@@ -15,17 +15,15 @@ import javax.persistence.Table;
 @AllArgsConstructor
 @Getter
 @Setter
-@Table(name = "roles")
-public class Role {
+@Table(name = "groups")
+public class Group {
     @Id
     @Column(name = "id", nullable = false)
     private Integer id;
 
-    @Column(name = "name", nullable = false, length = 45)
-    private String name;
+    @Column(name = "title", nullable = false, length = 100)
+    private String title;
 
-    @Column(name = "code", nullable = false, length = 45)
-    private String code;
 
 
 }
