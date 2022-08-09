@@ -1,4 +1,7 @@
 package com.unimerch.service;
 
-public interface RoleService{
+import com.unimerch.repository.model.Role;
+
+public interface RoleService extends GeneralService<Role> {
+    Role findByName(String name);
 }
