@@ -2,6 +2,11 @@ package com.unimerch.controller.api;
 
 import com.unimerch.dto.LoginParam;
 import com.unimerch.repository.model.JwtResponse;
+import com.unimerch.repository.model.User;
+import com.unimerch.service.RoleService;
+import com.unimerch.service.UserService;
+import com.unimerch.service.impl.JwtService;
+import com.unimerch.util.AppUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpHeaders;
@@ -33,10 +38,10 @@ public class AuthAPI {
     private JwtService jwtService;
 
     @Autowired
-    private IUserService userService;
+    private UserService userService;
 
     @Autowired
-    private IRoleService roleService;
+    private RoleService roleService;
 
     @Autowired
     private AppUtils appUtils;
@@ -78,4 +83,6 @@ public class AuthAPI {
                 .body(jwtResponse);
 
     }
+
+
 }

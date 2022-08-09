@@ -1,5 +1,6 @@
 package com.unimerch.repository;
 
+import com.unimerch.dto.UserCreateParam;
 import com.unimerch.repository.model.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -14,7 +15,5 @@ public interface UserRepository extends JpaRepository<User, Integer> {
 
     Optional<User> findByUsername(String username);
 
-    @Query("SELECT NEW com.banking.model.dto.UserDTO (u.id, u.username) FROM User u WHERE u.username = ?1")
-    Optional<UserDTO> findUserDTOByUsername(String username);
-
+    boolean existsByUsername(String username);
 }

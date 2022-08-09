@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import lombok.experimental.Accessors;
 import org.hibernate.Hibernate;
 
 import javax.persistence.Column;
@@ -17,6 +18,7 @@ import java.util.Objects;
 @AllArgsConstructor
 @Getter
 @Setter
+@Accessors(chain = true)
 public class BrgGroupAmznAccountId implements Serializable {
     private static final long serialVersionUID = 1461032386399547886L;
     @Column(name = "group_id", nullable = false)

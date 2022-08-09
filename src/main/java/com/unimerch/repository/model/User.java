@@ -4,6 +4,8 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import lombok.experimental.Accessors;
+import org.hibernate.annotations.CreationTimestamp;
 
 import javax.persistence.*;
 import java.time.Instant;
@@ -14,6 +16,7 @@ import java.time.Instant;
 @Getter
 @Setter
 @Table(name = "users")
+@Accessors(chain = true)
 public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -29,13 +32,14 @@ public class User {
     @Column(name = "mobile", length = 15)
     private String mobile;
 
-    @Column(name = "password_hash", nullable = false, length = 128)
+    @Column(name = "password_hash", nullable = false, length = 128, updatable = false)
     private String passwordHash;
 
-    @Column(name = "salt", nullable = false, length = 32)
+    @Column(name = "salt", nullable = false, length = 32, updatable = false)
     private String salt;
 
-    @Column(name = "registered_at", nullable = false)
+    @Column(name = "registered_at", nullable = false, updatable = false)
+    @CreationTimestamp
     private Instant registeredAt;
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)

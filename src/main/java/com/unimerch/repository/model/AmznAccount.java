@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import lombok.experimental.Accessors;
 
 import javax.persistence.*;
 import java.time.Instant;
@@ -14,6 +15,7 @@ import java.time.Instant;
 @Getter
 @Setter
 @Table(name = "amzn_accounts")
+@Accessors(chain = true)
 public class AmznAccount {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

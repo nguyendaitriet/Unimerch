@@ -1,6 +1,6 @@
 package com.unimerch.security;
 
-import com.banking.service.IUserService;
+import com.unimerch.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -22,7 +22,7 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Autowired
-    private IUserService userService;
+    private UserService userService;
 
     @Bean
     public JwtAuthenticationFilter jwtAuthenticationFilter() {
@@ -61,8 +61,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         http.httpBasic().authenticationEntryPoint(restServicesEntryPoint());
 
         http.authorizeRequests()
-                .antMatchers("/", "/api/auth/login", "/api/auth/register", "/login").permitAll()
-                .antMatchers("/transfers").hasAnyAuthority("ADMIN")
+                .antMatchers("/", "/api/auth/login", "/login",
+                        "/api/users/**").permitAll()
                 .antMatchers("/assets/**").permitAll()
                 .antMatchers(
                         "/v2/api-docs",

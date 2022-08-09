@@ -1,7 +1,7 @@
 package com.unimerch.security;
 
-import com.banking.service.IUserService;
-import com.banking.service.JwtService;
+import com.unimerch.service.UserService;
+import com.unimerch.service.impl.JwtService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -22,7 +22,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     private JwtService jwtService;
 
     @Autowired
-    private IUserService userService;
+    private UserService userService;
 
 
     private String getBearerTokenRequest(HttpServletRequest request) {
