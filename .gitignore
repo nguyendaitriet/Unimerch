@@ -37,3 +37,4 @@ out/
 .vscode/
 
 ### custom ###
+/src/main/resources/application.properties
