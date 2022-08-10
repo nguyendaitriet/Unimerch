@@ -42,7 +42,7 @@ public class User {
     @CreationTimestamp
     private Instant registeredAt;
 
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @ManyToOne(optional = false)
     @JoinColumn(name = "role_id", nullable = false)
     private Role role;
 

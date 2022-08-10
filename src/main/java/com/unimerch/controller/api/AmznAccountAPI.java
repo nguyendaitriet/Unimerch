@@ -18,4 +18,5 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/api/amznAccount")
 public class AmznAccountAPI {
+
 }
