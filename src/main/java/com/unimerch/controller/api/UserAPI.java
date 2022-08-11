@@ -24,7 +24,7 @@ public class UserAPI {
     @Autowired
     private UserService userService;
 
-    @PreAuthorize("hasAnyAuthority('MANAGER')")
+//    @PreAuthorize("hasAnyAuthority('MANAGER')")
     @PostMapping("/create")
     public ResponseEntity<?> createUser(@RequestBody UserCreateParam userCreateParam, BindingResult bindingResult) {
 

@@ -42,14 +42,19 @@ public class AuthAPI {
 
     @PostMapping("/login")
     public ResponseEntity<?> login(@RequestBody LoginParam user) {
+
         Authentication authentication = authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(user.getUsername(), user.getPassword()));
 
         SecurityContextHolder.getContext().setAuthentication(authentication);
 
+        User currentUser = userService.getByUsername(user.getUsername());
+        if (currentUser.isDisabled()) {
+            return new ResponseEntity<>(HttpStatus.FORBIDDEN);
+        }
+
         String jwt = jwtService.generateTokenLogin(authentication);
         UserDetails userDetails = (UserDetails) authentication.getPrincipal();
-        User currentUser = userService.getByUsername(user.getUsername());
 
         JwtResponse jwtResponse = new JwtResponse(
                 jwt,
