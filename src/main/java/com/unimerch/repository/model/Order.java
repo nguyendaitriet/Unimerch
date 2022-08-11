@@ -53,7 +53,7 @@ public class Order {
     @Column(name = "currency", nullable = false, length = 50)
     private String currency;
 
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @ManyToOne(optional = false)
     @JoinColumn(name = "amzn_account_id", nullable = false)
     private AmznAccount amznAccount;
 

@@ -42,7 +42,10 @@ public class User {
     @CreationTimestamp
     private Instant registeredAt;
 
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @Column(name = "disabled", nullable = false)
+    private boolean disabled;
+
+    @ManyToOne(optional = false)
     @JoinColumn(name = "role_id", nullable = false)
     private Role role;
 

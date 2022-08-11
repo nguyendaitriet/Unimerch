@@ -55,6 +55,33 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
     return new ResponseEntity<>(body, HttpStatus.CONFLICT);
   }
 
+  @ExceptionHandler(ServerErrorException.class)
+  public ResponseEntity<?> serverErrorException(ServerErrorException ex, WebRequest request) {
+    Map<String, String> body = new HashMap<>();
+
+    body.put("message", ex.getMessage());
+
+    return new ResponseEntity<>(body, HttpStatus.INTERNAL_SERVER_ERROR);
+  }
+
+  @ExceptionHandler(InvalidPasswordException.class)
+  public ResponseEntity<?> invalidPasswordException(InvalidPasswordException ex, WebRequest request) {
+    Map<String, String> body = new HashMap<>();
+
+    body.put("message", ex.getMessage());
+
+    return new ResponseEntity<>(body, HttpStatus.BAD_REQUEST);
+  }
+
+  @ExceptionHandler(InvalidIdException.class)
+  public ResponseEntity<?> invalidIdException(InvalidIdException ex, WebRequest request) {
+    Map<String, String> body = new HashMap<>();
+
+    body.put("message", ex.getMessage());
+
+    return new ResponseEntity<>(body, HttpStatus.BAD_REQUEST);
+  }
+
   @ExceptionHandler(DataInputException.class)
   public ResponseEntity<?> dataInputException(DataInputException ex, WebRequest request) {
     Map<String, String> body = new HashMap<>();
@@ -62,6 +89,15 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
     body.put("message", ex.getMessage());
 
     return new ResponseEntity<>(body, HttpStatus.BAD_REQUEST);
+  }
+
+  @ExceptionHandler(NotAllowDisableException.class)
+  public ResponseEntity<?> dataInputException(NotAllowDisableException ex, WebRequest request) {
+    Map<String, String> body = new HashMap<>();
+
+    body.put("message", ex.getMessage());
+
+    return new ResponseEntity<>(body, HttpStatus.UNAUTHORIZED);
   }
 
   @ExceptionHandler(ConstraintViolationException.class)
