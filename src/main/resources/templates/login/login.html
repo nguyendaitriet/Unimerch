@@ -6,7 +6,7 @@
 </head>
 <body>
 
-<form class="login" id="frmLogin">
+<form class="login" id="frmLogin" autocomplete="off">
     <input type="text" placeholder="Username" id="username">
     <input type="password" placeholder="Password" id="password">
     <button type="button" id="btnLogin">Login</button>
@@ -47,7 +47,6 @@
             },
             "type": "POST",
             "url": page.urls.login,
-            // "url": "localhost:8082/api/auth/login",
             "data": JSON.stringify(user)
         })
             .done(() => {
@@ -58,9 +57,11 @@
             })
             .fail((jqXHR) => {
                 if (jqXHR.status === 401) {
-                    App.IziToast.showErrorAlert("Wrong username or password");
+                    App.IziToast.showErrorAlert(App.ERROR_401);
+                } if (jqXHR.status === 403) {
+                    App.IziToast.showErrorAlert(App.ERROR_403);
                 } else {
-                    App.IziToast.showErrorAlert("Server error, please contact admin");
+                    App.IziToast.showErrorAlert(App.ERROR_500);
                 }
             })
     })

@@ -9,7 +9,7 @@ class App {
     static ERROR_401 = "Access timeout. Redirecting to login."
     static ERROR_403 = "Access denied. Unauthorized personnel cannot perform this action.";
     static ERROR_404 = "An error occurred. Please try again later!";
-    static ERROR_500 = "Task failed successfully, please contact administrators.";
+    static ERROR_500 = "Server error. Please contact admin";
     static SUCCESS_CREATED = "Data created successfully!";
     static SUCCESS_UPDATED = "Data updated successfully!";
 
