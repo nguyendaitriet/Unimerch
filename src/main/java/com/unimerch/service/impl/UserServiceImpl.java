@@ -3,7 +3,7 @@ package com.unimerch.service.impl;
 
 import com.unimerch.dto.UserCreateParam;
 import com.unimerch.dto.UserCreateResult;
-import com.unimerch.dto.UserDTO;
+import com.unimerch.dto.UserListItem;
 import com.unimerch.exception.*;
 import com.unimerch.mapper.UserMapper;
 import com.unimerch.repository.UserRepository;
@@ -13,8 +13,6 @@ import com.unimerch.repository.model.UserPrinciple;
 import com.unimerch.service.UserService;
 import com.unimerch.util.ValidationUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -47,6 +45,21 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    public Optional<User> findById(String id) {
+        boolean isIdValid = Pattern.matches(ValidationUtils.ID_REGEX, id);
+        if (!isIdValid) {
+            throw new InvalidIdException(ValidationUtils.ID_NOT_EXIST);
+        }
+
+        int validId = Integer.parseInt(id);
+        Optional<User> optionalUser = userRepository.findById(validId);
+        if (!optionalUser.isPresent()) {
+            throw new InvalidIdException(ValidationUtils.ID_NOT_EXIST);
+        }
+        return optionalUser;
+    }
+
+    @Override
     public UserCreateResult create(UserCreateParam userCreateParam) {
         User newUser = userMapper.toUser(userCreateParam);
 
@@ -70,18 +83,9 @@ public class UserServiceImpl implements UserService {
     @Override
     public void changePassword(String id, String password) {
 
-        boolean isIdValid = Pattern.matches(ValidationUtils.ID_REGEX, id);
+        User user = findById(id).get();
+
         boolean isPasswordValid = Pattern.matches(ValidationUtils.PASSWORD_REGEX, password);
-
-        if (!isIdValid) {
-            throw new InvalidIdException(ValidationUtils.ID_NOT_EXIST);
-        }
-
-        int validId = Integer.parseInt(id);
-        if (!userRepository.existsById(validId)) {
-            throw new InvalidIdException(ValidationUtils.ID_NOT_EXIST);
-        }
-
         if (!isPasswordValid) {
             throw new InvalidPasswordException(ValidationUtils.VALID_PASSWORD);
         }
@@ -89,28 +93,18 @@ public class UserServiceImpl implements UserService {
         try {
 
             String newPasswordHash = passwordEncoder.encode(password);
-            userRepository.changePassword(validId, newPasswordHash);
+            userRepository.changePassword(user.getId(), newPasswordHash);
 
         } catch (Exception e) {
             throw new ServerErrorException(ValidationUtils.SERVER_ERROR);
         }
     }
 
+
     @Override
     public void disableUser(String id) {
 
-        boolean isIdValid = Pattern.matches(ValidationUtils.ID_REGEX, id);
-        if (!isIdValid) {
-            throw new InvalidIdException(ValidationUtils.ID_NOT_EXIST);
-        }
-
-        int validId = Integer.parseInt(id);
-        Optional<User> optionalUser = userRepository.findById(validId);
-        if (!optionalUser.isPresent()) {
-            throw new InvalidIdException(ValidationUtils.ID_NOT_EXIST);
-        }
-
-        User user = optionalUser.get();
+        User user = findById(id).get();
         if (user.getRole().getId() == 1) {
             throw new NotAllowDisableException(ValidationUtils.NOT_ALLOW);
         }
@@ -126,12 +120,12 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public List<UserDTO> findAllUsersDTO(String principalUsername) {
-        List<UserDTO> userDTOList = userRepository.findAllUsersDTO(principalUsername);
-        if (userDTOList.isEmpty()) {
+    public List<UserListItem> findAllUsersDTO(String principalUsername) {
+        List<UserListItem> userListItemList = userRepository.findAllUserListItems(principalUsername);
+        if (userListItemList.isEmpty()) {
             throw new NoDataFoundException(ValidationUtils.NO_DATA_FOUND);
         }
-        return userDTOList;
+        return userListItemList;
     }
 
     @Override
@@ -141,7 +135,6 @@ public class UserServiceImpl implements UserService {
             throw new UsernameNotFoundException(username);
         }
         return UserPrinciple.build(userOptional.get());
-//        return (UserDetails) userOptional.get();
     }
 
 }

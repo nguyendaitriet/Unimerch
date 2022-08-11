@@ -1,5 +1,11 @@
 package com.unimerch.controller;
 
+import com.unimerch.dto.UserListItem;
+import com.unimerch.mapper.UserMapper;
+import com.unimerch.repository.model.User;
+import com.unimerch.service.UserService;
+import com.unimerch.util.PrincipalUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -9,24 +15,46 @@ import org.springframework.web.servlet.ModelAndView;
 @RequestMapping("/dashboard")
 public class DashboardController {
 
-    @GetMapping("/")
+    @Autowired
+    private PrincipalUtils principalUtils;
+
+    @Autowired
+    private UserService userService;
+
+    @Autowired
+    private UserMapper userMapper;
+
+    public UserListItem getCurrentUser() {
+        User currentUser = userService.getByUsername(principalUtils.getPrincipalUsername());
+        return userMapper.toUserListItem(currentUser);
+    }
+
+    @GetMapping("")
     public ModelAndView showDashboardPage() {
-        return new ModelAndView("/dashboard/dashboard");
+        ModelAndView modelAndView = new ModelAndView("/dashboard/dashboard");
+        modelAndView.addObject(getCurrentUser());
+        return modelAndView;
     }
 
     @GetMapping("/user")
     public ModelAndView showUserManagementPage() {
-        return new ModelAndView("/dashboard/user");
+        ModelAndView modelAndView = new ModelAndView("/dashboard/user");
+        modelAndView.addObject(getCurrentUser());
+        return modelAndView;
     }
 
     @GetMapping("/amznAccount")
     public ModelAndView showAmznAccountManagementPage() {
-        return new ModelAndView("/dashboard/amzn-account");
+        ModelAndView modelAndView = new ModelAndView("/dashboard/amzn-account");
+        modelAndView.addObject(getCurrentUser());
+        return modelAndView;
     }
 
     @GetMapping("/group")
     public ModelAndView showGroupManagementPage() {
-        return new ModelAndView("/dashboard/group");
+        ModelAndView modelAndView = new ModelAndView("/dashboard/group");
+        modelAndView.addObject(getCurrentUser());
+        return modelAndView;
     }
 
 }
