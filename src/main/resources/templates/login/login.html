@@ -47,7 +47,6 @@
             },
             "type": "POST",
             "url": page.urls.login,
-            // "url": "localhost:8082/api/auth/login",
             "data": JSON.stringify(user)
         })
             .done(() => {
@@ -58,9 +57,9 @@
             })
             .fail((jqXHR) => {
                 if (jqXHR.status === 401) {
-                    App.IziToast.showErrorAlert("Wrong username or password");
+                    App.IziToast.showErrorAlert(App.ERROR_401);
                 } else {
-                    App.IziToast.showErrorAlert("Server error, please contact admin");
+                    App.IziToast.showErrorAlert(App.ERROR_500);
                 }
             })
     })
