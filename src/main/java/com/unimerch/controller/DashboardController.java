@@ -11,7 +11,7 @@ public class DashboardController {
 
     @GetMapping("/")
     public ModelAndView showDashboardPage() {
-        return new ModelAndView("/dashboard/dashboard"));
+        return new ModelAndView("/dashboard/dashboard");
     }
 
     @GetMapping("/user")
@@ -28,5 +28,5 @@ public class DashboardController {
     public ModelAndView showGroupManagementPage() {
         return new ModelAndView("/dashboard/group");
     }
-    
+
 }
