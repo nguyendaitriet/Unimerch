@@ -36,8 +36,8 @@
 
     page.element.btnLogin.on("click", function () {
         let user = new User(
-            page.dialogs.element.username,
-            page.dialogs.element.password
+            page.dialogs.element.username.val(),
+            page.dialogs.element.password.val()
         );
 
         $.ajax({
@@ -47,6 +47,7 @@
             },
             "type": "POST",
             "url": page.urls.login,
+            // "url": "localhost:8082/api/auth/login",
             "data": JSON.stringify(user)
         })
             .done(() => {
