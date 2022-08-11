@@ -26,7 +26,7 @@ public class UserAPI {
 
     @PreAuthorize("hasAnyAuthority('MANAGER')")
     @PostMapping("/create")
-    public ResponseEntity<?> register(@RequestBody UserCreateParam userCreateParam, BindingResult bindingResult) {
+    public ResponseEntity<?> createUser(@RequestBody UserCreateParam userCreateParam, BindingResult bindingResult) {
 
         if (bindingResult.hasErrors()) {
             return appUtils.mapErrorToResponse(bindingResult);
