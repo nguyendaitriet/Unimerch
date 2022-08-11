@@ -3,10 +3,8 @@ package com.unimerch.service.impl;
 
 import com.unimerch.dto.UserCreateParam;
 import com.unimerch.dto.UserCreateResult;
-import com.unimerch.exception.InvalidIdException;
-import com.unimerch.exception.InvalidPasswordException;
-import com.unimerch.exception.NotAllowDisableException;
-import com.unimerch.exception.ServerErrorException;
+import com.unimerch.dto.UserDTO;
+import com.unimerch.exception.*;
 import com.unimerch.mapper.UserMapper;
 import com.unimerch.repository.UserRepository;
 import com.unimerch.repository.model.Role;
@@ -125,6 +123,15 @@ public class UserServiceImpl implements UserService {
             throw new ServerErrorException(ValidationUtils.SERVER_ERROR);
         }
 
+    }
+
+    @Override
+    public List<UserDTO> findAllUsersDTO(String principalUsername) {
+        List<UserDTO> userDTOList = userRepository.findAllUsersDTO(principalUsername);
+        if (userDTOList.isEmpty()) {
+            throw new NoDataFoundException(ValidationUtils.NO_DATA_FOUND);
+        }
+        return userDTOList;
     }
 
     @Override

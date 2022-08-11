@@ -100,6 +100,15 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
     return new ResponseEntity<>(body, HttpStatus.UNAUTHORIZED);
   }
 
+  @ExceptionHandler(NoDataFoundException.class)
+  public ResponseEntity<?> noDataFoundException(NoDataFoundException ex, WebRequest request) {
+    Map<String, String> body = new HashMap<>();
+
+    body.put("message", ex.getMessage());
+
+    return new ResponseEntity<>(body, HttpStatus.NO_CONTENT);
+  }
+
   @ExceptionHandler(ConstraintViolationException.class)
   public ResponseEntity<?> constraintViolationException(ConstraintViolationException ex, WebRequest request) {
     List<String> errors = new ArrayList<>();
