@@ -17,4 +17,6 @@ public interface UserService extends UserDetailsService {
     boolean existsByUsername(String username);
 
     void changePassword(String id, String password);
+
+    void disableUser(String id);
 }

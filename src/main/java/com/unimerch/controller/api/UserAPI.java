@@ -14,8 +14,6 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
-import javax.validation.Valid;
-
 @RestController
 @RequestMapping("/api/users")
 public class UserAPI {
@@ -40,20 +38,25 @@ public class UserAPI {
 
         try {
             userService.create(userCreateParam);
-
             return new ResponseEntity<>(HttpStatus.CREATED);
-
         } catch (DataIntegrityViolationException e) {
             throw new DataInputException("Account information is not valid, please check the information again");
         }
+
     }
 
     @PreAuthorize("hasAnyAuthority('MANAGER')")
     @PutMapping("/changePassword/{id}")
     public ResponseEntity<?> changeUserPassword(@PathVariable String id, @RequestBody String newPassword) {
-
         userService.changePassword(id, newPassword);
         return new ResponseEntity<>(HttpStatus.OK);
-
     }
+
+    @PreAuthorize("hasAnyAuthority('MANAGER')")
+    @PutMapping("/disable/{id}")
+    public ResponseEntity<?> disableUser(@PathVariable String id) {
+        userService.disableUser(id);
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+
 }

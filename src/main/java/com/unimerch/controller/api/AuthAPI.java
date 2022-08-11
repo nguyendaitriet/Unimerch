@@ -40,12 +40,6 @@ public class AuthAPI {
     @Autowired
     private UserService userService;
 
-    @Autowired
-    private RoleService roleService;
-
-    @Autowired
-    private AppUtils appUtils;
-
     @PostMapping("/login")
     public ResponseEntity<?> login(@RequestBody LoginParam user) {
         Authentication authentication = authenticationManager.authenticate(
@@ -74,8 +68,6 @@ public class AuthAPI {
 //                .domain("ajax-bank-location-jwt.herokuapp.com")
 //                .domain("bank-transaction.azurewebsites.net")
                 .build();
-
-        System.out.println(jwtResponse);
 
         return ResponseEntity
                 .ok()

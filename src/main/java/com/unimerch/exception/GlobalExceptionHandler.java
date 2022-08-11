@@ -91,6 +91,15 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
     return new ResponseEntity<>(body, HttpStatus.BAD_REQUEST);
   }
 
+  @ExceptionHandler(NotAllowDisableException.class)
+  public ResponseEntity<?> dataInputException(NotAllowDisableException ex, WebRequest request) {
+    Map<String, String> body = new HashMap<>();
+
+    body.put("message", ex.getMessage());
+
+    return new ResponseEntity<>(body, HttpStatus.UNAUTHORIZED);
+  }
+
   @ExceptionHandler(ConstraintViolationException.class)
   public ResponseEntity<?> constraintViolationException(ConstraintViolationException ex, WebRequest request) {
     List<String> errors = new ArrayList<>();
