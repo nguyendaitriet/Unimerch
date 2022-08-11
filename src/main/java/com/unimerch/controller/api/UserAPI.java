@@ -5,16 +5,14 @@ import com.unimerch.exception.DataInputException;
 import com.unimerch.exception.UsernameExistsException;
 import com.unimerch.service.UserService;
 import com.unimerch.util.AppUtils;
+import com.unimerch.util.ValidationUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 
@@ -37,7 +35,7 @@ public class UserAPI {
         }
 
         if (userService.existsByUsername(userCreateParam.getUsername())) {
-            throw new UsernameExistsException("Username has already existed.");
+            throw new UsernameExistsException(ValidationUtils.USERNAME_EXISTS);
         }
 
         try {
@@ -48,5 +46,14 @@ public class UserAPI {
         } catch (DataIntegrityViolationException e) {
             throw new DataInputException("Account information is not valid, please check the information again");
         }
+    }
+
+    @PreAuthorize("hasAnyAuthority('MANAGER')")
+    @PutMapping("/changePassword/{id}")
+    public ResponseEntity<?> changeUserPassword(@PathVariable String id, @RequestBody String newPassword) {
+
+        userService.changePassword(id, newPassword);
+        return new ResponseEntity<>(HttpStatus.OK);
+
     }
 }

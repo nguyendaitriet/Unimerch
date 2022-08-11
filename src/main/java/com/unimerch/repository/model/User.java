@@ -42,6 +42,9 @@ public class User {
     @CreationTimestamp
     private Instant registeredAt;
 
+    @Column(name = "disabled", nullable = false)
+    private boolean disabled;
+
     @ManyToOne(optional = false)
     @JoinColumn(name = "role_id", nullable = false)
     private Role role;
