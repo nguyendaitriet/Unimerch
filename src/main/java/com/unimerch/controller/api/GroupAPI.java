@@ -21,7 +21,8 @@ public class GroupAPI {
     @PreAuthorize("hasAnyAuthority('MANAGER')")
     @PostMapping("/create")
     public ResponseEntity<?> createGroup(@RequestBody String groupName) {
-        groupService.createGroup(groupName);
-        return new ResponseEntity<>(HttpStatus.CREATED);
+        Group newGroup = groupService.createGroup(groupName);
+        return new ResponseEntity<>(newGroup, HttpStatus.CREATED);
     }
+
 }

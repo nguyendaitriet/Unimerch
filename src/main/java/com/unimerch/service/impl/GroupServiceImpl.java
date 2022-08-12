@@ -16,12 +16,11 @@ public class GroupServiceImpl implements GroupService {
 
     @Override
     public Group createGroup(String groupName) {
-
-
         try {
-            Group newGroup = new Group(0, groupName.trim());
+            Group newGroup = new Group(groupName.trim());
             return groupRepository.save(newGroup);
         } catch (Exception e) {
+            e.printStackTrace();
             throw new ServerErrorException(ValidationUtils.SERVER_ERROR);
         }
     }
