@@ -20,12 +20,12 @@ public class BrgGroupAmznAccount {
     private BrgGroupAmznAccountId id;
 
     @MapsId("groupId")
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @ManyToOne(optional = false)
     @JoinColumn(name = "group_id", nullable = false)
     private Group group;
 
     @MapsId("amznAccountId")
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @ManyToOne(optional = false)
     @JoinColumn(name = "amzn_account_id", nullable = false)
     private AmznAccount amznAccount;
 

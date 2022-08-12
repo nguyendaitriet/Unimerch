@@ -36,21 +36,21 @@ public class DashboardController {
         return modelAndView;
     }
 
-    @GetMapping("/user")
+    @GetMapping("/users")
     public ModelAndView showUserManagementPage() {
         ModelAndView modelAndView = new ModelAndView("/dashboard/user");
         modelAndView.addObject(getCurrentUser());
         return modelAndView;
     }
 
-    @GetMapping("/amznAccount")
+    @GetMapping("/amznAccounts")
     public ModelAndView showAmznAccountManagementPage() {
         ModelAndView modelAndView = new ModelAndView("/dashboard/amzn-account");
         modelAndView.addObject(getCurrentUser());
         return modelAndView;
     }
 
-    @GetMapping("/group")
+    @GetMapping("/groups")
     public ModelAndView showGroupManagementPage() {
         ModelAndView modelAndView = new ModelAndView("/dashboard/group");
         modelAndView.addObject(getCurrentUser());

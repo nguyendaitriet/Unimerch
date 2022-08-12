@@ -16,7 +16,7 @@ import javax.persistence.Table;
 @AllArgsConstructor
 @Getter
 @Setter
-@Table(name = "groups")
+@Table(name = "groups", schema = "unimerch")
 @Accessors(chain = true)
 public class Group {
     @Id
@@ -26,6 +26,7 @@ public class Group {
     @Column(name = "title", nullable = false, length = 100)
     private String title;
 
-
-
+    public Group(String title) {
+        this.title = title;
+    }
 }
