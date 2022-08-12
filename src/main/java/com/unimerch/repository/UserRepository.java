@@ -1,7 +1,6 @@
 package com.unimerch.repository;
 
-import com.unimerch.dto.UserCreateParam;
-import com.unimerch.dto.UserDTO;
+import com.unimerch.dto.UserListItem;
 import com.unimerch.repository.model.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
@@ -10,11 +9,14 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import javax.transaction.Transactional;
+import java.awt.print.Pageable;
 import java.util.List;
 import java.util.Optional;
 
 @Repository
 public interface UserRepository extends JpaRepository<User, Integer> {
+
+//    List<User> findAll(Pageable pageable);
 
     User getByUsername(String username);
 
@@ -31,7 +33,7 @@ public interface UserRepository extends JpaRepository<User, Integer> {
             "WHERE u.id = :id")
     void changePassword(@Param("id") int id, @Param("newPass") String passwordHash);
 
-    @Query("SELECT NEW com.unimerch.dto.UserDTO (" +
+    @Query("SELECT NEW com.unimerch.dto.UserListItem (" +
                 "u.id, " +
                 "u.username, " +
                 "u.fullName, " +
@@ -39,5 +41,5 @@ public interface UserRepository extends JpaRepository<User, Integer> {
             ") " +
             "FROM User u " +
             "WHERE u.username <> :principalUsername")
-    List<UserDTO> findAllUsersDTO(@Param("principalUsername") String principalUsername);
+    List<UserListItem> findAllUserListItems(@Param("principalUsername") String principalUsername);
 }

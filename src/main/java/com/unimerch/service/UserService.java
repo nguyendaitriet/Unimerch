@@ -2,9 +2,8 @@ package com.unimerch.service;
 
 import com.unimerch.dto.UserCreateParam;
 import com.unimerch.dto.UserCreateResult;
-import com.unimerch.dto.UserDTO;
+import com.unimerch.dto.UserListItem;
 import com.unimerch.repository.model.User;
-import org.springframework.data.repository.query.Param;
 import org.springframework.security.core.userdetails.UserDetailsService;
 
 import java.util.List;
@@ -15,6 +14,8 @@ public interface UserService extends UserDetailsService {
 
     Optional<User> findByUsername(String username);
 
+    Optional<User> findById(String id);
+
     UserCreateResult create(UserCreateParam userCreateParam);
 
     boolean existsByUsername(String username);
@@ -23,6 +24,6 @@ public interface UserService extends UserDetailsService {
 
     void disableUser(String id);
 
-    List<UserDTO> findAllUsersDTO(String principalUsername);
+    List<UserListItem> findAllUsersDTO(String principalUsername);
 
 }

@@ -1,19 +1,20 @@
 package com.unimerch.controller.api;
 
 import com.unimerch.dto.UserCreateParam;
-import com.unimerch.dto.UserDTO;
+import com.unimerch.dto.UserListItem;
 import com.unimerch.exception.DataInputException;
 import com.unimerch.exception.UsernameExistsException;
+import com.unimerch.mapper.UserMapper;
+import com.unimerch.repository.model.User;
 import com.unimerch.service.UserService;
 import com.unimerch.util.AppUtils;
+import com.unimerch.util.PrincipalUtils;
 import com.unimerch.util.ValidationUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
@@ -23,37 +24,33 @@ import java.util.List;
 @RequestMapping("/api/users")
 public class UserAPI {
 
-    private String getPrincipalUsername() {
-        String userName;
-        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-
-        if (principal instanceof UserDetails) {
-            userName = ((UserDetails) principal).getUsername();
-        } else {
-            userName = principal.toString();
-        }
-        return userName;
-    }
+    @Autowired
+    private PrincipalUtils principalUtils;
 
     @Autowired
-    AppUtils appUtils;
+    private AppUtils appUtils;
 
     @Autowired
     private UserService userService;
 
+    @Autowired
+    private UserMapper userMapper;
+
     @PreAuthorize("hasAnyAuthority('MANAGER')")
     @GetMapping
     public ResponseEntity<?> findAllUsersExceptCurrent() {
-        List<UserDTO> userDTOList = userService.findAllUsersDTO(getPrincipalUsername());
-        return new ResponseEntity<>(userDTOList, HttpStatus.OK);
+        String principalUsername = principalUtils.getPrincipalUsername();
+        List<UserListItem> userListItemList = userService.findAllUsersDTO(principalUsername);
+        return new ResponseEntity<>(userListItemList, HttpStatus.OK);
     }
 
-//    @PreAuthorize("hasAnyAuthority('MANAGER')")
-//    @GetMapping
-//    public ResponseEntity<?> findByUsername() {
-//        List<UserDTO> userDTOList = userService.findAllUsersDTO(getPrincipalUsername());
-//        return new ResponseEntity<>(userDTOList, HttpStatus.OK);
-//    }
+    @PreAuthorize("hasAnyAuthority('MANAGER')")
+    @GetMapping("/{id}")
+    public ResponseEntity<?> findUserById(@PathVariable String id) {
+        User user = userService.findById(id).get();
+        UserListItem userListItem = userMapper.toUserListItem(user);
+        return new ResponseEntity<>(userListItem, HttpStatus.OK);
+    }
 
     @PreAuthorize("hasAnyAuthority('MANAGER')")
     @PostMapping("/create")
@@ -80,6 +77,13 @@ public class UserAPI {
     @PutMapping("/changePassword/{id}")
     public ResponseEntity<?> changeUserPassword(@PathVariable String id, @RequestBody String newPassword) {
         userService.changePassword(id, newPassword);
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+    @PreAuthorize("hasAnyAuthority('MANAGER')")
+    @PutMapping("/changePassword")
+    public ResponseEntity<?> changeMyPassword(@RequestBody String newPassword) {
+        userService.changePassword(String.valueOf(principalUtils.getPrincipalId()), newPassword);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 

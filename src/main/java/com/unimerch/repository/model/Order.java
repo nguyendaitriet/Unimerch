@@ -18,6 +18,7 @@ import java.time.Instant;
 @Table(name = "orders")
 @Accessors(chain = true)
 public class Order {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", nullable = false)

@@ -11,7 +11,7 @@ import lombok.experimental.Accessors;
 @NoArgsConstructor
 @AllArgsConstructor
 @Accessors(chain = true)
-public class UserDTO {
+public class UserListItem {
     private int id;
     private String username;
     private String fullName;

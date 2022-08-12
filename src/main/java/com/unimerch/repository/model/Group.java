@@ -16,6 +16,7 @@ import javax.persistence.*;
 @Table(name = "\"groups\"")
 @Accessors(chain = true)
 public class Group {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", nullable = false)
@@ -24,6 +25,8 @@ public class Group {
     @Column(name = "title", nullable = false, length = 100)
     private String title;
 
-
+    public Group(String title) {
+        this.title = title;
+    }
 
 }
