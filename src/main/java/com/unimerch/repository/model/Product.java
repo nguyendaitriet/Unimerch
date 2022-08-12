@@ -18,6 +18,7 @@ import java.math.BigDecimal;
 @Accessors(chain = true)
 public class Product {
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "ASIN", nullable = false, length = 150)
     private String id;
 

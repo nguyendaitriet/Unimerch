@@ -9,7 +9,7 @@ import org.springframework.web.servlet.ModelAndView;
 @RequestMapping("")
 public class HomeController {
 
-    @GetMapping("/")
+    @GetMapping("")
     public String redirectToDashBoard() {
         return "redirect:/dashboard";
     }
