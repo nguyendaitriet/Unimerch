@@ -36,7 +36,7 @@ public class UserAPI {
     @Autowired
     private UserMapper userMapper;
 
-    @PreAuthorize("hasAnyAuthority('MANAGER')")
+//    @PreAuthorize("hasAnyAuthority('MANAGER')")
     @GetMapping
     public ResponseEntity<?> findAllUsersExceptCurrent() {
         String principalUsername = principalUtils.getPrincipalUsername();
@@ -44,7 +44,7 @@ public class UserAPI {
         return new ResponseEntity<>(userListItemList, HttpStatus.OK);
     }
 
-    @PreAuthorize("hasAnyAuthority('MANAGER')")
+//    @PreAuthorize("hasAnyAuthority('MANAGER')")
     @GetMapping("/{id}")
     public ResponseEntity<?> findUserById(@PathVariable String id) {
         User user = userService.findById(id).get();
@@ -52,7 +52,7 @@ public class UserAPI {
         return new ResponseEntity<>(userListItem, HttpStatus.OK);
     }
 
-    @PreAuthorize("hasAnyAuthority('MANAGER')")
+//    @PreAuthorize("hasAnyAuthority('MANAGER')")
     @PostMapping("/create")
     public ResponseEntity<?> createUser(@RequestBody UserCreateParam userCreateParam, BindingResult bindingResult) {
 
@@ -73,21 +73,21 @@ public class UserAPI {
 
     }
 
-    @PreAuthorize("hasAnyAuthority('MANAGER')")
+//    @PreAuthorize("hasAnyAuthority('MANAGER')")
     @PutMapping("/changePassword/{id}")
     public ResponseEntity<?> changeUserPassword(@PathVariable String id, @RequestBody String newPassword) {
         userService.changePassword(id, newPassword);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
-    @PreAuthorize("hasAnyAuthority('MANAGER')")
+//    @PreAuthorize("hasAnyAuthority('MANAGER')")
     @PutMapping("/changePassword")
     public ResponseEntity<?> changeMyPassword(@RequestBody String newPassword) {
         userService.changePassword(String.valueOf(principalUtils.getPrincipalId()), newPassword);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
-    @PreAuthorize("hasAnyAuthority('MANAGER')")
+//    @PreAuthorize("hasAnyAuthority('MANAGER')")
     @PutMapping("/disable/{id}")
     public ResponseEntity<?> disableUser(@PathVariable String id) {
         userService.disableUser(id);
