@@ -3,6 +3,9 @@ class App {
 
     static BASE_URL_AUTHORIZATION = this.DOMAIN + "/api/auth";
     static BASE_URL_DASHBOARD = this.DOMAIN + "/api/dashboard";
+    static BASE_URL_USER = this.DOMAIN + "/api/user";
+    static BASE_URL_AMZN_ACCOUNT = this.DOMAIN + "/api/amzn-account";
+    static BASE_URL_GROUP = this.DOMAIN + "/api/group";
     static BASE_URL_FILE_UPLOAD = this.DOMAIN + "/api/file-upload";
 
     static ERROR_400 = "Task failed, please check your data.";

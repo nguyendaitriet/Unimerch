@@ -48,12 +48,12 @@ public class UserAPI {
         return new ResponseEntity<>(userDTOList, HttpStatus.OK);
     }
 
-    @PreAuthorize("hasAnyAuthority('MANAGER')")
-    @GetMapping
-    public ResponseEntity<?> findByUsername() {
-        List<UserDTO> userDTOList = userService.findAllUsersDTO(getPrincipalUsername());
-        return new ResponseEntity<>(userDTOList, HttpStatus.OK);
-    }
+//    @PreAuthorize("hasAnyAuthority('MANAGER')")
+//    @GetMapping
+//    public ResponseEntity<?> findByUsername() {
+//        List<UserDTO> userDTOList = userService.findAllUsersDTO(getPrincipalUsername());
+//        return new ResponseEntity<>(userDTOList, HttpStatus.OK);
+//    }
 
     @PreAuthorize("hasAnyAuthority('MANAGER')")
     @PostMapping("/create")
