@@ -2,26 +2,20 @@ package com.unimerch.controller.api;
 
 import com.unimerch.dto.UserCreateParam;
 import com.unimerch.dto.UserListItem;
-import com.unimerch.exception.DataInputException;
-import com.unimerch.exception.UsernameExistsException;
 import com.unimerch.mapper.UserMapper;
 import com.unimerch.repository.model.User;
 import com.unimerch.service.UserService;
 import com.unimerch.util.AppUtils;
 import com.unimerch.util.PrincipalUtils;
-import com.unimerch.util.ValidationUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
-import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Locale;
 
 @RestController
 @RequestMapping("/api/users")

@@ -41,6 +41,15 @@ public class UserServiceImpl implements UserService {
     private MessageSource messageSource;
 
     @Override
+    public List<UserListItem> findAllUsersDTO(String principalUsername) {
+        List<UserListItem> userListItemList = userRepository.findAllUserListItems(principalUsername);
+        if (userListItemList.isEmpty()) {
+            throw new NoDataFoundException(messageSource.getMessage("error.noDataFound", null, Locale.getDefault()));
+        }
+        return userListItemList;
+    }
+
+    @Override
     public User getByUsername(String username) {
         return userRepository.getByUsername(username);
     }
@@ -74,7 +83,7 @@ public class UserServiceImpl implements UserService {
         newUser.setRole(new Role(2));
 
         if (userRepository.existsByUsername(userCreateParam.getUsername())) {
-            throw new UsernameExistsException(messageSource.getMessage("validation.usernameExists", null, Locale.getDefault()));
+            throw new DuplicateDataException(messageSource.getMessage("validation.usernameExists", null, Locale.getDefault()));
         }
 
         try {
@@ -126,14 +135,7 @@ public class UserServiceImpl implements UserService {
 
     }
 
-    @Override
-    public List<UserListItem> findAllUsersDTO(String principalUsername) {
-        List<UserListItem> userListItemList = userRepository.findAllUserListItems(principalUsername);
-        if (userListItemList.isEmpty()) {
-            throw new NoDataFoundException(messageSource.getMessage("error.noDataFound", null, Locale.getDefault()));
-        }
-        return userListItemList;
-    }
+
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
