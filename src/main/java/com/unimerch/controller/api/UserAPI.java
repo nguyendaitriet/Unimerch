@@ -91,5 +91,5 @@ public class UserAPI {
         userService.disableUser(id);
         return new ResponseEntity<>(HttpStatus.OK);
     }
-    
+
 }
