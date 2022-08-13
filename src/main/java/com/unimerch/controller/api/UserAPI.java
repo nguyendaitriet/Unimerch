@@ -11,14 +11,17 @@ import com.unimerch.util.AppUtils;
 import com.unimerch.util.PrincipalUtils;
 import com.unimerch.util.ValidationUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.MessageSource;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.BindingResult;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Locale;
 
 @RestController
 @RequestMapping("/api/users")
@@ -36,7 +39,10 @@ public class UserAPI {
     @Autowired
     private UserMapper userMapper;
 
-    @PreAuthorize("hasAnyAuthority('MANAGER')")
+    @Autowired
+    private MessageSource messageSource;
+
+    //    @PreAuthorize("hasAnyAuthority('MANAGER')")
     @GetMapping
     public ResponseEntity<?> findAllUsersExceptCurrent() {
         String principalUsername = principalUtils.getPrincipalUsername();
@@ -44,7 +50,7 @@ public class UserAPI {
         return new ResponseEntity<>(userListItemList, HttpStatus.OK);
     }
 
-    @PreAuthorize("hasAnyAuthority('MANAGER')")
+    //    @PreAuthorize("hasAnyAuthority('MANAGER')")
     @GetMapping("/{id}")
     public ResponseEntity<?> findUserById(@PathVariable String id) {
         User user = userService.findById(id).get();
@@ -52,48 +58,38 @@ public class UserAPI {
         return new ResponseEntity<>(userListItem, HttpStatus.OK);
     }
 
-    @PreAuthorize("hasAnyAuthority('MANAGER')")
+    //    @PreAuthorize("hasAnyAuthority('MANAGER')")
     @PostMapping("/create")
-    public ResponseEntity<?> createUser(@RequestBody UserCreateParam userCreateParam, BindingResult bindingResult) {
+    public ResponseEntity<?> createUser(@Validated @RequestBody UserCreateParam userCreateParam, BindingResult bindingResult) {
 
         if (bindingResult.hasErrors()) {
             return appUtils.mapErrorToResponse(bindingResult);
         }
 
-        if (userService.existsByUsername(userCreateParam.getUsername())) {
-            throw new UsernameExistsException(ValidationUtils.USERNAME_EXISTS);
-        }
-
-        try {
-            userService.create(userCreateParam);
-            return new ResponseEntity<>(HttpStatus.CREATED);
-        } catch (DataIntegrityViolationException e) {
-            throw new DataInputException("Account information is not valid, please check the information again");
-        }
+        userService.create(userCreateParam);
+        return new ResponseEntity<>(HttpStatus.CREATED);
 
     }
 
-    @PreAuthorize("hasAnyAuthority('MANAGER')")
+    //    @PreAuthorize("hasAnyAuthority('MANAGER')")
     @PutMapping("/changePassword/{id}")
     public ResponseEntity<?> changeUserPassword(@PathVariable String id, @RequestBody String newPassword) {
         userService.changePassword(id, newPassword);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
-    @PreAuthorize("hasAnyAuthority('MANAGER')")
+    //    @PreAuthorize("hasAnyAuthority('MANAGER')")
     @PutMapping("/changePassword")
     public ResponseEntity<?> changeMyPassword(@RequestBody String newPassword) {
         userService.changePassword(String.valueOf(principalUtils.getPrincipalId()), newPassword);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
-    @PreAuthorize("hasAnyAuthority('MANAGER')")
+    //    @PreAuthorize("hasAnyAuthority('MANAGER')")
     @PutMapping("/disable/{id}")
     public ResponseEntity<?> disableUser(@PathVariable String id) {
         userService.disableUser(id);
         return new ResponseEntity<>(HttpStatus.OK);
     }
-
-
-
+    
 }

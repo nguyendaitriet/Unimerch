@@ -18,11 +18,13 @@ public class GroupAPI {
     @Autowired
     private GroupService groupService;
 
-    @PreAuthorize("hasAnyAuthority('MANAGER')")
+//    @PreAuthorize("hasAnyAuthority('MANAGER')")
     @PostMapping("/create")
     public ResponseEntity<?> createGroup(@RequestBody String groupName) {
         Group newGroup = groupService.createGroup(groupName);
         return new ResponseEntity<>(newGroup, HttpStatus.CREATED);
     }
+
+
 
 }

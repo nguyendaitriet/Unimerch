@@ -13,12 +13,15 @@ import com.unimerch.repository.model.UserPrinciple;
 import com.unimerch.service.UserService;
 import com.unimerch.util.ValidationUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.MessageSource;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Locale;
 import java.util.Optional;
 import java.util.regex.Pattern;
 
@@ -34,6 +37,9 @@ public class UserServiceImpl implements UserService {
     @Autowired
     private PasswordEncoder passwordEncoder;
 
+    @Autowired
+    private MessageSource messageSource;
+
     @Override
     public User getByUsername(String username) {
         return userRepository.getByUsername(username);
@@ -48,13 +54,13 @@ public class UserServiceImpl implements UserService {
     public Optional<User> findById(String id) {
         boolean isIdValid = Pattern.matches(ValidationUtils.ID_REGEX, id);
         if (!isIdValid) {
-            throw new InvalidIdException(ValidationUtils.ID_NOT_EXIST);
+            throw new InvalidIdException(messageSource.getMessage("validation.idNotExist", null, Locale.getDefault()));
         }
 
         int validId = Integer.parseInt(id);
         Optional<User> optionalUser = userRepository.findById(validId);
         if (!optionalUser.isPresent()) {
-            throw new InvalidIdException(ValidationUtils.ID_NOT_EXIST);
+            throw new InvalidIdException(messageSource.getMessage("validation.idNotExist", null, Locale.getDefault()));
         }
         return optionalUser;
     }
@@ -67,18 +73,19 @@ public class UserServiceImpl implements UserService {
         newUser.setPasswordHash(passwordEncoder.encode(userCreateParam.getPassword()));
         newUser.setRole(new Role(2));
 
+        if (userRepository.existsByUsername(userCreateParam.getUsername())) {
+            throw new UsernameExistsException(messageSource.getMessage("validation.usernameExists", null, Locale.getDefault()));
+        }
 
-        newUser = userRepository.save(newUser);
+        try {
+            newUser = userRepository.save(newUser);
+        } catch (DataIntegrityViolationException e) {
+            throw new DataInputException(messageSource.getMessage("validation.invalidAccountInformation", null, Locale.getDefault()));
+        }
 
-        UserCreateResult userCreateResult = userMapper.toUserCreateResult(newUser);
-
-        return userCreateResult;
+        return userMapper.toUserCreateResult(newUser);
     }
 
-    @Override
-    public boolean existsByUsername(String username) {
-        return userRepository.existsByUsername(username);
-    }
 
     @Override
     public void changePassword(String id, String password) {
@@ -87,7 +94,7 @@ public class UserServiceImpl implements UserService {
 
         boolean isPasswordValid = Pattern.matches(ValidationUtils.PASSWORD_REGEX, password);
         if (!isPasswordValid) {
-            throw new InvalidPasswordException(ValidationUtils.VALID_PASSWORD);
+            throw new InvalidPasswordException(messageSource.getMessage("validation.validPassword", null, Locale.getDefault()));
         }
 
         try {
@@ -96,7 +103,7 @@ public class UserServiceImpl implements UserService {
             userRepository.changePassword(user.getId(), newPasswordHash);
 
         } catch (Exception e) {
-            throw new ServerErrorException(ValidationUtils.SERVER_ERROR);
+            throw new ServerErrorException(messageSource.getMessage("error.serverError", null, Locale.getDefault()));
         }
     }
 
@@ -106,7 +113,7 @@ public class UserServiceImpl implements UserService {
 
         User user = findById(id).get();
         if (user.getRole().getId() == 1) {
-            throw new NotAllowDisableException(ValidationUtils.NOT_ALLOW);
+            throw new NotAllowDisableException(messageSource.getMessage("error.notAllow", null, Locale.getDefault()));
         }
 
         user.setDisabled(!user.isDisabled());
@@ -114,7 +121,7 @@ public class UserServiceImpl implements UserService {
         try {
             userRepository.save(user);
         } catch (Exception e) {
-            throw new ServerErrorException(ValidationUtils.SERVER_ERROR);
+            throw new ServerErrorException(messageSource.getMessage("error.serverError", null, Locale.getDefault()));
         }
 
     }
@@ -123,7 +130,7 @@ public class UserServiceImpl implements UserService {
     public List<UserListItem> findAllUsersDTO(String principalUsername) {
         List<UserListItem> userListItemList = userRepository.findAllUserListItems(principalUsername);
         if (userListItemList.isEmpty()) {
-            throw new NoDataFoundException(ValidationUtils.NO_DATA_FOUND);
+            throw new NoDataFoundException(messageSource.getMessage("error.noDataFound", null, Locale.getDefault()));
         }
         return userListItemList;
     }

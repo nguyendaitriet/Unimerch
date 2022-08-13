@@ -22,11 +22,11 @@ import javax.validation.constraints.Size;
 public class UserCreateParam {
 
     @NotBlank(message = "Username is required.")
-    @Size(min = 5, max = 80, message = "The length of email must be between 5 and 80 characters.")
+    @Size(min = 5, max = 80, message = "The length of full name must be between 5 and 80 characters.")
     private String fullName;
 
     @NotBlank(message = "Username is required.")
-    @Size(min = 3, max = 50, message = "The length of email must be between 3 and 128 characters.")
+    @Size(min = 3, max = 50, message = "The length of username must be between 3 and 128 characters.")
     private String username;
 
     @NotBlank(message = "Password is required.")
