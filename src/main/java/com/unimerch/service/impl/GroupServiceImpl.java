@@ -1,25 +1,34 @@
 package com.unimerch.service.impl;
 
+import com.unimerch.dto.AmznAccAddedToGroup;
 import com.unimerch.exception.DuplicateDataException;
 import com.unimerch.exception.InvalidIdException;
 import com.unimerch.exception.NoDataFoundException;
 import com.unimerch.exception.ServerErrorException;
+import com.unimerch.mapper.AmznAccountMapper;
+import com.unimerch.repository.AmznAccountRepository;
+import com.unimerch.repository.BrgGroupAmznAccountRepository;
 import com.unimerch.repository.GroupRepository;
-import com.unimerch.repository.model.Group;
-import com.unimerch.repository.model.User;
+import com.unimerch.repository.model.*;
 import com.unimerch.service.GroupService;
 import com.unimerch.util.ValidationUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
 import org.springframework.stereotype.Service;
 
+import javax.transaction.Transactional;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 import java.util.Optional;
 import java.util.regex.Pattern;
 
 @Service
+@Transactional
 public class GroupServiceImpl implements GroupService {
+
+    @Autowired
+    private AmznAccountRepository amznAccountRepository;
 
     @Autowired
     private GroupRepository groupRepository;
@@ -27,13 +36,19 @@ public class GroupServiceImpl implements GroupService {
     @Autowired
     private MessageSource messageSource;
 
+    @Autowired
+    private BrgGroupAmznAccountRepository brgGroupAmznAccRepo;
+
+    @Autowired
+    private AmznAccountMapper amznAccountMapper;
+
     @Override
     public List<Group> findAll() {
         List<Group> groupList = groupRepository.findAll();
         if (groupList.isEmpty()) {
             throw new NoDataFoundException(messageSource.getMessage("error.noDataFound", null, Locale.getDefault()));
         }
-       return groupList;
+        return groupList;
     }
 
     @Override
@@ -81,6 +96,35 @@ public class GroupServiceImpl implements GroupService {
         } catch (Exception e) {
             throw new ServerErrorException(messageSource.getMessage("error.serverError", null, Locale.getDefault()));
         }
+    }
+
+    @Override
+    public List<AmznAccAddedToGroup> addAmznAccToGroup(ArrayList<String> amznAccIdList, String id) {
+
+        Group group = findById(id).get();
+        List<AmznAccAddedToGroup> amznAccAddedToGroupList = new ArrayList<>();
+
+        try {
+            int groupId = group.getId();
+            for (String amznAccIdString : amznAccIdList) {
+                int amznAccId = Integer.parseInt(amznAccIdString);
+                AmznAccount amznAccount = amznAccountRepository.findById(amznAccId).get();
+                BrgGroupAmznAccountId brgGroupAmznAccountId = new BrgGroupAmznAccountId(groupId, amznAccId);
+                BrgGroupAmznAccount brgGroupAmznAccount = new BrgGroupAmznAccount();
+
+                brgGroupAmznAccount.setId(brgGroupAmznAccountId);
+                brgGroupAmznAccount.setGroup(group);
+                brgGroupAmznAccount.setAmznAccount(amznAccount);
+
+                brgGroupAmznAccRepo.save(brgGroupAmznAccount);
+                amznAccAddedToGroupList.add(amznAccountMapper.toAmznAccAddedToGroup(brgGroupAmznAccount));
+            }
+
+        } catch (Exception e) {
+            throw new ServerErrorException(messageSource.getMessage("error.serverError", null, Locale.getDefault()));
+        }
+
+        return amznAccAddedToGroupList;
     }
 
 }

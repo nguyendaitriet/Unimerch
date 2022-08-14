@@ -20,6 +20,7 @@ import java.util.Objects;
 @Setter
 @Accessors(chain = true)
 public class BrgGroupAmznAccountId implements Serializable {
+
     private static final long serialVersionUID = 1461032386399547886L;
     @Column(name = "group_id", nullable = false)
     private Integer groupId;

@@ -1,5 +1,6 @@
 package com.unimerch.controller.api;
 
+import com.unimerch.dto.AmznAccAddedToGroup;
 import com.unimerch.repository.model.Group;
 import com.unimerch.service.GroupService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -7,6 +8,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 @RestController
@@ -16,6 +19,7 @@ public class GroupAPI {
     @Autowired
     private GroupService groupService;
 
+    //    @PreAuthorize("hasAnyAuthority('MANAGER')")
     @GetMapping
     public ResponseEntity<?> findAllGroups() {
         return new ResponseEntity<>(groupService.findAll(), HttpStatus.OK);
@@ -40,6 +44,12 @@ public class GroupAPI {
     public ResponseEntity<?> updateGroup(@PathVariable String id ,@RequestBody String groupTitle) {
         Group group = groupService.updateGroup(id, groupTitle);
         return new ResponseEntity<>(group, HttpStatus.OK);
+    }
+
+    @PostMapping("/addAmznAccount/{id}")
+    public ResponseEntity<?> addAmznAccount(@PathVariable String id, @RequestBody ArrayList<String> amznAccIdList) {
+        List<AmznAccAddedToGroup> newAmznAccAddedToGroupList = groupService.addAmznAccToGroup(amznAccIdList, id);
+        return new ResponseEntity<>(newAmznAccAddedToGroupList, HttpStatus.OK);
     }
 
 }
