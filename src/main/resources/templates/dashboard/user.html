@@ -100,12 +100,18 @@
     <i class="fas fa-angle-up"></i>
 </a>
 
+<th:block th:replace="layout/modal :: create_user"/>
+
 <th:block th:replace="layout/script :: script-dashboard"/>
 
 <script>
     let page = {
         urls: {
-            find: App.BASE_URL_DASHBOARD,
+            findAllUsers: App.BASE_URL_USER,
+            findUser: App.BASE_URL_USER + "/",
+            createUser: App.BASE_URL_USER + "/create",
+            changePassword: App.BASE_URL_USER + "/changePassword",
+            changeStatus: App.BASE_URL_USER + "/changeStatus"
         },
         element: {},
         commands: {},
@@ -117,26 +123,85 @@
     }
 
     page.element.tableUser = $('#table-user');
+    // page.element.tableUser.tbody = $('#table-user tbody');
+    page.element.btnShowCreateUserFrm = $("#btnMdCreateUser");
+    page.dialogs.element.mdCreateUser = $("#mdCreateUser");
 
     $(document).ready(function () {
-        page.element.tableUser.DataTable({
+        let table = page.element.tableUser.DataTable({
             info: false,
             pagingType: 'simple_numbers',
             processing: true,
             ajax: {
-                url: 'https://jsonplaceholder.typicode.com/users',
+                url: page.urls.findAllUsers,
                 dataSrc: ''
             },
             columns: [
-                { data: 'id' },
-                { data: 'username'},
-                { data: 'name' },
-                { data: 'address.city' },
-                { data: 'company.name' },
+                {data: 'id'},
+                {data: 'username'},
+                {data: 'fullName'},
+                {data: 'disabled'},
+                {data: null}
             ],
-            pageLength: 10
+            columnDefs: [
+                {
+                    targets: 0,
+                    className: "text-center"
+                },
+                {
+                    targets: -1,
+                    className: "text-center",
+                    defaultContent:
+                        `<button type='button' class='appoint-group btn btn-outline-primary mr-3' title='Appoint group'>`
+                        + `<i class='fas fa-eye'></i>`
+                        + `</button>`
+                        + `<button type='button' class='change-password btn btn-outline-warning mr-3' title='Change password'>`
+                        + `<i class='fas fa-key'></i>`
+                        + `</button>`
+                        + `<button type='button' class='change-status btn btn-outline-danger' title='Disable/activate'>`
+                        + `<i class='fas fa-user-lock'></i>`
+                        + `</button>`,
+                },
+            ],
+            pageLength: 10,
+            lengthChange: false,
+            dom: 'Bfrtip',
+            buttons: {
+                dom: {
+                    button: {
+                        tag: 'button',
+                        className: ''
+                    }
+                },
+                buttons: [
+                    {
+                        text: `<i class="fas fa-user-plus"></i> Add`,
+                        titleAttr: 'Add new user',
+                        className: 'add btn btn-primary',
+                        init: function (api, node, config) {
+                            $(node).on('click', () => page.dialogs.element.mdCreateUser.modal("show"));
+                        }
+                    }
+                ]
+            },
+        });
+
+        page.element.tableUser.on('click', 'button.appoint-group', function () {
+            let data = table.row($(this).parents('tr')).data();
+            console.log(data);
+        });
+
+        page.element.tableUser.on('click', 'button.change-password', function () {
+            let data = table.row($(this).parents('tr')).data();
+            console.log(data);
+        });
+
+        page.element.tableUser.on('click', 'button.change-status', function () {
+            let data = table.row($(this).parents('tr')).data();
+            console.log(data);
         });
     });
+
 
 </script>
 </body>
