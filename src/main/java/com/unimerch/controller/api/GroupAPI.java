@@ -46,10 +46,21 @@ public class GroupAPI {
         return new ResponseEntity<>(group, HttpStatus.OK);
     }
 
+    //    @PreAuthorize("hasAnyAuthority('MANAGER')")
+
     @PostMapping("/addAmznAccount/{id}")
     public ResponseEntity<?> addAmznAccount(@PathVariable String id, @RequestBody ArrayList<String> amznAccIdList) {
         List<AmznAccAddedToGroup> newAmznAccAddedToGroupList = groupService.addAmznAccToGroup(amznAccIdList, id);
         return new ResponseEntity<>(newAmznAccAddedToGroupList, HttpStatus.OK);
     }
+
+    //    @PreAuthorize("hasAnyAuthority('MANAGER')")
+    @GetMapping("/showAmznAccInGroup/{id}")
+    public ResponseEntity<?> showAmznAccInGroup(@PathVariable String id) {
+        List<AmznAccAddedToGroup> amznAccAddedToGroupList = groupService.getAmznAccInGroup(id);
+        return new ResponseEntity<>(amznAccAddedToGroupList, HttpStatus.OK);
+    }
+
+//    @GetMapping("/show")
 
 }

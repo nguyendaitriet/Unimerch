@@ -20,4 +20,7 @@ public interface GroupService {
     Group updateGroup(String id, String groupTitle);
 
     List<AmznAccAddedToGroup> addAmznAccToGroup(ArrayList<String> amznAccIdList, String id);
+
+    List<AmznAccAddedToGroup> getAmznAccInGroup(String id);
+
 }
