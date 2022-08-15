@@ -80,10 +80,10 @@ public class UserAPI {
     }
 
     //    @PreAuthorize("hasAnyAuthority('MANAGER')")
-    @PutMapping("/disable/{id}")
-    public ResponseEntity<?> disableUser(@PathVariable String id) {
-        userService.disableUser(id);
-        return new ResponseEntity<>(HttpStatus.OK);
+    @PutMapping("/changeStatus/{id}")
+    public ResponseEntity<?> changeUserStatus(@PathVariable String id) {
+       UserListItem userListItem = userService.changeStatus(id);
+        return new ResponseEntity<>(userListItem, HttpStatus.OK);
     }
 
 }

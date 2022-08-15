@@ -20,7 +20,7 @@ public interface UserService extends UserDetailsService {
 
     void changePassword(String id, String password);
 
-    void disableUser(String id);
+    UserListItem changeStatus(String id);
 
     List<UserListItem> findAllUsersDTO(String principalUsername);
 

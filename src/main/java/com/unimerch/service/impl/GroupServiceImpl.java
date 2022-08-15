@@ -113,8 +113,8 @@ public class GroupServiceImpl implements GroupService {
                 BrgGroupAmznAccount brgGroupAmznAccount = new BrgGroupAmznAccount();
 
                 brgGroupAmznAccount.setId(brgGroupAmznAccountId);
-                brgGroupAmznAccount.setGroup(group);
-                brgGroupAmznAccount.setAmznAccount(amznAccount);
+//                brgGroupAmznAccount.setGroup(group);
+//                brgGroupAmznAccount.setAmznAccount(amznAccount);
 
                 brgGroupAmznAccRepo.save(brgGroupAmznAccount);
                 amznAccAddedToGroupList.add(amznAccountMapper.toAmznAccAddedToGroup(brgGroupAmznAccount));

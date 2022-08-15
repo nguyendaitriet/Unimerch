@@ -120,7 +120,7 @@ public class UserServiceImpl implements UserService {
 
 
     @Override
-    public void disableUser(String id) {
+    public UserListItem changeStatus(String id) {
 
         User user = findById(id).get();
         if (user.getRole().getId() == 1) {
@@ -130,7 +130,8 @@ public class UserServiceImpl implements UserService {
         user.setDisabled(!user.isDisabled());
 
         try {
-            userRepository.save(user);
+            user = userRepository.save(user);
+            return userMapper.toUserListItem(user);
         } catch (Exception e) {
             throw new ServerErrorException(messageSource.getMessage("error.serverError", null, Locale.getDefault()));
         }
