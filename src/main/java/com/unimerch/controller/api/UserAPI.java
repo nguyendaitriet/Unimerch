@@ -94,6 +94,4 @@ public class UserAPI {
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
-
-
 }
