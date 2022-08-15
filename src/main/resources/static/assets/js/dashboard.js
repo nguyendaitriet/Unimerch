@@ -3,7 +3,7 @@ class App {
 
     static BASE_URL_AUTHORIZATION = this.DOMAIN + "/api/auth";
     static BASE_URL_DASHBOARD = this.DOMAIN + "/api/dashboard";
-    static BASE_URL_USER = this.DOMAIN + "/api/user";
+    static BASE_URL_USER = this.DOMAIN + "/api/users";
     static BASE_URL_AMZN_ACCOUNT = this.DOMAIN + "/api/amzn-account";
     static BASE_URL_GROUP = this.DOMAIN + "/api/group";
     static BASE_URL_FILE_UPLOAD = this.DOMAIN + "/api/file-upload";
@@ -107,15 +107,11 @@ class App {
 }
 
 class User {
-    constructor(id, username, password, email, address, phone, role, isBlocked) {
+    constructor(id, username, fullName, disabled) {
         this.id = id;
         this.username = username;
-        this.password = password;
-        this.email = email;
-        this.address = address;
-        this.phone = phone;
-        this.role = role;
-        this.isBlocked = isBlocked;
+        this.fullName =
+        this.disabled = disabled;
     }
 }
 
