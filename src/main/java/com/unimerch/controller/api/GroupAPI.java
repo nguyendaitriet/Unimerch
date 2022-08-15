@@ -45,7 +45,6 @@ public class GroupAPI {
     }
 
     //    @PreAuthorize("hasAnyAuthority('MANAGER')")
-
     @PostMapping("/addAmznAccount/{id}")
     public ResponseEntity<?> addAmznAccount(@PathVariable String id, @RequestBody ArrayList<String> amznAccIdList) {
         List<AmznAccAddedToGroup> newAmznAccAddedToGroupList = groupService.addAmznAccToGroup(amznAccIdList, id);
@@ -61,5 +60,10 @@ public class GroupAPI {
         return new ResponseEntity<>(amznAccList, HttpStatus.OK);
     }
 
-
+    //    @PreAuthorize("hasAnyAuthority('MANAGER')")
+    @DeleteMapping("/deleteAmznAccFromGroup/{amznAccId}/{groupId}")
+    public ResponseEntity<?> deleteAmznAccFromGroup(@PathVariable int amznAccId, @PathVariable int groupId) {
+        groupService.deleteAmznAccFromGroup(amznAccId, groupId);
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
 }

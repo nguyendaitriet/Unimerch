@@ -139,5 +139,10 @@ public class GroupServiceImpl implements GroupService {
         return brgGroupAmznAccRepo.getAmznAccOutGroup(group.getId());
     }
 
+    @Override
+    public void deleteAmznAccFromGroup(int amznAccId, int groupId) {
+        brgGroupAmznAccRepo.deleteAmznAccFromGroup(amznAccId, groupId);
+    }
+
 
 }
