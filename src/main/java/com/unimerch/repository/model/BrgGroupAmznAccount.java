@@ -21,12 +21,12 @@ public class BrgGroupAmznAccount {
 
     @MapsId("groupId")
     @ManyToOne(optional = false)
-    @JoinColumn(name = "group_id", nullable = false)
+    @JoinColumn(name = "group_id")
     private Group group;
 
     @MapsId("amznAccountId")
     @ManyToOne(optional = false)
-    @JoinColumn(name = "amzn_account_id", nullable = false)
+    @JoinColumn(name = "amzn_account_id")
     private AmznAccount amznAccount;
 
 

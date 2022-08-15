@@ -18,11 +18,9 @@ public interface UserService extends UserDetailsService {
 
     UserCreateResult create(UserCreateParam userCreateParam);
 
-    boolean existsByUsername(String username);
-
     void changePassword(String id, String password);
 
-    void disableUser(String id);
+    UserListItem changeStatus(String id);
 
     List<UserListItem> findAllUsersDTO(String principalUsername);
 

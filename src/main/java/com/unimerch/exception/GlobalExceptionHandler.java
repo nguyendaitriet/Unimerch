@@ -46,8 +46,8 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
     return new ResponseEntity<>(body, HttpStatus.NOT_FOUND);
   }
 
-  @ExceptionHandler(UsernameExistsException.class)
-  public ResponseEntity<?> usernameExistsException(UsernameExistsException ex, WebRequest request) {
+  @ExceptionHandler(DuplicateDataException.class)
+  public ResponseEntity<?> duplicateDataException(DuplicateDataException ex, WebRequest request) {
     Map<String, String> body = new HashMap<>();
 
     body.put("message", ex.getMessage());
