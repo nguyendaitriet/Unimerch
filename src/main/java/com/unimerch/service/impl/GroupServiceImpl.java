@@ -128,11 +128,16 @@ public class GroupServiceImpl implements GroupService {
     }
 
     @Override
-    public List<AmznAccAddedToGroup> getAmznAccInGroup(String id) {
+    public List<AmznAccAddedToGroup> getAmznAccInsideGroup(String id) {
         Group group = findById(id).get();
         return brgGroupAmznAccRepo.getAmznAccInGroup(group.getId());
     }
 
+    @Override
+    public List<AmznAccAddedToGroup> getAmznAccOutsideGroup(String id) {
+        Group group = findById(id).get();
+        return brgGroupAmznAccRepo.getAmznAccOutGroup(group.getId());
+    }
 
 
 }

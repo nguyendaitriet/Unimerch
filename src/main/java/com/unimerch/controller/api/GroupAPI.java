@@ -8,9 +8,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 @RestController
 @RequestMapping("/api/groups")
@@ -55,12 +53,13 @@ public class GroupAPI {
     }
 
     //    @PreAuthorize("hasAnyAuthority('MANAGER')")
-    @GetMapping("/showAmznAccInGroup/{id}")
-    public ResponseEntity<?> showAmznAccInGroup(@PathVariable String id) {
-        List<AmznAccAddedToGroup> amznAccAddedToGroupList = groupService.getAmznAccInGroup(id);
-        return new ResponseEntity<>(amznAccAddedToGroupList, HttpStatus.OK);
+    @GetMapping("/showAmznAccInAndOutGroup/{id}")
+    public ResponseEntity<?> showAmznAccInAndOutGroup(@PathVariable String id) {
+        Map<String, List<AmznAccAddedToGroup>> amznAccList = new HashMap<>();
+        amznAccList.put("insideGroup",groupService.getAmznAccInsideGroup(id));
+        amznAccList.put("outsideGroup",groupService.getAmznAccOutsideGroup(id));
+        return new ResponseEntity<>(amznAccList, HttpStatus.OK);
     }
 
-//    @GetMapping("/show")
 
 }

@@ -2,8 +2,6 @@ package com.unimerch.service;
 
 import com.unimerch.dto.AmznAccAddedToGroup;
 import com.unimerch.repository.model.Group;
-import com.unimerch.repository.model.User;
-import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -21,6 +19,8 @@ public interface GroupService {
 
     List<AmznAccAddedToGroup> addAmznAccToGroup(ArrayList<String> amznAccIdList, String id);
 
-    List<AmznAccAddedToGroup> getAmznAccInGroup(String id);
+    List<AmznAccAddedToGroup> getAmznAccInsideGroup(String id);
+
+    List<AmznAccAddedToGroup> getAmznAccOutsideGroup(String id);
 
 }

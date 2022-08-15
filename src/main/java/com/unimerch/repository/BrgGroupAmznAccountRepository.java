@@ -19,4 +19,14 @@ public interface BrgGroupAmznAccountRepository extends JpaRepository<BrgGroupAmz
             "WHERE br.group.id = :id ")
     List<AmznAccAddedToGroup> getAmznAccInGroup(@Param("id") Integer id);
 
+    @Query("SELECT NEW com.unimerch.dto.AmznAccAddedToGroup (" +
+                "br.amznAccount.id, " +
+                "br.amznAccount.userName) " +
+            "FROM BrgGroupAmznAccount as br " +
+            "WHERE br.amznAccount.id NOT IN ( " +
+                "SELECT br.amznAccount.id " +
+                "FROM BrgGroupAmznAccount as br " +
+                "WHERE br.group.id = :id) ")
+    List<AmznAccAddedToGroup> getAmznAccOutGroup(@Param("id") Integer id);
+
 }
