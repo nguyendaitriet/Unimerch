@@ -54,5 +54,57 @@
     </div>
 </th:block>
 
+<th:block th:fragment="change_password_user">
+    <div id="mdChangePasswordUser" class="modal fade" tabindex="-1" role="dialog">
+        <div class="modal-dialog modal-dialog-centered" data-backdrop="static" data-keyboard="false">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Change account's password</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
 
+                    <div class="modal-alert-danger hide">
+                    </div>
+
+                    <form class="mb-3" id="frmChangePasswordUser">
+                        <div class="row mb-3">
+                            <div class="col-xl-4">
+                                <label for="fullNameCP">Full name:</label>
+                            </div>
+                            <div class="col-xl-8">
+                                <input type="text" id="fullNameCP" name="fullNameCP" class="form-control" readonly>
+                            </div>
+                        </div>
+
+                        <div class="row mb-3">
+                            <div class="col-xl-4">
+                                <label for="usernameCP">Username:</label>
+                            </div>
+                            <div class="col-xl-8">
+                                <input type="text" id="usernameCP" name="usernameCP" class="form-control" readonly>
+                            </div>
+                        </div>
+
+                        <div class="row mb-3">
+                            <div class="col-xl-4">
+                                <label for="passwordCP">Password:</label>
+                            </div>
+                            <div class="col-xl-8">
+                                <input type="text" id="passwordCP" name="passwordCP" class="form-control">
+                            </div>
+                        </div>
+                    </form>
+
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary">Save</button>
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</th:block>
 </html>

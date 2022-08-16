@@ -152,7 +152,7 @@
                     targets: -1,
                     className: "text-center",
                     defaultContent:
-                        `<button type='button' class='appoint-group btn btn-outline-primary mr-3' title='Appoint group'>`
+                        `<button type='button' class='assign-group btn btn-outline-primary mr-3' title='Assign group'>`
                         + `<i class='fas fa-eye'></i>`
                         + `</button>`
                         + `<button type='button' class='change-password btn btn-outline-warning mr-3' title='Change password'>`
@@ -186,7 +186,7 @@
             },
         });
 
-        page.element.tableUser.on('click', 'button.appoint-group', function () {
+        page.element.tableUser.on('click', 'button.assign-group', function () {
             let data = table.row($(this).parents('tr')).data();
             console.log(data);
         });
@@ -201,6 +201,7 @@
             console.log(data);
         });
     });
+
 
 
 </script>
