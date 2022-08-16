@@ -5,7 +5,7 @@ class App {
     static BASE_URL_DASHBOARD = this.DOMAIN + "/api/dashboard";
     static BASE_URL_USER = this.DOMAIN + "/api/users";
     static BASE_URL_AMZN_ACCOUNT = this.DOMAIN + "/api/amzn-account";
-    static BASE_URL_GROUP = this.DOMAIN + "/api/group";
+    static BASE_URL_GROUP = this.DOMAIN + "/api/groups";
     static BASE_URL_FILE_UPLOAD = this.DOMAIN + "/api/file-upload";
 
     static ERROR_400 = "Task failed, please check your data.";
@@ -110,7 +110,7 @@ class User {
     constructor(id, username, fullName, disabled) {
         this.id = id;
         this.username = username;
-        this.fullName =
+        this.fullName = fullName;
         this.disabled = disabled;
     }
 }

@@ -100,7 +100,7 @@
     <i class="fas fa-angle-up"></i>
 </a>
 
-<th:block th:replace="layout/modal :: create_user"/>
+<th:block th:replace="layout/modals-user :: create_user"/>
 
 <th:block th:replace="layout/script :: script-dashboard"/>
 
@@ -128,7 +128,7 @@
     page.dialogs.element.mdCreateUser = $("#mdCreateUser");
 
     $(document).ready(function () {
-        let table = page.element.tableUser.DataTable({
+        var table = page.element.tableGroup.DataTable({
             info: false,
             pagingType: 'simple_numbers',
             processing: true,
@@ -179,24 +179,24 @@
                         titleAttr: 'Add new user',
                         className: 'add btn btn-primary',
                         init: function (api, node, config) {
-                            $(node).on('click', () => page.dialogs.element.mdCreateUser.modal("show"));
+                            $(node).on('click', () => page.dialogs.element.mdCreateGroup.modal("show"));
                         }
                     }
                 ]
             },
         });
 
-        page.element.tableUser.on('click', 'button.appoint-group', function () {
+        page.element.tableGroup.on('click', 'button.appoint-group', function () {
             let data = table.row($(this).parents('tr')).data();
             console.log(data);
         });
 
-        page.element.tableUser.on('click', 'button.change-password', function () {
+        page.element.tableGroup.on('click', 'button.change-password', function () {
             let data = table.row($(this).parents('tr')).data();
             console.log(data);
         });
 
-        page.element.tableUser.on('click', 'button.change-status', function () {
+        page.element.tableGroup.on('click', 'button.change-status', function () {
             let data = table.row($(this).parents('tr')).data();
             console.log(data);
         });

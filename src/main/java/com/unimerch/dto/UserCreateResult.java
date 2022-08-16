@@ -18,4 +18,5 @@ public class UserCreateResult {
     private Integer id;
     private String fullName;
     private String username;
+    private boolean disabled;
 }

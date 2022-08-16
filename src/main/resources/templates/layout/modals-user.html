@@ -54,58 +54,5 @@
     </div>
 </th:block>
 
-<th:block th:fragment="abcd">
-    <div id="mdCreateUser" class="modal fade" tabindex="-1" role="dialog">
-        <div class="modal-dialog modal-dialog-centered" data-backdrop="static" data-keyboard="false">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title">Add new account</h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-                <div class="modal-body">
-
-                    <div class="modal-alert-danger hide">
-                    </div>
-
-                    <form class="mb-3" id="frmCreateUser">
-                        <div class="row mb-3">
-                            <div class="col-xl-4">
-                                <label for="fullNameCreate">Full name:</label>
-                            </div>
-                            <div class="col-xl-8">
-                                <input type="text" id="fullNameCreate" name="fullNameCreate" class="form-control">
-                            </div>
-                        </div>
-
-                        <div class="row mb-3">
-                            <div class="col-xl-4">
-                                <label for="usernameCreate">Username:</label>
-                            </div>
-                            <div class="col-xl-8">
-                                <input type="text" id="usernameCreate" name="usernameCreate" class="form-control">
-                            </div>
-                        </div>
-
-                        <div class="row mb-3">
-                            <div class="col-xl-4">
-                                <label for="passwordCreate">Password:</label>
-                            </div>
-                            <div class="col-xl-8">
-                                <input type="text" id="passwordCreate" name="passwordCreate" class="form-control">
-                            </div>
-                        </div>
-                    </form>
-
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-primary">Create</button>
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                </div>
-            </div>
-        </div>
-    </div>
-</th:block>
 
 </html>

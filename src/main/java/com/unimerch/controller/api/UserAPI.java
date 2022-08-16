@@ -1,6 +1,7 @@
 package com.unimerch.controller.api;
 
 import com.unimerch.dto.UserCreateParam;
+import com.unimerch.dto.UserCreateResult;
 import com.unimerch.dto.UserListItem;
 import com.unimerch.mapper.UserMapper;
 import com.unimerch.repository.model.User;
@@ -60,9 +61,8 @@ public class UserAPI {
             return appUtils.mapErrorToResponse(bindingResult);
         }
 
-        userService.create(userCreateParam);
-        return new ResponseEntity<>(HttpStatus.CREATED);
-
+        UserCreateResult newUser = userService.create(userCreateParam);
+        return new ResponseEntity<>(newUser, HttpStatus.CREATED);
     }
 
     //    @PreAuthorize("hasAnyAuthority('MANAGER')")

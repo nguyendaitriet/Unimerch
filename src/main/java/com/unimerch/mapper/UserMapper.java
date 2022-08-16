@@ -19,7 +19,8 @@ public class UserMapper {
         return new UserCreateResult()
                 .setId(user.getId())
                 .setFullName(user.getFullName())
-                .setUsername(user.getUsername());
+                .setUsername(user.getUsername())
+                .setDisabled(user.isDisabled());
     }
 
     public UserListItem toUserListItem(User user) {
