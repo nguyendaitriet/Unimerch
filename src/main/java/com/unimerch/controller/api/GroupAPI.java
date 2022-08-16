@@ -8,9 +8,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 @RestController
 @RequestMapping("/api/groups")
@@ -46,10 +44,26 @@ public class GroupAPI {
         return new ResponseEntity<>(group, HttpStatus.OK);
     }
 
+    //    @PreAuthorize("hasAnyAuthority('MANAGER')")
     @PostMapping("/addAmznAccount/{id}")
     public ResponseEntity<?> addAmznAccount(@PathVariable String id, @RequestBody ArrayList<String> amznAccIdList) {
         List<AmznAccAddedToGroup> newAmznAccAddedToGroupList = groupService.addAmznAccToGroup(amznAccIdList, id);
         return new ResponseEntity<>(newAmznAccAddedToGroupList, HttpStatus.OK);
     }
 
+    //    @PreAuthorize("hasAnyAuthority('MANAGER')")
+    @GetMapping("/showAmznAccInAndOutGroup/{id}")
+    public ResponseEntity<?> showAmznAccInAndOutGroup(@PathVariable String id) {
+        Map<String, List<AmznAccAddedToGroup>> amznAccList = new HashMap<>();
+        amznAccList.put("insideGroup",groupService.getAmznAccInsideGroup(id));
+        amznAccList.put("outsideGroup",groupService.getAmznAccOutsideGroup(id));
+        return new ResponseEntity<>(amznAccList, HttpStatus.OK);
+    }
+
+    //    @PreAuthorize("hasAnyAuthority('MANAGER')")
+    @DeleteMapping("/deleteAmznAccFromGroup/{amznAccId}/{groupId}")
+    public ResponseEntity<?> deleteAmznAccFromGroup(@PathVariable int amznAccId, @PathVariable int groupId) {
+        groupService.deleteAmznAccFromGroup(amznAccId, groupId);
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
 }

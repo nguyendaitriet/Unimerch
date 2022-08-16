@@ -113,8 +113,8 @@ public class GroupServiceImpl implements GroupService {
                 BrgGroupAmznAccount brgGroupAmznAccount = new BrgGroupAmznAccount();
 
                 brgGroupAmznAccount.setId(brgGroupAmznAccountId);
-//                brgGroupAmznAccount.setGroup(group);
-//                brgGroupAmznAccount.setAmznAccount(amznAccount);
+                brgGroupAmznAccount.setGroup(group);
+                brgGroupAmznAccount.setAmznAccount(amznAccount);
 
                 brgGroupAmznAccRepo.save(brgGroupAmznAccount);
                 amznAccAddedToGroupList.add(amznAccountMapper.toAmznAccAddedToGroup(brgGroupAmznAccount));
@@ -126,5 +126,23 @@ public class GroupServiceImpl implements GroupService {
 
         return amznAccAddedToGroupList;
     }
+
+    @Override
+    public List<AmznAccAddedToGroup> getAmznAccInsideGroup(String id) {
+        Group group = findById(id).get();
+        return brgGroupAmznAccRepo.getAmznAccInGroup(group.getId());
+    }
+
+    @Override
+    public List<AmznAccAddedToGroup> getAmznAccOutsideGroup(String id) {
+        Group group = findById(id).get();
+        return brgGroupAmznAccRepo.getAmznAccOutGroup(group.getId());
+    }
+
+    @Override
+    public void deleteAmznAccFromGroup(int amznAccId, int groupId) {
+        brgGroupAmznAccRepo.deleteAmznAccFromGroup(amznAccId, groupId);
+    }
+
 
 }
