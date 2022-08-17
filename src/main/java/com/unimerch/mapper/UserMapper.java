@@ -25,7 +25,9 @@ public class UserMapper {
 
     public UserListItem toUserListItem(User user) {
         return new UserListItem()
+                .setId(user.getId())
                 .setUsername(user.getUsername())
-                .setFullName(user.getFullName());
+                .setFullName(user.getFullName())
+                .setDisabled(user.isDisabled());
     }
 }

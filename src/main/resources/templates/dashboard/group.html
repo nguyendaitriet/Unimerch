@@ -36,47 +36,49 @@
                 <div class="row">
 
                     <!-- Users -->
-                    <div class="col">
+                    <div class="col-md-7">
                         <div class="card shadow mb-4">
                             <!-- Card Header - Dropdown -->
                             <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
-                                <h6 class="m-0 font-weight-bold text-primary">Earnings Overview</h6>
-                                <div class="dropdown no-arrow">
-                                    <a class="dropdown-toggle" href="#" role="button" id="dropdownMenuLink"
-                                       data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                        <i class="fas fa-ellipsis-v fa-sm fa-fw text-gray-400"></i>
-                                    </a>
-                                    <div class="dropdown-menu dropdown-menu-right shadow animated--fade-in"
-                                         aria-labelledby="dropdownMenuLink">
-                                        <div class="dropdown-header">Dropdown Header:</div>
-                                        <a class="dropdown-item" href="#">Action</a>
-                                        <a class="dropdown-item" href="#">Another action</a>
-                                        <div class="dropdown-divider"></div>
-                                        <a class="dropdown-item" href="#">Something else here</a>
-                                    </div>
-                                </div>
+                                <h6 class="m-0 font-weight-bold text-primary">Groups</h6>
                             </div>
 
-                            <div class="row">
-                                <div class="card-body col-md-7">
-                                    <!-- Table Body -->
-                                    <table id="table-group" class="cell-border stripe nowrap" style="width: 70%;">
-                                        <thead>
-                                        <tr>
-                                            <th>#</th>
-                                            <th>Group Title</th>
-                                            <th colspan="3">Action</th>
-                                        </tr>
-                                        </thead>
-                                        <!-- Tbody -->
-                                    </table>
-                                </div>
-
-                                <div class="col-md-5" >Amazon Account</div>
+                            <div class="card-body">
+                                <!-- Table Body -->
+                                <table id="table-group" class="table cell-border stripe nowrap" style="width: 100%;">
+                                    <thead>
+                                    <tr>
+                                        <th>#</th>
+                                        <th>Group Title</th>
+                                        <th colspan="3">Action</th>
+                                    </tr>
+                                    </thead>
+                                    <!-- Tbody -->
+                                </table>
                             </div>
                             <!-- Card Body -->
+                        </div>
+                    </div>
 
 
+                    <div class="col-md-5">
+                        <div class="card shadow mb-4">
+                            <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+                                <h6 class="m-0 font-weight-bold text-primary">Amazon Account</h6>
+                            </div>
+                            <div class="card-body">
+                                <!-- Table Body -->
+                                <table id="table-amzn-acc-in" class="border-0 stripe nowrap" style="width: 100%;">
+                                    <thead>
+                                    <tr>
+                                        <th>#</th>
+                                        <th>Username</th>
+                                        <th>Action</th>
+                                    </tr>
+                                    </thead>
+                                    <!-- Tbody -->
+                                </table>
+                            </div>
                         </div>
                     </div>
 
@@ -107,10 +109,15 @@
 
 <th:block th:replace="layout/script :: script-dashboard"/>
 
+<!--<script type="text/javascript" src="https://cdn.datatables.net/1.10.16/js/jquery.dataTables.min.js"></script>-->
+
 <script>
     let page = {
         urls: {
+            // findAllGroups: App.BASE_URL_GROUP + "/findAllGroups",
             findAllGroups: App.BASE_URL_GROUP,
+            findAllAmznAccInGroup: App.BASE_URL_GROUP + "/showAmznAccInsideGroup/",
+            findAllAmznAccOutGroup: App.BASE_URL_GROUP + "/showAmznAccOutsideGroup/",
             findGroup: App.BASE_URL_GROUP + "/",
             createGroup: App.BASE_URL_GROUP + "/create",
             changeGroupTitle: App.BASE_URL_GROUP + "/update/",
@@ -126,15 +133,19 @@
     }
 
     page.element.tableGroup = $('#table-group');
+    page.element.tableAmznAccIn = $('#table-amzn-acc-in');
+    page.element.tableAmznAccOut = $('#table-amzn-acc-out');
     // page.element.tableUser.tbody = $('#table-group tbody');
     page.element.btnShowCreateGroupFrm = $("#btnMdCreateGroup");
     page.dialogs.element.mdCreateGroup = $("#mdCreateGroup");
 
     $(document).ready(function () {
-        var table = page.element.tableGroup.DataTable({
+
+        let tableGroup = page.element.tableGroup.DataTable({
             info: false,
             pagingType: 'simple_numbers',
             processing: true,
+            // serverSide: true,
             ajax: {
                 url: page.urls.findAllGroups,
                 dataSrc: ''
@@ -187,18 +198,70 @@
             },
         });
 
-        page.element.tableGroup.on('click', 'button.appoint-group', function () {
-            let data = table.row($(this).parents('tr')).data();
+
+        let tableAmznAccIn = page.element.tableAmznAccIn.DataTable({
+            info: false,
+            pagingType: 'simple_numbers',
+            processing: true,
+            ajax: {
+                url: '/assets/json/data.json',
+                dataSrc: ''
+            },
+            columns: [
+                {data: 'id'},
+                {data: 'username'},
+                {data: null}
+            ],
+            columnDefs: [
+                {
+                    targets: 0,
+                    className: "text-center"
+                },
+                {
+                    targets: -1,
+                    className: "text-center",
+                    defaultContent:
+                        `<button type='button' class='manage-group btn btn-outline-danger mr-3' title='Manage group'>`
+                        + `<i class="fas fa-ban"></i>`
+                        + `</button>`
+                },
+            ],
+            pageLength: 10,
+            lengthChange: false,
+            dom: 'Bfrtip',
+            buttons: {
+                dom: {
+                    button: {
+                        tag: 'button',
+                        className: ''
+                    }
+                },
+                buttons: [
+                    {
+                        text: `<i class="fas fa-plus"></i> Add`,
+                        titleAttr: 'Add new Amzn Acc',
+                        className: 'add btn btn-primary',
+                        init: function (api, node, config) {
+                            $(node).on('click', () => page.dialogs.element.mdCreateGroup.modal("show"));
+                        }
+                    }
+                ]
+            },
+        });
+
+
+        page.element.tableGroup.on('click', 'button.manage-group', function () {
+            let data = tableGroup.row($(this).parents('tr')).data();
+            tableAmznAccIn.ajax.url(page.urls.findAllAmznAccInGroup + data.id).load();
+        });
+
+        page.element.tableGroup.on('click', 'button.change-title', function () {
+            let data = tableGroup.row($(this).parents('tr')).data();
             console.log(data);
         });
 
-        page.element.tableGroup.on('click', 'button.change-password', function () {
-            let data = table.row($(this).parents('tr')).data();
-            console.log(data);
-        });
-
-        page.element.tableGroup.on('click', 'button.change-status', function () {
-            let data = table.row($(this).parents('tr')).data();
+        page.element.tableGroup.on('click', 'button.delete-group', function () {
+            let data = tableGroup.row($(this).parents('tr')).data();
             console.log(data);
         });
     });
