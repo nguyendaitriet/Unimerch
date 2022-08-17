@@ -17,15 +17,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.datatables.mapping.Column;
 import org.springframework.data.jpa.datatables.mapping.DataTablesInput;
 import org.springframework.data.jpa.datatables.mapping.DataTablesOutput;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Locale;
-import java.util.Optional;
+import java.util.*;
 import java.util.regex.Pattern;
 
 @Service
@@ -60,8 +58,12 @@ public class GroupServiceImpl implements GroupService {
     }
 
     @Override
-    public DataTablesOutput<Group> findAll(DataTablesInput dataTablesInput) {
-        return groupDataTableRepository.findAll(dataTablesInput);
+    public DataTablesOutput<Group> findAll(DataTablesInput input) {
+        Map<String, Column> columnMap = input.getColumnsAsMap();
+        columnMap.remove(null);
+        List<Column> columnList = new ArrayList<>(columnMap.values());
+        input.setColumns(columnList);
+        return groupDataTableRepository.findAll(input);
     }
 
 //    @Override

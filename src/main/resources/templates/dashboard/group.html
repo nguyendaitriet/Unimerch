@@ -50,7 +50,7 @@
                                     <tr>
                                         <th>#</th>
                                         <th>Group Title</th>
-                                        <th colspan="3">Action</th>
+                                        <th>Action</th>
                                     </tr>
                                     </thead>
                                     <!-- Tbody -->
@@ -64,7 +64,7 @@
                     <div class="col-md-5">
                         <div class="card shadow mb-4">
                             <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
-                                <h6 class="m-0 font-weight-bold text-primary">Amazon Account</h6>
+                                <h6 class="group-title m-0 font-weight-bold text-primary">Amazon Account</h6>
                             </div>
                             <div class="card-body">
                                 <!-- Table Body -->
@@ -107,15 +107,17 @@
 
 <th:block th:replace="layout/modals-group :: create-group"/>
 
+<th:block th:replace="layout/modals-group :: update-group"/>
+
 <th:block th:replace="layout/script :: script-dashboard"/>
 
-<!--<script type="text/javascript" src="https://cdn.datatables.net/1.10.16/js/jquery.dataTables.min.js"></script>-->
+<!--<script type="text/javascript" src="/assets/js/jquery.spring-friendly.js"></script>-->
 
 <script>
     let page = {
         urls: {
-            // findAllGroups: App.BASE_URL_GROUP + "/findAllGroups",
-            findAllGroups: App.BASE_URL_GROUP,
+            findAllGroups: App.BASE_URL_GROUP + "/findAllGroups",
+            // findAllGroups: App.BASE_URL_GROUP,
             findAllAmznAccInGroup: App.BASE_URL_GROUP + "/showAmznAccInsideGroup/",
             findAllAmznAccOutGroup: App.BASE_URL_GROUP + "/showAmznAccOutsideGroup/",
             findGroup: App.BASE_URL_GROUP + "/",
@@ -135,21 +137,38 @@
     page.element.tableGroup = $('#table-group');
     page.element.tableAmznAccIn = $('#table-amzn-acc-in');
     page.element.tableAmznAccOut = $('#table-amzn-acc-out');
-    // page.element.tableUser.tbody = $('#table-group tbody');
-    page.element.btnShowCreateGroupFrm = $("#btnMdCreateGroup");
-    page.dialogs.element.mdCreateGroup = $("#mdCreateGroup");
+    page.element.btnShowCreateGroupFrm = $('#btnMdCreateGroup');
+    page.element.groupTitle = $(".group-title");
+
+    page.dialogs.element.mdCreateGroup = $('#mdCreateGroup');
+    page.dialogs.element.frmCreateGroup = $('#frmCreateGroup');
+    page.dialogs.element.btnCreateGroup = $('#btnCreateGroup');
+    page.dialogs.element.groupTitleCreate = $('#groupTitleCreate');
+
+    page.dialogs.element.mdUpdateGroup = $('#mdUpdateGroup');
+    page.dialogs.element.frmUpdateGroup = $('#frmUpdateGroup');
+    page.dialogs.element.btnUpdateGroup = $('#btnUpdateGroup');
+    page.dialogs.element.groupTitleUpdate = $('#groupTitleUpdate');
+
 
     $(document).ready(function () {
 
         let tableGroup = page.element.tableGroup.DataTable({
+            ajax: {
+                contentType: 'application/json',
+                url: page.urls.findAllGroups,
+                type: 'POST',
+                data: function(d) {
+                    // d.columns[2].data = null;
+                    console.log(d);
+                    return JSON.stringify(d);
+                },
+                dataSrc: 'data'
+            },
             info: false,
             pagingType: 'simple_numbers',
             processing: true,
-            // serverSide: true,
-            ajax: {
-                url: page.urls.findAllGroups,
-                dataSrc: ''
-            },
+            serverSide : true,
             columns: [
                 {data: 'id'},
                 {data: 'title'},
@@ -158,24 +177,24 @@
             columnDefs: [
                 {
                     targets: 0,
-                    className: "text-center"
+                    className: "text-center",
                 },
                 {
-                    targets: -1,
+                    targets: 2,
                     className: "text-center",
-                    defaultContent:
-                        `<button type='button' class='manage-group btn btn-outline-primary mr-3' title='Manage group'>`
-                        + `<i class="fas fa-cogs"></i>`
-                        + `</button>`
-                        + `<button type='button' class='change-title btn btn-outline-warning mr-3' title='Change group title'>`
-                        + `<i class="fas fa-pencil-alt"></i>`
-                        + `</button>`
-                        + `<button type='button' class='delete-group btn btn-outline-danger' title='Delete group'>`
-                        + `<i class="fas fa-trash"></i>`
-                        + `</button>`,
+                    render: (data, type, row) =>
+                        `<button type='button' class='manage-group btn btn-outline-primary mr-3' title='Manage group'>
+                            <i class="fas fa-cogs"></i>
+                        </button>
+                        <button type='button' class='change-title btn btn-outline-warning mr-3' title='Change group title'>
+                            <i class="fas fa-pencil-alt"></i>
+                        </button>
+                        <button type='button' class='delete-group btn btn-outline-danger' title='Delete group'>
+                            <i class="fas fa-trash"></i>
+                        </button>`,
                 },
             ],
-            pageLength: 10,
+            pageLength: 3,
             lengthChange: false,
             dom: 'Bfrtip',
             buttons: {
@@ -197,7 +216,6 @@
                 ]
             },
         });
-
 
         let tableAmznAccIn = page.element.tableAmznAccIn.DataTable({
             info: false,
@@ -248,10 +266,10 @@
                 ]
             },
         });
-
-
+        
         page.element.tableGroup.on('click', 'button.manage-group', function () {
             let data = tableGroup.row($(this).parents('tr')).data();
+            page.element.groupTitle.html(data.title);
             tableAmznAccIn.ajax.url(page.urls.findAllAmznAccInGroup + data.id).load();
         });
 

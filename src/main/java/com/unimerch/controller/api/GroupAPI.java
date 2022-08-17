@@ -5,6 +5,7 @@ import com.unimerch.repository.model.Group;
 import com.unimerch.service.GroupService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.jpa.datatables.mapping.Column;
 import org.springframework.data.jpa.datatables.mapping.DataTablesInput;
 import org.springframework.data.jpa.datatables.mapping.DataTablesOutput;
 import org.springframework.http.HttpStatus;
@@ -29,7 +30,7 @@ public class GroupAPI {
     }
 
     //    @PreAuthorize("hasAnyAuthority('MANAGER')")
-    @GetMapping("/findAllGroups")
+    @PostMapping("/findAllGroups")
     public DataTablesOutput<Group> findAllGroupsPageable(@Valid @RequestBody(required = false) DataTablesInput input) {
         return groupService.findAll(input);
     }
