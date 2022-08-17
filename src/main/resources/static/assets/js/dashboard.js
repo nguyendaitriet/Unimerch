@@ -5,7 +5,7 @@ class App {
     static BASE_URL_DASHBOARD = this.DOMAIN + "/api/dashboard";
     static BASE_URL_USER = this.DOMAIN + "/api/users";
     static BASE_URL_AMZN_ACCOUNT = this.DOMAIN + "/api/amzn-account";
-    static BASE_URL_GROUP = this.DOMAIN + "/api/group";
+    static BASE_URL_GROUP = this.DOMAIN + "/api/groups";
     static BASE_URL_FILE_UPLOAD = this.DOMAIN + "/api/file-upload";
 
     static ERROR_400 = "Task failed, please check your data.";
@@ -23,7 +23,7 @@ class App {
                 title: t,
                 position: 'center',
                 showConfirmButton: false,
-                timer: 1500,
+                timer: 800,
             })
         }
 
@@ -36,22 +36,10 @@ class App {
             })
         }
 
-        static showDisableConfirmDialog() {
+        static showChangeStatusDialog(t) {
             return Swal.fire({
-                icon: 'warning',
-                text: 'Are you sure to disable this user?',
-                showCancelButton: true,
-                confirmButtonColor: '#3085d6',
-                cancelButtonColor: '#5a6268',
-                confirmButtonText: 'Yes',
-                cancelButtonText: 'No',
-            })
-        }
-
-        static showActivateConfirmDialog() {
-            return Swal.fire({
-                icon: 'warning',
-                text: 'Are you sure to activate this user?',
+                icon: `question`,
+                text: `Are you sure to ${t ? 'activate' : 'disable'} this user?`,
                 showCancelButton: true,
                 confirmButtonColor: '#3085d6',
                 cancelButtonColor: '#5a6268',
@@ -107,19 +95,12 @@ class App {
 }
 
 class User {
-    constructor(id, username, fullName, disabled) {
+    constructor(id, username, fullName, password, disabled) {
         this.id = id;
         this.username = username;
-        this.fullName =
+        this.fullName = fullName;
+        this.password = password;
         this.disabled = disabled;
-    }
-}
-
-class Role{
-    constructor(id, code, name) {
-        this.id = id;
-        this.code = code;
-        this.name = name;
     }
 }
 

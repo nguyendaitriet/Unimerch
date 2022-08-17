@@ -46,7 +46,7 @@
 
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-primary">Create</button>
+                    <button type="button" id="btnCreateUser" class="btn btn-primary">Create</button>
                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
                 </div>
             </div>
@@ -55,7 +55,7 @@
 </th:block>
 
 <th:block th:fragment="change_password_user">
-    <div id="mdChangePasswordUser" class="modal fade" tabindex="-1" role="dialog">
+    <div id="mdCPUser" class="modal fade" tabindex="-1" role="dialog">
         <div class="modal-dialog modal-dialog-centered" data-backdrop="static" data-keyboard="false">
             <div class="modal-content">
                 <div class="modal-header">
@@ -69,7 +69,7 @@
                     <div class="modal-alert-danger hide">
                     </div>
 
-                    <form class="mb-3" id="frmChangePasswordUser">
+                    <form class="mb-3" id="frmCPUser">
                         <div class="row mb-3">
                             <div class="col-xl-4">
                                 <label for="fullNameCP">Full name:</label>
@@ -100,7 +100,7 @@
 
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-primary">Save</button>
+                    <button type="button" id="btnCPUser" class="btn btn-primary">Save</button>
                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
                 </div>
             </div>

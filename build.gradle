@@ -44,6 +44,9 @@ dependencies {
     runtimeOnly 'io.jsonwebtoken:jjwt-impl:0.11.2'
     runtimeOnly 'io.jsonwebtoken:jjwt-jackson:0.11.2'
 
+    // https://mvnrepository.com/artifact/com.github.darrachequesne/spring-data-jpa-datatables
+    implementation group: 'com.github.darrachequesne', name: 'spring-data-jpa-datatables', version: '5.2.0'
+
 }
 
 tasks.named('test') {
