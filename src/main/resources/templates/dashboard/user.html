@@ -2,6 +2,7 @@
 <html xmlns:th="http://www.thymeleaf.org" lang="en">
 <head>
     <th:block th:replace="layout/head :: dashboard-head"/>
+    <link rel="stylesheet" href="/assets/css/dashboard-1.css">
     <title>Users Management</title>
 </head>
 <body id="page-top">
@@ -143,11 +144,12 @@
     page.dialogs.element.passwordCP = $('#passwordCP');
     page.dialogs.element.btnCPUser = $('#btnCPUser');
 
+    // $.fn.dataTable.ext.classes.sPageButton = 'paging';
+
     $(document).ready(function () {
         let table = page.element.tableUser.DataTable({
             info: false,
             pagingType: 'simple_numbers',
-            serverSide: true,
             processing: true,
             ajax: {
                 url: page.urls.findAllUsers,
