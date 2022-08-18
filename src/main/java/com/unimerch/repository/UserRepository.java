@@ -9,7 +9,6 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import javax.transaction.Transactional;
-import java.awt.print.Pageable;
 import java.util.List;
 import java.util.Optional;
 
@@ -34,10 +33,10 @@ public interface UserRepository extends JpaRepository<User, Integer> {
     void changePassword(@Param("id") int id, @Param("newPass") String passwordHash);
 
     @Query("SELECT NEW com.unimerch.dto.UserListItem (" +
-                "u.id, " +
-                "u.username, " +
-                "u.fullName, " +
-                "u.disabled" +
+            "u.id, " +
+            "u.username, " +
+            "u.fullName, " +
+            "u.disabled" +
             ") " +
             "FROM User u " +
             "WHERE u.username <> :principalUsername")

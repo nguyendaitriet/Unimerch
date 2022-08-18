@@ -180,8 +180,9 @@
                     className: "text-center",
                 },
                 {
-                    targets: 2,
+                    targets: -1,
                     className: "text-center",
+                    orderable: false,
                     render: (data, type, row) =>
                         `<button type='button' class='manage-group btn btn-outline-primary mr-3' title='Manage group'>
                             <i class="fas fa-cogs"></i>
@@ -266,7 +267,7 @@
                 ]
             },
         });
-        
+
         page.element.tableGroup.on('click', 'button.manage-group', function () {
             let data = tableGroup.row($(this).parents('tr')).data();
             page.element.groupTitle.html(data.title);

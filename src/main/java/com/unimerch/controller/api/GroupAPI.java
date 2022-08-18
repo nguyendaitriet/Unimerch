@@ -36,11 +36,11 @@ public class GroupAPI {
     }
 
 //    @PreAuthorize("hasAnyAuthority('MANAGER')")
-//    @GetMapping("/{id}")
-//    public ResponseEntity<?> findGroupById(@PathVariable String id) {
-//        Optional<Group> group = groupService.findById(id);
-//        return new ResponseEntity<>(group.get(), HttpStatus.OK);
-//    }
+    @GetMapping("/{id}")
+    public ResponseEntity<?> findGroupById(@PathVariable String id) {
+        Optional<Group> group = groupService.findById(id);
+        return new ResponseEntity<>(group.get(), HttpStatus.OK);
+    }
 
 //    @PreAuthorize("hasAnyAuthority('MANAGER')")
     @PostMapping("/create")

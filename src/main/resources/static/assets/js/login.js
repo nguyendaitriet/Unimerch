@@ -15,7 +15,7 @@ class App {
                 title: t,
                 position: 'center',
                 showConfirmButton: false,
-                timer: 1500,
+                timer: 700,
             })
         }
 

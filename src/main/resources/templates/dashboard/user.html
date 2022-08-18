@@ -2,6 +2,7 @@
 <html xmlns:th="http://www.thymeleaf.org" lang="en">
 <head>
     <th:block th:replace="layout/head :: dashboard-head"/>
+    <link rel="stylesheet" href="/assets/css/dashboard-1.css">
     <title>Users Management</title>
 </head>
 <body id="page-top">
@@ -40,7 +41,7 @@
                         <div class="card shadow mb-4">
                             <!-- Card Header - Dropdown -->
                             <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
-                                <h6 class="m-0 font-weight-bold text-primary">Earnings Overview</h6>
+                                <h6 class="m-0 font-weight-bold text-primary">Users Overview</h6>
                                 <div class="dropdown no-arrow">
                                     <a class="dropdown-toggle" href="#" role="button" id="dropdownMenuLink"
                                        data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -101,6 +102,8 @@
 </a>
 
 <th:block th:replace="layout/modals-user :: create_user"/>
+<th:block th:replace="layout/modals-user :: change_password_user"/>
+<th:block th:replace="layout/modals-user :: assign_group_user"/>
 
 <th:block th:replace="layout/script :: script-dashboard"/>
 
@@ -110,8 +113,9 @@
             findAllUsers: App.BASE_URL_USER,
             findUser: App.BASE_URL_USER + "/",
             createUser: App.BASE_URL_USER + "/create",
-            changePassword: App.BASE_URL_USER + "/changePassword",
-            changeStatus: App.BASE_URL_USER + "/changeStatus"
+            changeMyPassword: App.BASE_URL_USER + "/changePassword",
+            changePassword: App.BASE_URL_USER + "/changePassword/",
+            changeStatus: App.BASE_URL_USER + "/changeStatus/"
         },
         element: {},
         commands: {},
@@ -123,12 +127,27 @@
     }
 
     page.element.tableUser = $('#table-user');
-    // page.element.tableUser.tbody = $('#table-user tbody');
-    page.element.btnShowCreateUserFrm = $("#btnMdCreateUser");
-    page.dialogs.element.mdCreateUser = $("#mdCreateUser");
+
+    page.element.btnShowCreateUserFrm = $('#btnMdCreateUser');
+    page.dialogs.element.mdCreateUser = $('#mdCreateUser');
+    page.dialogs.element.mdCPUser = $('#mdCPUser');
+
+    page.dialogs.element.frmCreateUser = $('#frmCreateUser');
+    page.dialogs.element.fullNameCreate = $('#fullNameCreate');
+    page.dialogs.element.usernameCreate = $('#usernameCreate');
+    page.dialogs.element.passwordCreate = $('#passwordCreate');
+    page.dialogs.element.btnCreateUser = $('#btnCreateUser');
+
+    page.dialogs.element.frmCPUser = $('#frmCPUser');
+    page.dialogs.element.fullNameCP = $('#fullNameCP');
+    page.dialogs.element.usernameCP = $('#usernameCP');
+    page.dialogs.element.passwordCP = $('#passwordCP');
+    page.dialogs.element.btnCPUser = $('#btnCPUser');
+
+    // $.fn.dataTable.ext.classes.sPageButton = 'paging';
 
     $(document).ready(function () {
-        var table = page.element.tableUser.DataTable({
+        let table = page.element.tableUser.DataTable({
             info: false,
             pagingType: 'simple_numbers',
             processing: true,
@@ -149,18 +168,31 @@
                     className: "text-center"
                 },
                 {
+                    targets: 3,
+                    render: (data, type, row) => data ? 'Disabled' : 'Active'
+                },
+                {
                     targets: -1,
                     className: "text-center",
-                    defaultContent:
-                        `<button type='button' class='appoint-group btn btn-outline-primary mr-3' title='Appoint group'>`
-                        + `<i class='fas fa-eye'></i>`
-                        + `</button>`
-                        + `<button type='button' class='change-password btn btn-outline-warning mr-3' title='Change password'>`
-                        + `<i class='fas fa-key'></i>`
-                        + `</button>`
-                        + `<button type='button' class='change-status btn btn-outline-danger' title='Disable/activate'>`
-                        + `<i class='fas fa-user-lock'></i>`
-                        + `</button>`,
+                    render: (data, type, row) => {
+                        return `
+                            <button type='button'
+                                    class='assign-group btn btn-outline-primary mr-3'
+                                    title='Assign group'>
+                                <i class="fas fa-users-cog"></i>
+                            </button>
+                            <button type='button'
+                                    class='change-password btn btn-outline-warning mr-3'
+                                    title='Change password'>
+                                <i class='fas fa-key'></i>
+                            </button>
+                            <button type='button'
+                                    class="change-status ${data.disabled ? 'btn btn-outline-success' : 'btn btn-outline-danger'}"
+                                    title="${data.disabled ? 'Activate' : 'Disable'}">
+                                <i class="${data.disabled ? 'fas fa-unlock' : 'fas fa-lock'}"></i>
+                            </button>
+                        `
+                    }
                 },
             ],
             pageLength: 10,
@@ -178,7 +210,7 @@
                         text: `<i class="fas fa-user-plus"></i> Add`,
                         titleAttr: 'Add new user',
                         className: 'add btn btn-primary',
-                        init: function (api, node, config) {
+                        init: (api, node, config) => {
                             $(node).on('click', () => page.dialogs.element.mdCreateUser.modal("show"));
                         }
                     }
@@ -186,22 +218,144 @@
             },
         });
 
-        page.element.tableUser.on('click', 'button.appoint-group', function () {
-            let data = table.row($(this).parents('tr')).data();
-            console.log(data);
+        page.element.tableUser.on('click', 'button.assign-group', function() {
+            let currentUser = table.row($(this).parents('tr')).data();
+            console.log(currentUser);
         });
 
-        page.element.tableUser.on('click', 'button.change-password', function () {
-            let data = table.row($(this).parents('tr')).data();
-            console.log(data);
+        page.element.tableUser.on('click', 'button.change-password', function() {
+            let currentUser = table.row($(this).parents('tr')).data();
+
+            page.dialogs.element.fullNameCP.val(currentUser.fullName);
+            page.dialogs.element.usernameCP.val(currentUser.username);
+
+            page.dialogs.element.mdCPUser.modal("show");
+
+            page.dialogs.element.btnCPUser.on("click", function() {
+                // page.dialogs.element.frmCPUser.submit();
+                page.commands.doCPUser(currentUser);
+            })
         });
 
-        page.element.tableUser.on('click', 'button.change-status', function () {
-            let data = table.row($(this).parents('tr')).data();
-            console.log(data);
+        page.element.tableUser.on('click', 'button.change-status', function() {
+            let currenRow = table.row($(this).parents('tr'));
+            let currentUser = currenRow.data();
+
+            App.SweetAlert.showChangeStatusDialog(currentUser.disabled)
+                .then((result) => {
+                    if (result.isConfirmed)
+                        page.commands.doChangeStatus(currentUser, currenRow);
+                })
         });
     });
 
+    page.dialogs.element.btnCreateUser.on("click", function() {
+        // page.dialogs.element.frmCreateUser.submit();
+        page.commands.doCreateUser();
+    })
+
+    page.commands.doCreateUser = function() {
+        let user = new User();
+
+        user.fullName = page.dialogs.element.fullNameCreate.val();
+        user.username = page.dialogs.element.usernameCreate.val();
+        user.password = page.dialogs.element.passwordCreate.val();
+
+        $.ajax({
+            "headers": {
+                "accept": "application/json",
+                "content-type": "application/json"
+            },
+            "type": "POST",
+            "url": page.urls.createUser,
+            "data": JSON.stringify(user)
+        })
+            .done((data) => {
+                let tableUser = page.element.tableUser.DataTable();
+
+                user = data;
+                tableUser.row.add({
+                    'id': user.id,
+                    'username': user.username,
+                    'fullName': user.fullName,
+                    'disabled': user.disabled
+                })
+                // .draw('full-hold');
+
+                tableUser.order([0, 'desc']).draw();
+
+                page.dialogs.element.frmCreateUser[0].reset();
+                page.dialogs.element.mdCreateUser.modal("hide");
+                App.SweetAlert.showSuccessAlert(App.SUCCESS_CREATED);
+            })
+            .fail(function (jqXHR) {
+                alert("fail");
+            })
+    }
+
+    page.commands.doCPUser = (currentUser) => {
+        let newPassword = page.dialogs.element.passwordCP.val();
+
+        return $.ajax({
+            "headers": {
+                "accept": "application/json",
+                "content-type": "application/json"
+            },
+            "type": "PUT",
+            "url": page.urls.changePassword + currentUser.id,
+            "data": newPassword
+        })
+            .done((data) => {
+                page.dialogs.element.frmCPUser[0].reset();
+                page.dialogs.element.mdCPUser.modal("hide");
+
+                App.SweetAlert.showSuccessAlert(App.SUCCESS_UPDATED);
+            })
+            .fail((jqXHR) => {
+                alert("fail");
+            })
+    }
+
+    page.commands.doChangeStatus = (currentUser, currentRow) => {
+        let user = new User;
+        return $.ajax({
+            "headers": {
+                "accept": "application/json",
+                "content-type": "application/json"
+            },
+            "type": "PUT",
+            "url": page.urls.changeStatus + currentUser.id,
+        })
+            .done((data) => {
+                let tableUser = page.element.tableUser.DataTable();
+
+                user = data;
+                tableUser.row(currentRow).data({
+                    'id': user.id,
+                    'username': user.username,
+                    'fullName': user.fullName,
+                    'disabled': user.disabled
+                })
+                    .draw('full-hold');
+
+                App.SweetAlert.showSuccessAlert(App.SUCCESS_UPDATED);
+            })
+            .fail((jqXHR) => {
+                alert("fail");
+            })
+    }
+
+    //reset modal on close
+    page.dialogs.element.mdCreateUser.on('hidden.bs.modal', function() {
+        page.dialogs.element.frmCreateUser[0].reset();
+        //         createUserValidator.resetForm();
+        // page.dialogs.alertDanger.mdCreateUser.removeClass("show").addClass("hide");
+        // $("#mdCreateUser input").removeClass("error");
+    })
+
+    page.dialogs.element.mdCPUser.on('hidden.bs.modal', function() {
+        page.dialogs.element.frmCPUser[0].reset();
+    })
 
 </script>
 </body>
