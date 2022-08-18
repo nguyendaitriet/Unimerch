@@ -92,6 +92,18 @@ class App {
     static formatTooltip() {
         $('[data-toggle="tooltip"]').tooltip();
     }
+
+    static allowShowingPassword(passwordSelector) {
+        $('.show-password').on('change', function () {
+            let input = passwordSelector.get(0);
+
+            if (input.type === 'password') {
+                input.type = 'text';
+            } else {
+                input.type = 'password';
+            }
+        })
+    }
 }
 
 class User {
@@ -122,14 +134,3 @@ class Category {
         this.name = name;
     }
 }
-
-$('.show-password').on('change', function () {
-    let input = $('#passwordCP').get(0);
-    console.log(input);
-
-    if (input.type === 'password') {
-        input.type = 'text';
-    } else {
-        input.type = 'password';
-    }
-})
