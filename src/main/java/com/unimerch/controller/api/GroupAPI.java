@@ -1,6 +1,7 @@
 package com.unimerch.controller.api;
 
 import com.unimerch.dto.AmznAccAddedToGroup;
+import com.unimerch.repository.model.AmznAccount;
 import com.unimerch.repository.model.Group;
 import com.unimerch.service.GroupService;
 import lombok.RequiredArgsConstructor;
@@ -24,14 +25,14 @@ public class GroupAPI {
     private GroupService groupService;
 
     //    @PreAuthorize("hasAnyAuthority('MANAGER')")
-    @GetMapping
+    @GetMapping("/findAllGroups")
     public ResponseEntity<?> findAllGroups() {
         return new ResponseEntity<>(groupService.findAll(), HttpStatus.OK);
     }
 
     //    @PreAuthorize("hasAnyAuthority('MANAGER')")
-    @PostMapping("/findAllGroups")
-    public DataTablesOutput<Group> findAllGroupsPageable(@Valid @RequestBody(required = false) DataTablesInput input) {
+    @PostMapping
+    public DataTablesOutput<Group> findAllGroupsPageable(@Valid @RequestBody DataTablesInput input) {
         return groupService.findAll(input);
     }
 
@@ -64,10 +65,15 @@ public class GroupAPI {
     }
 
     //    @PreAuthorize("hasAnyAuthority('MANAGER')")
-    @GetMapping("/showAmznAccInsideGroup/{id}")
-    public ResponseEntity<?> showAmznAccInsideGroup(@PathVariable String id) {
-        List<AmznAccAddedToGroup> amznAccAddedToGroupList = groupService.getAmznAccInsideGroup(id);
-        return new ResponseEntity<>(amznAccAddedToGroupList, HttpStatus.OK);
+//    @GetMapping("/showAmznAccInsideGroup/{id}")
+//    public ResponseEntity<?> showAmznAccInsideGroup(@PathVariable String id) {
+//        List<AmznAccAddedToGroup> amznAccAddedToGroupList = groupService.getAmznAccInsideGroup(id);
+//        return new ResponseEntity<>(amznAccAddedToGroupList, HttpStatus.OK);
+//    }
+
+    @PostMapping("/showAmznAccInsideGroup/{id}")
+    public DataTablesOutput<AmznAccAddedToGroup> showAmznAccInsideGroup(@Valid @RequestBody DataTablesInput input) {
+        return groupService.getAmznAccInsideGroup(input);
     }
 
     //    @PreAuthorize("hasAnyAuthority('MANAGER')")

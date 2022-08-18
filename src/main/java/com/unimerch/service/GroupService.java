@@ -1,6 +1,7 @@
 package com.unimerch.service;
 
 import com.unimerch.dto.AmznAccAddedToGroup;
+import com.unimerch.repository.model.AmznAccount;
 import com.unimerch.repository.model.Group;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -18,8 +19,6 @@ public interface GroupService {
 
     DataTablesOutput<Group> findAll(DataTablesInput dataTablesInput);
 
-//    Page<Group> findAllByTitleContains(String titleSearch, Pageable pageable);
-
     Optional<Group> findById(String id);
 
     Group createGroup(String groupTitle);
@@ -28,7 +27,8 @@ public interface GroupService {
 
     List<AmznAccAddedToGroup> addAmznAccToGroup(ArrayList<String> amznAccIdList, String id);
 
-    List<AmznAccAddedToGroup> getAmznAccInsideGroup(String id);
+//    List<AmznAccAddedToGroup> getAmznAccInsideGroup(String id);
+    DataTablesOutput<AmznAccAddedToGroup> getAmznAccInsideGroup(DataTablesInput input);
 
     List<AmznAccAddedToGroup> getAmznAccOutsideGroup(String id);
 
