@@ -122,3 +122,14 @@ class Category {
         this.name = name;
     }
 }
+
+$('.show-password').on('change', function () {
+    let input = $('#passwordCP').get(0);
+    console.log(input);
+
+    if (input.type === 'password') {
+        input.type = 'text';
+    } else {
+        input.type = 'password';
+    }
+})
