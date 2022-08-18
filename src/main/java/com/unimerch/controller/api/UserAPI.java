@@ -34,9 +34,6 @@ public class UserAPI {
     @Autowired
     private UserMapper userMapper;
 
-    @Autowired
-    private MessageSource messageSource;
-
     //    @PreAuthorize("hasAnyAuthority('MANAGER')")
     @GetMapping
     public ResponseEntity<?> findAllUsersExceptCurrent() {

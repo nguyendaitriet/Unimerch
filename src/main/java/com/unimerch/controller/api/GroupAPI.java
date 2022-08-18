@@ -3,14 +3,20 @@ package com.unimerch.controller.api;
 import com.unimerch.dto.AmznAccAddedToGroup;
 import com.unimerch.repository.model.Group;
 import com.unimerch.service.GroupService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.jpa.datatables.mapping.Column;
+import org.springframework.data.jpa.datatables.mapping.DataTablesInput;
+import org.springframework.data.jpa.datatables.mapping.DataTablesOutput;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.*;
 
 @RestController
+@RequiredArgsConstructor
 @RequestMapping("/api/groups")
 public class GroupAPI {
 
@@ -21,6 +27,12 @@ public class GroupAPI {
     @GetMapping
     public ResponseEntity<?> findAllGroups() {
         return new ResponseEntity<>(groupService.findAll(), HttpStatus.OK);
+    }
+
+    //    @PreAuthorize("hasAnyAuthority('MANAGER')")
+    @PostMapping("/findAllGroups")
+    public DataTablesOutput<Group> findAllGroupsPageable(@Valid @RequestBody(required = false) DataTablesInput input) {
+        return groupService.findAll(input);
     }
 
 //    @PreAuthorize("hasAnyAuthority('MANAGER')")
@@ -52,12 +64,17 @@ public class GroupAPI {
     }
 
     //    @PreAuthorize("hasAnyAuthority('MANAGER')")
-    @GetMapping("/showAmznAccInAndOutGroup/{id}")
-    public ResponseEntity<?> showAmznAccInAndOutGroup(@PathVariable String id) {
-        Map<String, List<AmznAccAddedToGroup>> amznAccList = new HashMap<>();
-        amznAccList.put("insideGroup",groupService.getAmznAccInsideGroup(id));
-        amznAccList.put("outsideGroup",groupService.getAmznAccOutsideGroup(id));
-        return new ResponseEntity<>(amznAccList, HttpStatus.OK);
+    @GetMapping("/showAmznAccInsideGroup/{id}")
+    public ResponseEntity<?> showAmznAccInsideGroup(@PathVariable String id) {
+        List<AmznAccAddedToGroup> amznAccAddedToGroupList = groupService.getAmznAccInsideGroup(id);
+        return new ResponseEntity<>(amznAccAddedToGroupList, HttpStatus.OK);
+    }
+
+    //    @PreAuthorize("hasAnyAuthority('MANAGER')")
+    @GetMapping("/showAmznAccOutsideGroup/{id}")
+    public ResponseEntity<?> showAmznAccOutsideGroup(@PathVariable String id) {
+        List<AmznAccAddedToGroup> amznAccAddedToGroupList = groupService.getAmznAccOutsideGroup(id);
+        return new ResponseEntity<>(amznAccAddedToGroupList, HttpStatus.OK);
     }
 
     //    @PreAuthorize("hasAnyAuthority('MANAGER')")

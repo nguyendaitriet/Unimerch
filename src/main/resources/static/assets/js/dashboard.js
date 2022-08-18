@@ -36,10 +36,22 @@ class App {
             })
         }
 
-        static showChangeStatusDialog(t) {
+        static showDisableConfirmDialog() {
             return Swal.fire({
-                icon: `question`,
-                text: `Are you sure to ${t ? 'activate' : 'disable'} this user?`,
+                icon: 'warning',
+                text: 'Are you sure to disable this user?',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#5a6268',
+                confirmButtonText: 'Yes',
+                cancelButtonText: 'No',
+            })
+        }
+
+        static showActivateConfirmDialog() {
+            return Swal.fire({
+                icon: 'warning',
+                text: 'Are you sure to activate this user?',
                 showCancelButton: true,
                 confirmButtonColor: '#3085d6',
                 cancelButtonColor: '#5a6268',
@@ -107,12 +119,19 @@ class App {
 }
 
 class User {
-    constructor(id, username, fullName, password, disabled) {
+    constructor(id, username, fullName, disabled) {
         this.id = id;
         this.username = username;
         this.fullName = fullName;
-        this.password = password;
         this.disabled = disabled;
+    }
+}
+
+class Role{
+    constructor(id, code, name) {
+        this.id = id;
+        this.code = code;
+        this.name = name;
     }
 }
 
