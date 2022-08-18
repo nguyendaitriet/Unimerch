@@ -9,13 +9,15 @@ import com.unimerch.service.UserService;
 import com.unimerch.util.AppUtils;
 import com.unimerch.util.PrincipalUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.MessageSource;
+import org.springframework.data.jpa.datatables.mapping.DataTablesInput;
+import org.springframework.data.jpa.datatables.mapping.DataTablesOutput;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.List;
 
 @RestController
@@ -31,22 +33,25 @@ public class UserAPI {
     @Autowired
     private UserService userService;
 
-    @Autowired
-    private UserMapper userMapper;
+    //    @PreAuthorize("hasAnyAuthority('MANAGER')")
+    @GetMapping("/findAllNonPageable")
+    public ResponseEntity<?> findAllUsersExclSelf() {
+        String principalUsername = principalUtils.getPrincipalUsername();
+        List<UserListItem> usersList = userService.findAllUsersDTOExclSelf(principalUsername);
+        return new ResponseEntity<>(usersList, HttpStatus.OK);
+    }
 
     //    @PreAuthorize("hasAnyAuthority('MANAGER')")
     @GetMapping
-    public ResponseEntity<?> findAllUsersExceptCurrent() {
+    public DataTablesOutput<UserListItem> findAllUsersPageableExclSelf(@Valid @RequestBody(required = false) DataTablesInput input) {
         String principalUsername = principalUtils.getPrincipalUsername();
-        List<UserListItem> userListItemList = userService.findAllUsersDTO(principalUsername);
-        return new ResponseEntity<>(userListItemList, HttpStatus.OK);
+        return userService.findAllUserDTOExclSelf(input, principalUsername);
     }
 
     //    @PreAuthorize("hasAnyAuthority('MANAGER')")
     @GetMapping("/{id}")
     public ResponseEntity<?> findUserById(@PathVariable String id) {
-        User user = userService.findById(id).get();
-        UserListItem userListItem = userMapper.toUserListItem(user);
+        UserListItem userListItem = userService.findUserListItemById(id);
         return new ResponseEntity<>(userListItem, HttpStatus.OK);
     }
 

@@ -61,8 +61,10 @@ public class GroupServiceImpl implements GroupService {
     public DataTablesOutput<Group> findAll(DataTablesInput input) {
         Map<String, Column> columnMap = input.getColumnsAsMap();
         columnMap.remove(null);
+
         List<Column> columnList = new ArrayList<>(columnMap.values());
         input.setColumns(columnList);
+
         return groupDataTableRepository.findAll(input);
     }
 

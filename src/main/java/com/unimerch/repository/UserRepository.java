@@ -40,5 +40,5 @@ public interface UserRepository extends JpaRepository<User, Integer> {
             ") " +
             "FROM User u " +
             "WHERE u.username <> :principalUsername")
-    List<UserListItem> findAllUserListItems(@Param("principalUsername") String principalUsername);
+    List<UserListItem> findAllUserListItemsExclSelf(@Param("principalUsername") String principalUsername);
 }
