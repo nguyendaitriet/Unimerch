@@ -121,8 +121,9 @@
             findAllAmznAccOutGroup: App.BASE_URL_GROUP + "/showAmznAccOutsideGroup/",
             findGroup: App.BASE_URL_GROUP + "/",
             createGroup: App.BASE_URL_GROUP + "/create",
-            changeGroupTitle: App.BASE_URL_GROUP + "/update/",
+            updateGroup: App.BASE_URL_GROUP + "/update/",
             // deleteGroup: App.BASE_URL_GROUP + "/delete/"
+            deleteAmznAccFromGroup: App.BASE_URL_GROUP + "/deleteAmznAccFromGroup/"
         },
         element: {},
         commands: {},
@@ -139,6 +140,7 @@
     page.element.btnShowCreateGroupFrm = $('#btnMdCreateGroup');
     page.element.groupTitle = $(".group-title");
     page.element.btnShowCreGrpMd = $(".showCrGrpMd");
+    page.element.btnShowAddAmzAccMd = $(".showAddAmzAccMd");
 
     page.dialogs.element.mdCreateGroup = $('#mdCreateGroup');
     page.dialogs.element.frmCreateGroup = $('#frmCreateGroup');
@@ -149,6 +151,7 @@
     page.dialogs.element.frmUpdateGroup = $('#frmUpdateGroup');
     page.dialogs.element.btnUpdateGroup = $('#btnUpdateGroup');
     page.dialogs.element.groupTitleUpdate = $('#groupTitleUpdate');
+
 
     page.commands.doCreateGroup = () => {
         let groupTitle = page.dialogs.element.groupTitleCreate.val().trim();
@@ -163,28 +166,63 @@
             data: groupTitle
         })
             .done((data) => {
-                let tableUser = page.element.tableGroup.DataTable();
+                let tableGroup = page.element.tableGroup.DataTable();
 
-                // user = data;
-                // tableUser.row.add({
-                //     'id': user.id,
-                //     'username': user.username,
-                //     'fullName': user.fullName,
-                //     'disabled': user.disabled
-                // })
-                // // .draw('full-hold');
-                //
-                // tableUser.order([0, 'desc']).draw();
-                //
-                // page.dialogs.element.frmCreateUser[0].reset();
-                // page.dialogs.element.mdCreateUser.modal("hide");
-                // App.SweetAlert.showSuccessAlert(App.SUCCESS_CREATED);
+                tableGroup.row.add({
+                    'id': data.id,
+                    'title': data.title
+                })
+
+                tableGroup.order([0, 'desc']).draw();
+
+                page.dialogs.element.frmCreateGroup[0].reset();
+                page.dialogs.element.mdCreateGroup.modal("hide");
+                App.SweetAlert.showSuccessAlert(App.SUCCESS_CREATED);
             })
             .fail(function (jqXHR) {
                 alert("fail");
             })
     }
+    page.commands.doUpdateGroup = (currentGroup, currentRow) => {
+        let groupTitle = page.dialogs.element.groupTitleUpdate.val().trim();
 
+        $.ajax({
+            headers: {
+                "accept": "application/json",
+                "content-type": "application/json"
+            },
+            type: "PUT",
+            url: page.urls.updateGroup + currentGroup.id,
+            data: groupTitle
+        })
+            .done((data) => {
+                let tableGroup = page.element.tableGroup.DataTable();
+                tableGroup.row(currentRow).data({
+                    'id': data.id,
+                    'title': data.title
+                })
+                page.dialogs.element.frmUpdateGroup[0].reset();
+                page.dialogs.element.mdUpdateGroup.modal("hide");
+                App.SweetAlert.showSuccessAlert(App.SUCCESS_UPDATED);
+            })
+            .fail(function (jqXHR) {
+                alert("fail");
+            })
+    }
+    page.commands.doDeletedAmznAcc = (currentGroup, currentAmznAcc, currentRowAmznAcc) => {
+        $.ajax({
+            type: "DELETE",
+            url: page.urls.deleteAmznAccFromGroup + currentAmznAcc.id + '/' + currentGroup.id,
+        })
+        .done((data) => {
+            let tableAmznAccIn = page.element.tableAmznAccIn.DataTable();
+            tableAmznAccIn.row(currentRowAmznAcc).remove().draw();
+            App.SweetAlert.showSuccessAlert('Data deleted successfully!');
+        })
+        .fail(function (jqXHR) {
+            alert("fail");
+        })
+    }
 
     $(document).ready(function () {
 
@@ -220,7 +258,7 @@
                         `<button type='button' class='manage-group btn btn-outline-primary mr-3' title='Manage group'>
                             <i class="fas fa-cogs"></i>
                         </button>
-                        <button type='button' class='change-title btn btn-outline-warning mr-3' title='Change group title'>
+                        <button type='button' class='update-group btn btn-outline-warning mr-3' title='Change group title'>
                             <i class="fas fa-pencil-alt"></i>
                         </button>
                         <button type='button' class='delete-group btn btn-outline-danger' title='Delete group'>
@@ -228,7 +266,7 @@
                         </button>`,
                 },
             ],
-            pageLength: 4,
+            pageLength: 10,
             lengthChange: false,
             dom: 'Bfrtip',
             buttons: {
@@ -240,7 +278,7 @@
                 },
                 buttons: [
                     {
-                        text: `<i class="fas fa-plus"></i> Add`,
+                        text: `<i class="fas fa-plus"></i> Create`,
                         titleAttr: 'Add new group',
                         className: 'showCrGrpMd btn btn-primary',
                         init: function (api, node, config) {
@@ -250,20 +288,25 @@
                 ]
             },
         });
-
         let tableAmznAccIn;
+        let currentRowGroup;
+        let currentGroup;
+        let currentRowAmznAcc;
+        let currentAmznAcc;
 
         page.element.tableGroup.on('click', 'button.manage-group', function () {
 
-            let data = tableGroup.row($(this).parents('tr')).data();
-            page.element.groupTitle.html(data.title);
+            currentGroup = tableGroup.row($(this).parents('tr')).data();
+            page.element.groupTitle.html(currentGroup.title);
+
             if (tableAmznAccIn === undefined) {
                 tableAmznAccIn= page.element.tableAmznAccIn.DataTable({
                     ajax: {
-                        url: '/assets/json/data.json',
+                        // url: '/assets/json/data.json',
+                        url: page.urls.findAllAmznAccInGroup + currentGroup.id,
                         dataSrc: ''
                         // contentType: 'application/json',
-                        // url: page.urls.findAllAmznAccInGroup + data.id,
+                        // url: page.urls.findAllAmznAccInGroup + currentGroup.id,
                         // type: 'POST',
                         // data: function(d) {
                         //     return JSON.stringify(d);
@@ -289,12 +332,12 @@
                             className: "text-center",
                             orderable: false,
                             defaultContent:
-                                `<button type='button' class='manage-group btn btn-outline-danger mr-3' title='Manage group'>`
+                                `<button type='button' class='delete-amzn-acc btn btn-outline-danger mr-3' title='Delete'>`
                                 + `<i class="fas fa-ban"></i>`
                                 + `</button>`
                         },
                     ],
-                    pageLength: 5,
+                    pageLength: 10,
                     lengthChange: false,
                     dom: 'Bfrtip',
                     buttons: {
@@ -308,31 +351,47 @@
                             {
                                 text: `<i class="fas fa-plus"></i> Add`,
                                 titleAttr: 'Add Amazon Account',
-                                className: 'add btn btn-primary',
+                                className: 'showAddAmzAccMd btn btn-primary',
                                 init: function (api, node, config) {
-                                    $(node).on('click', () => page.dialogs.element.mdCreateGroup.modal("show"));
+                                    $(node).on('click', () => {
+                                        page.dialogs.element.mdCreateGroup.modal("show");
+                                        page.dialogs.element.frmCreateGroup[0].reset();
+                                    })
                                 }
                             }
                         ]
                     },
                 });
             } else {
-                tableAmznAccIn.ajax.url(page.urls.findAllAmznAccInGroup + data.id).load();
+                tableAmznAccIn.ajax.url(page.urls.findAllAmznAccInGroup + currentGroup.id).load();
             }
-
         });
 
-        page.element.tableGroup.on('click', 'button.change-title', function () {
-            let data = tableGroup.row($(this).parents('tr')).data();
-            console.log(data);
+        page.element.tableGroup.on('click', 'button.update-group', function () {
+            currentRowGroup = tableGroup.row($(this).parents('tr'));
+            currentGroup = currentRowGroup.data();
+            page.dialogs.element.groupTitleUpdate.val(currentGroup.title);
+            page.dialogs.element.mdUpdateGroup.modal('show');
         });
 
         page.element.tableGroup.on('click', 'button.delete-group', function () {
             let data = tableGroup.row($(this).parents('tr')).data();
-            console.log(data);
-
-
         });
+
+        page.dialogs.element.btnCreateGroup.on('click', function () {
+            page.commands.doCreateGroup();
+        });
+
+        page.dialogs.element.btnUpdateGroup.on('click', function () {
+            page.commands.doUpdateGroup(currentGroup, currentRowGroup);
+        });
+
+        page.element.tableAmznAccIn.on('click', 'button.delete-amzn-acc', function () {
+            currentRowAmznAcc = tableAmznAccIn.row($(this).parents('tr'));
+            currentAmznAcc = currentRowAmznAcc.data();
+            page.commands.doDeletedAmznAcc(currentGroup, currentAmznAcc, currentRowAmznAcc);
+        });
+
     });
 
 

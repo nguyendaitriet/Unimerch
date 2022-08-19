@@ -6,9 +6,9 @@ import com.unimerch.dto.UserCreateResult;
 import com.unimerch.dto.UserListItem;
 import com.unimerch.exception.*;
 import com.unimerch.mapper.UserMapper;
-import com.unimerch.repository.GroupDataTableRepository;
-import com.unimerch.repository.UserDataTableRepository;
+import com.unimerch.repository.datatable.UserDataTableRepository;
 import com.unimerch.repository.UserRepository;
+import com.unimerch.repository.datatable.GroupDataTableRepository;
 import com.unimerch.repository.model.Group;
 import com.unimerch.repository.model.Role;
 import com.unimerch.repository.model.User;
@@ -26,10 +26,8 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import javax.persistence.criteria.CriteriaBuilder;
 import javax.transaction.Transactional;
 import java.util.*;
-import java.util.function.Predicate;
 import java.util.regex.Pattern;
 
 @Service
