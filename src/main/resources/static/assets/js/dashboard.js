@@ -101,10 +101,8 @@ class App {
 
         checkbox.on('change', function () {
             if (checkbox.is(':checked')) {
-                console.log("checked");
                 password.type = 'text';
             } else {
-                console.log(("unchecked"));
                 password.type = 'password';
             }
         })

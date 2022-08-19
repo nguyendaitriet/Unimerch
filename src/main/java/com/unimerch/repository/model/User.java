@@ -30,6 +30,9 @@ public class User {
     @Column(name = "full_name", nullable = false, length = 80)
     private String fullName;
 
+    @Column(name = "disabled", nullable = false)
+    private boolean disabled;
+
     @Column(name = "mobile", length = 15)
     private String mobile;
 
@@ -43,12 +46,7 @@ public class User {
     @CreationTimestamp
     private Instant registeredAt;
 
-    @Column(name = "disabled", nullable = false)
-    private boolean disabled;
-
     @ManyToOne(optional = false)
     @JoinColumn(name = "role_id", nullable = false)
     private Role role;
-
-
 }

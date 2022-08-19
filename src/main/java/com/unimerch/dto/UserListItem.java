@@ -12,7 +12,7 @@ import lombok.experimental.Accessors;
 @AllArgsConstructor
 @Accessors(chain = true)
 public class UserListItem {
-    private int id;
+    private Integer id;
     private String username;
     private String fullName;
     private boolean disabled;

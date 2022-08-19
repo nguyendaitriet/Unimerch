@@ -1,7 +1,6 @@
 package com.unimerch.service;
 
 import com.unimerch.dto.UserCreateParam;
-import com.unimerch.dto.UserCreateResult;
 import com.unimerch.dto.UserListItem;
 import com.unimerch.repository.model.User;
 import org.springframework.data.jpa.datatables.mapping.DataTablesInput;
@@ -24,7 +23,7 @@ public interface UserService extends UserDetailsService {
 
     UserListItem findUserListItemById(String id);
 
-    UserCreateResult create(UserCreateParam userCreateParam);
+    UserListItem create(UserCreateParam userCreateParam);
 
     void changePassword(String id, String password);
 

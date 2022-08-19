@@ -2,7 +2,6 @@ package com.unimerch.service.impl;
 
 
 import com.unimerch.dto.UserCreateParam;
-import com.unimerch.dto.UserCreateResult;
 import com.unimerch.dto.UserListItem;
 import com.unimerch.exception.*;
 import com.unimerch.mapper.UserMapper;
@@ -13,6 +12,7 @@ import com.unimerch.repository.model.Group;
 import com.unimerch.repository.model.Role;
 import com.unimerch.repository.model.User;
 import com.unimerch.repository.model.UserPrinciple;
+import com.unimerch.repository.specification.UserSpecification;
 import com.unimerch.service.UserService;
 import com.unimerch.util.ValidationUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,6 +21,7 @@ import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.jpa.datatables.mapping.Column;
 import org.springframework.data.jpa.datatables.mapping.DataTablesInput;
 import org.springframework.data.jpa.datatables.mapping.DataTablesOutput;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -63,12 +64,11 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public DataTablesOutput<UserListItem> findAllUserDTOExclSelf(DataTablesInput input, String principalUsername) {
-        Map<String, Column> columnMap = input.getColumnsAsMap();
-        columnMap.remove(null);
-
-        List<Column> columnList = new ArrayList<>(columnMap.values());
+        List<Column> columnList = input.getColumns();
+        columnList.remove(columnList.size() -1 );
         input.setColumns(columnList);
 
+//        (input, user -> userMapper.toUserListItem(user))
         return userDataTableRepository.findAll(input, user -> userMapper.toUserListItem(user));
     }
 
@@ -111,7 +111,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public UserCreateResult create(UserCreateParam userCreateParam) {
+    public UserListItem create(UserCreateParam userCreateParam) {
         User newUser = userMapper.toUser(userCreateParam);
 
         newUser.setSalt("abc");
@@ -128,7 +128,7 @@ public class UserServiceImpl implements UserService {
             throw new DataInputException(messageSource.getMessage("validation.invalidAccountInformation", null, Locale.getDefault()));
         }
 
-        return userMapper.toUserCreateResult(newUser);
+        return userMapper.toUserListItem(newUser);
     }
 
 
