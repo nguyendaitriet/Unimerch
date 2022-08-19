@@ -14,9 +14,6 @@ import java.util.Optional;
 
 @Repository
 public interface UserRepository extends JpaRepository<User, Integer> {
-
-//    List<User> findAll(Pageable pageable);
-
     User getByUsername(String username);
 
     Optional<User> findByUsername(String username);
@@ -40,5 +37,5 @@ public interface UserRepository extends JpaRepository<User, Integer> {
             ") " +
             "FROM User u " +
             "WHERE u.username <> :principalUsername")
-    List<UserListItem> findAllUserListItems(@Param("principalUsername") String principalUsername);
+    List<UserListItem> findAllUserListItemsExclSelf(@Param("principalUsername") String principalUsername);
 }

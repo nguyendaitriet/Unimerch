@@ -148,13 +148,14 @@
 
     $(document).ready(function () {
         let table = page.element.tableUser.DataTable({
-            info: false,
-            pagingType: 'simple_numbers',
-            processing: true,
             ajax: {
+                contentType: 'application/json',
                 url: page.urls.findAllUsers,
-                dataSrc: ''
+                type: 'POST',
+                data: (d) => JSON.stringify(d),
+                dataSrc: 'data'
             },
+            serverSide: true,
             columns: [
                 {data: 'id'},
                 {data: 'username'},
@@ -195,6 +196,9 @@
                     }
                 },
             ],
+            info: false,
+            pagingType: 'simple_numbers',
+            processing: true,
             pageLength: 10,
             lengthChange: false,
             dom: 'Bfrtip',
@@ -211,7 +215,11 @@
                         titleAttr: 'Add new user',
                         className: 'add btn btn-primary',
                         init: (api, node, config) => {
-                            $(node).on('click', () => page.dialogs.element.mdCreateUser.modal("show"));
+                            $(node).on('click', () => {
+                                page.dialogs.element.frmCreateUser[0].reset();
+                                page.dialogs.element.mdCreateUser.modal("show");
+                                App.allowShowingPassword(page.dialogs.element.passwordCreate);
+                            });
                         }
                     }
                 ]
@@ -228,6 +236,7 @@
 
             page.dialogs.element.fullNameCP.val(currentUser.fullName);
             page.dialogs.element.usernameCP.val(currentUser.username);
+            App.allowShowingPassword(page.dialogs.element.passwordCP);
 
             page.dialogs.element.mdCPUser.modal("show");
 

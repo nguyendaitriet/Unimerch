@@ -6,7 +6,10 @@ import com.unimerch.dto.UserCreateResult;
 import com.unimerch.dto.UserListItem;
 import com.unimerch.exception.*;
 import com.unimerch.mapper.UserMapper;
+import com.unimerch.repository.GroupDataTableRepository;
+import com.unimerch.repository.UserDataTableRepository;
 import com.unimerch.repository.UserRepository;
+import com.unimerch.repository.model.Group;
 import com.unimerch.repository.model.Role;
 import com.unimerch.repository.model.User;
 import com.unimerch.repository.model.UserPrinciple;
@@ -15,15 +18,18 @@ import com.unimerch.util.ValidationUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
 import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.data.jpa.datatables.mapping.Column;
+import org.springframework.data.jpa.datatables.mapping.DataTablesInput;
+import org.springframework.data.jpa.datatables.mapping.DataTablesOutput;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import javax.persistence.criteria.CriteriaBuilder;
 import javax.transaction.Transactional;
-import java.util.List;
-import java.util.Locale;
-import java.util.Optional;
+import java.util.*;
+import java.util.function.Predicate;
 import java.util.regex.Pattern;
 
 @Service
@@ -37,18 +43,42 @@ public class UserServiceImpl implements UserService {
     private UserRepository userRepository;
 
     @Autowired
+    private UserDataTableRepository userDataTableRepository;
+
+    @Autowired
+    private GroupDataTableRepository groupDataTableRepository;
+
+    @Autowired
     private PasswordEncoder passwordEncoder;
 
     @Autowired
     private MessageSource messageSource;
 
     @Override
-    public List<UserListItem> findAllUsersDTO(String principalUsername) {
-        List<UserListItem> userListItemList = userRepository.findAllUserListItems(principalUsername);
+    public List<UserListItem> findAllUsersDTOExclSelf(String principalUsername) {
+        List<UserListItem> userListItemList = userRepository.findAllUserListItemsExclSelf(principalUsername);
         if (userListItemList.isEmpty()) {
             throw new NoDataFoundException(messageSource.getMessage("error.noDataFound", null, Locale.getDefault()));
         }
         return userListItemList;
+    }
+
+    @Override
+    public DataTablesOutput<UserListItem> findAllUserDTOExclSelf(DataTablesInput input, String principalUsername) {
+        Map<String, Column> columnMap = input.getColumnsAsMap();
+        columnMap.remove(null);
+
+        List<Column> columnList = new ArrayList<>(columnMap.values());
+        input.setColumns(columnList);
+
+        return userDataTableRepository.findAll(input, user -> userMapper.toUserListItem(user));
+    }
+
+    public DataTablesOutput<Group> findAllGrpAssigned(DataTablesInput input, Integer userId) {
+
+
+//        return groupDataTableRepository.findAll(input, group -> );
+        return null;
     }
 
     @Override
@@ -73,7 +103,13 @@ public class UserServiceImpl implements UserService {
         if (!optionalUser.isPresent()) {
             throw new InvalidIdException(messageSource.getMessage("validation.idNotExist", null, Locale.getDefault()));
         }
+
         return optionalUser;
+    }
+
+    @Override
+    public UserListItem findUserListItemById(String id) {
+        return userMapper.toUserListItem(findById(id).get());
     }
 
     @Override
@@ -137,8 +173,6 @@ public class UserServiceImpl implements UserService {
         }
 
     }
-
-
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
