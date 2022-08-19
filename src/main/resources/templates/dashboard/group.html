@@ -138,6 +138,7 @@
     page.element.tableAmznAccOut = $('#table-amzn-acc-out');
     page.element.btnShowCreateGroupFrm = $('#btnMdCreateGroup');
     page.element.groupTitle = $(".group-title");
+    page.element.btnShowCreGrpMd = $(".showCrGrpMd");
 
     page.dialogs.element.mdCreateGroup = $('#mdCreateGroup');
     page.dialogs.element.frmCreateGroup = $('#frmCreateGroup');
@@ -148,6 +149,41 @@
     page.dialogs.element.frmUpdateGroup = $('#frmUpdateGroup');
     page.dialogs.element.btnUpdateGroup = $('#btnUpdateGroup');
     page.dialogs.element.groupTitleUpdate = $('#groupTitleUpdate');
+
+    page.commands.doCreateGroup = () => {
+        let groupTitle = page.dialogs.element.groupTitleCreate.val().trim();
+
+        $.ajax({
+            headers: {
+                "accept": "application/json",
+                "content-type": "application/json"
+            },
+            type: "POST",
+            url: page.urls.createGroup,
+            data: groupTitle
+        })
+            .done((data) => {
+                let tableUser = page.element.tableGroup.DataTable();
+
+                // user = data;
+                // tableUser.row.add({
+                //     'id': user.id,
+                //     'username': user.username,
+                //     'fullName': user.fullName,
+                //     'disabled': user.disabled
+                // })
+                // // .draw('full-hold');
+                //
+                // tableUser.order([0, 'desc']).draw();
+                //
+                // page.dialogs.element.frmCreateUser[0].reset();
+                // page.dialogs.element.mdCreateUser.modal("hide");
+                // App.SweetAlert.showSuccessAlert(App.SUCCESS_CREATED);
+            })
+            .fail(function (jqXHR) {
+                alert("fail");
+            })
+    }
 
 
     $(document).ready(function () {
@@ -206,7 +242,7 @@
                     {
                         text: `<i class="fas fa-plus"></i> Add`,
                         titleAttr: 'Add new group',
-                        className: 'add btn btn-primary',
+                        className: 'showCrGrpMd btn btn-primary',
                         init: function (api, node, config) {
                             $(node).on('click', () => page.dialogs.element.mdCreateGroup.modal("show"));
                         }
