@@ -192,7 +192,7 @@
                         </button>`,
                 },
             ],
-            pageLength: 3,
+            pageLength: 4,
             lengthChange: false,
             dom: 'Bfrtip',
             buttons: {
@@ -215,66 +215,75 @@
             },
         });
 
-        // let tableAmznAccIn = page.element.tableAmznAccIn.DataTable({
-        //     ajax: {
-        //         contentType: 'application/json',
-        //         url: '/assets/json/data.json',
-        //         type: 'POST',
-        //         data: function(d) {
-        //             return JSON.stringify(d);
-        //         },
-        //         dataSrc: 'data'
-        //     },
-        //     info: false,
-        //     pagingType: 'simple_numbers',
-        //     processing: true,
-        //     serverSide : true,
-        //     columns: [
-        //         {data: 'id'},
-        //         {data: 'username'},
-        //         {data: null}
-        //     ],
-        //     columnDefs: [
-        //         {
-        //             targets: 0,
-        //             className: "text-center"
-        //         },
-        //         {
-        //             targets: -1,
-        //             className: "text-center",
-        //             defaultContent:
-        //                 `<button type='button' class='manage-group btn btn-outline-danger mr-3' title='Manage group'>`
-        //                 + `<i class="fas fa-ban"></i>`
-        //                 + `</button>`
-        //         },
-        //     ],
-        //     pageLength: 3,
-        //     lengthChange: false,
-        //     dom: 'Bfrtip',
-        //     buttons: {
-        //         dom: {
-        //             button: {
-        //                 tag: 'button',
-        //                 className: ''
-        //             }
-        //         },
-        //         buttons: [
-        //             {
-        //                 text: `<i class="fas fa-plus"></i> Add`,
-        //                 titleAttr: 'Add Amazon Account',
-        //                 className: 'add btn btn-primary',
-        //                 init: function (api, node, config) {
-        //                     $(node).on('click', () => page.dialogs.element.mdCreateGroup.modal("show"));
-        //                 }
-        //             }
-        //         ]
-        //     },
-        // });
+        let tableAmznAccIn;
 
         page.element.tableGroup.on('click', 'button.manage-group', function () {
+
             let data = tableGroup.row($(this).parents('tr')).data();
             page.element.groupTitle.html(data.title);
-            tableAmznAccIn.ajax.url(page.urls.findAllAmznAccInGroup + data.id).load();
+            if (tableAmznAccIn === undefined) {
+                tableAmznAccIn= page.element.tableAmznAccIn.DataTable({
+                    ajax: {
+                        url: '/assets/json/data.json',
+                        dataSrc: ''
+                        // contentType: 'application/json',
+                        // url: page.urls.findAllAmznAccInGroup + data.id,
+                        // type: 'POST',
+                        // data: function(d) {
+                        //     return JSON.stringify(d);
+                        // },
+                        // dataSrc: 'data'
+                    },
+                    info: false,
+                    pagingType: 'simple_numbers',
+                    processing: true,
+                    // serverSide : true,
+                    columns: [
+                        {data: 'id'},
+                        {data: 'username'},
+                        {data: null}
+                    ],
+                    columnDefs: [
+                        {
+                            targets: 0,
+                            className: "text-center"
+                        },
+                        {
+                            targets: -1,
+                            className: "text-center",
+                            orderable: false,
+                            defaultContent:
+                                `<button type='button' class='manage-group btn btn-outline-danger mr-3' title='Manage group'>`
+                                + `<i class="fas fa-ban"></i>`
+                                + `</button>`
+                        },
+                    ],
+                    pageLength: 5,
+                    lengthChange: false,
+                    dom: 'Bfrtip',
+                    buttons: {
+                        dom: {
+                            button: {
+                                tag: 'button',
+                                className: ''
+                            }
+                        },
+                        buttons: [
+                            {
+                                text: `<i class="fas fa-plus"></i> Add`,
+                                titleAttr: 'Add Amazon Account',
+                                className: 'add btn btn-primary',
+                                init: function (api, node, config) {
+                                    $(node).on('click', () => page.dialogs.element.mdCreateGroup.modal("show"));
+                                }
+                            }
+                        ]
+                    },
+                });
+            } else {
+                tableAmznAccIn.ajax.url(page.urls.findAllAmznAccInGroup + data.id).load();
+            }
+
         });
 
         page.element.tableGroup.on('click', 'button.change-title', function () {
@@ -285,6 +294,8 @@
         page.element.tableGroup.on('click', 'button.delete-group', function () {
             let data = tableGroup.row($(this).parents('tr')).data();
             console.log(data);
+
+
         });
     });
 

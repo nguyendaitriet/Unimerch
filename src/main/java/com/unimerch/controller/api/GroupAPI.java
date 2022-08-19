@@ -6,7 +6,6 @@ import com.unimerch.repository.model.Group;
 import com.unimerch.service.GroupService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.jpa.datatables.mapping.Column;
 import org.springframework.data.jpa.datatables.mapping.DataTablesInput;
 import org.springframework.data.jpa.datatables.mapping.DataTablesOutput;
 import org.springframework.http.HttpStatus;
@@ -65,16 +64,17 @@ public class GroupAPI {
     }
 
     //    @PreAuthorize("hasAnyAuthority('MANAGER')")
-//    @GetMapping("/showAmznAccInsideGroup/{id}")
-//    public ResponseEntity<?> showAmznAccInsideGroup(@PathVariable String id) {
-//        List<AmznAccAddedToGroup> amznAccAddedToGroupList = groupService.getAmznAccInsideGroup(id);
-//        return new ResponseEntity<>(amznAccAddedToGroupList, HttpStatus.OK);
-//    }
-
-    @PostMapping("/showAmznAccInsideGroup/{id}")
-    public DataTablesOutput<AmznAccAddedToGroup> showAmznAccInsideGroup(@Valid @RequestBody DataTablesInput input) {
-        return groupService.getAmznAccInsideGroup(input);
+    @GetMapping("/showAmznAccInsideGroup/{id}")
+    public ResponseEntity<?> showAmznAccInsideGroup(@PathVariable String id) {
+        List<AmznAccAddedToGroup> amznAccAddedToGroupList = groupService.getAmznAccInsideGroup(id);
+        return new ResponseEntity<>(amznAccAddedToGroupList, HttpStatus.OK);
     }
+
+    //    @PreAuthorize("hasAnyAuthority('MANAGER')")
+//    @PostMapping("/showAmznAccInsideGroup/{id}")
+//    public DataTablesOutput<AmznAccAddedToGroup> showAmznAccInsideGroup(@PathVariable String id, @Valid @RequestBody DataTablesInput input) {
+//        return groupService.getAmznAccInsideGroup(id, input);
+//    }
 
     //    @PreAuthorize("hasAnyAuthority('MANAGER')")
     @GetMapping("/showAmznAccOutsideGroup/{id}")

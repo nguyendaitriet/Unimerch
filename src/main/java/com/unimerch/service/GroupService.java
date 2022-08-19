@@ -27,8 +27,9 @@ public interface GroupService {
 
     List<AmznAccAddedToGroup> addAmznAccToGroup(ArrayList<String> amznAccIdList, String id);
 
-//    List<AmznAccAddedToGroup> getAmznAccInsideGroup(String id);
-    DataTablesOutput<AmznAccAddedToGroup> getAmznAccInsideGroup(DataTablesInput input);
+    List<AmznAccAddedToGroup> getAmznAccInsideGroup(String id);
+
+//    DataTablesOutput<AmznAccAddedToGroup> getAmznAccInsideGroup(String id, DataTablesInput input);
 
     List<AmznAccAddedToGroup> getAmznAccOutsideGroup(String id);
 

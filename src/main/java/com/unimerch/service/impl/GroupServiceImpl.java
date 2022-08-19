@@ -16,11 +16,20 @@ import com.unimerch.service.GroupService;
 import com.unimerch.util.ValidationUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.datatables.SpecificationBuilder;
 import org.springframework.data.jpa.datatables.mapping.Column;
 import org.springframework.data.jpa.datatables.mapping.DataTablesInput;
 import org.springframework.data.jpa.datatables.mapping.DataTablesOutput;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
+import javax.persistence.EntityManager;
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Expression;
+import javax.persistence.criteria.Predicate;
 import javax.transaction.Transactional;
 import java.util.*;
 import java.util.regex.Pattern;
@@ -50,6 +59,9 @@ public class GroupServiceImpl implements GroupService {
     @Autowired
     private AmznAccTableRepository amznAccTableRepository;
 
+    @Autowired
+    EntityManager entityManager;
+
     @Override
     public List<Group> findAll() {
         List<Group> groupList = groupRepository.findAll();
@@ -65,7 +77,8 @@ public class GroupServiceImpl implements GroupService {
         columnMap.remove(null);
         List<Column> columnList = new ArrayList<>(columnMap.values());
         input.setColumns(columnList);
-        return groupDataTableRepository.findAll(input);
+        DataTablesOutput<Group> dataTablesOutput = groupDataTableRepository.findAll(input);
+        return dataTablesOutput;
     }
 
     @Override
@@ -144,28 +157,51 @@ public class GroupServiceImpl implements GroupService {
         return amznAccAddedToGroupList;
     }
 
-//    @Override
-//    public List<AmznAccAddedToGroup> getAmznAccInsideGroup(String id) {
-//        Group group = findById(id).get();
-//        return brgGroupAmznAccRepo.getAmznAccInGroup(group.getId());
-//    }
-
     @Override
-    public DataTablesOutput<AmznAccAddedToGroup> getAmznAccInsideGroup(DataTablesInput input) {
+    public List<AmznAccAddedToGroup> getAmznAccInsideGroup(String id) {
+        Group group = findById(id).get();
+        return brgGroupAmznAccRepo.getAmznAccInGroup(group.getId());
+    }
+
+//    @Override
+//    public DataTablesOutput<AmznAccAddedToGroup>getAmznAccInsideGroup(String id, DataTablesInput input) {
+//        Group group = findById(id).get();
+//
 //        Map<String, Column> columnMap = input.getColumnsAsMap();
 //        columnMap.remove(null);
 //        List<Column> columnList = new ArrayList<>(columnMap.values());
 //        input.setColumns(columnList);
-//        DataTablesOutput<AmznAccount> outputAmznAccList =  amznAccTableRepository.findAll(input);
-//        List<AmznAccount> amznAccountList = outputAmznAccList.getData();
 //
-//        List<AmznAccAddedToGroup> amznAccountAddedToGroupList = amznAccountList.stream()
-//                .map(AmznAccount::getId)
-//                .map(TypeB::new)
-//                .collect(Collectors.toList());
-//                DataTablesOutput<AmznAccAddedToGroup>
-        return null;
-    }
+//        List<Integer> amznAccIdInGroupList = brgGroupAmznAccRepo.getAmznAccIdInGroup(group.getId());
+//
+//
+////        Specification<AmznAccount> amznAccountSpecification = (Specification<AmznAccount>) (root, query, criteriaBuilder) -> {
+////            CriteriaQuery<AmznAccount> q = criteriaBuilder.createQuery(AmznAccount.class);
+//////            q.select(root);
+////
+////            Expression<Integer> idExpression = root.get("id");
+////            Predicate idPredicate = idExpression.in(amznAccIdInGroupList);
+//////            q.where(idPredicate);
+////            return (Predicate) criteriaBuilder.createQuery(AmznAccount.class).select(root).where(idPredicate);
+////        };
+//
+//        DataTablesOutput<AmznAccAddedToGroup> dataTablesOutput = amznAccTableRepository
+//                .findAll(input, amznAccount -> amznAccountMapper.toAmznAccAddedToGroup(amznAccount));
+//
+//        List<AmznAccAddedToGroup> amznAccAddedToGroupList = dataTablesOutput.getData();
+////
+////        List<AmznAccAddedToGroup> newAmznAccAddedToGroupList = new ArrayList<>();
+////        for (AmznAccAddedToGroup amznAccAddedToGroup : amznAccAddedToGroupList) {
+////            int amznAccId = amznAccAddedToGroup.getId();
+////            if (amznAccIdInGroupList.contains(amznAccId)){
+////                newAmznAccAddedToGroupList.add(amznAccAddedToGroup);
+////            }
+////        }
+//
+////        dataTablesOutput.setData(newAmznAccAddedToGroupList);
+//        dataTablesOutput.setData(amznAccAddedToGroupList);
+//        return dataTablesOutput;
+//    }
 
     @Override
     public List<AmznAccAddedToGroup> getAmznAccOutsideGroup(String id) {
