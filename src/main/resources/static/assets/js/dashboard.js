@@ -36,22 +36,10 @@ class App {
             })
         }
 
-        static showDisableConfirmDialog() {
+        static showChangeStatusDialog(t) {
             return Swal.fire({
-                icon: 'warning',
-                text: 'Are you sure to disable this user?',
-                showCancelButton: true,
-                confirmButtonColor: '#3085d6',
-                cancelButtonColor: '#5a6268',
-                confirmButtonText: 'Yes',
-                cancelButtonText: 'No',
-            })
-        }
-
-        static showActivateConfirmDialog() {
-            return Swal.fire({
-                icon: 'warning',
-                text: 'Are you sure to activate this user?',
+                icon: `question`,
+                text: `Are you sure to ${t ? 'activate' : 'disable'} this user?`,
                 showCancelButton: true,
                 confirmButtonColor: '#3085d6',
                 cancelButtonColor: '#5a6268',

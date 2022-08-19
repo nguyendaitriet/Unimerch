@@ -6,6 +6,8 @@ import com.unimerch.dto.UserCreateResult;
 import com.unimerch.dto.UserListItem;
 import com.unimerch.exception.*;
 import com.unimerch.mapper.UserMapper;
+import com.unimerch.repository.GroupDataTableRepository;
+import com.unimerch.repository.UserDataTableRepository;
 import com.unimerch.repository.UserRepository;
 import com.unimerch.repository.model.Group;
 import com.unimerch.repository.model.Role;
@@ -24,8 +26,10 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import javax.persistence.criteria.CriteriaBuilder;
 import javax.transaction.Transactional;
 import java.util.*;
+import java.util.function.Predicate;
 import java.util.regex.Pattern;
 
 @Service
@@ -37,6 +41,12 @@ public class UserServiceImpl implements UserService {
 
     @Autowired
     private UserRepository userRepository;
+
+    @Autowired
+    private UserDataTableRepository userDataTableRepository;
+
+    @Autowired
+    private GroupDataTableRepository groupDataTableRepository;
 
     @Autowired
     private PasswordEncoder passwordEncoder;
@@ -61,6 +71,13 @@ public class UserServiceImpl implements UserService {
         List<Column> columnList = new ArrayList<>(columnMap.values());
         input.setColumns(columnList);
 
+        return userDataTableRepository.findAll(input, user -> userMapper.toUserListItem(user));
+    }
+
+    public DataTablesOutput<Group> findAllGrpAssigned(DataTablesInput input, Integer userId) {
+
+
+//        return groupDataTableRepository.findAll(input, group -> );
         return null;
     }
 

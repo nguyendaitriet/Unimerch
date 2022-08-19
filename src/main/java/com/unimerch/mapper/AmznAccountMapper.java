@@ -10,6 +10,6 @@ public class AmznAccountMapper {
     public AmznAccAddedToGroup toAmznAccAddedToGroup (BrgGroupAmznAccount brgGroupAmznAccount) {
         return new AmznAccAddedToGroup()
                 .setId(brgGroupAmznAccount.getAmznAccount().getId())
-                .setUsername((brgGroupAmznAccount.getAmznAccount().getUserName()));
+                .setUsername((brgGroupAmznAccount.getAmznAccount().getUsername()));
     }
 }

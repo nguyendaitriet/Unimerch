@@ -148,13 +148,14 @@
 
     $(document).ready(function () {
         let table = page.element.tableUser.DataTable({
-            info: false,
-            pagingType: 'simple_numbers',
-            processing: true,
             ajax: {
+                contentType: 'application/json',
                 url: page.urls.findAllUsers,
-                dataSrc: ''
+                type: 'POST',
+                data: (d) => JSON.stringify(d),
+                dataSrc: 'data'
             },
+            serverSide: true,
             columns: [
                 {data: 'id'},
                 {data: 'username'},
@@ -195,6 +196,9 @@
                     }
                 },
             ],
+            info: false,
+            pagingType: 'simple_numbers',
+            processing: true,
             pageLength: 10,
             lengthChange: false,
             dom: 'Bfrtip',

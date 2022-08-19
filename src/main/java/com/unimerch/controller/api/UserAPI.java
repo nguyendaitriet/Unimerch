@@ -3,8 +3,6 @@ package com.unimerch.controller.api;
 import com.unimerch.dto.UserCreateParam;
 import com.unimerch.dto.UserCreateResult;
 import com.unimerch.dto.UserListItem;
-import com.unimerch.mapper.UserMapper;
-import com.unimerch.repository.model.User;
 import com.unimerch.service.UserService;
 import com.unimerch.util.AppUtils;
 import com.unimerch.util.PrincipalUtils;
@@ -23,7 +21,6 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/users")
 public class UserAPI {
-
     @Autowired
     private PrincipalUtils principalUtils;
 
@@ -42,7 +39,7 @@ public class UserAPI {
     }
 
     //    @PreAuthorize("hasAnyAuthority('MANAGER')")
-    @GetMapping
+    @PostMapping
     public DataTablesOutput<UserListItem> findAllUsersPageableExclSelf(@Valid @RequestBody(required = false) DataTablesInput input) {
         String principalUsername = principalUtils.getPrincipalUsername();
         return userService.findAllUserDTOExclSelf(input, principalUsername);

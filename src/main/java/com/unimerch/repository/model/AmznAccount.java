@@ -25,8 +25,8 @@ public class AmznAccount {
     @Column(name = "password", nullable = false, length = 50)
     private String password;
 
-    @Column(name = "user_name", nullable = false, length = 50)
-    private String userName;
+    @Column(name = "username", nullable = false, length = 50)
+    private String username;
 
     @Column(name = "last_check")
     private Instant lastCheck;
