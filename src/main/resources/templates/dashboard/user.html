@@ -61,14 +61,14 @@
                             <!-- Card Body -->
                             <div class="card-body">
                                 <!-- Table Body -->
-                                <table id="table-user" class="cell-border stripe nowrap" style="width: 100%;">
+                                <table id="table-user" class="table cell-border stripe nowrap" style="width: 80%;">
                                     <thead>
                                     <tr>
                                         <th>#</th>
                                         <th>Username</th>
                                         <th>Full name</th>
                                         <th>Status</th>
-                                        <th colspan="3">Action</th>
+                                        <th>Action</th>
                                     </tr>
                                     </thead>
                                     <!-- Tbody -->
@@ -127,8 +127,8 @@
     }
 
     page.element.tableUser = $('#table-user');
-
     page.element.btnShowCreateUserFrm = $('#btnMdCreateUser');
+
     page.dialogs.element.mdCreateUser = $('#mdCreateUser');
     page.dialogs.element.mdCPUser = $('#mdCPUser');
 
@@ -147,6 +147,7 @@
     // $.fn.dataTable.ext.classes.sPageButton = 'paging';
 
     $(document).ready(function () {
+
         let table = page.element.tableUser.DataTable({
             ajax: {
                 contentType: 'application/json',
@@ -155,6 +156,9 @@
                 data: (d) => JSON.stringify(d),
                 dataSrc: 'data'
             },
+            info: false,
+            pagingType: 'simple_numbers',
+            processing: true,
             serverSide: true,
             columns: [
                 {data: 'id'},
@@ -175,9 +179,9 @@
                 {
                     targets: -1,
                     className: "text-center",
-                    render: (data, type, row) => {
-                        return `
-                            <button type='button'
+                    orderable: false,
+                    render: (data, type, row) =>
+                         `<button type='button'
                                     class='assign-group btn btn-outline-primary mr-3'
                                     title='Assign group'>
                                 <i class="fas fa-users-cog"></i>
@@ -191,14 +195,9 @@
                                     class="change-status ${data.disabled ? 'btn btn-outline-success' : 'btn btn-outline-danger'}"
                                     title="${data.disabled ? 'Activate' : 'Disable'}">
                                 <i class="${data.disabled ? 'fas fa-unlock' : 'fas fa-lock'}"></i>
-                            </button>
-                        `
-                    }
+                            </button>`
                 },
             ],
-            info: false,
-            pagingType: 'simple_numbers',
-            processing: true,
             pageLength: 10,
             lengthChange: false,
             dom: 'Bfrtip',
@@ -256,12 +255,14 @@
                         page.commands.doChangeStatus(currentUser, currenRow);
                 })
         });
+
+        page.dialogs.element.btnCreateUser.on("click", function() {
+            // page.dialogs.element.frmCreateUser.submit();
+            page.commands.doCreateUser();
+        })
     });
 
-    page.dialogs.element.btnCreateUser.on("click", function() {
-        // page.dialogs.element.frmCreateUser.submit();
-        page.commands.doCreateUser();
-    })
+
 
     page.commands.doCreateUser = function() {
         let user = new User();
@@ -291,7 +292,7 @@
                 })
                 // .draw('full-hold');
 
-                tableUser.order([0, 'desc']).draw();
+                // tableUser.order([0, 'desc']).draw();
 
                 page.dialogs.element.frmCreateUser[0].reset();
                 page.dialogs.element.mdCreateUser.modal("hide");

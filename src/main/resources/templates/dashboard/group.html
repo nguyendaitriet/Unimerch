@@ -45,7 +45,7 @@
 
                             <div class="card-body">
                                 <!-- Table Body -->
-                                <table id="table-group" class="table cell-border stripe nowrap" style="width: 100%;">
+                                <table id="table-group" class="table stripe nowrap" style="width: 100%;">
                                     <thead>
                                     <tr>
                                         <th>#</th>
@@ -106,8 +106,8 @@
 </a>
 
 <th:block th:replace="layout/modals-group :: create-group"/>
-
 <th:block th:replace="layout/modals-group :: update-group"/>
+<th:block th:replace="layout/modals-group :: add-amzn-acc"/>
 
 <th:block th:replace="layout/script :: script-dashboard"/>
 
@@ -152,6 +152,7 @@
     page.dialogs.element.btnUpdateGroup = $('#btnUpdateGroup');
     page.dialogs.element.groupTitleUpdate = $('#groupTitleUpdate');
 
+    page.dialogs.element.mdAddAmznAccToGroup = $('#mdAddAmznAccToGroup');
 
     page.commands.doCreateGroup = () => {
         let groupTitle = page.dialogs.element.groupTitleCreate.val().trim();
@@ -224,6 +225,38 @@
         })
     }
 
+    page.commands.showAmznAccOutsideGroup = (tableAmznAccOut, currentGroup) => {
+
+        if (tableAmznAccOut === undefined) {
+            tableAmznAccOut = page.element.tableAmznAccOut.DataTable({
+                ajax: {
+                    url: page.urls.findAllAmznAccOutGroup + currentGroup.id,
+                    dataSrc: ''
+                },
+                info: false,
+                pagingType: 'simple_numbers',
+                processing: true,
+                columns: [
+                    {data: null},
+                    {data: 'username'},
+                ],
+                columnDefs: [
+                    {
+                        targets: 0,
+                        orderable: false,
+                        render: (data, type, row) =>
+                            `<input type="checkbox"/>`
+                    }
+                ],
+                pageLength: 10,
+                lengthChange: false,
+                dom: 'Bfrtip',
+            });
+        } else {
+            tableAmznAccOut.ajax.url(page.urls.findAllAmznAccOutGroup + currentGroup.id).load();
+        }
+    }
+
     $(document).ready(function () {
 
         let tableGroup = page.element.tableGroup.DataTable({
@@ -231,9 +264,7 @@
                 contentType: 'application/json',
                 url: page.urls.findAllGroups,
                 type: 'POST',
-                data: function(d) {
-                    return JSON.stringify(d);
-                },
+                data: (d) => JSON.stringify(d),
                 dataSrc: 'data'
             },
             info: false,
@@ -289,6 +320,7 @@
             },
         });
         let tableAmznAccIn;
+        let tableAmznAccOut;
         let currentRowGroup;
         let currentGroup;
         let currentRowAmznAcc;
@@ -354,8 +386,8 @@
                                 className: 'showAddAmzAccMd btn btn-primary',
                                 init: function (api, node, config) {
                                     $(node).on('click', () => {
-                                        page.dialogs.element.mdCreateGroup.modal("show");
-                                        page.dialogs.element.frmCreateGroup[0].reset();
+                                        page.dialogs.element.mdAddAmznAccToGroup.modal("show");
+                                        page.commands.showAmznAccOutsideGroup(tableAmznAccOut, currentGroup);
                                     })
                                 }
                             }
@@ -392,6 +424,11 @@
             page.commands.doDeletedAmznAcc(currentGroup, currentAmznAcc, currentRowAmznAcc);
         });
 
+        page.element.btnShowAddAmzAccMd.on('click', function () {
+            page.commands.s
+
+            (currentGroup, currentRowGroup);
+        });
     });
 
 

@@ -64,10 +64,13 @@ public class UserServiceImpl implements UserService {
     @Override
     public DataTablesOutput<UserListItem> findAllUserDTOExclSelf(DataTablesInput input, String principalUsername) {
         Map<String, Column> columnMap = input.getColumnsAsMap();
+        List<Column> columnList1 = input.getColumns();
+        columnList1.remove(columnList1.size()-1);
+
         columnMap.remove(null);
 
         List<Column> columnList = new ArrayList<>(columnMap.values());
-        input.setColumns(columnList);
+        input.setColumns(columnList1);
 
         return userDataTableRepository.findAll(input, user -> userMapper.toUserListItem(user));
     }
