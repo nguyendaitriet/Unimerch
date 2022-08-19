@@ -1,7 +1,6 @@
 package com.unimerch.controller.api;
 
 import com.unimerch.dto.UserCreateParam;
-import com.unimerch.dto.UserCreateResult;
 import com.unimerch.dto.UserListItem;
 import com.unimerch.service.UserService;
 import com.unimerch.util.AppUtils;
@@ -60,7 +59,7 @@ public class UserAPI {
             return appUtils.mapErrorToResponse(bindingResult);
         }
 
-        UserCreateResult newUser = userService.create(userCreateParam);
+        UserListItem newUser = userService.create(userCreateParam);
         return new ResponseEntity<>(newUser, HttpStatus.CREATED);
     }
 

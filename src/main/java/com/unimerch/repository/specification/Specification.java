@@ -1,4 +1,4 @@
-package com.unimerch.util;
+package com.unimerch.repository.specification;
 
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;

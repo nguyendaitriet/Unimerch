@@ -93,14 +93,17 @@ class App {
         $('[data-toggle="tooltip"]').tooltip();
     }
 
-    static allowShowingPassword(passwordSelector) {
-        $('.show-password').on('change', function () {
-            let input = passwordSelector.get(0);
+    static allowShowingPassword(form) {
+        let password = form.find('.password').get(0);
+        let checkbox = form.find('.show-password');
 
-            if (input.type === 'password') {
-                input.type = 'text';
+        password.type = 'password';
+
+        checkbox.on('change', function () {
+            if (checkbox.is(':checked')) {
+                password.type = 'text';
             } else {
-                input.type = 'password';
+                password.type = 'password';
             }
         })
     }

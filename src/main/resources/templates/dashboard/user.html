@@ -61,7 +61,7 @@
                             <!-- Card Body -->
                             <div class="card-body">
                                 <!-- Table Body -->
-                                <table id="table-user" class="table cell-border stripe nowrap" style="width: 80%;">
+                                <table id="table-user" class="cell-border stripe nowrap" style="width: 100%;">
                                     <thead>
                                     <tr>
                                         <th>#</th>
@@ -127,8 +127,8 @@
     }
 
     page.element.tableUser = $('#table-user');
-    page.element.btnShowCreateUserFrm = $('#btnMdCreateUser');
 
+    page.element.btnShowCreateUserFrm = $('#btnMdCreateUser');
     page.dialogs.element.mdCreateUser = $('#mdCreateUser');
     page.dialogs.element.mdCPUser = $('#mdCPUser');
 
@@ -147,17 +147,19 @@
     // $.fn.dataTable.ext.classes.sPageButton = 'paging';
 
     $(document).ready(function () {
+        let currentUser = new User();
+        let currenRow;
 
         let table = page.element.tableUser.DataTable({
             ajax: {
                 contentType: 'application/json',
                 url: page.urls.findAllUsers,
                 type: 'POST',
-                data: (d) => JSON.stringify(d),
+                data: function(d) {
+                    return JSON.stringify(d);
+                },
                 dataSrc: 'data'
             },
-            info: false,
-            pagingType: 'simple_numbers',
             processing: true,
             serverSide: true,
             columns: [
@@ -170,18 +172,21 @@
             columnDefs: [
                 {
                     targets: 0,
-                    className: "text-center"
+                    className: 'text-center'
                 },
                 {
                     targets: 3,
-                    render: (data, type, row) => data ? 'Disabled' : 'Active'
+                    className: 'text-center',
+                    render: (data, type, row) => data ? 'Disabled' : 'Active',
+                    createdCell: (cell, data) => data ? $(cell).addClass('text-danger') : $(cell).addClass('text-success')
                 },
                 {
                     targets: -1,
-                    className: "text-center",
+                    className: 'text-center col-2',
                     orderable: false,
-                    render: (data, type, row) =>
-                         `<button type='button'
+                    render: (data, type, row) => {
+                        return `
+                            <button type='button'
                                     class='assign-group btn btn-outline-primary mr-3'
                                     title='Assign group'>
                                 <i class="fas fa-users-cog"></i>
@@ -195,9 +200,13 @@
                                     class="change-status ${data.disabled ? 'btn btn-outline-success' : 'btn btn-outline-danger'}"
                                     title="${data.disabled ? 'Activate' : 'Disable'}">
                                 <i class="${data.disabled ? 'fas fa-unlock' : 'fas fa-lock'}"></i>
-                            </button>`
+                            </button>
+                        `
+                    }
                 },
             ],
+            info: false,
+            pagingType: 'simple_numbers',
             pageLength: 10,
             lengthChange: false,
             dom: 'Bfrtip',
@@ -217,7 +226,7 @@
                             $(node).on('click', () => {
                                 page.dialogs.element.frmCreateUser[0].reset();
                                 page.dialogs.element.mdCreateUser.modal("show");
-                                App.allowShowingPassword(page.dialogs.element.passwordCreate);
+                                App.allowShowingPassword(page.dialogs.element.frmCreateUser);
                             });
                         }
                     }
@@ -226,28 +235,28 @@
         });
 
         page.element.tableUser.on('click', 'button.assign-group', function() {
-            let currentUser = table.row($(this).parents('tr')).data();
+            currentUser = table.row($(this).parents('tr')).data();
             console.log(currentUser);
         });
 
         page.element.tableUser.on('click', 'button.change-password', function() {
-            let currentUser = table.row($(this).parents('tr')).data();
+            currentUser = table.row($(this).parents('tr')).data();
 
             page.dialogs.element.fullNameCP.val(currentUser.fullName);
             page.dialogs.element.usernameCP.val(currentUser.username);
-            App.allowShowingPassword(page.dialogs.element.passwordCP);
+            App.allowShowingPassword(page.dialogs.element.frmCPUser);
 
             page.dialogs.element.mdCPUser.modal("show");
-
-            page.dialogs.element.btnCPUser.on("click", function() {
-                // page.dialogs.element.frmCPUser.submit();
-                page.commands.doCPUser(currentUser);
-            })
         });
 
+        page.dialogs.element.btnCPUser.on("click", function() {
+            // page.dialogs.element.frmCPUser.submit();
+            page.commands.doCPUser(currentUser);
+        })
+
         page.element.tableUser.on('click', 'button.change-status', function() {
-            let currenRow = table.row($(this).parents('tr'));
-            let currentUser = currenRow.data();
+            currenRow = table.row($(this).parents('tr'));
+            currentUser = currenRow.data();
 
             App.SweetAlert.showChangeStatusDialog(currentUser.disabled)
                 .then((result) => {
@@ -255,14 +264,12 @@
                         page.commands.doChangeStatus(currentUser, currenRow);
                 })
         });
-
-        page.dialogs.element.btnCreateUser.on("click", function() {
-            // page.dialogs.element.frmCreateUser.submit();
-            page.commands.doCreateUser();
-        })
     });
 
-
+    page.dialogs.element.btnCreateUser.on("click", function() {
+        // page.dialogs.element.frmCreateUser.submit();
+        page.commands.doCreateUser();
+    })
 
     page.commands.doCreateUser = function() {
         let user = new User();
@@ -292,7 +299,7 @@
                 })
                 // .draw('full-hold');
 
-                // tableUser.order([0, 'desc']).draw();
+                tableUser.order([0, 'desc']).draw();
 
                 page.dialogs.element.frmCreateUser[0].reset();
                 page.dialogs.element.mdCreateUser.modal("hide");
