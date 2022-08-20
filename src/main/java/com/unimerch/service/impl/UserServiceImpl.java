@@ -1,8 +1,8 @@
 package com.unimerch.service.impl;
 
 
-import com.unimerch.dto.UserCreateParam;
-import com.unimerch.dto.UserListItem;
+import com.unimerch.dto.user.UserCreateParam;
+import com.unimerch.dto.user.UserListItem;
 import com.unimerch.exception.*;
 import com.unimerch.mapper.UserMapper;
 import com.unimerch.repository.datatable.GroupDataTableRepository;
@@ -12,7 +12,6 @@ import com.unimerch.repository.model.Group;
 import com.unimerch.repository.model.Role;
 import com.unimerch.repository.model.User;
 import com.unimerch.repository.model.UserPrinciple;
-import com.unimerch.repository.specification.UserSpecification;
 import com.unimerch.service.UserService;
 import com.unimerch.util.ValidationUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,7 +20,6 @@ import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.jpa.datatables.mapping.Column;
 import org.springframework.data.jpa.datatables.mapping.DataTablesInput;
 import org.springframework.data.jpa.datatables.mapping.DataTablesOutput;
-import org.springframework.data.jpa.domain.Specification;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;

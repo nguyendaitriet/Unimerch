@@ -1,6 +1,6 @@
 package com.unimerch.repository;
 
-import com.unimerch.dto.UserListItem;
+import com.unimerch.dto.user.UserListItem;
 import com.unimerch.repository.model.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
@@ -29,11 +29,11 @@ public interface UserRepository extends JpaRepository<User, Integer> {
             "WHERE u.id = :id")
     void changePassword(@Param("id") int id, @Param("newPass") String passwordHash);
 
-    @Query("SELECT NEW com.unimerch.dto.UserListItem (" +
-            "u.id, " +
-            "u.username, " +
-            "u.fullName, " +
-            "u.disabled" +
+    @Query("SELECT NEW com.unimerch.dto.user.UserListItem (" +
+                "u.id, " +
+                "u.username, " +
+                "u.fullName, " +
+                "u.disabled" +
             ") " +
             "FROM User u " +
             "WHERE u.username <> :principalUsername")

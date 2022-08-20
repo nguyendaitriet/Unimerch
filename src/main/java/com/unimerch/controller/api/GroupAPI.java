@@ -1,6 +1,8 @@
 package com.unimerch.controller.api;
 
-import com.unimerch.dto.AmznAccAddedToGroup;
+import com.unimerch.dto.amznacc.AmznAccAddedToGroup;
+import com.unimerch.dto.group.GroupCreateParam;
+import com.unimerch.dto.group.GroupListItem;
 import com.unimerch.repository.model.Group;
 import com.unimerch.service.GroupService;
 import lombok.RequiredArgsConstructor;
@@ -43,10 +45,16 @@ public class GroupAPI {
 
     //    @PreAuthorize("hasAnyAuthority('MANAGER')")
     @PostMapping("/create")
-    public ResponseEntity<?> createGroup(@RequestBody String groupTitle) {
-        Group newGroup = groupService.createGroup(groupTitle);
+    public ResponseEntity<?> createGroup(@RequestBody GroupCreateParam groupCreateParam) {
+        GroupListItem newGroup = groupService.createGroup(groupCreateParam);
         return new ResponseEntity<>(newGroup, HttpStatus.CREATED);
     }
+
+//    @PostMapping("/create")
+//    public ResponseEntity<?> createGroup(@RequestBody String groupTitle) {
+//        Group newGroup = groupService.createGroup(groupTitle);
+//        return new ResponseEntity<>(newGroup, HttpStatus.CREATED);
+//    }
 
     //    @PreAuthorize("hasAnyAuthority('MANAGER')")
     @PutMapping("/update/{id}")

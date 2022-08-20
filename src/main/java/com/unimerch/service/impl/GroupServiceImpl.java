@@ -1,11 +1,14 @@
 package com.unimerch.service.impl;
 
-import com.unimerch.dto.AmznAccAddedToGroup;
+import com.unimerch.dto.amznacc.AmznAccAddedToGroup;
+import com.unimerch.dto.group.GroupCreateParam;
+import com.unimerch.dto.group.GroupListItem;
 import com.unimerch.exception.DuplicateDataException;
 import com.unimerch.exception.InvalidIdException;
 import com.unimerch.exception.NoDataFoundException;
 import com.unimerch.exception.ServerErrorException;
 import com.unimerch.mapper.AmznAccountMapper;
+import com.unimerch.mapper.GroupMapper;
 import com.unimerch.repository.AmznAccountRepository;
 import com.unimerch.repository.BrgGroupAmznAccountRepository;
 import com.unimerch.repository.datatable.AmznAccTableRepository;
@@ -16,20 +19,12 @@ import com.unimerch.service.GroupService;
 import com.unimerch.util.ValidationUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.jpa.datatables.SpecificationBuilder;
 import org.springframework.data.jpa.datatables.mapping.Column;
 import org.springframework.data.jpa.datatables.mapping.DataTablesInput;
 import org.springframework.data.jpa.datatables.mapping.DataTablesOutput;
-import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
 import javax.persistence.EntityManager;
-import javax.persistence.criteria.CriteriaBuilder;
-import javax.persistence.criteria.CriteriaQuery;
-import javax.persistence.criteria.Expression;
-import javax.persistence.criteria.Predicate;
 import javax.transaction.Transactional;
 import java.util.*;
 import java.util.regex.Pattern;
@@ -60,7 +55,7 @@ public class GroupServiceImpl implements GroupService {
     private AmznAccTableRepository amznAccTableRepository;
 
     @Autowired
-    EntityManager entityManager;
+    private GroupMapper groupMapper;
 
     @Override
     public List<Group> findAll() {
@@ -95,19 +90,38 @@ public class GroupServiceImpl implements GroupService {
         return optionalGroup;
     }
 
+//    @Override
+//    public Group createGroup(String groupTitle) {
+//        if (groupRepository.existsByTitle(groupTitle.trim())) {
+//            throw new DuplicateDataException(messageSource.getMessage("validation.groupTitleExists", null, Locale.getDefault()));
+//        }
+//
+//        try {
+//            Group newGroup = new Group(groupTitle.trim());
+//            return groupRepository.save(newGroup);
+//        } catch (Exception e) {
+//            throw new ServerErrorException(messageSource.getMessage("error.serverError", null, Locale.getDefault()));
+//        }
+//    }
+
     @Override
-    public Group createGroup(String groupTitle) {
-        if (groupRepository.existsByTitle(groupTitle.trim())) {
+    public GroupListItem createGroup(GroupCreateParam groupCreateParam) {
+        String groupTitle = groupCreateParam.getTitle().trim();
+
+        if (groupRepository.existsByTitle(groupTitle)) {
             throw new DuplicateDataException(messageSource.getMessage("validation.groupTitleExists", null, Locale.getDefault()));
         }
 
         try {
-            Group newGroup = new Group(groupTitle.trim());
-            return groupRepository.save(newGroup);
+            Group newGroup = new Group(groupTitle);
+            newGroup =  groupRepository.save(newGroup);
+            return groupMapper.toGroupListItem(newGroup);
         } catch (Exception e) {
             throw new ServerErrorException(messageSource.getMessage("error.serverError", null, Locale.getDefault()));
         }
     }
+
+
 
     @Override
     public Group updateGroup(String id, String groupTitle) {

@@ -1,7 +1,7 @@
 package com.unimerch.mapper;
 
-import com.unimerch.dto.UserCreateParam;
-import com.unimerch.dto.UserListItem;
+import com.unimerch.dto.user.UserCreateParam;
+import com.unimerch.dto.user.UserListItem;
 import com.unimerch.repository.model.User;
 import org.springframework.stereotype.Component;
 

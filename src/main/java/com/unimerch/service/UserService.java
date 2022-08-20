@@ -1,7 +1,7 @@
 package com.unimerch.service;
 
-import com.unimerch.dto.UserCreateParam;
-import com.unimerch.dto.UserListItem;
+import com.unimerch.dto.user.UserCreateParam;
+import com.unimerch.dto.user.UserListItem;
 import com.unimerch.repository.model.User;
 import org.springframework.data.jpa.datatables.mapping.DataTablesInput;
 import org.springframework.data.jpa.datatables.mapping.DataTablesOutput;

@@ -1,4 +1,4 @@
-package com.unimerch.dto;
+package com.unimerch.dto.group;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -12,4 +12,5 @@ import lombok.experimental.Accessors;
 @AllArgsConstructor
 @Accessors(chain = true)
 public class GroupCreateParam {
+    private String title;
 }

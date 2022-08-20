@@ -1,13 +1,11 @@
 package com.unimerch.service;
 
-import com.unimerch.dto.AmznAccAddedToGroup;
-import com.unimerch.repository.model.AmznAccount;
+import com.unimerch.dto.amznacc.AmznAccAddedToGroup;
+import com.unimerch.dto.group.GroupCreateParam;
+import com.unimerch.dto.group.GroupListItem;
 import com.unimerch.repository.model.Group;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.datatables.mapping.DataTablesInput;
 import org.springframework.data.jpa.datatables.mapping.DataTablesOutput;
-import org.springframework.data.repository.query.Param;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -21,7 +19,9 @@ public interface GroupService {
 
     Optional<Group> findById(String id);
 
-    Group createGroup(String groupTitle);
+//    Group createGroup(String groupTitle);
+
+    GroupListItem createGroup(GroupCreateParam groupCreateParam);
 
     Group updateGroup(String id, String groupTitle);
 

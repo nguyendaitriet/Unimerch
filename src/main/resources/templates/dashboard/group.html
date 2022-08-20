@@ -157,7 +157,9 @@
     page.dialogs.element.btnAddAmznAccToGroup = $('#btnAddAmznAccToGroup');
 
     page.commands.doCreateGroup = () => {
-        let groupTitle = page.dialogs.element.groupTitleCreate.val().trim();
+        let newGroup = {};
+        // let groupTitle = page.dialogs.element.groupTitleCreate.val().trim();
+        newGroup.title = page.dialogs.element.groupTitleCreate.val().trim();
 
         $.ajax({
             headers: {
@@ -166,7 +168,7 @@
             },
             type: "POST",
             url: page.urls.createGroup,
-            data: groupTitle
+            data: JSON.stringify(newGroup)
         })
             .done((data) => {
                 let tableGroup = page.element.tableGroup.DataTable();
