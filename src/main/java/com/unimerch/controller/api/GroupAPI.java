@@ -1,7 +1,6 @@
 package com.unimerch.controller.api;
 
 import com.unimerch.dto.AmznAccAddedToGroup;
-import com.unimerch.repository.model.AmznAccount;
 import com.unimerch.repository.model.Group;
 import com.unimerch.service.GroupService;
 import lombok.RequiredArgsConstructor;
@@ -35,31 +34,33 @@ public class GroupAPI {
         return groupService.findAll(input);
     }
 
-//    @PreAuthorize("hasAnyAuthority('MANAGER')")
+    //    @PreAuthorize("hasAnyAuthority('MANAGER')")
     @GetMapping("/{id}")
     public ResponseEntity<?> findGroupById(@PathVariable String id) {
         Optional<Group> group = groupService.findById(id);
         return new ResponseEntity<>(group.get(), HttpStatus.OK);
     }
 
-//    @PreAuthorize("hasAnyAuthority('MANAGER')")
+    //    @PreAuthorize("hasAnyAuthority('MANAGER')")
     @PostMapping("/create")
     public ResponseEntity<?> createGroup(@RequestBody String groupTitle) {
         Group newGroup = groupService.createGroup(groupTitle);
         return new ResponseEntity<>(newGroup, HttpStatus.CREATED);
     }
 
-//    @PreAuthorize("hasAnyAuthority('MANAGER')")
+    //    @PreAuthorize("hasAnyAuthority('MANAGER')")
     @PutMapping("/update/{id}")
-    public ResponseEntity<?> updateGroup(@PathVariable String id ,@RequestBody String groupTitle) {
+    public ResponseEntity<?> updateGroup(@PathVariable String id, @RequestBody String groupTitle) {
         Group group = groupService.updateGroup(id, groupTitle);
         return new ResponseEntity<>(group, HttpStatus.OK);
     }
 
     //    @PreAuthorize("hasAnyAuthority('MANAGER')")
-    @PostMapping("/addAmznAccount/{id}")
-    public ResponseEntity<?> addAmznAccount(@PathVariable String id, @RequestBody ArrayList<String> amznAccIdList) {
-        List<AmznAccAddedToGroup> newAmznAccAddedToGroupList = groupService.addAmznAccToGroup(amznAccIdList, id);
+    @PostMapping("/addAmznAccountToGroup/{id}")
+    public ResponseEntity<?> addAmznAccountToGroup(@PathVariable String id,
+                                                   @RequestBody Map<String, ArrayList<String>> amznAccIdList) {
+        List<AmznAccAddedToGroup> newAmznAccAddedToGroupList = groupService
+                .addAmznAccToGroup(amznAccIdList.get("amznAccSelected"), id);
         return new ResponseEntity<>(newAmznAccAddedToGroupList, HttpStatus.OK);
     }
 

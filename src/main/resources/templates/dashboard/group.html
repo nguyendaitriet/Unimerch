@@ -123,7 +123,8 @@
             createGroup: App.BASE_URL_GROUP + "/create",
             updateGroup: App.BASE_URL_GROUP + "/update/",
             // deleteGroup: App.BASE_URL_GROUP + "/delete/"
-            deleteAmznAccFromGroup: App.BASE_URL_GROUP + "/deleteAmznAccFromGroup/"
+            deleteAmznAccFromGroup: App.BASE_URL_GROUP + "/deleteAmznAccFromGroup/",
+            addAmznAccountToGroup: App.BASE_URL_GROUP + "/addAmznAccountToGroup/"
         },
         element: {},
         commands: {},
@@ -153,6 +154,7 @@
     page.dialogs.element.groupTitleUpdate = $('#groupTitleUpdate');
 
     page.dialogs.element.mdAddAmznAccToGroup = $('#mdAddAmznAccToGroup');
+    page.dialogs.element.btnAddAmznAccToGroup = $('#btnAddAmznAccToGroup');
 
     page.commands.doCreateGroup = () => {
         let groupTitle = page.dialogs.element.groupTitleCreate.val().trim();
@@ -218,43 +220,42 @@
         .done((data) => {
             let tableAmznAccIn = page.element.tableAmznAccIn.DataTable();
             tableAmznAccIn.row(currentRowAmznAcc).remove().draw();
-            App.SweetAlert.showSuccessAlert('Data deleted successfully!');
         })
         .fail(function (jqXHR) {
             alert("fail");
         })
     }
 
-    page.commands.showAmznAccOutsideGroup = (tableAmznAccOut, currentGroup) => {
+    page.commands.addAmznAccToGroup = (currentGroup, tableAmznAccIn) => {
+        let amznAccSelected = [];
+        $('#table-amzn-acc-out input[type="checkbox"]:checked').each(function() {
+            amznAccSelected.push($(this).val());
+        });
 
-        if (tableAmznAccOut === undefined) {
-            tableAmznAccOut = page.element.tableAmznAccOut.DataTable({
-                ajax: {
-                    url: page.urls.findAllAmznAccOutGroup + currentGroup.id,
-                    dataSrc: ''
-                },
-                info: false,
-                pagingType: 'simple_numbers',
-                processing: true,
-                columns: [
-                    {data: null},
-                    {data: 'username'},
-                ],
-                columnDefs: [
-                    {
-                        targets: 0,
-                        orderable: false,
-                        render: (data, type, row) =>
-                            `<input type="checkbox"/>`
-                    }
-                ],
-                pageLength: 10,
-                lengthChange: false,
-                dom: 'Bfrtip',
-            });
-        } else {
-            tableAmznAccOut.ajax.url(page.urls.findAllAmznAccOutGroup + currentGroup.id).load();
-        }
+        $.ajax({
+            headers: {
+                "accept": "application/json",
+                "content-type": "application/json"
+            },
+            type: "POST",
+            url: page.urls.addAmznAccountToGroup + currentGroup.id,
+            data: JSON.stringify({amznAccSelected})
+        })
+        .done((data) => {
+            console.log(data);
+
+            data.forEach((amznAcc) => {
+                tableAmznAccIn.row.add({
+                    'id': amznAcc.id,
+                    'username': amznAcc.username
+                })
+            })
+            page.dialogs.element.mdAddAmznAccToGroup.modal("hide");
+            App.SweetAlert.showSuccessAlert(App.SUCCESS_CREATED);
+        })
+        .fail(function (jqXHR) {
+            alert("fail");
+        })
     }
 
     $(document).ready(function () {
@@ -387,7 +388,7 @@
                                 init: function (api, node, config) {
                                     $(node).on('click', () => {
                                         page.dialogs.element.mdAddAmznAccToGroup.modal("show");
-                                        page.commands.showAmznAccOutsideGroup(tableAmznAccOut, currentGroup);
+                                        // page.commands.showAmznAccOutsideGroup(tableAmznAccOut, currentGroup);
                                     })
                                 }
                             }
@@ -424,11 +425,45 @@
             page.commands.doDeletedAmznAcc(currentGroup, currentAmznAcc, currentRowAmznAcc);
         });
 
-        page.element.btnShowAddAmzAccMd.on('click', function () {
-            page.commands.s
-
-            (currentGroup, currentRowGroup);
+        page.dialogs.element.mdAddAmznAccToGroup.on('shown.bs.modal', () => {
+            if (tableAmznAccOut === undefined) {
+                tableAmznAccOut = page.element.tableAmznAccOut.DataTable({
+                    ajax: {
+                        url: page.urls.findAllAmznAccOutGroup + currentGroup.id,
+                        dataSrc: ''
+                    },
+                    info: false,
+                    pagingType: 'simple_numbers',
+                    processing: true,
+                    columns: [
+                        {data: null},
+                        {data: 'username'},
+                    ],
+                    columnDefs: [
+                        {
+                            targets: 0,
+                            orderable: false,
+                            render: (data, type, row) =>
+                                `<input type="checkbox" name="amznAccOutGroup" value="${data.id}"/>`
+                        }
+                    ],
+                    pageLength: 10,
+                    lengthChange: false,
+                    dom: 'Bfrtip',
+                });
+            } else {
+                tableAmznAccOut.ajax.url(page.urls.findAllAmznAccOutGroup + currentGroup.id).load();
+            }
         });
+
+        page.dialogs.element.mdAddAmznAccToGroup.on('hidden.bs.modal', () => {
+            tableAmznAccOut.clear().draw();
+        });
+
+        page.dialogs.element.btnAddAmznAccToGroup.on('click', () => {
+            page.commands.addAmznAccToGroup(currentGroup,tableAmznAccIn);
+        })
+
     });
 
 

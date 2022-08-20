@@ -148,7 +148,6 @@ public class GroupServiceImpl implements GroupService {
                 brgGroupAmznAccRepo.save(brgGroupAmznAccount);
                 amznAccAddedToGroupList.add(amznAccountMapper.toAmznAccAddedToGroup(brgGroupAmznAccount));
             }
-
         } catch (Exception e) {
             throw new ServerErrorException(messageSource.getMessage("error.serverError", null, Locale.getDefault()));
         }
