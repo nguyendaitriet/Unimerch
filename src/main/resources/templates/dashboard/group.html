@@ -248,8 +248,8 @@
                 tableAmznAccIn.row.add({
                     'id': amznAcc.id,
                     'username': amznAcc.username
-                })
-            })
+                }).draw()
+            });
             page.dialogs.element.mdAddAmznAccToGroup.modal("hide");
             App.SweetAlert.showSuccessAlert(App.SUCCESS_CREATED);
         })
@@ -458,6 +458,7 @@
 
         page.dialogs.element.mdAddAmznAccToGroup.on('hidden.bs.modal', () => {
             tableAmznAccOut.clear().draw();
+            tableAmznAccOut.search('').draw();
         });
 
         page.dialogs.element.btnAddAmznAccToGroup.on('click', () => {
