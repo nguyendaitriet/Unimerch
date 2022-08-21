@@ -3,14 +3,18 @@ package com.unimerch.controller.api;
 import com.unimerch.dto.amznacc.AmznAccAddedToGroup;
 import com.unimerch.dto.group.GroupCreateParam;
 import com.unimerch.dto.group.GroupListItem;
+import com.unimerch.dto.group.GroupUpdateParam;
 import com.unimerch.repository.model.Group;
 import com.unimerch.service.GroupService;
+import com.unimerch.util.AppUtils;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.jpa.datatables.mapping.DataTablesInput;
 import org.springframework.data.jpa.datatables.mapping.DataTablesOutput;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -23,6 +27,9 @@ public class GroupAPI {
 
     @Autowired
     private GroupService groupService;
+
+    @Autowired
+    private AppUtils appUtils;
 
     //    @PreAuthorize("hasAnyAuthority('MANAGER')")
     @GetMapping("/findAllGroups")
@@ -45,21 +52,20 @@ public class GroupAPI {
 
     //    @PreAuthorize("hasAnyAuthority('MANAGER')")
     @PostMapping("/create")
-    public ResponseEntity<?> createGroup(@RequestBody GroupCreateParam groupCreateParam) {
+    public ResponseEntity<?> createGroup(@Validated @RequestBody GroupCreateParam groupCreateParam,
+                                         BindingResult bindingResult) {
+        if (bindingResult.hasErrors()) {
+            return appUtils.mapErrorToResponse(bindingResult);
+        }
+
         GroupListItem newGroup = groupService.createGroup(groupCreateParam);
         return new ResponseEntity<>(newGroup, HttpStatus.CREATED);
     }
 
-//    @PostMapping("/create")
-//    public ResponseEntity<?> createGroup(@RequestBody String groupTitle) {
-//        Group newGroup = groupService.createGroup(groupTitle);
-//        return new ResponseEntity<>(newGroup, HttpStatus.CREATED);
-//    }
-
     //    @PreAuthorize("hasAnyAuthority('MANAGER')")
     @PutMapping("/update/{id}")
-    public ResponseEntity<?> updateGroup(@PathVariable String id, @RequestBody String groupTitle) {
-        Group group = groupService.updateGroup(id, groupTitle);
+    public ResponseEntity<?> updateGroup(@PathVariable String id, @RequestBody GroupUpdateParam groupUpdateParam) {
+        GroupListItem group = groupService.updateGroup(id, groupUpdateParam);
         return new ResponseEntity<>(group, HttpStatus.OK);
     }
 
