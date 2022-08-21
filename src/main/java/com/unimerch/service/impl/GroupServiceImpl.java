@@ -128,7 +128,22 @@ public class GroupServiceImpl implements GroupService {
         }
     }
 
-        @Override
+    @Override
+    public void deleteGroup(String id) {
+        Group group = findById(id).get();
+        int groupId = group.getId();
+
+        try {
+            groupRepository.deleteGroupAssociateAmznAcc(groupId);
+            groupRepository.deleteGroupAssociateUser(groupId);
+            groupRepository.deleteGroup(groupId);
+        } catch (Exception e) {
+            throw new ServerErrorException(messageSource.getMessage("error.serverError", null, Locale.getDefault()));
+        }
+
+        }
+
+    @Override
     public List<AmznAccAddedToGroup> addAmznAccToGroup(ArrayList<String> amznAccIdList, String id) {
 
         Group group = findById(id).get();

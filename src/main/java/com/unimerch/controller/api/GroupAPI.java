@@ -32,15 +32,15 @@ public class GroupAPI {
     private AppUtils appUtils;
 
     //    @PreAuthorize("hasAnyAuthority('MANAGER')")
-    @GetMapping("/findAllGroups")
-    public ResponseEntity<?> findAllGroups() {
-        return new ResponseEntity<>(groupService.findAll(), HttpStatus.OK);
-    }
-
-    //    @PreAuthorize("hasAnyAuthority('MANAGER')")
     @PostMapping
     public DataTablesOutput<Group> findAllGroupsPageable(@Valid @RequestBody DataTablesInput input) {
         return groupService.findAll(input);
+    }
+
+    //    @PreAuthorize("hasAnyAuthority('MANAGER')")
+    @GetMapping("/findAllGroups")
+    public ResponseEntity<?> findAllGroups() {
+        return new ResponseEntity<>(groupService.findAll(), HttpStatus.OK);
     }
 
     //    @PreAuthorize("hasAnyAuthority('MANAGER')")
@@ -57,7 +57,6 @@ public class GroupAPI {
         if (bindingResult.hasErrors()) {
             return appUtils.mapErrorToResponse(bindingResult);
         }
-
         GroupListItem newGroup = groupService.createGroup(groupCreateParam);
         return new ResponseEntity<>(newGroup, HttpStatus.CREATED);
     }
@@ -67,6 +66,13 @@ public class GroupAPI {
     public ResponseEntity<?> updateGroup(@PathVariable String id, @RequestBody GroupUpdateParam groupUpdateParam) {
         GroupListItem group = groupService.updateGroup(id, groupUpdateParam);
         return new ResponseEntity<>(group, HttpStatus.OK);
+    }
+
+    //    @PreAuthorize("hasAnyAuthority('MANAGER')")
+    @DeleteMapping("/delete/{id}")
+    public ResponseEntity<?> deleteGroup(@PathVariable String id) {
+        groupService.deleteGroup(id);
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 
     //    @PreAuthorize("hasAnyAuthority('MANAGER')")

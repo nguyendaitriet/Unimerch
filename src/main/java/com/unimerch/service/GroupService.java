@@ -24,6 +24,8 @@ public interface GroupService {
 
     GroupListItem updateGroup(String id, GroupUpdateParam groupUpdateParam);
 
+    void deleteGroup(String id);
+
     List<AmznAccAddedToGroup> addAmznAccToGroup(ArrayList<String> amznAccIdList, String id);
 
     List<AmznAccAddedToGroup> getAmznAccInsideGroup(String id);
