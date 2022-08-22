@@ -37,7 +37,4 @@ public interface BrgGroupAmznAccountRepository extends JpaRepository<BrgGroupAmz
     @Modifying
     void deleteAmznAccFromGroup(@Param("amznAccId") Integer amznAccId, @Param("groupId") Integer groupId);
 
-
-
-
 }
