@@ -151,7 +151,8 @@ class App {
                 break;
             case 401:
                 this.SweetAlert.showTimeOut(this.ERROR_401,
-                    "Redirecting to login in", 3000, this.redirectToLogin());
+                    "Redirecting to login in", 3000,
+                    this.redirectToLogin(3000));
                 break;
             case 403:
                 this.SweetAlert.showErrorAlert(this.ERROR_403);
@@ -165,10 +166,10 @@ class App {
         }
     }
 
-    static redirectToLogin() {
+    static redirectToLogin(timeout) {
         setTimeout(() => {
             location.href = "/logout";
-        }, 2000);
+        }, timeout);
     }
 }
 

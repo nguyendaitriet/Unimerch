@@ -1,11 +1,15 @@
 package com.unimerch.service.impl;
 
 import com.unimerch.dto.amznacc.AmznAccAddedToGroup;
+import com.unimerch.dto.group.GroupCreateParam;
+import com.unimerch.dto.group.GroupListItem;
+import com.unimerch.dto.group.GroupUpdateParam;
 import com.unimerch.exception.DuplicateDataException;
 import com.unimerch.exception.InvalidIdException;
 import com.unimerch.exception.NoDataFoundException;
 import com.unimerch.exception.ServerErrorException;
 import com.unimerch.mapper.AmznAccountMapper;
+import com.unimerch.mapper.GroupMapper;
 import com.unimerch.repository.AmznAccountRepository;
 import com.unimerch.repository.BrgGroupAmznAccountRepository;
 import com.unimerch.repository.datatable.AmznAccTableRepository;
@@ -20,6 +24,7 @@ import org.springframework.data.jpa.datatables.mapping.Column;
 import org.springframework.data.jpa.datatables.mapping.DataTablesInput;
 import org.springframework.data.jpa.datatables.mapping.DataTablesOutput;
 import org.springframework.stereotype.Service;
+import org.springframework.validation.BindingResult;
 
 import javax.persistence.EntityManager;
 import javax.transaction.Transactional;
@@ -52,7 +57,7 @@ public class GroupServiceImpl implements GroupService {
     private AmznAccTableRepository amznAccTableRepository;
 
     @Autowired
-    EntityManager entityManager;
+    private GroupMapper groupMapper;
 
     @Override
     public List<Group> findAll() {
@@ -88,23 +93,26 @@ public class GroupServiceImpl implements GroupService {
     }
 
     @Override
-    public Group createGroup(String groupTitle) {
-        if (groupRepository.existsByTitle(groupTitle.trim())) {
+    public GroupListItem createGroup(GroupCreateParam groupCreateParam) {
+        String groupTitle = groupCreateParam.getTitle().trim();
+
+        if (groupRepository.existsByTitle(groupTitle)) {
             throw new DuplicateDataException(messageSource.getMessage("validation.groupTitleExists", null, Locale.getDefault()));
         }
 
         try {
-            Group newGroup = new Group(groupTitle.trim());
-            return groupRepository.save(newGroup);
+            Group newGroup = new Group(groupTitle);
+            newGroup = groupRepository.save(newGroup);
+            return groupMapper.toGroupListItem(newGroup);
         } catch (Exception e) {
             throw new ServerErrorException(messageSource.getMessage("error.serverError", null, Locale.getDefault()));
         }
     }
 
-    @Override
-    public Group updateGroup(String id, String groupTitle) {
+    public GroupListItem updateGroup(String id, GroupUpdateParam groupUpdateParam) {
         Group group = findById(id).get();
-        String newGroupTitle = groupTitle.trim();
+
+        String newGroupTitle = groupUpdateParam.getTitle().trim();
         boolean isGroupInvalid = groupRepository.existsByTitleAndIdIsNot(newGroupTitle, group.getId());
 
         if (isGroupInvalid) {
@@ -113,11 +121,27 @@ public class GroupServiceImpl implements GroupService {
 
         try {
             group.setTitle(newGroupTitle);
-            return groupRepository.save(group);
+            group = groupRepository.save(group);
+            return groupMapper.toGroupListItem(group);
         } catch (Exception e) {
             throw new ServerErrorException(messageSource.getMessage("error.serverError", null, Locale.getDefault()));
         }
     }
+
+    @Override
+    public void deleteGroup(String id) {
+        Group group = findById(id).get();
+        int groupId = group.getId();
+
+        try {
+            groupRepository.deleteGroupAssociateAmznAcc(groupId);
+            groupRepository.deleteGroupAssociateUser(groupId);
+            groupRepository.deleteGroup(groupId);
+        } catch (Exception e) {
+            throw new ServerErrorException(messageSource.getMessage("error.serverError", null, Locale.getDefault()));
+        }
+
+        }
 
     @Override
     public List<AmznAccAddedToGroup> addAmznAccToGroup(ArrayList<String> amznAccIdList, String id) {
@@ -140,7 +164,6 @@ public class GroupServiceImpl implements GroupService {
                 brgGroupAmznAccRepo.save(brgGroupAmznAccount);
                 amznAccAddedToGroupList.add(amznAccountMapper.toAmznAccAddedToGroup(brgGroupAmznAccount));
             }
-
         } catch (Exception e) {
             throw new ServerErrorException(messageSource.getMessage("error.serverError", null, Locale.getDefault()));
         }
