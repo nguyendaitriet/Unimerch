@@ -14,6 +14,7 @@ import java.util.Optional;
 
 @Repository
 public interface UserRepository extends JpaRepository<User, Integer> {
+
     User getByUsername(String username);
 
     Optional<User> findByUsername(String username);
@@ -30,10 +31,10 @@ public interface UserRepository extends JpaRepository<User, Integer> {
     void changePassword(@Param("id") int id, @Param("newPass") String passwordHash);
 
     @Query("SELECT NEW com.unimerch.dto.user.UserListItem (" +
-                "u.id, " +
-                "u.username, " +
-                "u.fullName, " +
-                "u.disabled" +
+            "u.id, " +
+            "u.username, " +
+            "u.fullName, " +
+            "u.disabled" +
             ") " +
             "FROM User u " +
             "WHERE u.username <> :principalUsername")
