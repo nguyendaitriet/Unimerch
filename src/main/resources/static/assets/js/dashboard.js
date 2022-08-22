@@ -47,6 +47,20 @@ class App {
                 cancelButtonText: 'No',
             })
         }
+
+        static showDeleteGroupDialog() {
+            return Swal.fire({
+                icon: `warning`,
+                text: `Are you sure to DELETE this group?`,
+                showCancelButton: true,
+                confirmButtonColor: '#C21010',
+                cancelButtonColor: '#5a6268',
+                confirmButtonText: 'Yes',
+                cancelButtonText: 'No',
+            })
+        }
+
+
     }
 
     static IziToast = class {
