@@ -1,4 +1,4 @@
-package com.unimerch.dto;
+package com.unimerch.dto.user;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

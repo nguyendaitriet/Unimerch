@@ -1,6 +1,6 @@
 package com.unimerch.service.impl;
 
-import com.unimerch.dto.AmznAccAddedToGroup;
+import com.unimerch.dto.amznacc.AmznAccAddedToGroup;
 import com.unimerch.exception.DuplicateDataException;
 import com.unimerch.exception.InvalidIdException;
 import com.unimerch.exception.NoDataFoundException;
@@ -16,20 +16,12 @@ import com.unimerch.service.GroupService;
 import com.unimerch.util.ValidationUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.jpa.datatables.SpecificationBuilder;
 import org.springframework.data.jpa.datatables.mapping.Column;
 import org.springframework.data.jpa.datatables.mapping.DataTablesInput;
 import org.springframework.data.jpa.datatables.mapping.DataTablesOutput;
-import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
 import javax.persistence.EntityManager;
-import javax.persistence.criteria.CriteriaBuilder;
-import javax.persistence.criteria.CriteriaQuery;
-import javax.persistence.criteria.Expression;
-import javax.persistence.criteria.Predicate;
 import javax.transaction.Transactional;
 import java.util.*;
 import java.util.regex.Pattern;

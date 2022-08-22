@@ -1,6 +1,6 @@
 package com.unimerch.repository;
 
-import com.unimerch.dto.AmznAccAddedToGroup;
+import com.unimerch.dto.amznacc.AmznAccAddedToGroup;
 import com.unimerch.repository.model.BrgGroupAmznAccount;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
@@ -13,7 +13,7 @@ import java.util.List;
 @Repository
 public interface BrgGroupAmznAccountRepository extends JpaRepository<BrgGroupAmznAccount, Integer> {
 
-    @Query("SELECT NEW com.unimerch.dto.AmznAccAddedToGroup (" +
+    @Query("SELECT NEW com.unimerch.dto.amznacc.AmznAccAddedToGroup (" +
                 "br.amznAccount.id, " +
                 "br.amznAccount.username) " +
             "FROM BrgGroupAmznAccount AS br " +
@@ -26,7 +26,7 @@ public interface BrgGroupAmznAccountRepository extends JpaRepository<BrgGroupAmz
     List<Integer> getAmznAccIdInGroup(@Param("id") Integer id);
 
 
-    @Query("SELECT NEW com.unimerch.dto.AmznAccAddedToGroup (" +
+    @Query("SELECT NEW com.unimerch.dto.amznacc.AmznAccAddedToGroup (" +
                 "a.id, " +
                 "a.username) " +
             "FROM AmznAccount AS a " +

@@ -1,19 +1,15 @@
 package com.unimerch.service.impl;
 
 
-import com.unimerch.dto.UserCreateParam;
-import com.unimerch.dto.UserListItem;
+import com.unimerch.dto.user.UserCreateParam;
+import com.unimerch.dto.user.UserListItem;
 import com.unimerch.exception.*;
 import com.unimerch.mapper.UserMapper;
-import com.unimerch.repository.datatable.GroupDataTableRepository;
-import com.unimerch.repository.datatable.UserDataTableRepository;
 import com.unimerch.repository.UserRepository;
-import com.unimerch.repository.model.Group;
-import com.unimerch.repository.model.Role;
-import com.unimerch.repository.model.User;
-import com.unimerch.repository.model.UserPrinciple;
-import com.unimerch.repository.specification.UserSpecification;
+import com.unimerch.repository.datatable.UserDataTableRepository;
+import com.unimerch.repository.model.*;
 import com.unimerch.service.UserService;
+import com.unimerch.util.PrincipalUtils;
 import com.unimerch.util.ValidationUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
@@ -21,7 +17,6 @@ import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.jpa.datatables.mapping.Column;
 import org.springframework.data.jpa.datatables.mapping.DataTablesInput;
 import org.springframework.data.jpa.datatables.mapping.DataTablesOutput;
-import org.springframework.data.jpa.domain.Specification;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -34,7 +29,6 @@ import java.util.regex.Pattern;
 @Service
 @Transactional
 public class UserServiceImpl implements UserService {
-
     @Autowired
     private UserMapper userMapper;
 
@@ -45,7 +39,7 @@ public class UserServiceImpl implements UserService {
     private UserDataTableRepository userDataTableRepository;
 
     @Autowired
-    private GroupDataTableRepository groupDataTableRepository;
+    private BrgGroupUserRepository brgGroupUserRepository;
 
     @Autowired
     private PasswordEncoder passwordEncoder;
@@ -53,14 +47,14 @@ public class UserServiceImpl implements UserService {
     @Autowired
     private MessageSource messageSource;
 
-    @Override
-    public List<UserListItem> findAllUsersDTOExclSelf(String principalUsername) {
-        List<UserListItem> userListItemList = userRepository.findAllUserListItemsExclSelf(principalUsername);
-        if (userListItemList.isEmpty()) {
-            throw new NoDataFoundException(messageSource.getMessage("error.noDataFound", null, Locale.getDefault()));
-        }
-        return userListItemList;
-    }
+    @Autowired
+    private PrincipalUtils principalUtils;
+
+    @Autowired
+    private ValidationUtils validationUtils;
+
+    @Autowired
+    private RoleServiceImpl roleService;
 
     @Override
     public DataTablesOutput<UserListItem> findAllUserDTOExclSelf(DataTablesInput input, String principalUsername) {
@@ -68,15 +62,13 @@ public class UserServiceImpl implements UserService {
         columnList.remove(columnList.size() -1 );
         input.setColumns(columnList);
 
-//        (input, user -> userMapper.toUserListItem(user))
         return userDataTableRepository.findAll(input, user -> userMapper.toUserListItem(user));
     }
 
-    public DataTablesOutput<Group> findAllGrpAssigned(DataTablesInput input, Integer userId) {
-
-
-//        return groupDataTableRepository.findAll(input, group -> );
-        return null;
+    @Override
+    public List<Group> findAllGrpAssigned(Integer userId) {
+        List<Group> groupList = brgGroupUserRepository.findAllGroupByUserId(userId);
+        return groupList;
     }
 
     @Override
@@ -85,16 +77,9 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public Optional<User> findByUsername(String username) {
-        return userRepository.findByUsername(username);
-    }
-
-    @Override
-    public Optional<User> findById(String id) {
-        boolean isIdValid = Pattern.matches(ValidationUtils.ID_REGEX, id);
-        if (!isIdValid) {
+    public User findById(String id) {
+        if (!validationUtils.isIdValid(id))
             throw new InvalidIdException(messageSource.getMessage("validation.idNotExist", null, Locale.getDefault()));
-        }
 
         int validId = Integer.parseInt(id);
         Optional<User> optionalUser = userRepository.findById(validId);
@@ -102,12 +87,12 @@ public class UserServiceImpl implements UserService {
             throw new InvalidIdException(messageSource.getMessage("validation.idNotExist", null, Locale.getDefault()));
         }
 
-        return optionalUser;
+        return optionalUser.get();
     }
 
     @Override
     public UserListItem findUserListItemById(String id) {
-        return userMapper.toUserListItem(findById(id).get());
+        return userMapper.toUserListItem(findById(id));
     }
 
     @Override
@@ -118,9 +103,8 @@ public class UserServiceImpl implements UserService {
         newUser.setPasswordHash(passwordEncoder.encode(userCreateParam.getPassword()));
         newUser.setRole(new Role(2));
 
-        if (userRepository.existsByUsername(userCreateParam.getUsername())) {
+        if (userRepository.existsByUsername(userCreateParam.getUsername()))
             throw new DuplicateDataException(messageSource.getMessage("validation.usernameExists", null, Locale.getDefault()));
-        }
 
         try {
             newUser = userRepository.save(newUser);
@@ -134,32 +118,39 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public void changePassword(String id, String password) {
+        User user = findById(id);
 
-        User user = findById(id).get();
-
-        boolean isPasswordValid = Pattern.matches(ValidationUtils.PASSWORD_REGEX, password);
-        if (!isPasswordValid) {
+        if (!validationUtils.isPasswordvalid(password))
             throw new InvalidPasswordException(messageSource.getMessage("validation.validPassword", null, Locale.getDefault()));
-        }
 
         try {
-
             String newPasswordHash = passwordEncoder.encode(password);
             userRepository.changePassword(user.getId(), newPasswordHash);
-
         } catch (Exception e) {
             throw new ServerErrorException(messageSource.getMessage("error.serverError", null, Locale.getDefault()));
         }
     }
 
+    @Override
+    public void changeMyPassword(String password) {
+        User user = findById(String.valueOf(principalUtils.getPrincipalId()));
+
+        if (!validationUtils.isPasswordvalid(password))
+            throw new InvalidPasswordException(messageSource.getMessage("validation.validPassword", null, Locale.getDefault()));
+
+        try {
+            String newPasswordHash = passwordEncoder.encode(password);
+            userRepository.changePassword(user.getId(), newPasswordHash);
+        } catch (Exception e) {
+            throw new ServerErrorException(messageSource.getMessage("error.serverError", null, Locale.getDefault()));
+        }
+    }
 
     @Override
     public UserListItem changeStatus(String id) {
-
-        User user = findById(id).get();
-        if (user.getRole().getId() == 1) {
+        User user = findById(id);
+        if (roleService.isUserAdmin(id))
             throw new NotAllowDisableException(messageSource.getMessage("error.notAllow", null, Locale.getDefault()));
-        }
 
         user.setDisabled(!user.isDisabled());
 
@@ -169,16 +160,14 @@ public class UserServiceImpl implements UserService {
         } catch (Exception e) {
             throw new ServerErrorException(messageSource.getMessage("error.serverError", null, Locale.getDefault()));
         }
-
     }
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         Optional<User> userOptional = userRepository.findByUsername(username);
-        if (!userOptional.isPresent()) {
+        if (!userOptional.isPresent())
             throw new UsernameNotFoundException(username);
-        }
+
         return UserPrinciple.build(userOptional.get());
     }
-
 }

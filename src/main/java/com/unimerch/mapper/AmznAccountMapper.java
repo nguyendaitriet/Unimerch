@@ -1,6 +1,6 @@
 package com.unimerch.mapper;
 
-import com.unimerch.dto.AmznAccAddedToGroup;
+import com.unimerch.dto.amznacc.AmznAccAddedToGroup;
 import com.unimerch.repository.model.AmznAccount;
 import com.unimerch.repository.model.BrgGroupAmznAccount;
 import org.springframework.stereotype.Component;

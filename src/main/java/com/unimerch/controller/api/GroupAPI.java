@@ -1,7 +1,6 @@
 package com.unimerch.controller.api;
 
-import com.unimerch.dto.AmznAccAddedToGroup;
-import com.unimerch.repository.model.AmznAccount;
+import com.unimerch.dto.amznacc.AmznAccAddedToGroup;
 import com.unimerch.repository.model.Group;
 import com.unimerch.service.GroupService;
 import lombok.RequiredArgsConstructor;

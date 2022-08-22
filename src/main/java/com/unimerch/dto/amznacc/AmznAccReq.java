@@ -1,4 +1,4 @@
-package com.unimerch.dto;
+package com.unimerch.dto.amznacc;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -9,9 +9,7 @@ import lombok.Setter;
 @AllArgsConstructor
 @Getter
 @Setter
-public class LoginParam {
-
+public class AmznAccReq {
     private String username;
-
     private String password;
 }

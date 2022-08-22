@@ -1,4 +1,4 @@
-package com.unimerch.dto;
+package com.unimerch.dto.user;
 
 import com.unimerch.repository.model.Role;
 import com.unimerch.util.ValidationUtils;

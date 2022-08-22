@@ -1,7 +1,8 @@
 package com.unimerch.controller.api;
 
-import com.unimerch.dto.UserCreateParam;
-import com.unimerch.dto.UserListItem;
+import com.unimerch.dto.user.UserCreateParam;
+import com.unimerch.dto.user.UserListItem;
+import com.unimerch.repository.model.Group;
 import com.unimerch.service.UserService;
 import com.unimerch.util.AppUtils;
 import com.unimerch.util.PrincipalUtils;
@@ -28,14 +29,6 @@ public class UserAPI {
 
     @Autowired
     private UserService userService;
-
-    //    @PreAuthorize("hasAnyAuthority('MANAGER')")
-    @GetMapping("/findAllNonPageable")
-    public ResponseEntity<?> findAllUsersExclSelf() {
-        String principalUsername = principalUtils.getPrincipalUsername();
-        List<UserListItem> usersList = userService.findAllUsersDTOExclSelf(principalUsername);
-        return new ResponseEntity<>(usersList, HttpStatus.OK);
-    }
 
     //    @PreAuthorize("hasAnyAuthority('MANAGER')")
     @PostMapping
@@ -73,7 +66,7 @@ public class UserAPI {
     //    @PreAuthorize("hasAnyAuthority('MANAGER')")
     @PutMapping("/changePassword")
     public ResponseEntity<?> changeMyPassword(@RequestBody String newPassword) {
-        userService.changePassword(String.valueOf(principalUtils.getPrincipalId()), newPassword);
+        userService.changeMyPassword(newPassword);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
@@ -84,4 +77,9 @@ public class UserAPI {
         return new ResponseEntity<>(userListItem, HttpStatus.OK);
     }
 
+    @GetMapping("/grpAssigned/{id}")
+    public ResponseEntity<?> findAllAssignedGroups(@PathVariable Integer id) {
+        List<Group> groupList = userService.findAllGrpAssigned(id);
+        return new ResponseEntity<>(groupList, HttpStatus.OK);
+    }
 }

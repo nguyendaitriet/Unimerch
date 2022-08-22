@@ -1,13 +1,9 @@
 package com.unimerch.service;
 
-import com.unimerch.dto.AmznAccAddedToGroup;
-import com.unimerch.repository.model.AmznAccount;
+import com.unimerch.dto.amznacc.AmznAccAddedToGroup;
 import com.unimerch.repository.model.Group;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.datatables.mapping.DataTablesInput;
 import org.springframework.data.jpa.datatables.mapping.DataTablesOutput;
-import org.springframework.data.repository.query.Param;
 
 import java.util.ArrayList;
 import java.util.List;
