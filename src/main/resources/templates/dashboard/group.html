@@ -112,6 +112,7 @@
 <th:block th:replace="layout/script :: script-dashboard"/>
 
 <script type="text/javascript" src="/assets/js/absolute.js"></script>
+<script type="text/javascript" src="/assets/js/natural.js"></script>
 
 <script>
     let page = {
@@ -171,19 +172,19 @@
             url: page.urls.createGroup,
             data: JSON.stringify(newGroup)
         })
-            .done((data) => {
-                let tableGroup = page.element.tableGroup.DataTable();
-                tableGroup.row.add({
-                    'id': data.id,
-                    'title': data.title
-                })
-                tableGroup.order([0, 'desc']).draw();
-                page.dialogs.element.mdCreateGroup.modal("hide");
-                App.SweetAlert.showSuccessAlert(App.SUCCESS_CREATED);
+        .done((data) => {
+            let tableGroup = page.element.tableGroup.DataTable();
+            tableGroup.row.add({
+                'id': data.id,
+                'title': data.title
             })
-            .fail(function (jqXHR) {
-                alert("fail");
-            })
+            tableGroup.order([0, 'desc']).draw();
+            page.dialogs.element.mdCreateGroup.modal("hide");
+            App.SweetAlert.showSuccessAlert(App.SUCCESS_CREATED);
+        })
+        .fail(function (jqXHR) {
+            alert("fail");
+        })
     }
     page.commands.doUpdateGroup = (currentGroup, currentRowGroup) => {
         let group = {};
@@ -219,7 +220,12 @@
         })
             .done((data) => {
                 let tableGroup = page.element.tableGroup.DataTable();
-                tableGroup.row(currentRowGroup).remove().draw('page');
+                tableGroup.row(currentRowGroup).remove().draw('full-hold');
+                page.element.tableAmznAccOut.DataTable().clear().draw();
+                page.element.tableAmznAccIn.DataTable().clear().draw();
+                // page.element.tableAmznAccOut.DataTable().destroy();
+                // page.element.tableAmznAccIn.DataTable().destroy();
+                page.element.groupTitle.html('');
                 App.SweetAlert.showSuccessAlert(App.SUCCESS_UPDATED);
             })
             .fail(function (jqXHR) {
@@ -410,7 +416,6 @@
                                 init: function (api, node, config) {
                                     $(node).on('click', () => {
                                         page.dialogs.element.mdAddAmznAccToGroup.modal("show");
-                                        // page.commands.showAmznAccOutsideGroup(tableAmznAccOut, currentGroup);
                                     })
                                 }
                             }
@@ -435,7 +440,8 @@
             App.SweetAlert.showDeleteGroupDialog()
                 .then((result) => {
                     if (result.isConfirmed) {
-                        page.commands.doDeleteGroup(currentGroup, currentRowGroup)
+                        page.commands.doDeleteGroup(currentGroup, currentRowGroup);
+                        currentGroup = undefined;
                     }
                 })
 
@@ -494,6 +500,11 @@
         });
 
         page.dialogs.element.mdAddAmznAccToGroup.on('shown.bs.modal', () => {
+            console.log(currentGroup);
+            if (currentGroup === undefined) {
+                return;
+            }
+
             if (tableAmznAccOut === undefined) {
                 tableAmznAccOut = page.element.tableAmznAccOut.DataTable({
                     ajax: {

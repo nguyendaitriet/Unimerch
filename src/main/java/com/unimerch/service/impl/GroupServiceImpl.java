@@ -6,7 +6,6 @@ import com.unimerch.dto.group.GroupListItem;
 import com.unimerch.dto.group.GroupUpdateParam;
 import com.unimerch.exception.DuplicateDataException;
 import com.unimerch.exception.InvalidIdException;
-import com.unimerch.exception.NoDataFoundException;
 import com.unimerch.exception.ServerErrorException;
 import com.unimerch.mapper.AmznAccountMapper;
 import com.unimerch.mapper.GroupMapper;
@@ -24,9 +23,7 @@ import org.springframework.data.jpa.datatables.mapping.Column;
 import org.springframework.data.jpa.datatables.mapping.DataTablesInput;
 import org.springframework.data.jpa.datatables.mapping.DataTablesOutput;
 import org.springframework.stereotype.Service;
-import org.springframework.validation.BindingResult;
 
-import javax.persistence.EntityManager;
 import javax.transaction.Transactional;
 import java.util.*;
 import java.util.regex.Pattern;
@@ -61,11 +58,7 @@ public class GroupServiceImpl implements GroupService {
 
     @Override
     public List<Group> findAll() {
-        List<Group> groupList = groupRepository.findAll();
-        if (groupList.isEmpty()) {
-            throw new NoDataFoundException(messageSource.getMessage("error.noDataFound", null, Locale.getDefault()));
-        }
-        return groupList;
+        return groupRepository.findAll();
     }
 
     @Override
