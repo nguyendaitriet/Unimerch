@@ -115,7 +115,9 @@
             createUser: App.BASE_URL_USER + "/create",
             changeMyPassword: App.BASE_URL_USER + "/changePassword",
             changePassword: App.BASE_URL_USER + "/changePassword/",
-            changeStatus: App.BASE_URL_USER + "/changeStatus/"
+            changeStatus: App.BASE_URL_USER + "/changeStatus/",
+            findGroupsAssigned: App.BASE_URL_USER + "/grpAssigned/",
+            findGroupsUnassigned: App.BASE_URL_USER + "/grpUnassigned/"
         },
         element: {},
         commands: {},
@@ -237,6 +239,7 @@
         page.element.tableUser.on('click', 'button.assign-group', function() {
             currentUser = table.row($(this).parents('tr')).data();
             console.log(currentUser);
+            page.commands.findGroups(currentUser);
         });
 
         page.element.tableUser.on('click', 'button.change-password', function() {
@@ -306,7 +309,7 @@
                 App.SweetAlert.showSuccessAlert(App.SUCCESS_CREATED);
             })
             .fail(function (jqXHR) {
-                alert("fail");
+                console.log(jqXHR);
             })
     }
 
@@ -329,7 +332,7 @@
                 App.SweetAlert.showSuccessAlert(App.SUCCESS_UPDATED);
             })
             .fail((jqXHR) => {
-                alert("fail");
+                console.log(jqXHR);
             })
     }
 
@@ -358,7 +361,7 @@
                 App.SweetAlert.showSuccessAlert(App.SUCCESS_UPDATED);
             })
             .fail((jqXHR) => {
-                alert("fail");
+                console.log(jqXHR);
             })
     }
 
@@ -373,6 +376,44 @@
     page.dialogs.element.mdCPUser.on('hidden.bs.modal', function() {
         page.dialogs.element.frmCPUser[0].reset();
     })
+
+    page.commands.findGroups = (currentUser) => {
+        let userId = currentUser.id;
+        let assignedGroup = [];
+        let unAssignedGroup = [];
+
+        $.ajax({
+            "headers": {
+                "accept": "application/json",
+                "content-type": "application/json"
+            },
+            "type": "GET",
+            "url": page.urls.findGroupsAssigned + userId
+        })
+            .done((data) => {
+                assignedGroup = data;
+                console.log("assigned groups: " + assignedGroup);
+            })
+            .fail((jqXHR) => {
+                console.log(jqXHR);
+            });
+
+        $.ajax({
+            "headers": {
+                "accept": "application/json",
+                "content-type": "application/json"
+            },
+            "type": "GET",
+            "url": page.urls.findGroupsUnassigned + userId
+        })
+            .done((data) => {
+                unAssignedGroup = data;
+                console.log("unassigned: " + unAssignedGroup);
+            })
+            .fail((jqXHR) => {
+                console.log(jqXHR);
+            });
+    }
 
 </script>
 </body>

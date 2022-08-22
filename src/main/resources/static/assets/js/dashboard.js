@@ -121,6 +121,25 @@ class App {
             }
         })
     }
+
+    static handleFailedTasks(jqXHR) {
+        switch (jqXHR.status) {
+            case 400:
+                this.IziToast.showErrorAlert(this.ERROR_400);
+                break;
+            case 401:
+                this.SweetAlert.showErrorAlert(this.ERROR_401);
+                break;
+            case 403:
+                this.SweetAlert.showErrorAlert(this.ERROR_403);
+                break;
+            case 404:
+                this.IziToast.showErrorAlert(this.ERROR_404);
+                break;
+            default:
+                this.IziToast.showErrorAlert(this.ERROR_500);
+        }
+    }
 }
 
 class User {

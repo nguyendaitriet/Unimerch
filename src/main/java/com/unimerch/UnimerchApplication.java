@@ -8,7 +8,6 @@ import org.springframework.data.jpa.datatables.repository.DataTablesRepositoryFa
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
-
 @SpringBootApplication
 @EnableJpaRepositories(repositoryFactoryBeanClass = DataTablesRepositoryFactoryBean.class)
 public class UnimerchApplication implements WebMvcConfigurer {
@@ -29,3 +28,4 @@ public class UnimerchApplication implements WebMvcConfigurer {
     }
 
 }
+
