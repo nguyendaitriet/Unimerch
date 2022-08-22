@@ -9,7 +9,7 @@ class App {
     static BASE_URL_FILE_UPLOAD = this.DOMAIN + "/api/file-upload";
 
     static ERROR_400 = "Task failed, please check your data.";
-    static ERROR_401 = "Access timeout. Redirecting to login."
+    static ERROR_401 = "Access timeout."
     static ERROR_403 = "Access denied. Unauthorized personnel cannot perform this action.";
     static ERROR_404 = "An error occurred. Please try again later!";
     static ERROR_500 = "Server error. Please contact admin";
@@ -60,7 +60,29 @@ class App {
             })
         }
 
-
+        static showTimeOut(title, text, time, action) {
+            let timerInterval;
+            return Swal.fire({
+                title: title,
+                html: `${text}<br>in <b></b> milliseconds.`,
+                timer: time,
+                timerProgressBar: true,
+                didOpen: () => {
+                    Swal.showLoading();
+                    const b = Swal.getHtmlContainer().querySelector('b');
+                    timerInterval = setInterval(() => {
+                        b.textContent = Math.round(Swal.getTimerLeft()/1000)
+                    }, 1000)
+                },
+                willClose: () => {
+                    clearInterval(timerInterval)
+                }
+            }).then((result) => {
+                if (result.dismiss === Swal.DismissReason.timer) {
+                    action();
+                }
+            })
+        }
     }
 
     static IziToast = class {
@@ -128,7 +150,9 @@ class App {
                 this.IziToast.showErrorAlert(this.ERROR_400);
                 break;
             case 401:
-                this.SweetAlert.showErrorAlert(this.ERROR_401);
+                this.SweetAlert.showTimeOut(this.ERROR_401,
+                    "Redirecting to login in", 3000,
+                    this.redirectToLogin(3000));
                 break;
             case 403:
                 this.SweetAlert.showErrorAlert(this.ERROR_403);
@@ -138,7 +162,14 @@ class App {
                 break;
             default:
                 this.IziToast.showErrorAlert(this.ERROR_500);
+                break;
         }
+    }
+
+    static redirectToLogin(timeout) {
+        setTimeout(() => {
+            location.href = "/logout";
+        }, timeout);
     }
 }
 
