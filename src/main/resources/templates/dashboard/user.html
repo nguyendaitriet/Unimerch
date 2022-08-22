@@ -309,7 +309,7 @@
                 App.SweetAlert.showSuccessAlert(App.SUCCESS_CREATED);
             })
             .fail(function (jqXHR) {
-                console.log(jqXHR);
+                App.handleFailedTasks(jqXHR);
             })
     }
 
@@ -332,7 +332,7 @@
                 App.SweetAlert.showSuccessAlert(App.SUCCESS_UPDATED);
             })
             .fail((jqXHR) => {
-                console.log(jqXHR);
+                App.handleFailedTasks(jqXHR);
             })
     }
 
@@ -361,7 +361,7 @@
                 App.SweetAlert.showSuccessAlert(App.SUCCESS_UPDATED);
             })
             .fail((jqXHR) => {
-                console.log(jqXHR);
+                App.handleFailedTasks(jqXHR);
             })
     }
 
@@ -395,7 +395,7 @@
                 console.log("assigned groups: " + assignedGroup);
             })
             .fail((jqXHR) => {
-                console.log(jqXHR);
+                App.handleFailedTasks(jqXHR);
             });
 
         $.ajax({
@@ -411,7 +411,7 @@
                 console.log("unassigned: " + unAssignedGroup);
             })
             .fail((jqXHR) => {
-                console.log(jqXHR);
+                App.handleFailedTasks(jqXHR);
             });
     }
 
