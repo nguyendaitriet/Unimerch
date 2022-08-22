@@ -110,4 +110,5 @@ public class GroupAPI {
         groupService.deleteAmznAccFromGroup(amznAccId, groupId);
         return new ResponseEntity<>(HttpStatus.OK);
     }
+
 }
