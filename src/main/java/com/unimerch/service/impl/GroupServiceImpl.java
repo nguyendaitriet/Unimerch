@@ -1,8 +1,8 @@
 package com.unimerch.service.impl;
 
-import com.unimerch.dto.amznacc.AmznAccAddedToGroup;
+import com.unimerch.dto.amznacc.AmznAccResult;
 import com.unimerch.dto.group.GroupCreateParam;
-import com.unimerch.dto.group.GroupListItem;
+import com.unimerch.dto.group.GroupItemResult;
 import com.unimerch.dto.group.GroupUpdateParam;
 import com.unimerch.exception.DuplicateDataException;
 import com.unimerch.exception.InvalidIdException;
@@ -56,24 +56,26 @@ public class GroupServiceImpl implements GroupService {
     @Autowired
     private GroupMapper groupMapper;
 
+    @Autowired
+    private ValidationUtils validationUtils;
+
     @Override
     public List<Group> findAll() {
         return groupRepository.findAll();
     }
 
     @Override
-    public DataTablesOutput<Group> findAll(DataTablesInput input) {
+    public DataTablesOutput<GroupItemResult> findAll(DataTablesInput input) {
         Map<String, Column> columnMap = input.getColumnsAsMap();
         columnMap.remove(null);
         List<Column> columnList = new ArrayList<>(columnMap.values());
         input.setColumns(columnList);
-        return groupDataTableRepository.findAll(input);
+        return groupDataTableRepository.findAll(input, group -> groupMapper.toGroupItemResult(group));
     }
 
     @Override
-    public Optional<Group> findById(String id) {
-        boolean isIdValid = Pattern.matches(ValidationUtils.ID_REGEX, id);
-        if (!isIdValid) {
+    public Group findById(String id) {
+        if (!validationUtils.isIdValid(id)) {
             throw new InvalidIdException(messageSource.getMessage("validation.idNotExist", null, Locale.getDefault()));
         }
 
@@ -82,11 +84,11 @@ public class GroupServiceImpl implements GroupService {
         if (!optionalGroup.isPresent()) {
             throw new InvalidIdException(messageSource.getMessage("validation.idNotExist", null, Locale.getDefault()));
         }
-        return optionalGroup;
+        return optionalGroup.get();
     }
 
     @Override
-    public GroupListItem createGroup(GroupCreateParam groupCreateParam) {
+    public GroupItemResult createGroup(GroupCreateParam groupCreateParam) {
         String groupTitle = groupCreateParam.getTitle().trim();
 
         if (groupRepository.existsByTitle(groupTitle)) {
@@ -96,14 +98,14 @@ public class GroupServiceImpl implements GroupService {
         try {
             Group newGroup = new Group(groupTitle);
             newGroup = groupRepository.save(newGroup);
-            return groupMapper.toGroupListItem(newGroup);
+            return groupMapper.toGroupItemResult(newGroup);
         } catch (Exception e) {
             throw new ServerErrorException(messageSource.getMessage("error.serverError", null, Locale.getDefault()));
         }
     }
 
-    public GroupListItem updateGroup(String id, GroupUpdateParam groupUpdateParam) {
-        Group group = findById(id).get();
+    public GroupItemResult updateGroup(String id, GroupUpdateParam groupUpdateParam) {
+        Group group = findById(id);
 
         String newGroupTitle = groupUpdateParam.getTitle().trim();
         boolean isGroupInvalid = groupRepository.existsByTitleAndIdIsNot(newGroupTitle, group.getId());
@@ -115,7 +117,7 @@ public class GroupServiceImpl implements GroupService {
         try {
             group.setTitle(newGroupTitle);
             group = groupRepository.save(group);
-            return groupMapper.toGroupListItem(group);
+            return groupMapper.toGroupItemResult(group);
         } catch (Exception e) {
             throw new ServerErrorException(messageSource.getMessage("error.serverError", null, Locale.getDefault()));
         }
@@ -123,7 +125,7 @@ public class GroupServiceImpl implements GroupService {
 
     @Override
     public void deleteGroup(String id) {
-        Group group = findById(id).get();
+        Group group = findById(id);
         int groupId = group.getId();
 
         try {
@@ -137,10 +139,10 @@ public class GroupServiceImpl implements GroupService {
         }
 
     @Override
-    public List<AmznAccAddedToGroup> addAmznAccToGroup(ArrayList<String> amznAccIdList, String id) {
+    public List<AmznAccResult> addAmznAccToGroup(ArrayList<String> amznAccIdList, String id) {
 
-        Group group = findById(id).get();
-        List<AmznAccAddedToGroup> amznAccAddedToGroupList = new ArrayList<>();
+        Group group = findById(id);
+        List<AmznAccResult> amznAccResultList = new ArrayList<>();
 
         try {
             int groupId = group.getId();
@@ -155,65 +157,30 @@ public class GroupServiceImpl implements GroupService {
                 brgGroupAmznAccount.setAmznAccount(amznAccount);
 
                 brgGroupAmznAccRepo.save(brgGroupAmznAccount);
-                amznAccAddedToGroupList.add(amznAccountMapper.toAmznAccAddedToGroup(brgGroupAmznAccount));
+                amznAccResultList.add(amznAccountMapper.toAmznAccResult(brgGroupAmznAccount));
             }
         } catch (Exception e) {
             throw new ServerErrorException(messageSource.getMessage("error.serverError", null, Locale.getDefault()));
         }
 
-        return amznAccAddedToGroupList;
+        return amznAccResultList;
     }
 
     @Override
-    public List<AmznAccAddedToGroup> getAmznAccInsideGroup(String id) {
-        Group group = findById(id).get();
-        return brgGroupAmznAccRepo.getAmznAccInGroup(group.getId());
-    }
-
-//    @Override
-//    public DataTablesOutput<AmznAccAddedToGroup>getAmznAccInsideGroup(String id, DataTablesInput input) {
-//        Group group = findById(id).get();
-//
-//        Map<String, Column> columnMap = input.getColumnsAsMap();
-//        columnMap.remove(null);
-//        List<Column> columnList = new ArrayList<>(columnMap.values());
-//        input.setColumns(columnList);
-//
-//        List<Integer> amznAccIdInGroupList = brgGroupAmznAccRepo.getAmznAccIdInGroup(group.getId());
-//
-//
-////        Specification<AmznAccount> amznAccountSpecification = (Specification<AmznAccount>) (root, query, criteriaBuilder) -> {
-////            CriteriaQuery<AmznAccount> q = criteriaBuilder.createQuery(AmznAccount.class);
-//////            q.select(root);
-////
-////            Expression<Integer> idExpression = root.get("id");
-////            Predicate idPredicate = idExpression.in(amznAccIdInGroupList);
-//////            q.where(idPredicate);
-////            return (Predicate) criteriaBuilder.createQuery(AmznAccount.class).select(root).where(idPredicate);
-////        };
-//
-//        DataTablesOutput<AmznAccAddedToGroup> dataTablesOutput = amznAccTableRepository
-//                .findAll(input, amznAccount -> amznAccountMapper.toAmznAccAddedToGroup(amznAccount));
-//
-//        List<AmznAccAddedToGroup> amznAccAddedToGroupList = dataTablesOutput.getData();
-////
-////        List<AmznAccAddedToGroup> newAmznAccAddedToGroupList = new ArrayList<>();
-////        for (AmznAccAddedToGroup amznAccAddedToGroup : amznAccAddedToGroupList) {
-////            int amznAccId = amznAccAddedToGroup.getId();
-////            if (amznAccIdInGroupList.contains(amznAccId)){
-////                newAmznAccAddedToGroupList.add(amznAccAddedToGroup);
-////            }
-////        }
-//
-////        dataTablesOutput.setData(newAmznAccAddedToGroupList);
-//        dataTablesOutput.setData(amznAccAddedToGroupList);
-//        return dataTablesOutput;
-//    }
+    public List<AmznAccResult> getAmznAccInsideGroup(String id) {
+        Group group = findById(id);
+        List<AmznAccResult> amznAccResultList = new ArrayList<>();
+        List<AmznAccount> amznAccResult =  brgGroupAmznAccRepo.getAmznAccInGroup(group.getId());
+        amznAccResult.forEach((result) -> amznAccResultList.add(amznAccountMapper.toAmznAccResult(result)));
+        return amznAccResultList;    }
 
     @Override
-    public List<AmznAccAddedToGroup> getAmznAccOutsideGroup(String id) {
-        Group group = findById(id).get();
-        return brgGroupAmznAccRepo.getAmznAccOutGroup(group.getId());
+    public List<AmznAccResult> getAmznAccOutsideGroup(String id) {
+        Group group = findById(id);
+        List<AmznAccResult> amznAccResultList = new ArrayList<>();
+        List<AmznAccount> amznAccResult =  brgGroupAmznAccRepo.getAmznAccOutGroup(group.getId());
+        amznAccResult.forEach((result) -> amznAccResultList.add(amznAccountMapper.toAmznAccResult(result)));
+        return amznAccResultList;
     }
 
     @Override

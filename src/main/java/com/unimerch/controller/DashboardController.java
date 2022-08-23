@@ -18,9 +18,6 @@ import java.util.Optional;
 @RequestMapping("/dashboard")
 public class DashboardController {
 
-    @Autowired
-    GroupService groupService;
-
     @GetMapping("")
     public ModelAndView showDashboardPage() {
         return new ModelAndView("/dashboard/dashboard");
@@ -40,19 +37,5 @@ public class DashboardController {
     public ModelAndView showGroupManagementPage() {
         return new ModelAndView("/dashboard/group");
     }
-
-//    @GetMapping("/group")
-//    public ModelAndView showGroupManagementPage(@RequestParam("searchGroup") Optional<String> search, Pageable pageable) {
-//
-//        Page<Group> groups;
-//        if(search.isPresent()){
-//            groups = groupService.findAllByTitleContains(search.get(), pageable);
-//        } else {
-//            groups = groupService.findAll(pageable);
-//        }
-//        ModelAndView modelAndView =  new ModelAndView("/dashboard/group");
-//        modelAndView.addObject("customers", groups);
-//        return modelAndView;
-//    }
 
 }

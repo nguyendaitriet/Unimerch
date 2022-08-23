@@ -1,8 +1,8 @@
 package com.unimerch.controller.api;
 
-import com.unimerch.dto.amznacc.AmznAccAddedToGroup;
+import com.unimerch.dto.amznacc.AmznAccResult;
 import com.unimerch.dto.group.GroupCreateParam;
-import com.unimerch.dto.group.GroupListItem;
+import com.unimerch.dto.group.GroupItemResult;
 import com.unimerch.dto.group.GroupUpdateParam;
 import com.unimerch.repository.model.Group;
 import com.unimerch.service.GroupService;
@@ -33,7 +33,7 @@ public class GroupAPI {
 
     //    @PreAuthorize("hasAnyAuthority('MANAGER')")
     @PostMapping
-    public DataTablesOutput<Group> findAllGroupsPageable(@Valid @RequestBody DataTablesInput input) {
+    public DataTablesOutput<GroupItemResult> findAllGroupsPageable(@Valid @RequestBody DataTablesInput input) {
         return groupService.findAll(input);
     }
 
@@ -46,8 +46,8 @@ public class GroupAPI {
     //    @PreAuthorize("hasAnyAuthority('MANAGER')")
     @GetMapping("/{id}")
     public ResponseEntity<?> findGroupById(@PathVariable String id) {
-        Optional<Group> group = groupService.findById(id);
-        return new ResponseEntity<>(group.get(), HttpStatus.OK);
+        Group group = groupService.findById(id);
+        return new ResponseEntity<>(group, HttpStatus.OK);
     }
 
     //    @PreAuthorize("hasAnyAuthority('MANAGER')")
@@ -57,14 +57,14 @@ public class GroupAPI {
         if (bindingResult.hasErrors()) {
             return appUtils.mapErrorToResponse(bindingResult);
         }
-        GroupListItem newGroup = groupService.createGroup(groupCreateParam);
+        GroupItemResult newGroup = groupService.createGroup(groupCreateParam);
         return new ResponseEntity<>(newGroup, HttpStatus.CREATED);
     }
 
     //    @PreAuthorize("hasAnyAuthority('MANAGER')")
     @PutMapping("/update/{id}")
     public ResponseEntity<?> updateGroup(@PathVariable String id, @RequestBody GroupUpdateParam groupUpdateParam) {
-        GroupListItem group = groupService.updateGroup(id, groupUpdateParam);
+        GroupItemResult group = groupService.updateGroup(id, groupUpdateParam);
         return new ResponseEntity<>(group, HttpStatus.OK);
     }
 
@@ -79,29 +79,23 @@ public class GroupAPI {
     @PostMapping("/addAmznAccountToGroup/{id}")
     public ResponseEntity<?> addAmznAccountToGroup(@PathVariable String id,
                                                    @RequestBody Map<String, ArrayList<String>> amznAccIdList) {
-        List<AmznAccAddedToGroup> newAmznAccAddedToGroupList = groupService
+        List<AmznAccResult> newAmznAccResultList = groupService
                 .addAmznAccToGroup(amznAccIdList.get("amznAccSelected"), id);
-        return new ResponseEntity<>(newAmznAccAddedToGroupList, HttpStatus.OK);
+        return new ResponseEntity<>(newAmznAccResultList, HttpStatus.OK);
     }
 
     //    @PreAuthorize("hasAnyAuthority('MANAGER')")
     @GetMapping("/showAmznAccInsideGroup/{id}")
     public ResponseEntity<?> showAmznAccInsideGroup(@PathVariable String id) {
-        List<AmznAccAddedToGroup> amznAccAddedToGroupList = groupService.getAmznAccInsideGroup(id);
-        return new ResponseEntity<>(amznAccAddedToGroupList, HttpStatus.OK);
+        List<AmznAccResult> amznAccResultList = groupService.getAmznAccInsideGroup(id);
+        return new ResponseEntity<>(amznAccResultList, HttpStatus.OK);
     }
-
-    //    @PreAuthorize("hasAnyAuthority('MANAGER')")
-//    @PostMapping("/showAmznAccInsideGroup/{id}")
-//    public DataTablesOutput<AmznAccAddedToGroup> showAmznAccInsideGroup(@PathVariable String id, @Valid @RequestBody DataTablesInput input) {
-//        return groupService.getAmznAccInsideGroup(id, input);
-//    }
 
     //    @PreAuthorize("hasAnyAuthority('MANAGER')")
     @GetMapping("/showAmznAccOutsideGroup/{id}")
     public ResponseEntity<?> showAmznAccOutsideGroup(@PathVariable String id) {
-        List<AmznAccAddedToGroup> amznAccAddedToGroupList = groupService.getAmznAccOutsideGroup(id);
-        return new ResponseEntity<>(amznAccAddedToGroupList, HttpStatus.OK);
+        List<AmznAccResult> amznAccResultList = groupService.getAmznAccOutsideGroup(id);
+        return new ResponseEntity<>(amznAccResultList, HttpStatus.OK);
     }
 
     //    @PreAuthorize("hasAnyAuthority('MANAGER')")

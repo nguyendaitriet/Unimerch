@@ -1,7 +1,7 @@
 package com.unimerch.controller.api;
 
 import com.unimerch.dto.user.UserCreateParam;
-import com.unimerch.dto.user.UserListItem;
+import com.unimerch.dto.user.UserItemResult;
 import com.unimerch.repository.model.Group;
 import com.unimerch.service.UserService;
 import com.unimerch.util.AppUtils;
@@ -32,7 +32,7 @@ public class UserAPI {
 
     //    @PreAuthorize("hasAnyAuthority('MANAGER')")
     @PostMapping
-    public DataTablesOutput<UserListItem> findAllUsersPageableExclSelf(@Valid @RequestBody(required = false) DataTablesInput input) {
+    public DataTablesOutput<UserItemResult> findAllUsersPageableExclSelf(@Valid @RequestBody(required = false) DataTablesInput input) {
         String principalUsername = principalUtils.getPrincipalUsername();
         return userService.findAllUserDTOExclSelf(input, principalUsername);
     }
@@ -40,8 +40,8 @@ public class UserAPI {
     //    @PreAuthorize("hasAnyAuthority('MANAGER')")
     @GetMapping("/{id}")
     public ResponseEntity<?> findUserById(@PathVariable String id) {
-        UserListItem userListItem = userService.findUserListItemById(id);
-        return new ResponseEntity<>(userListItem, HttpStatus.OK);
+        UserItemResult userItemResult = userService.findUserListItemById(id);
+        return new ResponseEntity<>(userItemResult, HttpStatus.OK);
     }
 
     //    @PreAuthorize("hasAnyAuthority('MANAGER')")
@@ -52,7 +52,7 @@ public class UserAPI {
             return appUtils.mapErrorToResponse(bindingResult);
         }
 
-        UserListItem newUser = userService.create(userCreateParam);
+        UserItemResult newUser = userService.create(userCreateParam);
         return new ResponseEntity<>(newUser, HttpStatus.CREATED);
     }
 
@@ -73,8 +73,8 @@ public class UserAPI {
     //    @PreAuthorize("hasAnyAuthority('MANAGER')")
     @PutMapping("/changeStatus/{id}")
     public ResponseEntity<?> changeUserStatus(@PathVariable String id) {
-       UserListItem userListItem = userService.changeStatus(id);
-        return new ResponseEntity<>(userListItem, HttpStatus.OK);
+       UserItemResult userItemResult = userService.changeStatus(id);
+        return new ResponseEntity<>(userItemResult, HttpStatus.OK);
     }
 
     @GetMapping("/grpAssigned/{id}")

@@ -2,7 +2,7 @@ package com.unimerch.service.impl;
 
 
 import com.unimerch.dto.user.UserCreateParam;
-import com.unimerch.dto.user.UserListItem;
+import com.unimerch.dto.user.UserItemResult;
 import com.unimerch.exception.*;
 import com.unimerch.mapper.UserMapper;
 import com.unimerch.repository.BrgGroupUserRepository;
@@ -57,12 +57,12 @@ public class UserServiceImpl implements UserService {
     private RoleServiceImpl roleService;
 
     @Override
-    public DataTablesOutput<UserListItem> findAllUserDTOExclSelf(DataTablesInput input, String principalUsername) {
+    public DataTablesOutput<UserItemResult> findAllUserDTOExclSelf(DataTablesInput input, String principalUsername) {
         List<Column> columnList = input.getColumns();
         columnList.remove(columnList.size() -1 );
         input.setColumns(columnList);
 
-        return userDataTableRepository.findAll(input, user -> userMapper.toUserListItem(user));
+        return userDataTableRepository.findAll(input, user -> userMapper.toUserItemResult(user));
     }
 
     @Override
@@ -91,12 +91,12 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public UserListItem findUserListItemById(String id) {
-        return userMapper.toUserListItem(findById(id));
+    public UserItemResult findUserListItemById(String id) {
+        return userMapper.toUserItemResult(findById(id));
     }
 
     @Override
-    public UserListItem create(UserCreateParam userCreateParam) {
+    public UserItemResult create(UserCreateParam userCreateParam) {
         User newUser = userMapper.toUser(userCreateParam);
 
         newUser.setSalt("abc");
@@ -112,7 +112,7 @@ public class UserServiceImpl implements UserService {
             throw new DataInputException(messageSource.getMessage("validation.invalidAccountInformation", null, Locale.getDefault()));
         }
 
-        return userMapper.toUserListItem(newUser);
+        return userMapper.toUserItemResult(newUser);
     }
 
 
@@ -147,7 +147,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public UserListItem changeStatus(String id) {
+    public UserItemResult changeStatus(String id) {
         User user = findById(id);
         if (roleService.isUserAdmin(id))
             throw new NotAllowDisableException(messageSource.getMessage("error.notAllow", null, Locale.getDefault()));
@@ -156,7 +156,7 @@ public class UserServiceImpl implements UserService {
 
         try {
             user = userRepository.save(user);
-            return userMapper.toUserListItem(user);
+            return userMapper.toUserItemResult(user);
         } catch (Exception e) {
             throw new ServerErrorException(messageSource.getMessage("error.serverError", null, Locale.getDefault()));
         }

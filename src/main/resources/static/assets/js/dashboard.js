@@ -4,6 +4,7 @@ class App {
     static BASE_URL_AUTHORIZATION = this.DOMAIN + "/api/auth";
     static BASE_URL_DASHBOARD = this.DOMAIN + "/api/dashboard";
     static BASE_URL_USER = this.DOMAIN + "/api/users";
+    static BASE_URL_USER_GROUPS = this.DOMAIN + "/api/asgnGrp";
     static BASE_URL_AMZN_ACCOUNT = this.DOMAIN + "/api/amzn-account";
     static BASE_URL_GROUP = this.DOMAIN + "/api/groups";
     static BASE_URL_FILE_UPLOAD = this.DOMAIN + "/api/file-upload";
@@ -12,6 +13,7 @@ class App {
     static ERROR_401 = "Access timeout."
     static ERROR_403 = "Access denied. Unauthorized personnel cannot perform this action.";
     static ERROR_404 = "An error occurred. Please try again later!";
+    static ERROR_409 = "Task failed, please check your data.";
     static ERROR_500 = "Server error. Please contact admin";
     static SUCCESS_CREATED = "Data created successfully!";
     static SUCCESS_UPDATED = "Data updated successfully!";
@@ -64,7 +66,7 @@ class App {
             let timerInterval;
             return Swal.fire({
                 title: title,
-                html: `${text}<br>in <b></b> milliseconds.`,
+                html: `${text}<br>in <b></b> seconds.`,
                 timer: time,
                 timerProgressBar: true,
                 didOpen: () => {
@@ -144,21 +146,35 @@ class App {
         })
     }
 
+    static handleCheckboxByRow(table) {
+        let currentCheckbox = $(table).find('input[type=checkbox]');
+        if($(currentCheckbox).is(':checked')){
+            currentCheckbox.prop('checked', false)
+        } else {
+            currentCheckbox.prop('checked', true)
+        }
+    }
+
     static handleFailedTasks(jqXHR) {
         switch (jqXHR.status) {
             case 400:
                 this.IziToast.showErrorAlert(this.ERROR_400);
                 break;
             case 401:
-                this.SweetAlert.showTimeOut(this.ERROR_401,
-                    "Redirecting to login in", 3000,
-                    this.redirectToLogin(3000));
+                this.SweetAlert.showTimeOut(
+                    this.ERROR_401,
+                    "Redirecting to login",
+                    4000,
+                    this.redirectToLogin(4000));
                 break;
             case 403:
                 this.SweetAlert.showErrorAlert(this.ERROR_403);
                 break;
             case 404:
                 this.IziToast.showErrorAlert(this.ERROR_404);
+                break;
+            case 409:
+                this.IziToast.showErrorAlert(this.ERROR_409);
                 break;
             default:
                 this.IziToast.showErrorAlert(this.ERROR_500);
