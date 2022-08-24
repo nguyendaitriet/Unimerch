@@ -2,7 +2,7 @@
 <html xmlns:th="http://www.thymeleaf.org" lang="en">
 <head>
     <th:block th:replace="layout/head :: dashboard-head"/>
-    <link rel="stylesheet" href="/assets/css/dashboard-1.css">
+    <link rel="stylesheet" href="/assets/css/dashboard-custom.css">
     <title>Users Management</title>
 </head>
 <body id="page-top">
@@ -115,7 +115,6 @@
             changeMyPassword: App.BASE_URL_USER + "/changePassword",
             changePassword: App.BASE_URL_USER + "/changePassword/",
             changeStatus: App.BASE_URL_USER + "/changeStatus/",
-            findGroups: App.BASE_URL_USER + "/groups/",
         },
         element: {},
         commands: {},
@@ -127,7 +126,6 @@
     }
 
     page.element.tableUser = $('#table-user');
-    page.element.tableAssignGrp = $('#tb-assign-grp-user');
 
     page.element.btnShowCreateUserFrm = $('#btnMdCreateUser');
     page.dialogs.element.mdCreateUser = $('#mdCreateUser');
@@ -171,6 +169,10 @@
                     className: 'text-center'
                 },
                 {
+                    targets: [1, 2],
+                    type: 'natural'
+                },
+                {
                     targets: 3,
                     className: 'text-center',
                     render: (data, type, row) => data ? 'Disabled' : 'Active',
@@ -205,6 +207,9 @@
             pagingType: 'simple_numbers',
             pageLength: 10,
             lengthChange: false,
+            language: {
+                search: `<i class="fas fa-search text-primary"></i> `
+            },
             dom: 'Bfrtip',
             buttons: {
                 dom: {

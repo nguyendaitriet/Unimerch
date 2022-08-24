@@ -189,29 +189,9 @@ class User {
     }
 }
 
-class Role{
-    constructor(id, code, name) {
+class Group {
+    constructor(id, title) {
         this.id = id;
-        this.code = code;
-        this.name = name;
-    }
-}
-
-class Product {
-    constructor(id, name, price, quantity, isLocked, category, createdBy) {
-        this.id = id;
-        this.name = name;
-        this.price = price;
-        this.quantity = quantity;
-        this.isLocked = isLocked;
-        this.category = category;
-        this.createdBy = createdBy;
-    }
-}
-
-class Category {
-    constructor(id, name) {
-        this.id = id;
-        this.name = name;
+        this.title = title;
     }
 }

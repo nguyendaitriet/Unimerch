@@ -95,9 +95,9 @@ public class UserAPI {
         return new ResponseEntity<>(groupList, HttpStatus.OK);
     }
 
-    @PostMapping("/asgnGrp/{userId}/remove")
+    @DeleteMapping("/asgnGrp/{userId}/remove")
     public ResponseEntity<?> removeOldGroup(@PathVariable String userId, @RequestBody String groupId) {
-        GroupItemResult group = userService.removeGroupFromUser(userId, groupId);
-        return new ResponseEntity<>(group, HttpStatus.OK);
+        userService.removeGroupFromUser(userId, groupId);
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 }

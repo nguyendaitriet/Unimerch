@@ -33,5 +33,5 @@ public interface UserService extends UserDetailsService {
 
     List<GroupItemResult> assignGroupToUser(String userId, List<String> groupId);
 
-    GroupItemResult removeGroupFromUser(String userId, String groupId);
+    void removeGroupFromUser(String userId, String groupId);
 }
