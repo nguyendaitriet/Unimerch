@@ -4,9 +4,11 @@ import com.unimerch.dto.amznacc.AmznAccResult;
 import com.unimerch.dto.group.GroupCreateParam;
 import com.unimerch.dto.group.GroupItemResult;
 import com.unimerch.dto.group.GroupUpdateParam;
+import com.unimerch.repository.model.AmznAccount;
 import com.unimerch.repository.model.Group;
 import org.springframework.data.jpa.datatables.mapping.DataTablesInput;
 import org.springframework.data.jpa.datatables.mapping.DataTablesOutput;
+import org.springframework.data.repository.query.Param;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -16,7 +18,7 @@ public interface GroupService {
 
     List<Group> findAll();
 
-    DataTablesOutput<Group> findAll(DataTablesInput dataTablesInput);
+    DataTablesOutput<GroupItemResult> findAll(DataTablesInput dataTablesInput);
 
     Group findById(String id);
 
@@ -29,8 +31,6 @@ public interface GroupService {
     List<AmznAccResult> addAmznAccToGroup(ArrayList<String> amznAccIdList, String id);
 
     List<AmznAccResult> getAmznAccInsideGroup(String id);
-
-//    DataTablesOutput<AmznAccResult> getAmznAccInsideGroup(String id, DataTablesInput input);
 
     List<AmznAccResult> getAmznAccOutsideGroup(String id);
 

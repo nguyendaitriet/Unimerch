@@ -17,21 +17,10 @@ import java.util.Objects;
 public class AmznAccResult {
     private Integer id;
     private String username;
+    private String option;
 
-    public AmznAccResult(Integer id) {
+    public AmznAccResult(Integer id, String username) {
         this.id = id;
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        AmznAccResult that = (AmznAccResult) o;
-        return Objects.equals(id, that.id);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(id);
+        this.username = username;
     }
 }

@@ -17,4 +17,6 @@ public class GroupMapper {
                 .setId(group.getId())
                 .setTitle(group.getTitle());
     }
+
+
 }

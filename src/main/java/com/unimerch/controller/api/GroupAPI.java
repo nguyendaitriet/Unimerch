@@ -33,7 +33,7 @@ public class GroupAPI {
 
     //    @PreAuthorize("hasAnyAuthority('MANAGER')")
     @PostMapping
-    public DataTablesOutput<Group> findAllGroupsPageable(@Valid @RequestBody DataTablesInput input) {
+    public DataTablesOutput<GroupItemResult> findAllGroupsPageable(@Valid @RequestBody DataTablesInput input) {
         return groupService.findAll(input);
     }
 
@@ -90,12 +90,6 @@ public class GroupAPI {
         List<AmznAccResult> amznAccResultList = groupService.getAmznAccInsideGroup(id);
         return new ResponseEntity<>(amznAccResultList, HttpStatus.OK);
     }
-
-    //    @PreAuthorize("hasAnyAuthority('MANAGER')")
-//    @PostMapping("/showAmznAccInsideGroup/{id}")
-//    public DataTablesOutput<AmznAccResult> showAmznAccInsideGroup(@PathVariable String id, @Valid @RequestBody DataTablesInput input) {
-//        return groupService.getAmznAccInsideGroup(id, input);
-//    }
 
     //    @PreAuthorize("hasAnyAuthority('MANAGER')")
     @GetMapping("/showAmznAccOutsideGroup/{id}")

@@ -3,6 +3,7 @@
 <head>
     <title>Groups Management</title>
     <th:block th:replace="layout/head :: dashboard-head"/>
+    <link rel="stylesheet" href="/assets/datatables/dataTables.checkboxes.css">
 </head>
 <body id="page-top">
 
@@ -111,7 +112,9 @@
 
 <th:block th:replace="layout/script :: script-dashboard"/>
 
-<script type="text/javascript" src="/assets/js/absolute.js"></script>
+<script type="text/javascript" src="/assets/datatables/absolute.js"></script>
+<script type="text/javascript" src="/assets/datatables/natural.js"></script>
+<script type="text/javascript" src="/assets/datatables/dataTables.checkboxes.min.js"></script>
 
 <script>
     let page = {
@@ -171,19 +174,19 @@
             url: page.urls.createGroup,
             data: JSON.stringify(newGroup)
         })
-            .done((data) => {
-                let tableGroup = page.element.tableGroup.DataTable();
-                tableGroup.row.add({
-                    'id': data.id,
-                    'title': data.title
-                })
-                tableGroup.order([0, 'desc']).draw();
-                page.dialogs.element.mdCreateGroup.modal("hide");
-                App.SweetAlert.showSuccessAlert(App.SUCCESS_CREATED);
+        .done((data) => {
+            let tableGroup = page.element.tableGroup.DataTable();
+            tableGroup.row.add({
+                'id': data.id,
+                'title': data.title
             })
-            .fail(function (jqXHR) {
-                alert("fail");
-            })
+            tableGroup.order([0, 'desc']).draw();
+            page.dialogs.element.mdCreateGroup.modal("hide");
+            App.SweetAlert.showSuccessAlert(App.SUCCESS_CREATED);
+        })
+        .fail(function (jqXHR) {
+            alert("fail");
+        })
     }
     page.commands.doUpdateGroup = (currentGroup, currentRowGroup) => {
         let group = {};
@@ -198,19 +201,19 @@
             url: page.urls.updateGroup + currentGroup.id,
             data: JSON.stringify(group)
         })
-            .done((data) => {
-                let tableGroup = page.element.tableGroup.DataTable();
-                tableGroup.row(currentRowGroup).data({
-                    'id': data.id,
-                    'title': data.title
-                }).draw('full-hold');
-                page.dialogs.element.frmUpdateGroup[0].reset();
-                page.dialogs.element.mdUpdateGroup.modal("hide");
-                App.SweetAlert.showSuccessAlert(App.SUCCESS_UPDATED);
-            })
-            .fail(function (jqXHR) {
-                alert("fail");
-            })
+        .done((data) => {
+            let tableGroup = page.element.tableGroup.DataTable();
+            tableGroup.row(currentRowGroup).data({
+                'id': data.id,
+                'title': data.title
+            }).draw('full-hold');
+            page.dialogs.element.frmUpdateGroup[0].reset();
+            page.dialogs.element.mdUpdateGroup.modal("hide");
+            App.SweetAlert.showSuccessAlert(App.SUCCESS_UPDATED);
+        })
+        .fail(function (jqXHR) {
+            alert("fail");
+        })
     }
     page.commands.doDeleteGroup = (currentGroup, currentRowGroup) => {
         $.ajax({
@@ -219,7 +222,10 @@
         })
             .done((data) => {
                 let tableGroup = page.element.tableGroup.DataTable();
-                tableGroup.row(currentRowGroup).remove().draw('page');
+                tableGroup.row(currentRowGroup).remove().draw('full-hold');
+                page.element.tableAmznAccOut.DataTable().clear().draw();
+                page.element.tableAmznAccIn.DataTable().clear().draw();
+                page.element.groupTitle.html('');
                 App.SweetAlert.showSuccessAlert(App.SUCCESS_UPDATED);
             })
             .fail(function (jqXHR) {
@@ -227,11 +233,20 @@
             })
     }
 
-    page.commands.addAmznAccToGroup = (currentGroup, tableAmznAccIn) => {
+    page.commands.addAmznAccToGroup = (currentGroup, tableAmznAccIn, tableAmznAccOut) => {
+        if (currentGroup === undefined) return;
+
         let amznAccSelected = [];
-        $('#table-amzn-acc-out input[type="checkbox"]:checked').each(function () {
-            amznAccSelected.push($(this).val());
+
+        let rows_selected = tableAmznAccOut.rows({selected:true}).data()
+        $.each(rows_selected, function(index, value){
+            amznAccSelected.push(value.id);
         });
+
+        if (amznAccSelected.length === 0) {
+            App.IziToast.showErrorAlert('No data selected!');
+            return;
+        }
 
         $.ajax({
             headers: {
@@ -242,20 +257,20 @@
             url: page.urls.addAmznAccountToGroup + currentGroup.id,
             data: JSON.stringify({amznAccSelected})
         })
-            .done((data) => {
-                data.forEach((amznAcc) => {
-                    tableAmznAccIn.row.add({
-                        'id': amznAcc.id,
-                        'username': amznAcc.username
-                    })
-                    tableAmznAccIn.order([0, 'desc']).draw();
-                });
-                page.dialogs.element.mdAddAmznAccToGroup.modal("hide");
-                App.SweetAlert.showSuccessAlert(App.SUCCESS_CREATED);
-            })
-            .fail(function (jqXHR) {
-                alert("fail");
-            })
+        .done((data) => {
+            data.forEach((amznAcc) => {
+                tableAmznAccIn.row.add({
+                    'id': amznAcc.id,
+                    'username': amznAcc.username
+                })
+                tableAmznAccIn.order([0, 'desc']).draw();
+            });
+            page.dialogs.element.mdAddAmznAccToGroup.modal("hide");
+            App.SweetAlert.showSuccessAlert(App.SUCCESS_CREATED);
+        })
+        .fail(function (jqXHR) {
+            alert("fail");
+        })
     }
     page.commands.doDeletedAmznAcc = (currentGroup, currentAmznAcc, currentRowAmznAcc) => {
         $.ajax({
@@ -350,7 +365,6 @@
         let currentAmznAcc;
 
         page.element.tableGroup.on('click', 'button.manage-group', function () {
-
             currentGroup = tableGroup.row($(this).parents('tr')).data();
             page.element.groupTitle.html(currentGroup.title);
 
@@ -383,6 +397,11 @@
                             className: "text-center"
                         },
                         {
+                            targets: 1,
+                            className: "text-center",
+                            type: 'natural',
+                        },
+                        {
                             targets: -1,
                             className: "text-center",
                             orderable: false,
@@ -410,7 +429,6 @@
                                 init: function (api, node, config) {
                                     $(node).on('click', () => {
                                         page.dialogs.element.mdAddAmznAccToGroup.modal("show");
-                                        // page.commands.showAmznAccOutsideGroup(tableAmznAccOut, currentGroup);
                                     })
                                 }
                             }
@@ -435,11 +453,16 @@
             App.SweetAlert.showDeleteGroupDialog()
                 .then((result) => {
                     if (result.isConfirmed) {
-                        page.commands.doDeleteGroup(currentGroup, currentRowGroup)
+                        page.commands.doDeleteGroup(currentGroup, currentRowGroup);
+                        currentGroup = undefined;
                     }
                 })
 
         });
+
+        // page.element.tableAmznAccOut.on('click', 'tbody tr', function() {
+        //     App.handleCheckboxByRow(this);
+        // });
 
         page.dialogs.element.btnCreateGroup.on('click', function () {
             page.dialogs.element.frmCreateGroup.submit();
@@ -494,6 +517,10 @@
         });
 
         page.dialogs.element.mdAddAmznAccToGroup.on('shown.bs.modal', () => {
+            if (currentGroup === undefined) {
+                return;
+            }
+
             if (tableAmznAccOut === undefined) {
                 tableAmznAccOut = page.element.tableAmznAccOut.DataTable({
                     ajax: {
@@ -504,24 +531,31 @@
                     pagingType: 'simple_numbers',
                     processing: true,
                     columns: [
-                        {data: null},
+                        {data: 'id'},
                         {data: 'username'},
+                        {data: 'option'},
                     ],
                     columnDefs: [
                         {
-                            targets: 0,
-                            orderable: false,
-                            render: (data, type, row) =>
-                                `<input type="checkbox" name="amznAccOutGroup" value="${data.id}"/>`
+                            targets: 1,
+                            type: 'natural',
+                        },
+                        {
+                            targets: 2,
+                            className: 'select-checkbox',
                         }
                     ],
-                    pageLength: 10,
+                    select: {
+                        style: 'multi+shift'
+                    },
+                    pageLength: 8,
                     lengthChange: false,
                     dom: 'Bfrtip',
                 });
             } else {
                 tableAmznAccOut.ajax.url(page.urls.findAllAmznAccOutGroup + currentGroup.id).load();
             }
+            page.element.tableAmznAccOut.css('cursor','pointer');
         });
 
         page.dialogs.element.mdAddAmznAccToGroup.on('hidden.bs.modal', () => {
@@ -530,7 +564,7 @@
         });
 
         page.dialogs.element.btnAddAmznAccToGroup.on('click', () => {
-            page.commands.addAmznAccToGroup(currentGroup, tableAmznAccIn);
+            page.commands.addAmznAccToGroup(currentGroup, tableAmznAccIn, tableAmznAccOut);
         })
 
     });

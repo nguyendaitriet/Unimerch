@@ -65,12 +65,12 @@ public class GroupServiceImpl implements GroupService {
     }
 
     @Override
-    public DataTablesOutput<Group> findAll(DataTablesInput input) {
+    public DataTablesOutput<GroupItemResult> findAll(DataTablesInput input) {
         Map<String, Column> columnMap = input.getColumnsAsMap();
         columnMap.remove(null);
         List<Column> columnList = new ArrayList<>(columnMap.values());
         input.setColumns(columnList);
-        return groupDataTableRepository.findAll(input);
+        return groupDataTableRepository.findAll(input, group -> groupMapper.toGroupItemResult(group));
     }
 
     @Override
@@ -169,59 +169,23 @@ public class GroupServiceImpl implements GroupService {
     @Override
     public List<AmznAccResult> getAmznAccInsideGroup(String id) {
         Group group = findById(id);
-        return brgGroupAmznAccRepo.getAmznAccInGroup(group.getId());
-    }
-
-//    @Override
-//    public DataTablesOutput<AmznAccResult>getAmznAccInsideGroup(String id, DataTablesInput input) {
-//        Group group = findById(id).get();
-//
-//        Map<String, Column> columnMap = input.getColumnsAsMap();
-//        columnMap.remove(null);
-//        List<Column> columnList = new ArrayList<>(columnMap.values());
-//        input.setColumns(columnList);
-//
-//        List<Integer> amznAccIdInGroupList = brgGroupAmznAccRepo.getAmznAccIdInGroup(group.getId());
-//
-//
-////        Specification<AmznAccount> amznAccountSpecification = (Specification<AmznAccount>) (root, query, criteriaBuilder) -> {
-////            CriteriaQuery<AmznAccount> q = criteriaBuilder.createQuery(AmznAccount.class);
-//////            q.select(root);
-////
-////            Expression<Integer> idExpression = root.get("id");
-////            Predicate idPredicate = idExpression.in(amznAccIdInGroupList);
-//////            q.where(idPredicate);
-////            return (Predicate) criteriaBuilder.createQuery(AmznAccount.class).select(root).where(idPredicate);
-////        };
-//
-//        DataTablesOutput<AmznAccResult> dataTablesOutput = amznAccTableRepository
-//                .findAll(input, amznAccount -> amznAccountMapper.toAmznAccAddedToGroup(amznAccount));
-//
-//        List<AmznAccResult> amznAccAddedToGroupList = dataTablesOutput.getData();
-////
-////        List<AmznAccResult> newAmznAccAddedToGroupList = new ArrayList<>();
-////        for (AmznAccResult amznAccAddedToGroup : amznAccAddedToGroupList) {
-////            int amznAccId = amznAccAddedToGroup.getId();
-////            if (amznAccIdInGroupList.contains(amznAccId)){
-////                newAmznAccAddedToGroupList.add(amznAccAddedToGroup);
-////            }
-////        }
-//
-////        dataTablesOutput.setData(newAmznAccAddedToGroupList);
-//        dataTablesOutput.setData(amznAccAddedToGroupList);
-//        return dataTablesOutput;
-//    }
+        List<AmznAccResult> amznAccResultList = new ArrayList<>();
+        List<AmznAccount> amznAccResult =  brgGroupAmznAccRepo.getAmznAccInGroup(group.getId());
+        amznAccResult.forEach((result) -> amznAccResultList.add(amznAccountMapper.toAmznAccResult(result)));
+        return amznAccResultList;    }
 
     @Override
     public List<AmznAccResult> getAmznAccOutsideGroup(String id) {
         Group group = findById(id);
-        return brgGroupAmznAccRepo.getAmznAccOutGroup(group.getId());
+        List<AmznAccResult> amznAccResultList = new ArrayList<>();
+        List<AmznAccount> amznAccResult =  brgGroupAmznAccRepo.getAmznAccOutGroup(group.getId());
+        amznAccResult.forEach((result) -> amznAccResultList.add(amznAccountMapper.toAmznAccResult(result)));
+        return amznAccResultList;
     }
 
     @Override
     public void deleteAmznAccFromGroup(int amznAccId, int groupId) {
         brgGroupAmznAccRepo.deleteAmznAccFromGroup(amznAccId, groupId);
     }
-
 
 }
