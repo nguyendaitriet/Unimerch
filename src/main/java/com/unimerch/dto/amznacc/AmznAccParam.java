@@ -9,7 +9,7 @@ import lombok.Setter;
 @AllArgsConstructor
 @Getter
 @Setter
-public class AmznAccReq {
+public class AmznAccParam {
     private String username;
     private String password;
 }
