@@ -17,5 +17,4 @@ import java.util.Objects;
 public class AmznAccResult {
     private Integer id;
     private String username;
-
 }

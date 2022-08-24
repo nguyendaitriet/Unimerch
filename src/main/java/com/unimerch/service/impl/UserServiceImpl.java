@@ -220,12 +220,10 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public GroupItemResult removeGroupFromUser(String userId, String groupId) {
+    public void removeGroupFromUser(String userId, String groupId) {
         Group group = groupService.findById(groupId);
         User user = findById(userId);
 
         brgGroupUserRepository.removeGroupFromUser(group, user);
-
-        return groupMapper.toGroupItemResult(group);
     }
 }

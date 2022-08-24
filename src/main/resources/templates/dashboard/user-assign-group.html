@@ -2,7 +2,7 @@
 <html xmlns:th="http://www.thymeleaf.org" lang="en">
 <head>
     <th:block th:replace="layout/head :: dashboard-head"/>
-    <link rel="stylesheet" href="/assets/css/dashboard-1.css">
+    <link rel="stylesheet" href="/assets/css/dashboard-custom.css">
     <title>Assign Groups To User</title>
 </head>
 <body id="page-top">
@@ -39,7 +39,7 @@
                         <div class="card shadow mb-4">
                             <!-- Card Header - Dropdown -->
                             <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
-                                <h6 class="m-0 font-weight-bold text-primary">Assign Groups</h6>
+                                <h4 class="m-0 font-weight-bold text-primary">Assign Groups</h4>
                                 <div class="dropdown no-arrow">
                                     <a class="dropdown-toggle" href="#" role="button" id="dropdownMenuLink"
                                        data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -103,7 +103,7 @@
 <th:block th:replace="layout/script :: script-dashboard"/>
 
 <script>
-    let currentUserId = window.location.pathname.split('/')[3];
+    let currentUserId = window.location.pathname.split('/')[4];
 
     let page = {
         urls: {
@@ -122,10 +122,15 @@
     }
 
     page.element.tbAsgnedGrps = $('#table-assigned-groups');
-    page.element.tbAsgnNewGrps = $('#assign_group');
+    page.element.tbAsgnNewGrps = $('#tb-assign-grp-user');
+
+    page.dialogs.element.btnRemoveGrpUser = $('#btnRemoveGrpUser');
+
+    page.dialogs.element.mdAssignGrpUser = $('#mdAssignGrpUser');
+    page.dialogs.element.btnAssignGrpUser = $('#btnAssignGrpUser');
 
     $(document).ready(function () {
-        let tableGrpAsgned = page.element.tbAsgnedGrps.DataTable({
+        let mainTable = page.element.tbAsgnedGrps.DataTable({
             ajax: {
                 contentType: 'application/json',
                 type: 'GET',
@@ -141,7 +146,8 @@
             columnDefs: [
                 {
                     targets: 0,
-                    className: 'text-center'
+                    className: 'text-center',
+                    type: 'natural'
                 },
                 {
                     targets: -1,
@@ -150,42 +156,158 @@
                     render: (data, type, row) => {
                         return `
                             <button type='button'
-                                    class='assign-group btn btn-outline-primary mr-3'
-                                    title='Assign group'>
-                                <i class="fas fa-users-cog"></i>
-                            </button>
-                            <button type='button'
-                                    class='change-password btn btn-outline-warning mr-3'
-                                    title='Change password'>
-                                <i class='fas fa-key'></i>
-                            </button>
-                            <button type='button'
-                                    class="change-status ${data.disabled ? 'btn btn-outline-success' : 'btn btn-outline-danger'}"
-                                    title="${data.disabled ? 'Activate' : 'Disable'}">
-                                <i class="${data.disabled ? 'fas fa-unlock' : 'fas fa-lock'}"></i>
+                                    class="remove-assigned-group btn btn-outline-danger"
+                                    title="Remove">
+                                <i class="fas fa-trash-alt"></i>
                             </button>
                         `
                     }
                 },
             ],
+            info: false,
+            pagingType: 'simple_numbers',
+            pageLength: 10,
+            lengthChange: false,
+            language: {
+                search: `<i class="fas fa-search text-primary"></i> `
+            },
+            dom: 'Bfrtip',
+            buttons: {
+                dom: {
+                    button: {
+                        tag: 'button',
+                        className: ''
+                    }
+                },
+                buttons: [
+                    {
+                        text: `<i class="fas fa-plus"></i> Assign new`,
+                        titleAttr: 'Assign new groups to user',
+                        className: 'add btn btn-primary',
+                        init: (api, node, config) => {
+                            $(node).on('click', () => {
+                                page.dialogs.element.mdAssignGrpUser.modal("show");
+                            });
+                        }
+                    }
+                ]
+            },
+        })
+
+        page.element.tbAsgnedGrps.on('click', '.remove-assigned-group', function () {
+            let currentRow = mainTable.row($(this).parents('tr'));
+            let currentGroup = currentRow.data();
+
+            page.commands.doRemoveGroup(currentGroup.id, currentRow);
+        })
+
+        let sideTable = page.element.tbAsgnNewGrps.DataTable({
+            ajax: {
+                contentType: 'application/json',
+                type: 'GET',
+                url: page.urls.findUnassignedGroups,
+                dataSrc: ''
+            },
+            processing: true,
+            columns: [
+                {data: 'id'},
+                {data: 'title'},
+                {data: null}
+            ],
+            columnDefs: [
+                {
+                    targets: 1,
+                    className: 'text-center',
+                    type: 'natural'
+                },
+                {
+                    targets: -1,
+                    orderable: false,
+                    className: 'select-checkbox',
+                    render: () => ''
+                },
+            ],
+            select: {
+                style: 'multi+shift'
+            },
+            info: false,
+            pagingType: 'simple_numbers',
+            pageLength: 6,
+            lengthChange: false,
+            language: {
+                search: `<i class="fas fa-search text-primary"></i> `
+            },
+        })
+
+        page.dialogs.element.btnAssignGrpUser.on('click', function () {
+            let selectedRows = sideTable.rows({selected: true}).data();
+            let selectedRowIds = [];
+
+            $.each(selectedRows, function (index, value) {
+                selectedRowIds.push(value.id);
+            })
+
+            page.commands.doAssignGroups(selectedRowIds);
         })
     })
 
-    page.commands.findGroups = (currentUser) => {
-        let userId = currentUser.id;
-
-        return $.ajax({
+    page.commands.doRemoveGroup = (groupId, currentRow) => {
+        $.ajax({
             "headers": {
                 "accept": "application/json",
                 "content-type": "application/json"
             },
-            "type": "GET",
-            "url": page.urls.findGroups + userId
+            "type": "DELETE",
+            "url": page.urls.removeOldGroup,
+            "data": JSON.stringify(groupId)
         })
+            .done((data) => {
+                let mainTable = page.element.tbAsgnedGrps.DataTable();
+                let sideTable = page.element.tbAsgnNewGrps.DataTable();
+
+                mainTable.row(currentRow).remove().draw('full-hold');
+                sideTable.ajax.reload();
+            })
+            .fail((jqXHR) => {
+                App.handleFailedTasks(jqXHR);
+            })
     }
 
+    page.commands.doAssignGroups = (groupIdsList) => {
+        $.ajax({
+            "headers": {
+                "accept": "application/json",
+                "content-type": "application/json"
+            },
+            "type": "POST",
+            "url": page.urls.assignNewGroups,
+            "data": JSON.stringify(groupIdsList)
+        })
+            .done((data) => {
+                let mainTable = page.element.tbAsgnedGrps.DataTable();
+                let sideTable = page.element.tbAsgnNewGrps.DataTable();
+                sideTable.ajax.reload();
 
-    page.dialogs.element.mdAssignGrpUser.on('hidden.bs.modal', function() {
+                $.each(data, function (index, group) {
+                    mainTable.row.add({
+                        'id': group.id,
+                        'title': group.title
+                    })
+                })
 
+                mainTable.draw('full-hold');
+
+                page.dialogs.element.mdAssignGrpUser.modal('hide');
+
+                App.SweetAlert.showSuccessAlert(App.SUCCESS_UPDATED);
+            })
+            .fail((jqXHR) => {
+                App.handleFailedTasks(jqXHR);
+            })
+    }
+
+    page.dialogs.element.mdAssignGrpUser.on('hidden.bs.modal', function () {
+        page.element.tbAsgnNewGrps.DataTable().search('').draw();
+        page.element.tbAsgnNewGrps.find('tr.selected').removeClass('selected');
     })
 </script>
