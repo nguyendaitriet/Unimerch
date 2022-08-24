@@ -39,7 +39,7 @@
                         <div class="card shadow mb-4">
                             <!-- Card Header - Dropdown -->
                             <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
-                                <h6 class="m-0 font-weight-bold text-primary">Assign Groups</h6>
+                                <h4 class="m-0 font-weight-bold text-primary">Assign Groups</h4>
                                 <div class="dropdown no-arrow">
                                     <a class="dropdown-toggle" href="#" role="button" id="dropdownMenuLink"
                                        data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -166,7 +166,7 @@
             ],
             info: false,
             pagingType: 'simple_numbers',
-            pageLength: 8,
+            pageLength: 10,
             lengthChange: false,
             language: {
                 search: `<i class="fas fa-search text-primary"></i> `
@@ -181,7 +181,7 @@
                 },
                 buttons: [
                     {
-                        text: `<i class="fas fa-user-friends"></i> Assign new`,
+                        text: `<i class="fas fa-plus"></i> Assign new`,
                         titleAttr: 'Assign new groups to user',
                         className: 'add btn btn-primary',
                         init: (api, node, config) => {
@@ -194,10 +194,8 @@
             },
         })
 
-        let currentRow;
-
         page.element.tbAsgnedGrps.on('click', '.remove-assigned-group', function () {
-            currentRow = mainTable.row($(this).parents('tr'));
+            let currentRow = mainTable.row($(this).parents('tr'));
             let currentGroup = currentRow.data();
 
             page.commands.doRemoveGroup(currentGroup.id, currentRow);
@@ -234,11 +232,22 @@
             },
             info: false,
             pagingType: 'simple_numbers',
-            pageLength: 10,
+            pageLength: 6,
             lengthChange: false,
             language: {
                 search: `<i class="fas fa-search text-primary"></i> `
             },
+        })
+
+        page.dialogs.element.btnAssignGrpUser.on('click', function () {
+            let selectedRows = sideTable.rows({selected: true}).data();
+            let selectedRowIds = [];
+
+            $.each(selectedRows, function (index, value) {
+                selectedRowIds.push(value.id);
+            })
+
+            page.commands.doAssignGroups(selectedRowIds);
         })
     })
 
@@ -264,7 +273,7 @@
             })
     }
 
-    page.commands.doAddGroup = (groupList) => {
+    page.commands.doAssignGroups = (groupIdsList) => {
         $.ajax({
             "headers": {
                 "accept": "application/json",
@@ -272,9 +281,24 @@
             },
             "type": "POST",
             "url": page.urls.assignNewGroups,
-            "data": JSON.stringify(groupList)
+            "data": JSON.stringify(groupIdsList)
         })
             .done((data) => {
+                let mainTable = page.element.tbAsgnedGrps.DataTable();
+                let sideTable = page.element.tbAsgnNewGrps.DataTable();
+                sideTable.ajax.reload();
+
+                $.each(data, function (index, group) {
+                    mainTable.row.add({
+                        'id': group.id,
+                        'title': group.title
+                    })
+                })
+
+                mainTable.draw('full-hold');
+
+                page.dialogs.element.mdAssignGrpUser.modal('hide');
+
                 App.SweetAlert.showSuccessAlert(App.SUCCESS_UPDATED);
             })
             .fail((jqXHR) => {
@@ -283,6 +307,7 @@
     }
 
     page.dialogs.element.mdAssignGrpUser.on('hidden.bs.modal', function () {
-
+        page.element.tbAsgnNewGrps.DataTable().search('').draw();
+        page.element.tbAsgnNewGrps.find('tr.selected').removeClass('selected');
     })
 </script>
