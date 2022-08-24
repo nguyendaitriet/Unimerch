@@ -21,11 +21,14 @@ public class UnimerchApplication implements WebMvcConfigurer {
 
         ResourceBundleMessageSource source = new ResourceBundleMessageSource();
         source.setBasenames("static/messages/messages_vi");
+        source.setBasenames("static/views/group_content");
         source.setDefaultEncoding("UTF-8");
         source.setUseCodeAsDefaultMessage(true);
 
         return source;
     }
+
+    
 
 }
 

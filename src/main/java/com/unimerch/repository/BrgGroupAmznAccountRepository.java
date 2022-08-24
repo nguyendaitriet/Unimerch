@@ -13,7 +13,7 @@ import java.util.List;
 
 @Repository
 public interface BrgGroupAmznAccountRepository extends JpaRepository<BrgGroupAmznAccount, Integer> {
-    
+
     @Query("SELECT a " +
             "FROM AmznAccount AS a " +
             "WHERE a.id NOT IN ( " +
@@ -35,4 +35,5 @@ public interface BrgGroupAmznAccountRepository extends JpaRepository<BrgGroupAmz
             "WHERE (br.group.id = :groupId AND br.amznAccount.id = :amznAccId) ")
     @Modifying
     void deleteAmznAccFromGroup(@Param("amznAccId") Integer amznAccId, @Param("groupId") Integer groupId);
+
 }

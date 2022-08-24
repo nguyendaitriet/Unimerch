@@ -188,5 +188,4 @@ public class GroupServiceImpl implements GroupService {
         brgGroupAmznAccRepo.deleteAmznAccFromGroup(amznAccId, groupId);
     }
 
-
 }
