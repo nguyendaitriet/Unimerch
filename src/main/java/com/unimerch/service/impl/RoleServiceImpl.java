@@ -23,6 +23,6 @@ public class RoleServiceImpl implements RoleService {
     @Override
     public boolean isUserAdmin(String id) {
         User user = userService.findById(id);
-        return user.getRole().getId() == 0;
+        return user.getRole().getId() == 1;
     }
 }

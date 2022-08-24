@@ -1,9 +1,11 @@
 package com.unimerch.service.impl;
 
 
+import com.unimerch.dto.group.GroupItemResult;
 import com.unimerch.dto.user.UserCreateParam;
 import com.unimerch.dto.user.UserItemResult;
 import com.unimerch.exception.*;
+import com.unimerch.mapper.GroupMapper;
 import com.unimerch.mapper.UserMapper;
 import com.unimerch.repository.BrgGroupUserRepository;
 import com.unimerch.repository.UserRepository;
@@ -30,13 +32,19 @@ import java.util.*;
 @Transactional
 public class UserServiceImpl implements UserService {
     @Autowired
-    private UserMapper userMapper;
-
-    @Autowired
     private UserRepository userRepository;
 
     @Autowired
     private UserDataTableRepository userDataTableRepository;
+
+    @Autowired
+    private UserMapper userMapper;
+
+    @Autowired
+    private GroupServiceImpl groupService;
+
+    @Autowired
+    private GroupMapper groupMapper;
 
     @Autowired
     private BrgGroupUserRepository brgGroupUserRepository;
@@ -59,16 +67,10 @@ public class UserServiceImpl implements UserService {
     @Override
     public DataTablesOutput<UserItemResult> findAllUserDTOExclSelf(DataTablesInput input, String principalUsername) {
         List<Column> columnList = input.getColumns();
-        columnList.remove(columnList.size() -1 );
+        columnList.remove(columnList.size() - 1);
         input.setColumns(columnList);
 
         return userDataTableRepository.findAll(input, user -> userMapper.toUserItemResult(user));
-    }
-
-    @Override
-    public List<Group> findAllGrpAssigned(Integer userId) {
-        List<Group> groupList = brgGroupUserRepository.findAllGroupByUserId(userId);
-        return groupList;
     }
 
     @Override
@@ -149,6 +151,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public UserItemResult changeStatus(String id) {
         User user = findById(id);
+
         if (roleService.isUserAdmin(id))
             throw new NotAllowDisableException(messageSource.getMessage("error.notAllow", null, Locale.getDefault()));
 
@@ -169,5 +172,60 @@ public class UserServiceImpl implements UserService {
             throw new UsernameNotFoundException(username);
 
         return UserPrinciple.build(userOptional.get());
+    }
+
+    @Override
+    public List<GroupItemResult> findAssignedGroups(String userId) {
+        User user = findById(userId);
+
+        List<GroupItemResult> groupListResult = new ArrayList<>();
+
+        brgGroupUserRepository.findAssignedGroupsByUserId(user.getId())
+                .forEach(group -> groupListResult.add(groupMapper.toGroupItemResult(group)));
+
+        return groupListResult;
+    }
+
+    @Override
+    public List<GroupItemResult> findUnassignedGroups(String userId) {
+        User user = findById(userId);
+
+        List<GroupItemResult> groupListResult = new ArrayList<>();
+
+        brgGroupUserRepository.findUnassignedGroupsByUserId(user.getId())
+                .forEach(group -> groupListResult.add(groupMapper.toGroupItemResult(group)));
+
+        return groupListResult;
+    }
+
+    @Override
+    public List<GroupItemResult> assignGroupToUser(String userId, List<String> listGroupId) {
+        if (listGroupId.isEmpty())
+            throw new DataInputException(messageSource.getMessage("validation.inputEmpty", null, Locale.getDefault()));
+
+        User user = findById(userId);
+        List<GroupItemResult> groupListResult = new ArrayList<>();
+
+        for (String groupId : listGroupId) {
+            Group group = groupService.findById(groupId);
+
+            BrgGroupUserId bridgeId = new BrgGroupUserId(group.getId(), user.getId());
+            BrgGroupUser newBridge = new BrgGroupUser(bridgeId, group, user);
+
+            brgGroupUserRepository.save(newBridge);
+            groupListResult.add(groupMapper.toGroupItemResult(group));
+        }
+
+        return groupListResult;
+    }
+
+    @Override
+    public GroupItemResult removeGroupFromUser(String userId, String groupId) {
+        Group group = groupService.findById(groupId);
+        User user = findById(userId);
+
+        brgGroupUserRepository.removeGroupFromUser(group, user);
+
+        return groupMapper.toGroupItemResult(group);
     }
 }

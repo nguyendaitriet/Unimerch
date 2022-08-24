@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+
+<th:block th:fragment="assign_group">
+  <div id="mdAssignGrpUser" class="modal fade" tabindex="-1" role="dialog">
+    <div class="modal-dialog modal-dialog-centered" data-backdrop="static" data-keyboard="false">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">Assign new groups to user</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+
+        <div class="modal-body">
+          <table id="tb-assign-grp-user" class="table stripe nowrap table-borderless" style="width: 100%;">
+            <thead>
+            <tr>
+              <th>#</th>
+              <th>Title</th>
+            </tr>
+            </thead>
+            <!-- Tbody -->
+          </table>
+        </div>
+        <div class="modal-footer">
+          <button type="button" id="btnAssignGrpUser" class="btn btn-primary">Add</button>
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</th:block>

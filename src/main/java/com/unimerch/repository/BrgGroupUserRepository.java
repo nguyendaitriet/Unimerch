@@ -2,7 +2,9 @@ package com.unimerch.repository;
 
 import com.unimerch.repository.model.BrgGroupUser;
 import com.unimerch.repository.model.Group;
+import com.unimerch.repository.model.User;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
@@ -12,8 +14,23 @@ import java.util.List;
 @Repository
 public interface BrgGroupUserRepository extends JpaRepository<BrgGroupUser, Integer> {
     @Query("SELECT NEW com.unimerch.repository.model.Group " +
-                "(br.group.id, br.group.title)" +
+            "(br.group.id, br.group.title)" +
             "FROM BrgGroupUser AS br " +
             "WHERE br.user.id=:id")
-    List<Group> findAllGroupByUserId(@Param("id") Integer userId);
+    List<Group> findAssignedGroupsByUserId(@Param("id") Integer userId);
+
+    @Query("SELECT NEW com.unimerch.repository.model.Group " +
+            "(g.id, g.title)" +
+            "FROM Group AS g " +
+            "WHERE g.id NOT IN " +
+                "(SELECT br.group.id FROM " +
+                "BrgGroupUser AS br " +
+                "WHERE br.user.id=:id)")
+    List<Group> findUnassignedGroupsByUserId(@Param("id") Integer userId);
+
+    @Modifying
+    @Query("DELETE FROM BrgGroupUser AS br " +
+            "WHERE br.group=:group " +
+            "AND br.user=:user")
+    void removeGroupFromUser(@Param("group") Group group, @Param("user") User user);
 }

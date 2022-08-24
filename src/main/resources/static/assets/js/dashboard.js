@@ -4,7 +4,7 @@ class App {
     static BASE_URL_AUTHORIZATION = this.DOMAIN + "/api/auth";
     static BASE_URL_DASHBOARD = this.DOMAIN + "/api/dashboard";
     static BASE_URL_USER = this.DOMAIN + "/api/users";
-    static BASE_URL_USER_GROUPS = this.DOMAIN + "/api/asgnGrp";
+    static BASE_URL_USER_GROUPS = this.DOMAIN + "/api/users/asgnGrp";
     static BASE_URL_AMZN_ACCOUNT = this.DOMAIN + "/api/amzn-account";
     static BASE_URL_GROUP = this.DOMAIN + "/api/groups";
     static BASE_URL_FILE_UPLOAD = this.DOMAIN + "/api/file-upload";
@@ -144,15 +144,6 @@ class App {
                 password.type = 'password';
             }
         })
-    }
-
-    static handleCheckboxByRow(table) {
-        let currentCheckbox = $(table).find('input[type=checkbox]');
-        if($(currentCheckbox).is(':checked')){
-            currentCheckbox.prop('checked', false)
-        } else {
-            currentCheckbox.prop('checked', true)
-        }
     }
 
     static handleFailedTasks(jqXHR) {

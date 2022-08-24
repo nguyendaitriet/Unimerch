@@ -1,8 +1,8 @@
 package com.unimerch.controller.api;
 
+import com.unimerch.dto.group.GroupItemResult;
 import com.unimerch.dto.user.UserCreateParam;
 import com.unimerch.dto.user.UserItemResult;
-import com.unimerch.repository.model.Group;
 import com.unimerch.service.UserService;
 import com.unimerch.util.AppUtils;
 import com.unimerch.util.PrincipalUtils;
@@ -48,9 +48,8 @@ public class UserAPI {
     @PostMapping("/create")
     public ResponseEntity<?> createUser(@Validated @RequestBody UserCreateParam userCreateParam, BindingResult bindingResult) {
 
-        if (bindingResult.hasErrors()) {
+        if (bindingResult.hasErrors())
             return appUtils.mapErrorToResponse(bindingResult);
-        }
 
         UserItemResult newUser = userService.create(userCreateParam);
         return new ResponseEntity<>(newUser, HttpStatus.CREATED);
@@ -77,9 +76,28 @@ public class UserAPI {
         return new ResponseEntity<>(userItemResult, HttpStatus.OK);
     }
 
-    @GetMapping("/grpAssigned/{id}")
-    public ResponseEntity<?> findAllAssignedGroups(@PathVariable Integer id) {
-        List<Group> groupList = userService.findAllGrpAssigned(id);
+    @GetMapping("/asgnGrp/{id}")
+    public ResponseEntity<?> findAssignedGroups(@PathVariable String id) {
+        List<GroupItemResult> groupList = userService.findAssignedGroups(id);
         return new ResponseEntity<>(groupList, HttpStatus.OK);
+    }
+
+    @GetMapping("/asgnGrpNot/{id}")
+    public ResponseEntity<?> findUnassignedGroups(@PathVariable String id) {
+        List<GroupItemResult> groupList = userService.findUnassignedGroups(id);
+        return new ResponseEntity<>(groupList, HttpStatus.OK);
+    }
+
+
+    @PostMapping("/asgnGrp/{userId}/add")
+    public ResponseEntity<?> assignNewGroups(@PathVariable String userId, @RequestBody List<String> listGroupId) {
+        List<GroupItemResult> groupList = userService.assignGroupToUser(userId, listGroupId);
+        return new ResponseEntity<>(groupList, HttpStatus.OK);
+    }
+
+    @PostMapping("/asgnGrp/{userId}/remove")
+    public ResponseEntity<?> removeOldGroup(@PathVariable String userId, @RequestBody String groupId) {
+        GroupItemResult group = userService.removeGroupFromUser(userId, groupId);
+        return new ResponseEntity<>(group, HttpStatus.OK);
     }
 }

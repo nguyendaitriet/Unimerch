@@ -1,8 +1,8 @@
 package com.unimerch.service;
 
+import com.unimerch.dto.group.GroupItemResult;
 import com.unimerch.dto.user.UserCreateParam;
 import com.unimerch.dto.user.UserItemResult;
-import com.unimerch.repository.model.Group;
 import com.unimerch.repository.model.User;
 import org.springframework.data.jpa.datatables.mapping.DataTablesInput;
 import org.springframework.data.jpa.datatables.mapping.DataTablesOutput;
@@ -27,5 +27,11 @@ public interface UserService extends UserDetailsService {
 
     UserItemResult changeStatus(String id);
 
-    List<Group> findAllGrpAssigned(Integer userId);
+    List<GroupItemResult> findAssignedGroups(String userId);
+
+    List<GroupItemResult> findUnassignedGroups(String userId);
+
+    List<GroupItemResult> assignGroupToUser(String userId, List<String> groupId);
+
+    GroupItemResult removeGroupFromUser(String userId, String groupId);
 }
