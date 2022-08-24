@@ -35,16 +35,13 @@
 
                 <div class="row">
 
-                    <!-- Users -->
                     <div class="col-md-7">
                         <div class="card shadow mb-4">
-                            <!-- Card Header - Dropdown -->
                             <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
                                 <h4 class="m-0 font-weight-bold text-primary" th:text="#{group.groupTableTitle}">Groups Management</h4>
                             </div>
 
                             <div class="card-body">
-                                <!-- Table Body -->
                                 <table id="table-group" class="table stripe nowrap" style="width: 100%;">
                                     <thead>
                                     <tr>
@@ -53,10 +50,8 @@
                                         <th th:text="#{group.action}">Action</th>
                                     </tr>
                                     </thead>
-                                    <!-- Tbody -->
                                 </table>
                             </div>
-                            <!-- Card Body -->
                         </div>
                     </div>
 
@@ -67,7 +62,6 @@
                                 <h6 class="group-title m-0 font-weight-bold text-light" th:text="#{group.amznAccTableTitle}">Amazon Account</h6>
                             </div>
                             <div class="card-body">
-                                <!-- Table Body -->
                                 <table id="table-amzn-acc-in" class="border-0 stripe nowrap" style="width: 100%;">
                                     <thead>
                                     <tr>
@@ -76,7 +70,6 @@
                                         <th th:text="#{group.action}">Action</th>
                                     </tr>
                                     </thead>
-                                    <!-- Tbody -->
                                 </table>
                             </div>
                         </div>
@@ -180,7 +173,7 @@
             App.SweetAlert.showSuccessAlert(App.SUCCESS_CREATED);
         })
         .fail(function (jqXHR) {
-            alert("fail");
+            App.handleFailedTasks(jqXHR);
         })
     }
     page.commands.doUpdateGroup = (currentGroup, currentRowGroup) => {
@@ -207,7 +200,7 @@
             App.SweetAlert.showSuccessAlert(App.SUCCESS_UPDATED);
         })
         .fail(function (jqXHR) {
-            alert("fail");
+            App.handleFailedTasks(jqXHR);
         })
     }
     page.commands.doDeleteGroup = (currentGroup, currentRowGroup) => {
@@ -224,7 +217,7 @@
                 App.SweetAlert.showSuccessAlert(App.SUCCESS_UPDATED);
             })
             .fail(function (jqXHR) {
-                alert("fail");
+                App.handleFailedTasks(jqXHR);
             })
     }
 
@@ -264,7 +257,7 @@
             App.SweetAlert.showSuccessAlert(App.SUCCESS_CREATED);
         })
         .fail(function (jqXHR) {
-            alert("fail");
+            App.handleFailedTasks(jqXHR);
         })
     }
     page.commands.doDeletedAmznAcc = (currentGroup, currentAmznAcc, currentRowAmznAcc) => {
@@ -277,7 +270,7 @@
                 tableAmznAccIn.row(currentRowAmznAcc).remove().draw('page');
             })
             .fail(function (jqXHR) {
-                alert("fail");
+                App.handleFailedTasks(jqXHR);
             })
     }
 
@@ -290,11 +283,12 @@
         page.dialogs.element.frmCreateGroup.validate().resetForm();
     }
 
-    var btdCreate = '[[#{group.btnCreate}]]';
+    var btnCreate = '[[#{group.btnCreate}]]';
     var btnAdd = '[[#{group.btnAdd}]]';
     var btnManage = '[[#{group.btnManage}]]';
     var btnUpdate = '[[#{group.btnUpdate}]]';
     var btnDelete = '[[#{group.btnDelete}]]';
+    var noDataInTable = '[[#{table.noData}]]';
 
     $(document).ready(function () {
         
@@ -361,8 +355,7 @@
                 },
                 buttons: [
                     {
-                        text: `<i class="fas fa-plus"></i> ${btdCreate}`,
-                        titleAttr: 'Add new group',
+                        text: `<i class="fas fa-plus"></i> ${btnCreate}`,
                         className: 'showCrGrpMd btn btn-primary',
                         init: function (api, node, config) {
                             $(node).on('click', () => page.dialogs.element.mdCreateGroup.modal("show"));
@@ -427,7 +420,8 @@
                                 previous: 'Previous',
                                 next:     'Next'
                             }
-                        }
+                        },
+                        emptyTable: `${noDataInTable}`
                     },
                     pageLength: 10,
                     lengthChange: false,
@@ -442,7 +436,6 @@
                         buttons: [
                             {
                                 text: `<i class="fas fa-plus"></i> ${btnAdd}`,
-                                titleAttr: 'Add Amazon Account',
                                 className: 'showAddAmzAccMd btn btn-primary',
                                 init: function (api, node, config) {
                                     $(node).on('click', () => {

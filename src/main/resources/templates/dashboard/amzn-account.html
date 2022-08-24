@@ -1,8 +1,8 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org" lang="en">
 <head>
+    <title th:text="#{amznAcc.tabTitle}">Amzn Acc Management</title>
     <th:block th:replace="layout/head :: dashboard-head"/>
-    <title>Amazon Accounts Management</title>
 </head>
 <body id="page-top">
 
@@ -28,329 +28,31 @@
 
                 <!-- Page Heading -->
                 <div class="d-sm-flex align-items-center justify-content-between mb-4">
-                    <h1 class="h3 mb-0 text-gray-800">Dashboard</h1>
+                    <h1 class="h3 mb-0 text-gray-800" th:text="#{amznAcc.pageTitle}"></h1>
                     <a href="#" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm"><i
                             class="fas fa-download fa-sm text-white-50"></i> Generate Report</a>
                 </div>
 
-                <!-- Content Row -->
                 <div class="row">
 
-                    <!-- Earnings (Monthly) Card Example -->
-                    <div class="col-xl-3 col-md-6 mb-4">
-                        <div class="card border-left-primary shadow h-100 py-2">
-                            <div class="card-body">
-                                <div class="row no-gutters align-items-center">
-                                    <div class="col mr-2">
-                                        <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">
-                                            Earnings (Monthly)
-                                        </div>
-                                        <div class="h5 mb-0 font-weight-bold text-gray-800">$40,000</div>
-                                    </div>
-                                    <div class="col-auto">
-                                        <i class="fas fa-calendar fa-2x text-gray-300"></i>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Earnings (Monthly) Card Example -->
-                    <div class="col-xl-3 col-md-6 mb-4">
-                        <div class="card border-left-success shadow h-100 py-2">
-                            <div class="card-body">
-                                <div class="row no-gutters align-items-center">
-                                    <div class="col mr-2">
-                                        <div class="text-xs font-weight-bold text-success text-uppercase mb-1">
-                                            Earnings (Annual)
-                                        </div>
-                                        <div class="h5 mb-0 font-weight-bold text-gray-800">$215,000</div>
-                                    </div>
-                                    <div class="col-auto">
-                                        <i class="fas fa-dollar-sign fa-2x text-gray-300"></i>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Earnings (Monthly) Card Example -->
-                    <div class="col-xl-3 col-md-6 mb-4">
-                        <div class="card border-left-info shadow h-100 py-2">
-                            <div class="card-body">
-                                <div class="row no-gutters align-items-center">
-                                    <div class="col mr-2">
-                                        <div class="text-xs font-weight-bold text-info text-uppercase mb-1">Tasks
-                                        </div>
-                                        <div class="row no-gutters align-items-center">
-                                            <div class="col-auto">
-                                                <div class="h5 mb-0 mr-3 font-weight-bold text-gray-800">50%</div>
-                                            </div>
-                                            <div class="col">
-                                                <div class="progress progress-sm mr-2">
-                                                    <div class="progress-bar bg-info" role="progressbar"
-                                                         style="width: 50%" aria-valuenow="50" aria-valuemin="0"
-                                                         aria-valuemax="100"></div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="col-auto">
-                                        <i class="fas fa-clipboard-list fa-2x text-gray-300"></i>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Pending Requests Card Example -->
-                    <div class="col-xl-3 col-md-6 mb-4">
-                        <div class="card border-left-warning shadow h-100 py-2">
-                            <div class="card-body">
-                                <div class="row no-gutters align-items-center">
-                                    <div class="col mr-2">
-                                        <div class="text-xs font-weight-bold text-warning text-uppercase mb-1">
-                                            Pending Requests
-                                        </div>
-                                        <div class="h5 mb-0 font-weight-bold text-gray-800">18</div>
-                                    </div>
-                                    <div class="col-auto">
-                                        <i class="fas fa-comments fa-2x text-gray-300"></i>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Content Row -->
-
-                <div class="row">
-
-                    <!-- Area Chart -->
-                    <div class="col-xl-8 col-lg-7">
+                    <div class="col-md-7">
                         <div class="card shadow mb-4">
-                            <!-- Card Header - Dropdown -->
-                            <div
-                                    class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
-                                <h6 class="m-0 font-weight-bold text-primary">Earnings Overview</h6>
-                                <div class="dropdown no-arrow">
-                                    <a class="dropdown-toggle" href="#" role="button" id="dropdownMenuLink"
-                                       data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                        <i class="fas fa-ellipsis-v fa-sm fa-fw text-gray-400"></i>
-                                    </a>
-                                    <div class="dropdown-menu dropdown-menu-right shadow animated--fade-in"
-                                         aria-labelledby="dropdownMenuLink">
-                                        <div class="dropdown-header">Dropdown Header:</div>
-                                        <a class="dropdown-item" href="#">Action</a>
-                                        <a class="dropdown-item" href="#">Another action</a>
-                                        <div class="dropdown-divider"></div>
-                                        <a class="dropdown-item" href="#">Something else here</a>
-                                    </div>
-                                </div>
+                            <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+                                <h4 class="m-0 font-weight-bold text-primary" th:text="#{amznAcc.amznAccTableTitle}">Amzn Acc Management</h4>
                             </div>
-                            <!-- Card Body -->
+
                             <div class="card-body">
-                                <div class="chart-area">
-                                    <canvas id="myAreaChart"></canvas>
-                                </div>
+                                <table id="table-amzn-acc" class="table stripe nowrap" style="width: 100%;">
+                                    <thead>
+                                    <tr>
+                                        <th>#</th>
+                                        <th th:text="#{amznAcc.amznAccTitle}">Amzn Acc Title</th>
+                                        <th th:text="#{amznAcc.action}">Action</th>
+                                    </tr>
+                                    </thead>
+                                </table>
                             </div>
                         </div>
-                    </div>
-
-                    <!-- Pie Chart -->
-                    <div class="col-xl-4 col-lg-5">
-                        <div class="card shadow mb-4">
-                            <!-- Card Header - Dropdown -->
-                            <div
-                                    class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
-                                <h6 class="m-0 font-weight-bold text-primary">Revenue Sources</h6>
-                                <div class="dropdown no-arrow">
-                                    <a class="dropdown-toggle" href="#" role="button" id="dropdownMenuLink2"
-                                       data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                        <i class="fas fa-ellipsis-v fa-sm fa-fw text-gray-400"></i>
-                                    </a>
-                                    <div class="dropdown-menu dropdown-menu-right shadow animated--fade-in"
-                                         aria-labelledby="dropdownMenuLink">
-                                        <div class="dropdown-header">Dropdown Header:</div>
-                                        <a class="dropdown-item" href="#">Action</a>
-                                        <a class="dropdown-item" href="#">Another action</a>
-                                        <div class="dropdown-divider"></div>
-                                        <a class="dropdown-item" href="#">Something else here</a>
-                                    </div>
-                                </div>
-                            </div>
-                            <!-- Card Body -->
-                            <div class="card-body">
-                                <div class="chart-pie pt-4 pb-2">
-                                    <canvas id="myPieChart"></canvas>
-                                </div>
-                                <div class="mt-4 text-center small">
-                                        <span class="mr-2">
-                                            <i class="fas fa-circle text-primary"></i> Direct
-                                        </span>
-                                    <span class="mr-2">
-                                            <i class="fas fa-circle text-success"></i> Social
-                                        </span>
-                                    <span class="mr-2">
-                                            <i class="fas fa-circle text-info"></i> Referral
-                                        </span>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Content Row -->
-                <div class="row">
-
-                    <!-- Content Column -->
-                    <div class="col-lg-6 mb-4">
-
-                        <!-- Project Card Example -->
-                        <div class="card shadow mb-4">
-                            <div class="card-header py-3">
-                                <h6 class="m-0 font-weight-bold text-primary">Projects</h6>
-                            </div>
-                            <div class="card-body">
-                                <h4 class="small font-weight-bold">Server Migration <span
-                                        class="float-right">20%</span></h4>
-                                <div class="progress mb-4">
-                                    <div class="progress-bar bg-danger" role="progressbar" style="width: 20%"
-                                         aria-valuenow="20" aria-valuemin="0" aria-valuemax="100"></div>
-                                </div>
-                                <h4 class="small font-weight-bold">Sales Tracking <span
-                                        class="float-right">40%</span></h4>
-                                <div class="progress mb-4">
-                                    <div class="progress-bar bg-warning" role="progressbar" style="width: 40%"
-                                         aria-valuenow="40" aria-valuemin="0" aria-valuemax="100"></div>
-                                </div>
-                                <h4 class="small font-weight-bold">Customer Database <span
-                                        class="float-right">60%</span></h4>
-                                <div class="progress mb-4">
-                                    <div class="progress-bar" role="progressbar" style="width: 60%"
-                                         aria-valuenow="60" aria-valuemin="0" aria-valuemax="100"></div>
-                                </div>
-                                <h4 class="small font-weight-bold">Payout Details <span
-                                        class="float-right">80%</span></h4>
-                                <div class="progress mb-4">
-                                    <div class="progress-bar bg-info" role="progressbar" style="width: 80%"
-                                         aria-valuenow="80" aria-valuemin="0" aria-valuemax="100"></div>
-                                </div>
-                                <h4 class="small font-weight-bold">Account Setup <span
-                                        class="float-right">Complete!</span></h4>
-                                <div class="progress">
-                                    <div class="progress-bar bg-success" role="progressbar" style="width: 100%"
-                                         aria-valuenow="100" aria-valuemin="0" aria-valuemax="100"></div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- Color System -->
-                        <div class="row">
-                            <div class="col-lg-6 mb-4">
-                                <div class="card bg-primary text-white shadow">
-                                    <div class="card-body">
-                                        Primary
-                                        <div class="text-white-50 small">#4e73df</div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-lg-6 mb-4">
-                                <div class="card bg-success text-white shadow">
-                                    <div class="card-body">
-                                        Success
-                                        <div class="text-white-50 small">#1cc88a</div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-lg-6 mb-4">
-                                <div class="card bg-info text-white shadow">
-                                    <div class="card-body">
-                                        Info
-                                        <div class="text-white-50 small">#36b9cc</div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-lg-6 mb-4">
-                                <div class="card bg-warning text-white shadow">
-                                    <div class="card-body">
-                                        Warning
-                                        <div class="text-white-50 small">#f6c23e</div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-lg-6 mb-4">
-                                <div class="card bg-danger text-white shadow">
-                                    <div class="card-body">
-                                        Danger
-                                        <div class="text-white-50 small">#e74a3b</div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-lg-6 mb-4">
-                                <div class="card bg-secondary text-white shadow">
-                                    <div class="card-body">
-                                        Secondary
-                                        <div class="text-white-50 small">#858796</div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-lg-6 mb-4">
-                                <div class="card bg-light text-black shadow">
-                                    <div class="card-body">
-                                        Light
-                                        <div class="text-black-50 small">#f8f9fc</div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-lg-6 mb-4">
-                                <div class="card bg-dark text-white shadow">
-                                    <div class="card-body">
-                                        Dark
-                                        <div class="text-white-50 small">#5a5c69</div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                    </div>
-
-                    <div class="col-lg-6 mb-4">
-
-                        <!-- Illustrations -->
-                        <div class="card shadow mb-4">
-                            <div class="card-header py-3">
-                                <h6 class="m-0 font-weight-bold text-primary">Illustrations</h6>
-                            </div>
-                            <div class="card-body">
-                                <div class="text-center">
-                                    <img class="img-fluid px-3 px-sm-4 mt-3 mb-4" style="width: 25rem;"
-                                         src="/assets/img/undraw_posting_photo.svg" alt="...">
-                                </div>
-                                <p>Add some quality, svg illustrations to your project courtesy of <a
-                                        target="_blank" rel="nofollow" href="https://undraw.co/">unDraw</a>, a
-                                    constantly updated collection of beautiful svg images that you can use
-                                    completely free and without attribution!</p>
-                                <a target="_blank" rel="nofollow" href="https://undraw.co/">Browse Illustrations on
-                                    unDraw &rarr;</a>
-                            </div>
-                        </div>
-
-                        <!-- Approach -->
-                        <div class="card shadow mb-4">
-                            <div class="card-header py-3">
-                                <h6 class="m-0 font-weight-bold text-primary">Development Approach</h6>
-                            </div>
-                            <div class="card-body">
-                                <p>SB Admin 2 makes extensive use of Bootstrap 4 utility classes in order to reduce
-                                    CSS bloat and poor page performance. Custom CSS classes are used to create
-                                    custom components and custom utility classes.</p>
-                                <p class="mb-0">Before working with this theme, you should become familiar with the
-                                    Bootstrap framework, especially the utility classes.</p>
-                            </div>
-                        </div>
-
                     </div>
                 </div>
 
@@ -375,21 +77,480 @@
     <i class="fas fa-angle-up"></i>
 </a>
 
+<th:block th:replace="layout/modals-amzn-acc :: create-amzn-acc"/>
+
+
 <th:block th:replace="layout/script :: script-dashboard"/>
 
 <script>
     let page = {
         urls: {
-            find: App.BASE_URL_DASHBOARD,
+            findAllAmznAccs: App.BASE_URL_AMZN_ACCOUNT,
+            createAmznAcc: App.BASE_URL_AMZN_ACCOUNT + "/create",
+            updateAmznAcc: App.BASE_URL_AMZN_ACCOUNT + "/update/",
+            deleteAmznAcc: App.BASE_URL_AMZN_ACCOUNT + "/delete/",
         },
         element: {},
         commands: {},
         dialogs: {
             element: {},
+            commands: {},
             alertDanger: {},
-            inputError: {}
+            inputError: {},
+            close: {}
         }
     }
+
+    page.element.tableAmznAcc = $('#table-amzn-acc');
+    page.element.btnShowCreateAmznAccMd = $('#btnMdCreateAmznAcc');
+
+    page.dialogs.element.mdCreateAmznAcc = $('#mdCreateAmznAcc');
+    page.dialogs.element.frmCreateAmznAcc = $('#frmCreateAmznAcc');
+    page.dialogs.element.btnCreateAmznAcc = $('#btnCreateAmznAcc');
+    page.dialogs.element.amznAccUsernameCreate = $('#amznAccUsernameCreate');
+    page.dialogs.element.amznAccPasswordCreate = $('#amznAccPasswordCreate');
+
+    page.dialogs.element.mdUpdateGroup = $('#mdUpdateGroup');
+    page.dialogs.element.frmUpdateGroup = $('#frmUpdateGroup');
+    page.dialogs.element.btnUpdateGroup = $('#btnUpdateGroup');
+    page.dialogs.element.groupTitleUpdate = $('#groupTitleUpdate');
+
+    page.dialogs.element.mdAddAmznAccToGroup = $('#mdAddAmznAccToGroup');
+    page.dialogs.element.btnAddAmznAccToGroup = $('#btnAddAmznAccToGroup');
+
+    page.dialogs.alertDanger.mdCreateGroup = $('#mdCreateGroup .modal-body .modal-alert-danger')
+
+    page.commands.doCreateGroup = () => {
+        let newGroup = {};
+        newGroup.title = page.dialogs.element.groupTitleCreate.val().trim();
+
+        $.ajax({
+            headers: {
+                "accept": "application/json",
+                "content-type": "application/json"
+            },
+            type: "POST",
+            url: page.urls.createGroup,
+            data: JSON.stringify(newGroup)
+        })
+            .done((data) => {
+                let tableGroup = page.element.tableGroup.DataTable();
+                tableGroup.row.add({
+                    'id': data.id,
+                    'title': data.title
+                })
+                tableGroup.order([0, 'desc']).draw();
+                page.dialogs.element.mdCreateGroup.modal("hide");
+                App.SweetAlert.showSuccessAlert(App.SUCCESS_CREATED);
+            })
+            .fail(function (jqXHR) {
+                alert("fail");
+            })
+    }
+    page.commands.doUpdateGroup = (currentGroup, currentRowGroup) => {
+        let group = {};
+        group.title = page.dialogs.element.groupTitleUpdate.val().trim();
+
+        $.ajax({
+            headers: {
+                "accept": "application/json",
+                "content-type": "application/json"
+            },
+            type: "PUT",
+            url: page.urls.updateGroup + currentGroup.id,
+            data: JSON.stringify(group)
+        })
+            .done((data) => {
+                let tableGroup = page.element.tableGroup.DataTable();
+                tableGroup.row(currentRowGroup).data({
+                    'id': data.id,
+                    'title': data.title
+                }).draw('full-hold');
+                page.dialogs.element.frmUpdateGroup[0].reset();
+                page.dialogs.element.mdUpdateGroup.modal("hide");
+                App.SweetAlert.showSuccessAlert(App.SUCCESS_UPDATED);
+            })
+            .fail(function (jqXHR) {
+                alert("fail");
+            })
+    }
+    page.commands.doDeleteGroup = (currentGroup, currentRowGroup) => {
+        $.ajax({
+            type: "DELETE",
+            url: page.urls.deleteGroup + currentGroup.id,
+        })
+            .done((data) => {
+                let tableGroup = page.element.tableGroup.DataTable();
+                tableGroup.row(currentRowGroup).remove().draw('full-hold');
+                page.element.tableAmznAccOut.DataTable().clear().draw();
+                page.element.tableAmznAccIn.DataTable().clear().draw();
+                page.element.groupTitle.html('');
+                App.SweetAlert.showSuccessAlert(App.SUCCESS_UPDATED);
+            })
+            .fail(function (jqXHR) {
+                alert("fail");
+            })
+    }
+
+    page.commands.addAmznAccToGroup = (currentGroup, tableAmznAccIn, tableAmznAccOut) => {
+        if (currentGroup === undefined) return;
+
+        let amznAccSelected = [];
+
+        let rows_selected = tableAmznAccOut.rows({selected:true}).data()
+        $.each(rows_selected, function(index, value){
+            amznAccSelected.push(value.id);
+        });
+
+        if (amznAccSelected.length === 0) {
+            App.IziToast.showErrorAlert('No data selected!');
+            return;
+        }
+
+        $.ajax({
+            headers: {
+                "accept": "application/json",
+                "content-type": "application/json"
+            },
+            type: "POST",
+            url: page.urls.addAmznAccountToGroup + currentGroup.id,
+            data: JSON.stringify({amznAccSelected})
+        })
+            .done((data) => {
+                data.forEach((amznAcc) => {
+                    tableAmznAccIn.row.add({
+                        'id': amznAcc.id,
+                        'username': amznAcc.username
+                    })
+                    tableAmznAccIn.order([0, 'desc']).draw();
+                });
+                page.dialogs.element.mdAddAmznAccToGroup.modal("hide");
+                App.SweetAlert.showSuccessAlert(App.SUCCESS_CREATED);
+            })
+            .fail(function (jqXHR) {
+                alert("fail");
+            })
+    }
+    page.commands.doDeletedAmznAcc = (currentGroup, currentAmznAcc, currentRowAmznAcc) => {
+        $.ajax({
+            type: "DELETE",
+            url: page.urls.deleteAmznAccFromGroup + currentAmznAcc.id + '/' + currentGroup.id,
+        })
+            .done((data) => {
+                let tableAmznAccIn = page.element.tableAmznAccIn.DataTable();
+                tableAmznAccIn.row(currentRowAmznAcc).remove().draw('page');
+            })
+            .fail(function (jqXHR) {
+                alert("fail");
+            })
+    }
+
+    page.dialogs.close.mdCreateGroup = () => {
+        page.dialogs.alertDanger.mdCreateGroup.empty();
+        page.dialogs.alertDanger.mdCreateGroup.addClass("hide");
+        page.dialogs.alertDanger.mdCreateGroup.removeClass("show");
+        page.dialogs.element.frmCreateGroup.find("input.error").removeClass("error");
+        page.dialogs.element.frmCreateGroup[0].reset();
+        page.dialogs.element.frmCreateGroup.validate().resetForm();
+    }
+
+
+    var btnChangePass = '[[#{amznAcc.btnChangePass}]]';
+    var btnDelete = '[[#{amznAcc.btnDelete}]]';
+    var btnCreate = '[[#{amznAcc.btnCreate}]]';
+
+    $(document).ready(function () {
+
+        let tableGroup = page.element.tableGroup.DataTable({
+            ajax: {
+                contentType: 'application/json',
+                url: page.urls.findAllAmznAccs,
+                type: 'POST',
+                data: (d) => JSON.stringify(d),
+                dataSrc: 'data'
+            },
+            info: false,
+            pagingType: 'simple_numbers',
+            processing: true,
+            serverSide: true,
+            columns: [
+                {data: 'id'},
+                {data: 'username'},
+                {data: null}
+            ],
+            columnDefs: [
+                {
+                    targets: -1,
+                    className: "text-center",
+                    orderable: false,
+                    render: (data, type, row) =>
+                        `<button type='button' class='manage-group btn btn-outline-warning mr-3' title='${btnChangePass}'>
+                            <i class="fas fa-key"></i>
+                        </button>
+                        <button type='button' class='delete-group btn btn-outline-danger' title='${btnDelete}'>
+                            <i class="fas fa-trash"></i>
+                        </button>`,
+                },
+            ],
+            language: {
+                search: `<i class="fas fa-search text-primary"></i> `,
+                paginate: {
+                    previous: `<i class="fas fa-angle-left"></i>`,
+                    next:     `<i class="fas fa-angle-right"></i>`
+                },
+                aria: {
+                    paginate: {
+                        previous: 'Previous',
+                        next:     'Next'
+                    }
+                }
+            },
+            pageLength: 10,
+            lengthChange: false,
+            dom: 'Bfrtip',
+            buttons: {
+                dom: {
+                    button: {
+                        tag: 'button',
+                        className: ''
+                    }
+                },
+                buttons: [
+                    {
+                        text: `<i class="fas fa-plus"></i> ${btnCreate}`,
+                        className: 'showCrGrpMd btn btn-primary',
+                        init: function (api, node, config) {
+                            $(node).on('click', () => page.dialogs.element.mdCreateAmznAcc.modal("show"));
+                        }
+                    }
+                ]
+            },
+        });
+        let tableAmznAccIn;
+        let tableAmznAccOut;
+        let currentRowGroup;
+        let currentGroup;
+        let currentRowAmznAcc;
+        let currentAmznAcc;
+
+        page.element.tableGroup.on('click', 'button.manage-group', function () {
+            currentGroup = tableGroup.row($(this).parents('tr')).data();
+            page.element.groupTitle.html(currentGroup.title);
+
+            if (tableAmznAccIn === undefined) {
+                tableAmznAccIn = page.element.tableAmznAccIn.DataTable({
+                    ajax: {
+                        url: page.urls.findAllAmznAccInGroup + currentGroup.id,
+                        dataSrc: ''
+                    },
+                    info: false,
+                    pagingType: 'simple_numbers',
+                    processing: true,
+                    columns: [
+                        {data: 'id'},
+                        {data: 'username'},
+                        {data: null}
+                    ],
+                    columnDefs: [
+                        {
+                            targets: 0,
+                            className: "text-center"
+                        },
+                        {
+                            targets: 1,
+                            className: "text-center",
+                            type: 'natural',
+                        },
+                        {
+                            targets: -1,
+                            className: "text-center",
+                            orderable: false,
+                            defaultContent:
+                                `<button type='button' class='delete-amzn-acc btn btn-outline-danger mr-3' title='${btnDelete}'>`
+                                + `<i class="fas fa-ban"></i>`
+                                + `</button>`
+                        },
+                    ],
+                    language: {
+                        search: `<i class="fas fa-search text-primary"></i> `,
+                        paginate: {
+                            previous: `<i class="fas fa-angle-left"></i>`,
+                            next:     `<i class="fas fa-angle-right"></i>`
+                        },
+                        aria: {
+                            paginate: {
+                                previous: 'Previous',
+                                next:     'Next'
+                            }
+                        }
+                    },
+                    pageLength: 10,
+                    lengthChange: false,
+                    dom: 'Bfrtip',
+                    buttons: {
+                        dom: {
+                            button: {
+                                tag: 'button',
+                                className: ''
+                            }
+                        },
+                        buttons: [
+                            {
+                                text: `<i class="fas fa-plus"></i> ${btnAdd}`,
+                                titleAttr: 'Add Amazon Account',
+                                className: 'showAddAmzAccMd btn btn-primary',
+                                init: function (api, node, config) {
+                                    $(node).on('click', () => {
+                                        page.dialogs.element.mdAddAmznAccToGroup.modal("show");
+                                    })
+                                }
+                            }
+                        ]
+                    },
+                });
+            } else {
+                tableAmznAccIn.ajax.url(page.urls.findAllAmznAccInGroup + currentGroup.id).load();
+            }
+        });
+
+        page.element.tableGroup.on('click', 'button.update-group', function () {
+            currentRowGroup = tableGroup.row($(this).parents('tr'));
+            currentGroup = currentRowGroup.data();
+            page.dialogs.element.groupTitleUpdate.val(currentGroup.title);
+            page.dialogs.element.mdUpdateGroup.modal('show');
+        });
+
+        page.element.tableGroup.on('click', 'button.delete-group', function () {
+            currentRowGroup = tableGroup.row($(this).parents('tr'));
+            currentGroup = currentRowGroup.data();
+            App.SweetAlert.showDeleteGroupDialog()
+                .then((result) => {
+                    if (result.isConfirmed) {
+                        page.commands.doDeleteGroup(currentGroup, currentRowGroup);
+                        currentGroup = undefined;
+                    }
+                })
+
+        });
+
+        page.dialogs.element.btnCreateGroup.on('click', function () {
+            page.dialogs.element.frmCreateGroup.submit();
+        });
+
+        page.dialogs.element.frmCreateGroup.validate({
+            onkeyup: function (element) {
+                $(element).valid()
+            },
+            onclick: false,
+            onfocusout: false,
+            rules: {
+                groupTitleCreate: {
+                    required: true
+                }
+            },
+            messages: {
+                groupTitleCreate: {
+                    required: 'Group title is required.'
+                }
+            },
+            errorLabelContainer: "#mdCreateGroup .modal-alert-danger",
+            errorPlacement: function (error, element) {
+                error.appendTo("#mdCreateGroup .modal-alert-danger");
+            },
+            showErrors: function (errorMap, errorList) {
+                if (this.numberOfInvalids() > 0) {
+                    page.dialogs.alertDanger.mdCreateGroup.removeClass("hide").addClass("show");
+                } else {
+                    page.dialogs.alertDanger.mdCreateGroup.removeClass("show").addClass("hide").empty();
+                    page.dialogs.element.frmCreateGroup.removeClass("error");
+                }
+                this.defaultShowErrors();
+            },
+            submitHandler: function () {
+                page.commands.doCreateGroup();
+            }
+        })
+
+        page.dialogs.element.mdCreateGroup.on('hidden.bs.modal', () => {
+            page.dialogs.close.mdCreateGroup();
+        });
+
+        page.dialogs.element.btnUpdateGroup.on('click', function () {
+            page.commands.doUpdateGroup(currentGroup, currentRowGroup);
+        });
+
+        page.element.tableAmznAccIn.on('click', 'button.delete-amzn-acc', function () {
+            currentRowAmznAcc = tableAmznAccIn.row($(this).parents('tr'));
+            currentAmznAcc = currentRowAmznAcc.data();
+            page.commands.doDeletedAmznAcc(currentGroup, currentAmznAcc, currentRowAmznAcc);
+        });
+
+        page.dialogs.element.mdAddAmznAccToGroup.on('shown.bs.modal', () => {
+            if (currentGroup === undefined) {
+                return;
+            }
+
+            if (tableAmznAccOut === undefined) {
+                tableAmznAccOut = page.element.tableAmznAccOut.DataTable({
+                    ajax: {
+                        url: page.urls.findAllAmznAccOutGroup + currentGroup.id,
+                        dataSrc: ''
+                    },
+                    info: false,
+                    pagingType: 'simple_numbers',
+                    processing: true,
+                    columns: [
+                        {data: 'id'},
+                        {data: 'username'},
+                        {data: null},
+                    ],
+                    columnDefs: [
+                        {
+                            targets: 1,
+                            type: 'natural',
+                        },
+                        {
+                            targets: 2,
+                            orderable: false,
+                            className: 'select-checkbox',
+                            render: () => '',
+                        }
+                    ],
+                    select: {
+                        style: 'multi+shift'
+                    },
+                    language: {
+                        search: `<i class="fas fa-search text-primary"></i> `,
+                        paginate: {
+                            previous: `<i class="fas fa-angle-left"></i>`,
+                            next:     `<i class="fas fa-angle-right"></i>`
+                        },
+                        aria: {
+                            paginate: {
+                                previous: 'Previous',
+                                next:     'Next'
+                            }
+                        }
+                    },
+                    pageLength: 8,
+                    lengthChange: false,
+                    dom: 'Bfrtip',
+                });
+            } else {
+                tableAmznAccOut.ajax.url(page.urls.findAllAmznAccOutGroup + currentGroup.id).load();
+            }
+            page.element.tableAmznAccOut.css('cursor','pointer');
+        });
+
+        page.dialogs.element.mdAddAmznAccToGroup.on('hidden.bs.modal', () => {
+            tableAmznAccOut.clear().draw();
+            tableAmznAccOut.search('').draw();
+        });
+
+        page.dialogs.element.btnAddAmznAccToGroup.on('click', () => {
+            page.commands.addAmznAccToGroup(currentGroup, tableAmznAccIn, tableAmznAccOut);
+        })
+    });
 
 
 </script>
