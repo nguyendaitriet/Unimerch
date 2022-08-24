@@ -1,4 +1,4 @@
-package com.unimerch.dto.user;
+package com.unimerch.dto.group;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -11,9 +11,7 @@ import lombok.experimental.Accessors;
 @NoArgsConstructor
 @AllArgsConstructor
 @Accessors(chain = true)
-public class UserListItem {
-    private Integer id;
-    private String username;
-    private String fullName;
-    private boolean disabled;
+public class GroupItemResult {
+    private int id;
+    private String title;
 }

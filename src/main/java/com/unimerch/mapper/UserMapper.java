@@ -1,7 +1,7 @@
 package com.unimerch.mapper;
 
 import com.unimerch.dto.user.UserCreateParam;
-import com.unimerch.dto.user.UserListItem;
+import com.unimerch.dto.user.UserItemResult;
 import com.unimerch.repository.model.User;
 import org.springframework.stereotype.Component;
 
@@ -14,8 +14,8 @@ public class UserMapper {
                 .setUsername(userCreateParam.getUsername());
     }
 
-    public UserListItem toUserListItem(User user) {
-        return new UserListItem()
+    public UserItemResult toUserItemResult(User user) {
+        return new UserItemResult()
                 .setId(user.getId())
                 .setUsername(user.getUsername())
                 .setFullName(user.getFullName())

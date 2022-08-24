@@ -14,11 +14,11 @@ import java.util.Objects;
 @Getter
 @Setter
 @Accessors(chain = true)
-public class AmznAccAddedToGroup {
+public class AmznAccResult {
     private Integer id;
     private String username;
 
-    public AmznAccAddedToGroup(Integer id) {
+    public AmznAccResult(Integer id) {
         this.id = id;
     }
 
@@ -26,7 +26,7 @@ public class AmznAccAddedToGroup {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        AmznAccAddedToGroup that = (AmznAccAddedToGroup) o;
+        AmznAccResult that = (AmznAccResult) o;
         return Objects.equals(id, that.id);
     }
 

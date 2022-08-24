@@ -103,7 +103,6 @@
 
 <th:block th:replace="layout/modals-user :: create_user"/>
 <th:block th:replace="layout/modals-user :: change_password_user"/>
-<th:block th:replace="layout/modals-user :: assign_group_user"/>
 
 <th:block th:replace="layout/script :: script-dashboard"/>
 
@@ -116,8 +115,7 @@
             changeMyPassword: App.BASE_URL_USER + "/changePassword",
             changePassword: App.BASE_URL_USER + "/changePassword/",
             changeStatus: App.BASE_URL_USER + "/changeStatus/",
-            findGroupsAssigned: App.BASE_URL_USER + "/grpAssigned/",
-            findGroupsUnassigned: App.BASE_URL_USER + "/grpUnassigned/"
+            findGroups: App.BASE_URL_USER + "/groups/",
         },
         element: {},
         commands: {},
@@ -129,6 +127,7 @@
     }
 
     page.element.tableUser = $('#table-user');
+    page.element.tableAssignGrp = $('#tb-assign-grp-user');
 
     page.element.btnShowCreateUserFrm = $('#btnMdCreateUser');
     page.dialogs.element.mdCreateUser = $('#mdCreateUser');
@@ -146,17 +145,12 @@
     page.dialogs.element.passwordCP = $('#passwordCP');
     page.dialogs.element.btnCPUser = $('#btnCPUser');
 
-    // $.fn.dataTable.ext.classes.sPageButton = 'paging';
-
     $(document).ready(function () {
-        let currentUser = new User();
-        let currenRow;
-
         let table = page.element.tableUser.DataTable({
             ajax: {
                 contentType: 'application/json',
-                url: page.urls.findAllUsers,
                 type: 'POST',
+                url: page.urls.findAllUsers,
                 data: function(d) {
                     return JSON.stringify(d);
                 },
@@ -236,10 +230,18 @@
             },
         });
 
+        let currentUser = new User();
+        let currenRow;
+
+        page.dialogs.element.btnCreateUser.on("click", function() {
+            // page.dialogs.element.frmCreateUser.submit();
+            page.commands.doCreateUser();
+        })
+
         page.element.tableUser.on('click', 'button.assign-group', function() {
             currentUser = table.row($(this).parents('tr')).data();
-            console.log(currentUser);
-            page.commands.findGroups(currentUser);
+
+            window.location.href = '/dashboard/user/group/' + currentUser.id;
         });
 
         page.element.tableUser.on('click', 'button.change-password', function() {
@@ -268,11 +270,6 @@
                 })
         });
     });
-
-    page.dialogs.element.btnCreateUser.on("click", function() {
-        // page.dialogs.element.frmCreateUser.submit();
-        page.commands.doCreateUser();
-    })
 
     page.commands.doCreateUser = function() {
         let user = new User();
@@ -376,44 +373,6 @@
     page.dialogs.element.mdCPUser.on('hidden.bs.modal', function() {
         page.dialogs.element.frmCPUser[0].reset();
     })
-
-    page.commands.findGroups = (currentUser) => {
-        let userId = currentUser.id;
-        let assignedGroup = [];
-        let unAssignedGroup = [];
-
-        $.ajax({
-            "headers": {
-                "accept": "application/json",
-                "content-type": "application/json"
-            },
-            "type": "GET",
-            "url": page.urls.findGroupsAssigned + userId
-        })
-            .done((data) => {
-                assignedGroup = data;
-                console.log("assigned groups: " + assignedGroup);
-            })
-            .fail((jqXHR) => {
-                App.handleFailedTasks(jqXHR);
-            });
-
-        $.ajax({
-            "headers": {
-                "accept": "application/json",
-                "content-type": "application/json"
-            },
-            "type": "GET",
-            "url": page.urls.findGroupsUnassigned + userId
-        })
-            .done((data) => {
-                unAssignedGroup = data;
-                console.log("unassigned: " + unAssignedGroup);
-            })
-            .fail((jqXHR) => {
-                App.handleFailedTasks(jqXHR);
-            });
-    }
 
 </script>
 </body>
