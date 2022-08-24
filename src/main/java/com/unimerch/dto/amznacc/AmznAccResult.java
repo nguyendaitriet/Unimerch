@@ -17,10 +17,5 @@ import java.util.Objects;
 public class AmznAccResult {
     private Integer id;
     private String username;
-    private String option;
 
-    public AmznAccResult(Integer id, String username) {
-        this.id = id;
-        this.username = username;
-    }
 }

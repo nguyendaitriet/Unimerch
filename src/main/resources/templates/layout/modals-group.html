@@ -6,7 +6,7 @@
         <div class="modal-dialog modal-dialog-centered" data-backdrop="static" data-keyboard="false">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title">Add new group</h5>
+                    <h5 class="modal-title" th:text="#{group.mdCreateGroupTitle}">Add new group</h5>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>
@@ -19,7 +19,7 @@
                     <form class="mb-3" id="frmCreateGroup">
                         <div class="row mb-3">
                             <div class="col-xl-4">
-                                <label for="groupTitleCreate">Group title</label>
+                                <label for="groupTitleCreate" th:text="#{group.groupTitle}">Group title</label>
                             </div>
                             <div class="col-xl-8">
                                 <input type="text" id="groupTitleCreate" name="groupTitleCreate" class="form-control" required>
@@ -29,8 +29,8 @@
 
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-primary" id="btnCreateGroup">Create</button>
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary" id="btnCreateGroup" th:text="#{group.btnCreate}">Create</button>
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal" th:text="#{group.btnClose}">Close</button>
                 </div>
             </div>
         </div>
@@ -42,7 +42,7 @@
         <div class="modal-dialog modal-dialog-centered" data-backdrop="static" data-keyboard="false">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title">Change group title</h5>
+                    <h5 class="modal-title" th:text="#{group.mdUpdateGroupTitle}">Change group title</h5>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>
@@ -55,7 +55,7 @@
                     <form class="mb-3" id="frmUpdateGroup">
                         <div class="row mb-3">
                             <div class="col-xl-4">
-                                <label for="groupTitleUpdate">Group Title</label>
+                                <label for="groupTitleUpdate" th:text="#{group.groupTitle}">Group Title</label>
                             </div>
                             <div class="col-xl-8">
                                 <input type="text" id="groupTitleUpdate" name="groupTitleUpdate" class="form-control"/>
@@ -66,8 +66,8 @@
 
                 </div>
                 <div class="modal-footer">
-                    <button type="button" id="btnUpdateGroup" class="btn btn-primary">Change</button>
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <button type="button" id="btnUpdateGroup" class="btn btn-primary" th:text="#{group.btnSave}">Change</button>
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal" th:text="#{group.btnClose}">Close</button>
                 </div>
             </div>
         </div>
@@ -80,7 +80,7 @@
             <div class="modal-content">
 
                 <div class="modal-header">
-                    <h5 class="modal-title">Add Amazon account to group</h5>
+                    <h5 class="modal-title" th:text="#{group.mdAddAmznAccTitle}">Add Amazon account to group</h5>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>
@@ -96,7 +96,7 @@
                                 <thead>
                                 <tr>
                                     <th>#</th>
-                                    <th>Username</th>
+                                    <th th:text="#{group.tableAmznAccUsername}">Username</th>
                                     <th></th>
                                 </tr>
                                 </thead>
@@ -106,8 +106,8 @@
 
                 </div>
                 <div class="modal-footer">
-                    <button type="button" id="btnAddAmznAccToGroup" class="btn btn-primary">Add</button>
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <button type="button" id="btnAddAmznAccToGroup" class="btn btn-primary" th:text="#{group.btnAdd}">Add</button>
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal" th:text="#{group.btnClose}">Close</button>
                 </div>
             </div>
         </div>

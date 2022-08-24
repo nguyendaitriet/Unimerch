@@ -1,9 +1,8 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org" lang="en">
 <head>
-    <title>Groups Management</title>
+    <title th:text="#{group.tabTitle}">Groups Management</title>
     <th:block th:replace="layout/head :: dashboard-head"/>
-    <link rel="stylesheet" href="/assets/datatables/dataTables.checkboxes.css">
 </head>
 <body id="page-top">
 
@@ -29,7 +28,7 @@
 
                 <!-- Page Heading -->
                 <div class="d-sm-flex align-items-center justify-content-between mb-4">
-                    <h1 class="h3 mb-0 text-gray-800">Groups Management</h1>
+                    <h1 class="h3 mb-0 text-gray-800" th:text="#{group.pageTitle}"></h1>
                     <a href="#" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm"><i
                             class="fas fa-download fa-sm text-white-50"></i> Generate Report</a>
                 </div>
@@ -41,7 +40,7 @@
                         <div class="card shadow mb-4">
                             <!-- Card Header - Dropdown -->
                             <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
-                                <h6 class="m-0 font-weight-bold text-primary">Groups</h6>
+                                <h4 class="m-0 font-weight-bold text-primary" th:text="#{group.groupTableTitle}">Groups Management</h4>
                             </div>
 
                             <div class="card-body">
@@ -50,8 +49,8 @@
                                     <thead>
                                     <tr>
                                         <th>#</th>
-                                        <th>Group Title</th>
-                                        <th>Action</th>
+                                        <th th:text="#{group.groupTitle}">Group Title</th>
+                                        <th th:text="#{group.action}">Action</th>
                                     </tr>
                                     </thead>
                                     <!-- Tbody -->
@@ -64,8 +63,8 @@
 
                     <div class="col-md-5">
                         <div class="card shadow mb-4">
-                            <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
-                                <h6 class="group-title m-0 font-weight-bold text-primary">Amazon Account</h6>
+                            <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between bg-primary">
+                                <h6 class="group-title m-0 font-weight-bold text-light" th:text="#{group.amznAccTableTitle}">Amazon Account</h6>
                             </div>
                             <div class="card-body">
                                 <!-- Table Body -->
@@ -73,8 +72,8 @@
                                     <thead>
                                     <tr>
                                         <th>#</th>
-                                        <th>Username</th>
-                                        <th>Action</th>
+                                        <th th:text="#{group.tableAmznAccUsername}">Username</th>
+                                        <th th:text="#{group.action}">Action</th>
                                     </tr>
                                     </thead>
                                     <!-- Tbody -->
@@ -111,10 +110,6 @@
 <th:block th:replace="layout/modals-group :: add-amzn-acc"/>
 
 <th:block th:replace="layout/script :: script-dashboard"/>
-
-<script type="text/javascript" src="/assets/datatables/absolute.js"></script>
-<script type="text/javascript" src="/assets/datatables/natural.js"></script>
-<script type="text/javascript" src="/assets/datatables/dataTables.checkboxes.min.js"></script>
 
 <script>
     let page = {
@@ -295,6 +290,12 @@
         page.dialogs.element.frmCreateGroup.validate().resetForm();
     }
 
+    var btdCreate = '[[#{group.btnCreate}]]';
+    var btnAdd = '[[#{group.btnAdd}]]';
+    var btnManage = '[[#{group.btnManage}]]';
+    var btnUpdate = '[[#{group.btnUpdate}]]';
+    var btnDelete = '[[#{group.btnDelete}]]';
+
     $(document).ready(function () {
         
         let tableGroup = page.element.tableGroup.DataTable({
@@ -324,17 +325,30 @@
                     className: "text-center",
                     orderable: false,
                     render: (data, type, row) =>
-                        `<button type='button' class='manage-group btn btn-outline-primary mr-3' title='Manage group'>
+                        `<button type='button' class='manage-group btn btn-outline-primary mr-3' title='${btnManage}'>
                             <i class="fas fa-cogs"></i>
                         </button>
-                        <button type='button' class='update-group btn btn-outline-warning mr-3' title='Change group title'>
+                        <button type='button' class='update-group btn btn-outline-warning mr-3' title='${btnUpdate}'>
                             <i class="fas fa-pencil-alt"></i>
                         </button>
-                        <button type='button' class='delete-group btn btn-outline-danger' title='Delete group'>
+                        <button type='button' class='delete-group btn btn-outline-danger' title='${btnDelete}'>
                             <i class="fas fa-trash"></i>
                         </button>`,
                 },
             ],
+            language: {
+                search: `<i class="fas fa-search text-primary"></i> `,
+                paginate: {
+                    previous: `<i class="fas fa-angle-left"></i>`,
+                    next:     `<i class="fas fa-angle-right"></i>`
+                },
+                aria: {
+                    paginate: {
+                        previous: 'Previous',
+                        next:     'Next'
+                    }
+                }
+            },
             pageLength: 10,
             lengthChange: false,
             dom: 'Bfrtip',
@@ -347,7 +361,7 @@
                 },
                 buttons: [
                     {
-                        text: `<i class="fas fa-plus"></i> Create`,
+                        text: `<i class="fas fa-plus"></i> ${btdCreate}`,
                         titleAttr: 'Add new group',
                         className: 'showCrGrpMd btn btn-primary',
                         init: function (api, node, config) {
@@ -371,21 +385,12 @@
             if (tableAmznAccIn === undefined) {
                 tableAmznAccIn = page.element.tableAmznAccIn.DataTable({
                     ajax: {
-                        // url: '/assets/json/data.json',
                         url: page.urls.findAllAmznAccInGroup + currentGroup.id,
                         dataSrc: ''
-                        // contentType: 'application/json',
-                        // url: page.urls.findAllAmznAccInGroup + currentGroup.id,
-                        // type: 'POST',
-                        // data: function(d) {
-                        //     return JSON.stringify(d);
-                        // },
-                        // dataSrc: 'data'
                     },
                     info: false,
                     pagingType: 'simple_numbers',
                     processing: true,
-                    // serverSide : true,
                     columns: [
                         {data: 'id'},
                         {data: 'username'},
@@ -406,11 +411,24 @@
                             className: "text-center",
                             orderable: false,
                             defaultContent:
-                                `<button type='button' class='delete-amzn-acc btn btn-outline-danger mr-3' title='Delete'>`
+                                `<button type='button' class='delete-amzn-acc btn btn-outline-danger mr-3' title='${btnDelete}'>`
                                 + `<i class="fas fa-ban"></i>`
                                 + `</button>`
                         },
                     ],
+                    language: {
+                        search: `<i class="fas fa-search text-primary"></i> `,
+                        paginate: {
+                            previous: `<i class="fas fa-angle-left"></i>`,
+                            next:     `<i class="fas fa-angle-right"></i>`
+                        },
+                        aria: {
+                            paginate: {
+                                previous: 'Previous',
+                                next:     'Next'
+                            }
+                        }
+                    },
                     pageLength: 10,
                     lengthChange: false,
                     dom: 'Bfrtip',
@@ -423,7 +441,7 @@
                         },
                         buttons: [
                             {
-                                text: `<i class="fas fa-plus"></i> Add`,
+                                text: `<i class="fas fa-plus"></i> ${btnAdd}`,
                                 titleAttr: 'Add Amazon Account',
                                 className: 'showAddAmzAccMd btn btn-primary',
                                 init: function (api, node, config) {
@@ -459,10 +477,6 @@
                 })
 
         });
-
-        // page.element.tableAmznAccOut.on('click', 'tbody tr', function() {
-        //     App.handleCheckboxByRow(this);
-        // });
 
         page.dialogs.element.btnCreateGroup.on('click', function () {
             page.dialogs.element.frmCreateGroup.submit();
@@ -533,7 +547,7 @@
                     columns: [
                         {data: 'id'},
                         {data: 'username'},
-                        {data: 'option'},
+                        {data: null},
                     ],
                     columnDefs: [
                         {
@@ -542,11 +556,26 @@
                         },
                         {
                             targets: 2,
+                            orderable: false,
                             className: 'select-checkbox',
+                            render: () => '',
                         }
                     ],
                     select: {
                         style: 'multi+shift'
+                    },
+                    language: {
+                        search: `<i class="fas fa-search text-primary"></i> `,
+                        paginate: {
+                            previous: `<i class="fas fa-angle-left"></i>`,
+                            next:     `<i class="fas fa-angle-right"></i>`
+                        },
+                        aria: {
+                            paginate: {
+                                previous: 'Previous',
+                                next:     'Next'
+                            }
+                        }
                     },
                     pageLength: 8,
                     lengthChange: false,
@@ -566,7 +595,6 @@
         page.dialogs.element.btnAddAmznAccToGroup.on('click', () => {
             page.commands.addAmznAccToGroup(currentGroup, tableAmznAccIn, tableAmznAccOut);
         })
-
     });
 
 
