@@ -11,7 +11,6 @@ import com.unimerch.mapper.AmznAccountMapper;
 import com.unimerch.mapper.GroupMapper;
 import com.unimerch.repository.AmznAccountRepository;
 import com.unimerch.repository.BrgGroupAmznAccountRepository;
-import com.unimerch.repository.datatable.AmznAccTableRepository;
 import com.unimerch.repository.datatable.GroupDataTableRepository;
 import com.unimerch.repository.GroupRepository;
 import com.unimerch.repository.model.*;
@@ -23,10 +22,8 @@ import org.springframework.data.jpa.datatables.mapping.Column;
 import org.springframework.data.jpa.datatables.mapping.DataTablesInput;
 import org.springframework.data.jpa.datatables.mapping.DataTablesOutput;
 import org.springframework.stereotype.Service;
-
 import javax.transaction.Transactional;
 import java.util.*;
-import java.util.regex.Pattern;
 
 @Service
 @Transactional
@@ -49,9 +46,6 @@ public class GroupServiceImpl implements GroupService {
 
     @Autowired
     private GroupDataTableRepository groupDataTableRepository;
-
-    @Autowired
-    private AmznAccTableRepository amznAccTableRepository;
 
     @Autowired
     private GroupMapper groupMapper;
