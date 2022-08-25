@@ -81,7 +81,6 @@
 <th:block th:replace="layout/modals-amzn-acc :: update-amzn-acc"/>
 <th:block th:replace="layout/texts :: texts"/>
 
-
 <th:block th:replace="layout/script :: script-dashboard"/>
 
 <script>
@@ -170,18 +169,15 @@
         })
     }
 
-    page.commands.doDeleteGroup = (currentGroup, currentRowGroup) => {
+    page.dialogs.commands.doDeletedAmznAcc = (currentAmznAcc, currentRowAmznAcc) => {
         $.ajax({
             type: "DELETE",
-            url: page.urls.deleteGroup + currentGroup.id,
+            url: page.urls.deleteAmznAcc + currentAmznAcc.id,
         })
             .done((data) => {
-                let tableGroup = page.element.tableGroup.DataTable();
-                tableGroup.row(currentRowGroup).remove().draw('full-hold');
-                page.element.tableAmznAccOut.DataTable().clear().draw();
-                page.element.tableAmznAccIn.DataTable().clear().draw();
-                page.element.groupTitle.html('');
-                App.SweetAlert.showSuccessAlert(App.SUCCESS_UPDATED);
+                let tableAmznAcc = page.element.tableAmznAcc.DataTable();
+                tableAmznAcc.row(currentRowAmznAcc).remove().draw('full-hold');
+                App.SweetAlert.showSuccessAlert(SUCCESS_REMOVED);
             })
             .fail(function (jqXHR) {
                 App.handleFailedTasks(jqXHR)
@@ -199,13 +195,6 @@
         page.dialogs.element.frmUpdateAmznAcc[0].reset();
         page.dialogs.element.frmUpdateAmznAcc.validate().resetForm();
     }
-
-    // var btnChangePass = '[[#{amznAcc.btnChangePass}]]';
-    // var btnDelete = '[[#{amznAcc.btnDelete}]]';
-    // var btnCreate = '[[#{amznAcc.btnCreate}]]';
-    // var btnImport = '[[#{amznAcc.btnImport}]]';
-    // var usernameRequired = '[[#{amznAcc.validation.usernameRequired}]]';
-    // var passwordRequired = '[[#{amznAcc.validation.passwordRequired}]]';
 
     $(document).ready(function () {
 
@@ -227,6 +216,11 @@
                 {data: null}
             ],
             columnDefs: [
+                {
+                    targets: 1,
+                    type: 'natural',
+                    orderable: false
+                },
                 {
                     targets: -1,
                     className: "text-center",
@@ -356,71 +350,17 @@
             page.dialogs.element.mdUpdateAmznAcc.modal('show');
         });
 
-        // page.dialogs.element.mdAddAmznAccToGroup.on('shown.bs.modal', () => {
-        //     if (currentGroup === undefined) {
-        //         return;
-        //     }
-        //
-        //     if (tableAmznAccOut === undefined) {
-        //         tableAmznAccOut = page.element.tableAmznAccOut.DataTable({
-        //             ajax: {
-        //                 url: page.urls.findAllAmznAccOutGroup + currentGroup.id,
-        //                 dataSrc: ''
-        //             },
-        //             info: false,
-        //             pagingType: 'simple_numbers',
-        //             processing: true,
-        //             columns: [
-        //                 {data: 'id'},
-        //                 {data: 'username'},
-        //                 {data: null},
-        //             ],
-        //             columnDefs: [
-        //                 {
-        //                     targets: 1,
-        //                     type: 'natural',
-        //                 },
-        //                 {
-        //                     targets: 2,
-        //                     orderable: false,
-        //                     className: 'select-checkbox',
-        //                     render: () => '',
-        //                 }
-        //             ],
-        //             select: {
-        //                 style: 'multi+shift'
-        //             },
-        //             language: {
-        //                 search: `<i class="fas fa-search text-primary"></i> `,
-        //                 paginate: {
-        //                     previous: `<i class="fas fa-angle-left"></i>`,
-        //                     next:     `<i class="fas fa-angle-right"></i>`
-        //                 },
-        //                 aria: {
-        //                     paginate: {
-        //                         previous: 'Previous',
-        //                         next:     'Next'
-        //                     }
-        //                 }
-        //             },
-        //             pageLength: 8,
-        //             lengthChange: false,
-        //             dom: 'Bfrtip',
-        //         });
-        //     } else {
-        //         tableAmznAccOut.ajax.url(page.urls.findAllAmznAccOutGroup + currentGroup.id).load();
-        //     }
-        //     page.element.tableAmznAccOut.css('cursor','pointer');
-        // });
-        //
-        // page.dialogs.element.mdAddAmznAccToGroup.on('hidden.bs.modal', () => {
-        //     tableAmznAccOut.clear().draw();
-        //     tableAmznAccOut.search('').draw();
-        // });
-        //
-        // page.dialogs.element.btnAddAmznAccToGroup.on('click', () => {
-        //     page.commands.addAmznAccToGroup(currentGroup, tableAmznAccIn, tableAmznAccOut);
-        // })
+        page.element.tableAmznAcc.on('click', 'button.delete-amzn-acc', function () {
+            currentRowAmznAcc = tableAmznAcc.row($(this).parents('tr'));
+            currentAmznAcc = currentRowAmznAcc.data();
+            App.SweetAlert.showDeleteDialog()
+                .then((result) => {
+                    if (result.isConfirmed) {
+                        page.dialogs.commands.doDeletedAmznAcc(currentAmznAcc, currentRowAmznAcc);
+                    }
+                })
+        });
+
     });
 
 

@@ -8,6 +8,8 @@ import com.unimerch.exception.InvalidIdException;
 import com.unimerch.exception.ServerErrorException;
 import com.unimerch.mapper.AmznAccountMapper;
 import com.unimerch.repository.AmznAccountRepository;
+import com.unimerch.repository.BrgGroupAmznAccountRepository;
+import com.unimerch.repository.OrderRepository;
 import com.unimerch.repository.datatable.AmznAccTableRepository;
 import com.unimerch.repository.model.AmznAccount;
 import com.unimerch.repository.model.Group;
@@ -20,9 +22,11 @@ import org.springframework.data.jpa.datatables.mapping.DataTablesInput;
 import org.springframework.data.jpa.datatables.mapping.DataTablesOutput;
 import org.springframework.stereotype.Service;
 
+import javax.transaction.Transactional;
 import java.util.*;
 
 @Service
+@Transactional
 public class AmznAccountServiceImpl implements AmznAccountService {
 
     @Autowired
@@ -33,6 +37,12 @@ public class AmznAccountServiceImpl implements AmznAccountService {
 
     @Autowired
     private AmznAccountRepository amznAccountRepository;
+
+    @Autowired
+    private BrgGroupAmznAccountRepository brgGroupAmznAccountRepository;
+
+    @Autowired
+    private OrderRepository orderRepository;
 
     @Autowired
     private MessageSource messageSource;
@@ -94,5 +104,16 @@ public class AmznAccountServiceImpl implements AmznAccountService {
         }
     }
 
+    @Override
+    public void delete(String id) {
+        AmznAccount amznAccount = findById(id);
+        try {
+            orderRepository.deleteByAmznAccount_Id(amznAccount.getId());
+            brgGroupAmznAccountRepository.deleteByAmznAccount_Id(amznAccount.getId());
+            amznAccountRepository.delete(amznAccount);
+        } catch (Exception e) {
+            throw new ServerErrorException(messageSource.getMessage("error.500", null, Locale.getDefault()));
+        }
+    }
 
 }

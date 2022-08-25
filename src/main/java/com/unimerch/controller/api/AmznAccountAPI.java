@@ -46,4 +46,11 @@ public class AmznAccountAPI {
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
+    //    @PreAuthorize("hasAnyAuthority('MANAGER')")
+    @DeleteMapping("delete/{id}")
+    public ResponseEntity<?> deleteAmznAcc(@PathVariable String id){
+        amznAccountService.delete(id);
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+
 }

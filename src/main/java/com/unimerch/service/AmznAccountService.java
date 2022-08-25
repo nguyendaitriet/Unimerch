@@ -18,4 +18,5 @@ public interface AmznAccountService {
 
     AmznAccResult update(String id, AmznAccParam amznAccParam);
 
+    void delete(String id);
 }

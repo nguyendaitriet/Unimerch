@@ -41,7 +41,7 @@ class App {
             })
         }
 
-        static showDeleteGroupDialog() {
+        static showDeleteDialog() {
             return Swal.fire({
                 icon: `warning`,
                 text: deleteGroup,

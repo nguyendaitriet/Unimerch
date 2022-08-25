@@ -213,7 +213,7 @@
                 page.element.tableAmznAccOut.DataTable().clear().draw();
                 page.element.tableAmznAccIn.DataTable().clear().draw();
                 page.element.groupTitle.html('');
-                App.SweetAlert.showSuccessAlert(SUCCESS_UPDATED);
+                App.SweetAlert.showSuccessAlert(SUCCESS_REMOVED);
             })
             .fail(function (jqXHR) {
                 handleFailedTasks(jqXHR);
@@ -283,14 +283,6 @@
         page.dialogs.element.frmUpdateGroup[0].reset();
         page.dialogs.element.frmUpdateGroup.validate().resetForm();
     }
-
-    // var btnCreate = '[[#{group.btnCreate}]]';
-    // var btnAdd = '[[#{group.btnAdd}]]';
-    // var btnManage = '[[#{group.btnManage}]]';
-    // var btnUpdate = '[[#{group.btnUpdate}]]';
-    // var btnDelete = '[[#{group.btnDelete}]]';
-    // var requiredGroupTitle = '[[#{group.validation.titleRequired}]]';
-    // var noDataInTable = '[[#{table.noData}]]';
 
     $(document).ready(function () {
         
@@ -462,14 +454,13 @@
         page.element.tableGroup.on('click', 'button.delete-group', function () {
             currentRowGroup = tableGroup.row($(this).parents('tr'));
             currentGroup = currentRowGroup.data();
-            App.SweetAlert.showDeleteGroupDialog()
+            App.SweetAlert.showDeleteDialog()
                 .then((result) => {
                     if (result.isConfirmed) {
                         page.commands.doDeleteGroup(currentGroup, currentRowGroup);
                         currentGroup = undefined;
                     }
                 })
-
         });
 
         page.dialogs.element.btnCreateGroup.on('click', function () {
