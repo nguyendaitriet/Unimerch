@@ -100,7 +100,7 @@ public class GroupServiceImpl implements GroupService {
             newGroup = groupRepository.save(newGroup);
             return groupMapper.toGroupItemResult(newGroup);
         } catch (Exception e) {
-            throw new ServerErrorException(messageSource.getMessage("error.serverError", null, Locale.getDefault()));
+            throw new ServerErrorException(messageSource.getMessage("error.500", null, Locale.getDefault()));
         }
     }
 
@@ -119,7 +119,7 @@ public class GroupServiceImpl implements GroupService {
             group = groupRepository.save(group);
             return groupMapper.toGroupItemResult(group);
         } catch (Exception e) {
-            throw new ServerErrorException(messageSource.getMessage("error.serverError", null, Locale.getDefault()));
+            throw new ServerErrorException(messageSource.getMessage("error.500", null, Locale.getDefault()));
         }
     }
 
@@ -133,7 +133,7 @@ public class GroupServiceImpl implements GroupService {
             groupRepository.deleteGroupAssociateUser(groupId);
             groupRepository.deleteGroup(groupId);
         } catch (Exception e) {
-            throw new ServerErrorException(messageSource.getMessage("error.serverError", null, Locale.getDefault()));
+            throw new ServerErrorException(messageSource.getMessage("error.500", null, Locale.getDefault()));
         }
 
         }
@@ -160,7 +160,7 @@ public class GroupServiceImpl implements GroupService {
                 amznAccResultList.add(amznAccountMapper.toAmznAccResult(brgGroupAmznAccount));
             }
         } catch (Exception e) {
-            throw new ServerErrorException(messageSource.getMessage("error.serverError", null, Locale.getDefault()));
+            throw new ServerErrorException(messageSource.getMessage("error.500", null, Locale.getDefault()));
         }
 
         return amznAccResultList;

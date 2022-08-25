@@ -9,15 +9,6 @@ class App {
     static BASE_URL_GROUP = this.DOMAIN + "/api/groups";
     static BASE_URL_FILE_UPLOAD = this.DOMAIN + "/api/file-upload";
 
-    static ERROR_400 = "Task failed, please check your data.";
-    static ERROR_401 = "Access timeout."
-    static ERROR_403 = "Access denied. Unauthorized personnel cannot perform this action.";
-    static ERROR_404 = "An error occurred. Please try again later!";
-    static ERROR_409 = "Task failed, please check your data.";
-    static ERROR_500 = "Server error. Please contact admin";
-    static SUCCESS_CREATED = "Data created successfully!";
-    static SUCCESS_UPDATED = "Data updated successfully!";
-
     static SweetAlert = class {
         static showSuccessAlert(t) {
             Swal.fire({
@@ -38,15 +29,15 @@ class App {
             })
         }
 
-        static showChangeStatusDialog(t) {
+        static showChangeStatusDialog(status) {
             return Swal.fire({
                 icon: `question`,
-                text: `Are you sure to ${t ? 'activate' : 'disable'} this user?`,
+                text: `${status ? questionToActive : questionToDisable}`,
                 showCancelButton: true,
                 confirmButtonColor: '#3085d6',
                 cancelButtonColor: '#5a6268',
-                confirmButtonText: 'Yes',
-                cancelButtonText: 'No',
+                confirmButtonText: btnAgree,
+                cancelButtonText: btnDisagree,
             })
         }
 
@@ -57,8 +48,8 @@ class App {
                 showCancelButton: true,
                 confirmButtonColor: '#C21010',
                 cancelButtonColor: '#5a6268',
-                confirmButtonText: 'Yes',
-                cancelButtonText: 'No',
+                confirmButtonText: btnAgree,
+                cancelButtonText: btnDisagree,
             })
         }
 
@@ -149,26 +140,26 @@ class App {
     static handleFailedTasks(jqXHR) {
         switch (jqXHR.status) {
             case 400:
-                this.IziToast.showErrorAlert(this.ERROR_400);
+                this.IziToast.showErrorAlert(ERROR_400);
                 break;
             case 401:
                 this.SweetAlert.showTimeOut(
-                    this.ERROR_401,
-                    "Redirecting to login",
+                    ERROR_401,
+                    warningRedirect,
                     4000,
                     this.redirectToLogin(4000));
                 break;
             case 403:
-                this.SweetAlert.showErrorAlert(this.ERROR_403);
+                this.SweetAlert.showErrorAlert(ERROR_403);
                 break;
             case 404:
-                this.IziToast.showErrorAlert(this.ERROR_404);
+                this.IziToast.showErrorAlert(ERROR_404);
                 break;
             case 409:
-                this.IziToast.showErrorAlert(this.ERROR_409);
+                this.IziToast.showErrorAlert(jqXHR.responseJSON.message);
                 break;
             default:
-                this.IziToast.showErrorAlert(this.ERROR_500);
+                this.IziToast.showErrorAlert(ERROR_500);
                 break;
         }
     }

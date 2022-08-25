@@ -1,0 +1,30 @@
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<th:block th:fragment="texts">
+    <script type="text/javascript" th:inline="javascript">
+        //common
+        var btnAgree = [[#{btn.agree}]];
+        var btnDisagree = [[#{btn.disagree}]];
+        var btnTextAdd = [[#{btn.add}]];
+        var warningRedirect = [[#{warning.redirect.login}]];
+        
+        // error
+        var ERROR_400 = [[#{error.400}]];
+        var ERROR_401 = [[#{error.401}]]
+        var ERROR_403 = [[#{error.403}]];
+        var ERROR_404 = [[#{error.404}]];
+        var ERROR_500 = [[#{error.serverError}]];
+        var SUCCESS_CREATED = [[#{success.created}]];
+        var SUCCESS_UPDATED = [[#{success.updated}]];
+        var SUCCESS_REMOVED = [[#{success.removed}]];
+        
+        //user
+        var statusActive = [[#{user.table.status.active}]];
+        var statusDisabled = [[#{user.table.status.disabled}]];
+        var btnTitleStatusActive = [[#{user.table.btnTitle.status.active}]];
+        var btnTitleStatusDisable = [[#{user.table.btnTitle.status.disable}]];
+        var questionToActive = [[#{user.status.question.toActive}]];
+        var questionToDisable = [[#{user.status.question.toDisable}]];
+        var btnTitleChangePassword = [[#{user.table.btnTitle.changePassword}]];
+        var btnTitleAssignGroup = [[#{user.table.btnTitle.assignGroup}]];
+    </script>
+</th:block>

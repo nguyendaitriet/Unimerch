@@ -3,7 +3,7 @@
 <head>
     <th:block th:replace="layout/head :: dashboard-head"/>
     <link rel="stylesheet" href="/assets/css/dashboard-custom.css">
-    <title>Assign Groups To User</title>
+    <title th:text="#{user_asgn.pageTitle}">Assign Groups To User</title>
 </head>
 <body id="page-top">
 
@@ -29,7 +29,7 @@
 
                 <!-- Page Heading -->
                 <div class="d-sm-flex align-items-center justify-content-between mb-4">
-                    <h1 class="h3 mb-0 text-gray-800" th:text="${username} + '\'s group'"></h1>
+                    <h1 class="h3 mb-0 text-gray-800" th:text="|#{user_asgn.pageHeading} ${username}|"></h1>
                 </div>
 
                 <div class="row">
@@ -39,21 +39,7 @@
                         <div class="card shadow mb-4">
                             <!-- Card Header - Dropdown -->
                             <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
-                                <h4 class="m-0 font-weight-bold text-primary">Assign Groups</h4>
-                                <div class="dropdown no-arrow">
-                                    <a class="dropdown-toggle" href="#" role="button" id="dropdownMenuLink"
-                                       data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                        <i class="fas fa-ellipsis-v fa-sm fa-fw text-gray-400"></i>
-                                    </a>
-                                    <div class="dropdown-menu dropdown-menu-right shadow animated--fade-in"
-                                         aria-labelledby="dropdownMenuLink">
-                                        <div class="dropdown-header">Dropdown Header:</div>
-                                        <a class="dropdown-item" href="#">Action</a>
-                                        <a class="dropdown-item" href="#">Another action</a>
-                                        <div class="dropdown-divider"></div>
-                                        <a class="dropdown-item" href="#">Something else here</a>
-                                    </div>
-                                </div>
+                                <h4 class="m-0 font-weight-bold text-primary" th:text="#{user_asgn.tabHeader}">Assign Groups</h4>
                             </div>
 
                             <!-- Card Body -->
@@ -64,8 +50,8 @@
                                     <thead>
                                     <tr>
                                         <th>#</th>
-                                        <th>Group's title</th>
-                                        <th>Action</th>
+                                        <th th:text="#{user_asgn.table.th.fullName}">Group's title</th>
+                                        <th th:text="#{user_asgn.table.th.action}">Action</th>
                                     </tr>
                                     </thead>
                                     <!-- Tbody -->
@@ -129,6 +115,9 @@
     page.dialogs.element.mdAssignGrpUser = $('#mdAssignGrpUser');
     page.dialogs.element.btnAssignGrpUser = $('#btnAssignGrpUser');
 
+    var btnAssignNew = '[[#{user_asgn.table.btnAdd}]]';
+    var btnTitleRemove = '[[#{user_asgn.table.btnTitle.remove}]]';
+
     $(document).ready(function () {
         let mainTable = page.element.tbAsgnedGrps.DataTable({
             ajax: {
@@ -157,7 +146,7 @@
                         return `
                             <button type='button'
                                     class="remove-assigned-group btn btn-outline-danger"
-                                    title="Remove">
+                                    title="${btnTitleRemove}">
                                 <i class="fas fa-trash-alt"></i>
                             </button>
                         `
@@ -181,7 +170,7 @@
                 },
                 buttons: [
                     {
-                        text: `<i class="fas fa-plus"></i> Assign new`,
+                        text: `<i class="fas fa-plus"></i> ${btnAssignNew}`,
                         titleAttr: 'Assign new groups to user',
                         className: 'add btn btn-primary',
                         init: (api, node, config) => {

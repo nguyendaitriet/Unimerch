@@ -3,11 +3,6 @@ class App {
 
     static BASE_URL_AUTHORIZATION = this.DOMAIN + "/api/auth";
 
-    static ERROR_401 = "Wrong username or password."
-    static ERROR_403 = "Account disabled. Please contact admin."
-    static ERROR_404 = "Page not found.";
-    static ERROR_500 = "Server error. Please contact admin";
-
     static SweetAlert = class {
         static showSuccessAlert(t) {
             Swal.fire({

@@ -5,7 +5,7 @@
         <div class="modal-dialog modal-dialog-centered" data-backdrop="static" data-keyboard="false">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title">Add new account</h5>
+                    <h5 class="modal-title" th:text="#{user.mdCreate.title}">Add new account</h5>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>
@@ -18,7 +18,7 @@
                     <form class="mb-3" id="frmCreateUser">
                         <div class="row mb-3">
                             <div class="col-xl-4">
-                                <label for="fullNameCreate">Full name:</label>
+                                <label for="fullNameCreate" th:text="#{user.mdCreate.fullName}">Full name:</label>
                             </div>
                             <div class="col-xl-8">
                                 <input type="text" id="fullNameCreate" name="fullNameCreate" class="form-control">
@@ -27,7 +27,7 @@
 
                         <div class="row mb-3">
                             <div class="col-xl-4">
-                                <label for="usernameCreate">Username:</label>
+                                <label for="usernameCreate" th:text="#{user.mdCreate.username}">Username:</label>
                             </div>
                             <div class="col-xl-8">
                                 <input type="text" id="usernameCreate" name="usernameCreate" class="form-control">
@@ -36,7 +36,7 @@
 
                         <div class="row mb-3">
                             <div class="col-xl-4">
-                                <label for="passwordCreate">Password:</label>
+                                <label for="passwordCreate" th:text="#{user.mdCreate.password}">Password:</label>
                             </div>
                             <div class="col-xl-8">
                                 <input type="password" id="passwordCreate" name="passwordCreate"
@@ -47,15 +47,15 @@
                         <div class="row">
                             <div class="col-xl-4"></div>
                             <div class="col-xl-8">
-                                <input type="checkbox" class="checkbox show-password"> Show password
+                                <input type="checkbox" class="checkbox show-password" th:text=" #{user.mdCreate.showPassword}">
                             </div>
                         </div>
                     </form>
 
                 </div>
                 <div class="modal-footer">
-                    <button type="button" id="btnCreateUser" class="btn btn-primary">Create</button>
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <button type="button" id="btnCreateUser" class="btn btn-primary" th:text="#{btn.create}">Create</button>
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal" th:text="#{btn.close}">Close</button>
                 </div>
             </div>
         </div>
@@ -67,7 +67,7 @@
         <div class="modal-dialog modal-dialog-centered" data-backdrop="static" data-keyboard="false">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title">Change account's password</h5>
+                    <h5 class="modal-title" th:text="#{user.mdCP.title}">Change account's password</h5>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>
@@ -80,7 +80,7 @@
                     <form class="mb-3" id="frmCPUser">
                         <div class="row mb-3">
                             <div class="col-xl-4">
-                                <label for="fullNameCP">Full name:</label>
+                                <label for="fullNameCP" th:text="#{user.mdCP.fullName}">Full name:</label>
                             </div>
                             <div class="col-xl-8">
                                 <input type="text" id="fullNameCP" name="fullNameCP" class="form-control" readonly>
@@ -89,7 +89,7 @@
 
                         <div class="row mb-3">
                             <div class="col-xl-4">
-                                <label for="usernameCP">Username:</label>
+                                <label for="usernameCP" th:text="#{user.mdCP.username}">Username:</label>
                             </div>
                             <div class="col-xl-8">
                                 <input type="text" id="usernameCP" name="usernameCP" class="form-control" readonly>
@@ -98,7 +98,7 @@
 
                         <div class="row mb-3">
                             <div class="col-xl-4">
-                                <label for="passwordCP">Password:</label>
+                                <label for="passwordCP" th:text="#{user.mdCP.password}">New password:</label>
                             </div>
                             <div class="col-xl-8">
                                 <input type="password" id="passwordCP" name="passwordCP" class="form-control password">
@@ -108,15 +108,15 @@
                         <div class="row">
                             <div class="col-xl-4"></div>
                             <div class="col-xl-8">
-                                <input type="checkbox" class="checkbox show-password"> Show password
+                                <input type="checkbox" class="checkbox show-password" th:text="#{user.mdCP.showPassword}">
                             </div>
                         </div>
                     </form>
 
                 </div>
                 <div class="modal-footer">
-                    <button type="button" id="btnCPUser" class="btn btn-primary">Save</button>
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <button type="button" id="btnCPUser" class="btn btn-primary" th:text="#{btn.save}">Save</button>
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal" th:text="#{btn.close}">Close</button>
                 </div>
             </div>
         </div>
