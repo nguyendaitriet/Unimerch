@@ -18,7 +18,7 @@ public interface GroupService {
 
     List<Group> findAll();
 
-    DataTablesOutput<GroupItemResult> findAll(DataTablesInput dataTablesInput);
+    DataTablesOutput<GroupItemResult> findAll(DataTablesInput input);
 
     Group findById(String id);
 

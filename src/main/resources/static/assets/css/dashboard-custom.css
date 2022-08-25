@@ -1,12 +1,39 @@
-#custom-scrollbar {
+/*#custom-scrollbar {*/
+/*    height: 220px;*/
+/*    overflow-y: scroll;*/
+/*}*/
+.scrollbar {
     height: 220px;
+    background: #F5F5F5;
     overflow-y: scroll;
+}
+
+#custom-scrollbar::-webkit-scrollbar {
+    width: 10px;
+    background-color: #F5F5F5;
+}
+
+#custom-scrollbar::-webkit-scrollbar-track {
+    -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.3);
+    background-color: #F5F5F5;
+    border-radius: 10px;
+}
+
+#custom-scrollbar::-webkit-scrollbar-thumb {
+    border-radius: 10px;
+    background-color: #4a4a4a29;
 }
 
 .checkbox.show-password {
     margin-right: 7px;
 }
 
+.error {
+    font-size: 15px;
+    margin-top: 15px;
+    color: red;
+    width: 100%;
+}
 /*.dataTables_wrapper .dataTables_paginate .paginate_button {*/
 /*    box-sizing: border-box;*/
 /*    display: inline-block;*/

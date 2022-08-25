@@ -5,7 +5,7 @@ class App {
     static BASE_URL_DASHBOARD = this.DOMAIN + "/api/dashboard";
     static BASE_URL_USER = this.DOMAIN + "/api/users";
     static BASE_URL_USER_GROUPS = this.DOMAIN + "/api/users/asgnGrp";
-    static BASE_URL_AMZN_ACCOUNT = this.DOMAIN + "/api/amzn-account";
+    static BASE_URL_AMZN_ACCOUNT = this.DOMAIN + "/api/amznAccounts";
     static BASE_URL_GROUP = this.DOMAIN + "/api/groups";
     static BASE_URL_FILE_UPLOAD = this.DOMAIN + "/api/file-upload";
 

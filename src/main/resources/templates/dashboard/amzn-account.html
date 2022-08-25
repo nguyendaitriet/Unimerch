@@ -78,6 +78,7 @@
 </a>
 
 <th:block th:replace="layout/modals-amzn-acc :: create-amzn-acc"/>
+<th:block th:replace="layout/modals-amzn-acc :: update-amzn-acc"/>
 
 
 <th:block th:replace="layout/script :: script-dashboard"/>
@@ -110,19 +111,18 @@
     page.dialogs.element.amznAccUsernameCreate = $('#amznAccUsernameCreate');
     page.dialogs.element.amznAccPasswordCreate = $('#amznAccPasswordCreate');
 
-    page.dialogs.element.mdUpdateGroup = $('#mdUpdateGroup');
-    page.dialogs.element.frmUpdateGroup = $('#frmUpdateGroup');
-    page.dialogs.element.btnUpdateGroup = $('#btnUpdateGroup');
-    page.dialogs.element.groupTitleUpdate = $('#groupTitleUpdate');
+    page.dialogs.element.mdImportAmznAcc = $('#mdImportAmznAcc');
 
-    page.dialogs.element.mdAddAmznAccToGroup = $('#mdAddAmznAccToGroup');
-    page.dialogs.element.btnAddAmznAccToGroup = $('#btnAddAmznAccToGroup');
+    page.dialogs.element.mdUpdateAmznAcc = $('#mdUpdateAmznAcc');
+    page.dialogs.element.frmUpdateAmznAcc = $('#frmUpdateAmznAcc');
+    page.dialogs.element.btnUpdateAmznAcc = $('#btnUpdateAmznAcc');
+    page.dialogs.element.amznAccUsernameUpdate = $('#amznAccUsernameUpdate');
+    page.dialogs.element.amznAccPasswordUpdate = $('#amznAccPasswordUpdate');
 
-    page.dialogs.alertDanger.mdCreateGroup = $('#mdCreateGroup .modal-body .modal-alert-danger')
-
-    page.commands.doCreateGroup = () => {
-        let newGroup = {};
-        newGroup.title = page.dialogs.element.groupTitleCreate.val().trim();
+    page.dialogs.commands.doCreateAmznAcc = () => {
+        let newAmznAcc = {};
+        newAmznAcc.username = page.dialogs.element.amznAccUsernameCreate.val().toLowerCase().trim();
+        newAmznAcc.password = page.dialogs.element.amznAccPasswordCreate.val();
 
         $.ajax({
             headers: {
@@ -130,50 +130,45 @@
                 "content-type": "application/json"
             },
             type: "POST",
-            url: page.urls.createGroup,
-            data: JSON.stringify(newGroup)
+            url: page.urls.createAmznAcc,
+            data: JSON.stringify(newAmznAcc)
         })
-            .done((data) => {
-                let tableGroup = page.element.tableGroup.DataTable();
-                tableGroup.row.add({
-                    'id': data.id,
-                    'title': data.title
-                })
-                tableGroup.order([0, 'desc']).draw();
-                page.dialogs.element.mdCreateGroup.modal("hide");
-                App.SweetAlert.showSuccessAlert(App.SUCCESS_CREATED);
+        .done((data) => {
+            let tableAmznAcc = page.element.tableAmznAcc.DataTable();
+            tableAmznAcc.row.add({
+                'id': data.id,
+                'username': data.username
             })
-            .fail(function (jqXHR) {
-                alert("fail");
-            })
+            tableAmznAcc.order([0, 'desc']).draw();
+            page.dialogs.element.mdCreateAmznAcc.modal("hide");
+            App.SweetAlert.showSuccessAlert(App.SUCCESS_CREATED);
+        })
+        .fail(function (jqXHR) {
+            App.handleFailedTasks(jqXHR)
+        })
     }
-    page.commands.doUpdateGroup = (currentGroup, currentRowGroup) => {
-        let group = {};
-        group.title = page.dialogs.element.groupTitleUpdate.val().trim();
 
+    page.dialogs.commands.doUpdateAmznAcc = (currentAmznAcc) => {
+        let amznAcc = {};
+        amznAcc.password = page.dialogs.element.amznAccPasswordUpdate.val().trim();
         $.ajax({
             headers: {
                 "accept": "application/json",
                 "content-type": "application/json"
             },
             type: "PUT",
-            url: page.urls.updateGroup + currentGroup.id,
-            data: JSON.stringify(group)
+            url: page.urls.updateAmznAcc + currentAmznAcc.id,
+            data: JSON.stringify(amznAcc)
         })
-            .done((data) => {
-                let tableGroup = page.element.tableGroup.DataTable();
-                tableGroup.row(currentRowGroup).data({
-                    'id': data.id,
-                    'title': data.title
-                }).draw('full-hold');
-                page.dialogs.element.frmUpdateGroup[0].reset();
-                page.dialogs.element.mdUpdateGroup.modal("hide");
-                App.SweetAlert.showSuccessAlert(App.SUCCESS_UPDATED);
-            })
-            .fail(function (jqXHR) {
-                alert("fail");
-            })
+        .done((data) => {
+            page.dialogs.element.mdUpdateAmznAcc.modal("hide");
+            App.SweetAlert.showSuccessAlert(App.SUCCESS_UPDATED);
+        })
+        .fail(function (jqXHR) {
+            App.handleFailedTasks(jqXHR)
+        })
     }
+
     page.commands.doDeleteGroup = (currentGroup, currentRowGroup) => {
         $.ajax({
             type: "DELETE",
@@ -188,80 +183,32 @@
                 App.SweetAlert.showSuccessAlert(App.SUCCESS_UPDATED);
             })
             .fail(function (jqXHR) {
-                alert("fail");
+                App.handleFailedTasks(jqXHR)
             })
     }
 
-    page.commands.addAmznAccToGroup = (currentGroup, tableAmznAccIn, tableAmznAccOut) => {
-        if (currentGroup === undefined) return;
-
-        let amznAccSelected = [];
-
-        let rows_selected = tableAmznAccOut.rows({selected:true}).data()
-        $.each(rows_selected, function(index, value){
-            amznAccSelected.push(value.id);
-        });
-
-        if (amznAccSelected.length === 0) {
-            App.IziToast.showErrorAlert('No data selected!');
-            return;
-        }
-
-        $.ajax({
-            headers: {
-                "accept": "application/json",
-                "content-type": "application/json"
-            },
-            type: "POST",
-            url: page.urls.addAmznAccountToGroup + currentGroup.id,
-            data: JSON.stringify({amznAccSelected})
-        })
-            .done((data) => {
-                data.forEach((amznAcc) => {
-                    tableAmznAccIn.row.add({
-                        'id': amznAcc.id,
-                        'username': amznAcc.username
-                    })
-                    tableAmznAccIn.order([0, 'desc']).draw();
-                });
-                page.dialogs.element.mdAddAmznAccToGroup.modal("hide");
-                App.SweetAlert.showSuccessAlert(App.SUCCESS_CREATED);
-            })
-            .fail(function (jqXHR) {
-                alert("fail");
-            })
-    }
-    page.commands.doDeletedAmznAcc = (currentGroup, currentAmznAcc, currentRowAmznAcc) => {
-        $.ajax({
-            type: "DELETE",
-            url: page.urls.deleteAmznAccFromGroup + currentAmznAcc.id + '/' + currentGroup.id,
-        })
-            .done((data) => {
-                let tableAmznAccIn = page.element.tableAmznAccIn.DataTable();
-                tableAmznAccIn.row(currentRowAmznAcc).remove().draw('page');
-            })
-            .fail(function (jqXHR) {
-                alert("fail");
-            })
+    page.dialogs.close.mdCreateAmznAcc = () => {
+        page.dialogs.element.frmCreateAmznAcc.find("input.error").removeClass("error");
+        page.dialogs.element.frmCreateAmznAcc[0].reset();
+        page.dialogs.element.frmCreateAmznAcc.validate().resetForm();
     }
 
-    page.dialogs.close.mdCreateGroup = () => {
-        page.dialogs.alertDanger.mdCreateGroup.empty();
-        page.dialogs.alertDanger.mdCreateGroup.addClass("hide");
-        page.dialogs.alertDanger.mdCreateGroup.removeClass("show");
-        page.dialogs.element.frmCreateGroup.find("input.error").removeClass("error");
-        page.dialogs.element.frmCreateGroup[0].reset();
-        page.dialogs.element.frmCreateGroup.validate().resetForm();
+    page.dialogs.close.mdUpdateAmznAcc = () => {
+        page.dialogs.element.frmUpdateAmznAcc.find("input.error").removeClass("error");
+        page.dialogs.element.frmUpdateAmznAcc[0].reset();
+        page.dialogs.element.frmUpdateAmznAcc.validate().resetForm();
     }
-
 
     var btnChangePass = '[[#{amznAcc.btnChangePass}]]';
     var btnDelete = '[[#{amznAcc.btnDelete}]]';
     var btnCreate = '[[#{amznAcc.btnCreate}]]';
+    var btnImport = '[[#{amznAcc.btnImport}]]';
+    var usernameRequired = '[[#{amznAcc.validation.usernameRequired}]]';
+    var passwordRequired = '[[#{amznAcc.validation.passwordRequired}]]';
 
     $(document).ready(function () {
 
-        let tableGroup = page.element.tableGroup.DataTable({
+        let tableAmznAcc = page.element.tableAmznAcc.DataTable({
             ajax: {
                 contentType: 'application/json',
                 url: page.urls.findAllAmznAccs,
@@ -284,10 +231,10 @@
                     className: "text-center",
                     orderable: false,
                     render: (data, type, row) =>
-                        `<button type='button' class='manage-group btn btn-outline-warning mr-3' title='${btnChangePass}'>
+                        `<button type='button' class='update-amzn-acc btn btn-outline-warning mr-3' title='${btnChangePass}'>
                             <i class="fas fa-key"></i>
                         </button>
-                        <button type='button' class='delete-group btn btn-outline-danger' title='${btnDelete}'>
+                        <button type='button' class='delete-amzn-acc btn btn-outline-danger' title='${btnDelete}'>
                             <i class="fas fa-trash"></i>
                         </button>`,
                 },
@@ -322,234 +269,157 @@
                         init: function (api, node, config) {
                             $(node).on('click', () => page.dialogs.element.mdCreateAmznAcc.modal("show"));
                         }
+                    },
+                    {
+                        text: `<i class="fas fa-file-import"></i> ${btnImport}`,
+                        className: 'showImportGrpMd btn btn-secondary',
+                        init: function (api, node, config) {
+                            $(node).on('click', () => page.dialogs.element.mdImportAmznAcc.modal("show"));
+                        }
                     }
                 ]
             },
         });
-        let tableAmznAccIn;
-        let tableAmznAccOut;
-        let currentRowGroup;
-        let currentGroup;
+
         let currentRowAmznAcc;
         let currentAmznAcc;
 
-        page.element.tableGroup.on('click', 'button.manage-group', function () {
-            currentGroup = tableGroup.row($(this).parents('tr')).data();
-            page.element.groupTitle.html(currentGroup.title);
-
-            if (tableAmznAccIn === undefined) {
-                tableAmznAccIn = page.element.tableAmznAccIn.DataTable({
-                    ajax: {
-                        url: page.urls.findAllAmznAccInGroup + currentGroup.id,
-                        dataSrc: ''
-                    },
-                    info: false,
-                    pagingType: 'simple_numbers',
-                    processing: true,
-                    columns: [
-                        {data: 'id'},
-                        {data: 'username'},
-                        {data: null}
-                    ],
-                    columnDefs: [
-                        {
-                            targets: 0,
-                            className: "text-center"
-                        },
-                        {
-                            targets: 1,
-                            className: "text-center",
-                            type: 'natural',
-                        },
-                        {
-                            targets: -1,
-                            className: "text-center",
-                            orderable: false,
-                            defaultContent:
-                                `<button type='button' class='delete-amzn-acc btn btn-outline-danger mr-3' title='${btnDelete}'>`
-                                + `<i class="fas fa-ban"></i>`
-                                + `</button>`
-                        },
-                    ],
-                    language: {
-                        search: `<i class="fas fa-search text-primary"></i> `,
-                        paginate: {
-                            previous: `<i class="fas fa-angle-left"></i>`,
-                            next:     `<i class="fas fa-angle-right"></i>`
-                        },
-                        aria: {
-                            paginate: {
-                                previous: 'Previous',
-                                next:     'Next'
-                            }
-                        }
-                    },
-                    pageLength: 10,
-                    lengthChange: false,
-                    dom: 'Bfrtip',
-                    buttons: {
-                        dom: {
-                            button: {
-                                tag: 'button',
-                                className: ''
-                            }
-                        },
-                        buttons: [
-                            {
-                                text: `<i class="fas fa-plus"></i> ${btnAdd}`,
-                                titleAttr: 'Add Amazon Account',
-                                className: 'showAddAmzAccMd btn btn-primary',
-                                init: function (api, node, config) {
-                                    $(node).on('click', () => {
-                                        page.dialogs.element.mdAddAmznAccToGroup.modal("show");
-                                    })
-                                }
-                            }
-                        ]
-                    },
-                });
-            } else {
-                tableAmznAccIn.ajax.url(page.urls.findAllAmznAccInGroup + currentGroup.id).load();
-            }
+        page.dialogs.element.btnCreateAmznAcc.on('click', function () {
+            page.dialogs.element.frmCreateAmznAcc.submit();
         });
 
-        page.element.tableGroup.on('click', 'button.update-group', function () {
-            currentRowGroup = tableGroup.row($(this).parents('tr'));
-            currentGroup = currentRowGroup.data();
-            page.dialogs.element.groupTitleUpdate.val(currentGroup.title);
-            page.dialogs.element.mdUpdateGroup.modal('show');
+        page.dialogs.element.btnUpdateAmznAcc.on('click', function () {
+            page.dialogs.element.frmUpdateAmznAcc.submit();
         });
 
-        page.element.tableGroup.on('click', 'button.delete-group', function () {
-            currentRowGroup = tableGroup.row($(this).parents('tr'));
-            currentGroup = currentRowGroup.data();
-            App.SweetAlert.showDeleteGroupDialog()
-                .then((result) => {
-                    if (result.isConfirmed) {
-                        page.commands.doDeleteGroup(currentGroup, currentRowGroup);
-                        currentGroup = undefined;
-                    }
-                })
-
-        });
-
-        page.dialogs.element.btnCreateGroup.on('click', function () {
-            page.dialogs.element.frmCreateGroup.submit();
-        });
-
-        page.dialogs.element.frmCreateGroup.validate({
+        page.dialogs.element.frmCreateAmznAcc.validate({
             onkeyup: function (element) {
                 $(element).valid()
             },
             onclick: false,
             onfocusout: false,
             rules: {
-                groupTitleCreate: {
+                amznAccUsernameCreate: {
+                    required: true
+                },
+                amznAccPasswordCreate: {
                     required: true
                 }
             },
             messages: {
-                groupTitleCreate: {
-                    required: 'Group title is required.'
-                }
-            },
-            errorLabelContainer: "#mdCreateGroup .modal-alert-danger",
-            errorPlacement: function (error, element) {
-                error.appendTo("#mdCreateGroup .modal-alert-danger");
-            },
-            showErrors: function (errorMap, errorList) {
-                if (this.numberOfInvalids() > 0) {
-                    page.dialogs.alertDanger.mdCreateGroup.removeClass("hide").addClass("show");
-                } else {
-                    page.dialogs.alertDanger.mdCreateGroup.removeClass("show").addClass("hide").empty();
-                    page.dialogs.element.frmCreateGroup.removeClass("error");
-                }
-                this.defaultShowErrors();
+                amznAccUsernameCreate: {
+                    required: `${usernameRequired}`
+                },
+                amznAccPasswordCreate: {
+                    required: `${passwordRequired}`
+                },
             },
             submitHandler: function () {
-                page.commands.doCreateGroup();
+                page.dialogs.commands.doCreateAmznAcc();
             }
         })
 
-        page.dialogs.element.mdCreateGroup.on('hidden.bs.modal', () => {
-            page.dialogs.close.mdCreateGroup();
-        });
-
-        page.dialogs.element.btnUpdateGroup.on('click', function () {
-            page.commands.doUpdateGroup(currentGroup, currentRowGroup);
-        });
-
-        page.element.tableAmznAccIn.on('click', 'button.delete-amzn-acc', function () {
-            currentRowAmznAcc = tableAmznAccIn.row($(this).parents('tr'));
-            currentAmznAcc = currentRowAmznAcc.data();
-            page.commands.doDeletedAmznAcc(currentGroup, currentAmznAcc, currentRowAmznAcc);
-        });
-
-        page.dialogs.element.mdAddAmznAccToGroup.on('shown.bs.modal', () => {
-            if (currentGroup === undefined) {
-                return;
+        page.dialogs.element.frmUpdateAmznAcc.validate({
+            onkeyup: function (element) {
+                $(element).valid()
+            },
+            onclick: false,
+            onfocusout: false,
+            rules: {
+                amznAccPasswordUpdate: {
+                    required: true
+                }
+            },
+            messages: {
+                amznAccPasswordUpdate: {
+                    required: `${passwordRequired}`
+                },
+            },
+            submitHandler: function () {
+                page.dialogs.commands.doUpdateAmznAcc(currentAmznAcc);
             }
-
-            if (tableAmznAccOut === undefined) {
-                tableAmznAccOut = page.element.tableAmznAccOut.DataTable({
-                    ajax: {
-                        url: page.urls.findAllAmznAccOutGroup + currentGroup.id,
-                        dataSrc: ''
-                    },
-                    info: false,
-                    pagingType: 'simple_numbers',
-                    processing: true,
-                    columns: [
-                        {data: 'id'},
-                        {data: 'username'},
-                        {data: null},
-                    ],
-                    columnDefs: [
-                        {
-                            targets: 1,
-                            type: 'natural',
-                        },
-                        {
-                            targets: 2,
-                            orderable: false,
-                            className: 'select-checkbox',
-                            render: () => '',
-                        }
-                    ],
-                    select: {
-                        style: 'multi+shift'
-                    },
-                    language: {
-                        search: `<i class="fas fa-search text-primary"></i> `,
-                        paginate: {
-                            previous: `<i class="fas fa-angle-left"></i>`,
-                            next:     `<i class="fas fa-angle-right"></i>`
-                        },
-                        aria: {
-                            paginate: {
-                                previous: 'Previous',
-                                next:     'Next'
-                            }
-                        }
-                    },
-                    pageLength: 8,
-                    lengthChange: false,
-                    dom: 'Bfrtip',
-                });
-            } else {
-                tableAmznAccOut.ajax.url(page.urls.findAllAmznAccOutGroup + currentGroup.id).load();
-            }
-            page.element.tableAmznAccOut.css('cursor','pointer');
-        });
-
-        page.dialogs.element.mdAddAmznAccToGroup.on('hidden.bs.modal', () => {
-            tableAmznAccOut.clear().draw();
-            tableAmznAccOut.search('').draw();
-        });
-
-        page.dialogs.element.btnAddAmznAccToGroup.on('click', () => {
-            page.commands.addAmznAccToGroup(currentGroup, tableAmznAccIn, tableAmznAccOut);
         })
+
+        page.dialogs.element.mdCreateAmznAcc.on('hidden.bs.modal', () => {
+            page.dialogs.close.mdCreateAmznAcc();
+        });
+
+        page.dialogs.element.mdUpdateAmznAcc.on('hidden.bs.modal', () => {
+            page.dialogs.close.mdUpdateAmznAcc();
+        });
+
+        page.element.tableAmznAcc.on('click', 'button.update-amzn-acc', function () {
+            currentAmznAcc = tableAmznAcc.row($(this).parents('tr')).data();
+            page.dialogs.element.amznAccUsernameUpdate.val(currentAmznAcc.username);
+            page.dialogs.element.amznAccPasswordUpdate.val(currentAmznAcc.password);
+            page.dialogs.element.mdUpdateAmznAcc.modal('show');
+        });
+
+        // page.dialogs.element.mdAddAmznAccToGroup.on('shown.bs.modal', () => {
+        //     if (currentGroup === undefined) {
+        //         return;
+        //     }
+        //
+        //     if (tableAmznAccOut === undefined) {
+        //         tableAmznAccOut = page.element.tableAmznAccOut.DataTable({
+        //             ajax: {
+        //                 url: page.urls.findAllAmznAccOutGroup + currentGroup.id,
+        //                 dataSrc: ''
+        //             },
+        //             info: false,
+        //             pagingType: 'simple_numbers',
+        //             processing: true,
+        //             columns: [
+        //                 {data: 'id'},
+        //                 {data: 'username'},
+        //                 {data: null},
+        //             ],
+        //             columnDefs: [
+        //                 {
+        //                     targets: 1,
+        //                     type: 'natural',
+        //                 },
+        //                 {
+        //                     targets: 2,
+        //                     orderable: false,
+        //                     className: 'select-checkbox',
+        //                     render: () => '',
+        //                 }
+        //             ],
+        //             select: {
+        //                 style: 'multi+shift'
+        //             },
+        //             language: {
+        //                 search: `<i class="fas fa-search text-primary"></i> `,
+        //                 paginate: {
+        //                     previous: `<i class="fas fa-angle-left"></i>`,
+        //                     next:     `<i class="fas fa-angle-right"></i>`
+        //                 },
+        //                 aria: {
+        //                     paginate: {
+        //                         previous: 'Previous',
+        //                         next:     'Next'
+        //                     }
+        //                 }
+        //             },
+        //             pageLength: 8,
+        //             lengthChange: false,
+        //             dom: 'Bfrtip',
+        //         });
+        //     } else {
+        //         tableAmznAccOut.ajax.url(page.urls.findAllAmznAccOutGroup + currentGroup.id).load();
+        //     }
+        //     page.element.tableAmznAccOut.css('cursor','pointer');
+        // });
+        //
+        // page.dialogs.element.mdAddAmznAccToGroup.on('hidden.bs.modal', () => {
+        //     tableAmznAccOut.clear().draw();
+        //     tableAmznAccOut.search('').draw();
+        // });
+        //
+        // page.dialogs.element.btnAddAmznAccToGroup.on('click', () => {
+        //     page.commands.addAmznAccToGroup(currentGroup, tableAmznAccIn, tableAmznAccOut);
+        // })
     });
 
 

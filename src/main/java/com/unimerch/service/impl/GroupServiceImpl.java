@@ -11,7 +11,6 @@ import com.unimerch.mapper.AmznAccountMapper;
 import com.unimerch.mapper.GroupMapper;
 import com.unimerch.repository.AmznAccountRepository;
 import com.unimerch.repository.BrgGroupAmznAccountRepository;
-import com.unimerch.repository.datatable.AmznAccTableRepository;
 import com.unimerch.repository.datatable.GroupDataTableRepository;
 import com.unimerch.repository.GroupRepository;
 import com.unimerch.repository.model.*;
@@ -23,10 +22,8 @@ import org.springframework.data.jpa.datatables.mapping.Column;
 import org.springframework.data.jpa.datatables.mapping.DataTablesInput;
 import org.springframework.data.jpa.datatables.mapping.DataTablesOutput;
 import org.springframework.stereotype.Service;
-
 import javax.transaction.Transactional;
 import java.util.*;
-import java.util.regex.Pattern;
 
 @Service
 @Transactional
@@ -51,9 +48,6 @@ public class GroupServiceImpl implements GroupService {
     private GroupDataTableRepository groupDataTableRepository;
 
     @Autowired
-    private AmznAccTableRepository amznAccTableRepository;
-
-    @Autowired
     private GroupMapper groupMapper;
 
     @Autowired
@@ -66,11 +60,15 @@ public class GroupServiceImpl implements GroupService {
 
     @Override
     public DataTablesOutput<GroupItemResult> findAll(DataTablesInput input) {
-        Map<String, Column> columnMap = input.getColumnsAsMap();
-        columnMap.remove(null);
-        List<Column> columnList = new ArrayList<>(columnMap.values());
-        input.setColumns(columnList);
-        return groupDataTableRepository.findAll(input, group -> groupMapper.toGroupItemResult(group));
+        try {
+            Map<String, Column> columnMap = input.getColumnsAsMap();
+            columnMap.remove(null);
+            List<Column> columnList = new ArrayList<>(columnMap.values());
+            input.setColumns(columnList);
+            return groupDataTableRepository.findAll(input, group -> groupMapper.toGroupItemResult(group));
+        } catch (Exception e) {
+            throw new ServerErrorException(messageSource.getMessage("error.500", null, Locale.getDefault()));
+        }
     }
 
     @Override
@@ -136,7 +134,7 @@ public class GroupServiceImpl implements GroupService {
             throw new ServerErrorException(messageSource.getMessage("error.500", null, Locale.getDefault()));
         }
 
-        }
+    }
 
     @Override
     public List<AmznAccResult> addAmznAccToGroup(ArrayList<String> amznAccIdList, String id) {
@@ -168,24 +166,37 @@ public class GroupServiceImpl implements GroupService {
 
     @Override
     public List<AmznAccResult> getAmznAccInsideGroup(String id) {
-        Group group = findById(id);
-        List<AmznAccResult> amznAccResultList = new ArrayList<>();
-        List<AmznAccount> amznAccResult =  brgGroupAmznAccRepo.getAmznAccInGroup(group.getId());
-        amznAccResult.forEach((result) -> amznAccResultList.add(amznAccountMapper.toAmznAccResult(result)));
-        return amznAccResultList;    }
+        try {
+            Group group = findById(id);
+            List<AmznAccResult> amznAccResultList = new ArrayList<>();
+            List<AmznAccount> amznAccResult = brgGroupAmznAccRepo.getAmznAccInGroup(group.getId());
+            amznAccResult.forEach((result) -> amznAccResultList.add(amznAccountMapper.toAmznAccResult(result)));
+            return amznAccResultList;
+        } catch (Exception e) {
+            throw new ServerErrorException(messageSource.getMessage("error.500", null, Locale.getDefault()));
+        }
+    }
 
     @Override
     public List<AmznAccResult> getAmznAccOutsideGroup(String id) {
-        Group group = findById(id);
-        List<AmznAccResult> amznAccResultList = new ArrayList<>();
-        List<AmznAccount> amznAccResult =  brgGroupAmznAccRepo.getAmznAccOutGroup(group.getId());
-        amznAccResult.forEach((result) -> amznAccResultList.add(amznAccountMapper.toAmznAccResult(result)));
-        return amznAccResultList;
+        try {
+            Group group = findById(id);
+            List<AmznAccResult> amznAccResultList = new ArrayList<>();
+            List<AmznAccount> amznAccResult = brgGroupAmznAccRepo.getAmznAccOutGroup(group.getId());
+            amznAccResult.forEach((result) -> amznAccResultList.add(amznAccountMapper.toAmznAccResult(result)));
+            return amznAccResultList;
+        } catch (Exception e) {
+            throw new ServerErrorException(messageSource.getMessage("error.500", null, Locale.getDefault()));
+        }
     }
 
     @Override
     public void deleteAmznAccFromGroup(int amznAccId, int groupId) {
-        brgGroupAmznAccRepo.deleteAmznAccFromGroup(amznAccId, groupId);
+        try {
+            brgGroupAmznAccRepo.deleteAmznAccFromGroup(amznAccId, groupId);
+        } catch (Exception e) {
+            throw new ServerErrorException(messageSource.getMessage("error.500", null, Locale.getDefault()));
+        }
     }
 
 }
