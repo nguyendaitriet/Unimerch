@@ -44,7 +44,7 @@ class App {
         static showDeleteGroupDialog() {
             return Swal.fire({
                 icon: `warning`,
-                text: `Are you sure to DELETE this group?`,
+                text: deleteGroup,
                 showCancelButton: true,
                 confirmButtonColor: '#C21010',
                 cancelButtonColor: '#5a6268',

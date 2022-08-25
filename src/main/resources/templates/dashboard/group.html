@@ -101,6 +101,7 @@
 <th:block th:replace="layout/modals-group :: create-group"/>
 <th:block th:replace="layout/modals-group :: update-group"/>
 <th:block th:replace="layout/modals-group :: add-amzn-acc"/>
+<th:block th:replace="layout/texts :: texts"/>
 
 <th:block th:replace="layout/script :: script-dashboard"/>
 
@@ -168,7 +169,7 @@
             })
             tableGroup.order([0, 'desc']).draw();
             page.dialogs.element.mdCreateGroup.modal("hide");
-            App.SweetAlert.showSuccessAlert(App.SUCCESS_CREATED);
+            App.SweetAlert.showSuccessAlert(SUCCESS_CREATED);
         })
         .fail(function (jqXHR) {
             App.handleFailedTasks(jqXHR);
@@ -195,7 +196,7 @@
             }).draw('full-hold');
             page.dialogs.element.frmUpdateGroup[0].reset();
             page.dialogs.element.mdUpdateGroup.modal("hide");
-            App.SweetAlert.showSuccessAlert(App.SUCCESS_UPDATED);
+            App.SweetAlert.showSuccessAlert(SUCCESS_UPDATED);
         })
         .fail(function (jqXHR) {
             App.handleFailedTasks(jqXHR);
@@ -212,10 +213,10 @@
                 page.element.tableAmznAccOut.DataTable().clear().draw();
                 page.element.tableAmznAccIn.DataTable().clear().draw();
                 page.element.groupTitle.html('');
-                App.SweetAlert.showSuccessAlert(App.SUCCESS_UPDATED);
+                App.SweetAlert.showSuccessAlert(SUCCESS_UPDATED);
             })
             .fail(function (jqXHR) {
-                App.handleFailedTasks(jqXHR);
+                handleFailedTasks(jqXHR);
             })
     }
 
@@ -252,10 +253,10 @@
                 tableAmznAccIn.order([0, 'desc']).draw();
             });
             page.dialogs.element.mdAddAmznAccToGroup.modal("hide");
-            App.SweetAlert.showSuccessAlert(App.SUCCESS_CREATED);
+            App.SweetAlert.showSuccessAlert(SUCCESS_CREATED);
         })
         .fail(function (jqXHR) {
-            App.handleFailedTasks(jqXHR);
+            handleFailedTasks(jqXHR);
         })
     }
     page.commands.doDeletedAmznAcc = (currentGroup, currentAmznAcc, currentRowAmznAcc) => {
@@ -283,13 +284,13 @@
         page.dialogs.element.frmUpdateGroup.validate().resetForm();
     }
 
-    var btnCreate = '[[#{group.btnCreate}]]';
-    var btnAdd = '[[#{group.btnAdd}]]';
-    var btnManage = '[[#{group.btnManage}]]';
-    var btnUpdate = '[[#{group.btnUpdate}]]';
-    var btnDelete = '[[#{group.btnDelete}]]';
-    var requiredGroupTitle = '[[#{group.validation.titleRequired}]]';
-    var noDataInTable = '[[#{table.noData}]]';
+    // var btnCreate = '[[#{group.btnCreate}]]';
+    // var btnAdd = '[[#{group.btnAdd}]]';
+    // var btnManage = '[[#{group.btnManage}]]';
+    // var btnUpdate = '[[#{group.btnUpdate}]]';
+    // var btnDelete = '[[#{group.btnDelete}]]';
+    // var requiredGroupTitle = '[[#{group.validation.titleRequired}]]';
+    // var noDataInTable = '[[#{table.noData}]]';
 
     $(document).ready(function () {
         

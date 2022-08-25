@@ -79,6 +79,7 @@
 
 <th:block th:replace="layout/modals-amzn-acc :: create-amzn-acc"/>
 <th:block th:replace="layout/modals-amzn-acc :: update-amzn-acc"/>
+<th:block th:replace="layout/texts :: texts"/>
 
 
 <th:block th:replace="layout/script :: script-dashboard"/>
@@ -141,7 +142,7 @@
             })
             tableAmznAcc.order([0, 'desc']).draw();
             page.dialogs.element.mdCreateAmznAcc.modal("hide");
-            App.SweetAlert.showSuccessAlert(App.SUCCESS_CREATED);
+            App.SweetAlert.showSuccessAlert(SUCCESS_CREATED);
         })
         .fail(function (jqXHR) {
             App.handleFailedTasks(jqXHR)
@@ -162,7 +163,7 @@
         })
         .done((data) => {
             page.dialogs.element.mdUpdateAmznAcc.modal("hide");
-            App.SweetAlert.showSuccessAlert(App.SUCCESS_UPDATED);
+            App.SweetAlert.showSuccessAlert(SUCCESS_UPDATED);
         })
         .fail(function (jqXHR) {
             App.handleFailedTasks(jqXHR)
@@ -199,12 +200,12 @@
         page.dialogs.element.frmUpdateAmznAcc.validate().resetForm();
     }
 
-    var btnChangePass = '[[#{amznAcc.btnChangePass}]]';
-    var btnDelete = '[[#{amznAcc.btnDelete}]]';
-    var btnCreate = '[[#{amznAcc.btnCreate}]]';
-    var btnImport = '[[#{amznAcc.btnImport}]]';
-    var usernameRequired = '[[#{amznAcc.validation.usernameRequired}]]';
-    var passwordRequired = '[[#{amznAcc.validation.passwordRequired}]]';
+    // var btnChangePass = '[[#{amznAcc.btnChangePass}]]';
+    // var btnDelete = '[[#{amznAcc.btnDelete}]]';
+    // var btnCreate = '[[#{amznAcc.btnCreate}]]';
+    // var btnImport = '[[#{amznAcc.btnImport}]]';
+    // var usernameRequired = '[[#{amznAcc.validation.usernameRequired}]]';
+    // var passwordRequired = '[[#{amznAcc.validation.passwordRequired}]]';
 
     $(document).ready(function () {
 
