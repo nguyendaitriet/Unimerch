@@ -147,8 +147,6 @@
     page.dialogs.element.mdAddAmznAccToGroup = $('#mdAddAmznAccToGroup');
     page.dialogs.element.btnAddAmznAccToGroup = $('#btnAddAmznAccToGroup');
 
-    page.dialogs.alertDanger.mdCreateGroup = $('#mdCreateGroup .modal-body .modal-alert-danger')
-
     page.commands.doCreateGroup = () => {
         let newGroup = {};
         newGroup.title = page.dialogs.element.groupTitleCreate.val().trim();
@@ -275,12 +273,14 @@
     }
 
     page.dialogs.close.mdCreateGroup = () => {
-        page.dialogs.alertDanger.mdCreateGroup.empty();
-        page.dialogs.alertDanger.mdCreateGroup.addClass("hide");
-        page.dialogs.alertDanger.mdCreateGroup.removeClass("show");
         page.dialogs.element.frmCreateGroup.find("input.error").removeClass("error");
         page.dialogs.element.frmCreateGroup[0].reset();
         page.dialogs.element.frmCreateGroup.validate().resetForm();
+    }
+    page.dialogs.close.mdUpdateGroup = () => {
+        page.dialogs.element.frmUpdateGroup.find("input.error").removeClass("error");
+        page.dialogs.element.frmUpdateGroup[0].reset();
+        page.dialogs.element.frmUpdateGroup.validate().resetForm();
     }
 
     var btnCreate = '[[#{group.btnCreate}]]';
@@ -288,6 +288,7 @@
     var btnManage = '[[#{group.btnManage}]]';
     var btnUpdate = '[[#{group.btnUpdate}]]';
     var btnDelete = '[[#{group.btnDelete}]]';
+    var requiredGroupTitle = '[[#{group.validation.titleRequired}]]';
     var noDataInTable = '[[#{table.noData}]]';
 
     $(document).ready(function () {
@@ -457,7 +458,6 @@
             page.dialogs.element.groupTitleUpdate.val(currentGroup.title);
             page.dialogs.element.mdUpdateGroup.modal('show');
         });
-
         page.element.tableGroup.on('click', 'button.delete-group', function () {
             currentRowGroup = tableGroup.row($(this).parents('tr'));
             currentGroup = currentRowGroup.data();
@@ -488,33 +488,43 @@
             },
             messages: {
                 groupTitleCreate: {
-                    required: 'Group title is required.'
+                    required: `${requiredGroupTitle}`
                 }
-            },
-            errorLabelContainer: "#mdCreateGroup .modal-alert-danger",
-            errorPlacement: function (error, element) {
-                error.appendTo("#mdCreateGroup .modal-alert-danger");
-            },
-            showErrors: function (errorMap, errorList) {
-                if (this.numberOfInvalids() > 0) {
-                    page.dialogs.alertDanger.mdCreateGroup.removeClass("hide").addClass("show");
-                } else {
-                    page.dialogs.alertDanger.mdCreateGroup.removeClass("show").addClass("hide").empty();
-                    page.dialogs.element.frmCreateGroup.removeClass("error");
-                }
-                this.defaultShowErrors();
             },
             submitHandler: function () {
                 page.commands.doCreateGroup();
+            }
+        })
+        page.dialogs.element.frmUpdateGroup.validate({
+            onkeyup: function (element) {
+                $(element).valid()
+            },
+            onclick: false,
+            onfocusout: false,
+            rules: {
+                groupTitleUpdate: {
+                    required: true
+                }
+            },
+            messages: {
+                groupTitleUpdate: {
+                    required: `${requiredGroupTitle}`
+                }
+            },
+            submitHandler: function () {
+                page.commands.doUpdateGroup(currentGroup, currentRowGroup);
             }
         })
 
         page.dialogs.element.mdCreateGroup.on('hidden.bs.modal', () => {
             page.dialogs.close.mdCreateGroup();
         });
+        page.dialogs.element.mdUpdateGroup.on('hidden.bs.modal', () => {
+            page.dialogs.close.mdUpdateGroup();
+        });
 
         page.dialogs.element.btnUpdateGroup.on('click', function () {
-            page.commands.doUpdateGroup(currentGroup, currentRowGroup);
+            page.dialogs.element.frmUpdateGroup.submit();
         });
 
         page.element.tableAmznAccIn.on('click', 'button.delete-amzn-acc', function () {

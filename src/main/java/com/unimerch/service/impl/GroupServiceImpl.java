@@ -66,11 +66,15 @@ public class GroupServiceImpl implements GroupService {
 
     @Override
     public DataTablesOutput<GroupItemResult> findAll(DataTablesInput input) {
-        Map<String, Column> columnMap = input.getColumnsAsMap();
-        columnMap.remove(null);
-        List<Column> columnList = new ArrayList<>(columnMap.values());
-        input.setColumns(columnList);
-        return groupDataTableRepository.findAll(input, group -> groupMapper.toGroupItemResult(group));
+        try {
+            Map<String, Column> columnMap = input.getColumnsAsMap();
+            columnMap.remove(null);
+            List<Column> columnList = new ArrayList<>(columnMap.values());
+            input.setColumns(columnList);
+            return groupDataTableRepository.findAll(input, group -> groupMapper.toGroupItemResult(group));
+        } catch (Exception e) {
+            throw new ServerErrorException(messageSource.getMessage("error.500", null, Locale.getDefault()));
+        }
     }
 
     @Override
@@ -100,7 +104,7 @@ public class GroupServiceImpl implements GroupService {
             newGroup = groupRepository.save(newGroup);
             return groupMapper.toGroupItemResult(newGroup);
         } catch (Exception e) {
-            throw new ServerErrorException(messageSource.getMessage("error.serverError", null, Locale.getDefault()));
+            throw new ServerErrorException(messageSource.getMessage("error.500", null, Locale.getDefault()));
         }
     }
 
@@ -119,7 +123,7 @@ public class GroupServiceImpl implements GroupService {
             group = groupRepository.save(group);
             return groupMapper.toGroupItemResult(group);
         } catch (Exception e) {
-            throw new ServerErrorException(messageSource.getMessage("error.serverError", null, Locale.getDefault()));
+            throw new ServerErrorException(messageSource.getMessage("error.500", null, Locale.getDefault()));
         }
     }
 
@@ -133,10 +137,10 @@ public class GroupServiceImpl implements GroupService {
             groupRepository.deleteGroupAssociateUser(groupId);
             groupRepository.deleteGroup(groupId);
         } catch (Exception e) {
-            throw new ServerErrorException(messageSource.getMessage("error.serverError", null, Locale.getDefault()));
+            throw new ServerErrorException(messageSource.getMessage("error.500", null, Locale.getDefault()));
         }
 
-        }
+    }
 
     @Override
     public List<AmznAccResult> addAmznAccToGroup(ArrayList<String> amznAccIdList, String id) {
@@ -160,7 +164,7 @@ public class GroupServiceImpl implements GroupService {
                 amznAccResultList.add(amznAccountMapper.toAmznAccResult(brgGroupAmznAccount));
             }
         } catch (Exception e) {
-            throw new ServerErrorException(messageSource.getMessage("error.serverError", null, Locale.getDefault()));
+            throw new ServerErrorException(messageSource.getMessage("error.500", null, Locale.getDefault()));
         }
 
         return amznAccResultList;
@@ -168,24 +172,37 @@ public class GroupServiceImpl implements GroupService {
 
     @Override
     public List<AmznAccResult> getAmznAccInsideGroup(String id) {
-        Group group = findById(id);
-        List<AmznAccResult> amznAccResultList = new ArrayList<>();
-        List<AmznAccount> amznAccResult =  brgGroupAmznAccRepo.getAmznAccInGroup(group.getId());
-        amznAccResult.forEach((result) -> amznAccResultList.add(amznAccountMapper.toAmznAccResult(result)));
-        return amznAccResultList;    }
+        try {
+            Group group = findById(id);
+            List<AmznAccResult> amznAccResultList = new ArrayList<>();
+            List<AmznAccount> amznAccResult = brgGroupAmznAccRepo.getAmznAccInGroup(group.getId());
+            amznAccResult.forEach((result) -> amznAccResultList.add(amznAccountMapper.toAmznAccResult(result)));
+            return amznAccResultList;
+        } catch (Exception e) {
+            throw new ServerErrorException(messageSource.getMessage("error.500", null, Locale.getDefault()));
+        }
+    }
 
     @Override
     public List<AmznAccResult> getAmznAccOutsideGroup(String id) {
-        Group group = findById(id);
-        List<AmznAccResult> amznAccResultList = new ArrayList<>();
-        List<AmznAccount> amznAccResult =  brgGroupAmznAccRepo.getAmznAccOutGroup(group.getId());
-        amznAccResult.forEach((result) -> amznAccResultList.add(amznAccountMapper.toAmznAccResult(result)));
-        return amznAccResultList;
+        try {
+            Group group = findById(id);
+            List<AmznAccResult> amznAccResultList = new ArrayList<>();
+            List<AmznAccount> amznAccResult = brgGroupAmznAccRepo.getAmznAccOutGroup(group.getId());
+            amznAccResult.forEach((result) -> amznAccResultList.add(amznAccountMapper.toAmznAccResult(result)));
+            return amznAccResultList;
+        } catch (Exception e) {
+            throw new ServerErrorException(messageSource.getMessage("error.500", null, Locale.getDefault()));
+        }
     }
 
     @Override
     public void deleteAmznAccFromGroup(int amznAccId, int groupId) {
-        brgGroupAmznAccRepo.deleteAmznAccFromGroup(amznAccId, groupId);
+        try {
+            brgGroupAmznAccRepo.deleteAmznAccFromGroup(amznAccId, groupId);
+        } catch (Exception e) {
+            throw new ServerErrorException(messageSource.getMessage("error.500", null, Locale.getDefault()));
+        }
     }
 
 }

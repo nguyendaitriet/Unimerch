@@ -39,4 +39,11 @@ public class AmznAccountAPI {
         return new ResponseEntity<>(newAmznAcc, HttpStatus.CREATED);
     }
 
+    //    @PreAuthorize("hasAnyAuthority('MANAGER')")
+    @PutMapping("/update/{id}")
+    public ResponseEntity<?> updateAmznAcc(@RequestBody AmznAccParam amznAccParam, @PathVariable String id) {
+        amznAccountService.update(id, amznAccParam);
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+
 }

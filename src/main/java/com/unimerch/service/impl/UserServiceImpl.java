@@ -129,7 +129,7 @@ public class UserServiceImpl implements UserService {
             String newPasswordHash = passwordEncoder.encode(password);
             userRepository.changePassword(user.getId(), newPasswordHash);
         } catch (Exception e) {
-            throw new ServerErrorException(messageSource.getMessage("error.serverError", null, Locale.getDefault()));
+            throw new ServerErrorException(messageSource.getMessage("error.500", null, Locale.getDefault()));
         }
     }
 
@@ -144,7 +144,7 @@ public class UserServiceImpl implements UserService {
             String newPasswordHash = passwordEncoder.encode(password);
             userRepository.changePassword(user.getId(), newPasswordHash);
         } catch (Exception e) {
-            throw new ServerErrorException(messageSource.getMessage("error.serverError", null, Locale.getDefault()));
+            throw new ServerErrorException(messageSource.getMessage("error.500", null, Locale.getDefault()));
         }
     }
 
@@ -153,7 +153,7 @@ public class UserServiceImpl implements UserService {
         User user = findById(id);
 
         if (roleService.isUserAdmin(id))
-            throw new NotAllowDisableException(messageSource.getMessage("error.notAllow", null, Locale.getDefault()));
+            throw new NotAllowDisableException(messageSource.getMessage("error.403", null, Locale.getDefault()));
 
         user.setDisabled(!user.isDisabled());
 
@@ -161,7 +161,7 @@ public class UserServiceImpl implements UserService {
             user = userRepository.save(user);
             return userMapper.toUserItemResult(user);
         } catch (Exception e) {
-            throw new ServerErrorException(messageSource.getMessage("error.serverError", null, Locale.getDefault()));
+            throw new ServerErrorException(messageSource.getMessage("error.500", null, Locale.getDefault()));
         }
     }
 
