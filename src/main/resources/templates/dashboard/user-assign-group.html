@@ -85,6 +85,7 @@
 </a>
 
 <th:block th:replace="layout/modals-user-assign-group :: assign_group"/>
+<th:block th:replace="layout/texts :: texts"/>
 
 <th:block th:replace="layout/script :: script-dashboard"/>
 
@@ -114,9 +115,6 @@
 
     page.dialogs.element.mdAssignGrpUser = $('#mdAssignGrpUser');
     page.dialogs.element.btnAssignGrpUser = $('#btnAssignGrpUser');
-
-    var btnAssignNew = '[[#{user_asgn.table.btnAdd}]]';
-    var btnTitleRemove = '[[#{user_asgn.table.btnTitle.remove}]]';
 
     $(document).ready(function () {
         let mainTable = page.element.tbAsgnedGrps.DataTable({
@@ -288,7 +286,7 @@
 
                 page.dialogs.element.mdAssignGrpUser.modal('hide');
 
-                App.SweetAlert.showSuccessAlert(App.SUCCESS_UPDATED);
+                App.SweetAlert.showSuccessAlert(SUCCESS_UPDATED);
             })
             .fail((jqXHR) => {
                 App.handleFailedTasks(jqXHR);
