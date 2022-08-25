@@ -81,7 +81,7 @@ class App {
     static IziToast = class {
         static showSuccessAlert(t) {
             iziToast.success({
-                title: 'Success',
+                title: iziToastTitleSuccess,
                 position: 'topRight',
                 timeout: 2500,
                 message: t
@@ -90,7 +90,7 @@ class App {
 
         static showErrorAlert(t) {
             iziToast.error({
-                title: 'Error',
+                title: iziToastTitleError,
                 position: 'topRight',
                 timeout: 3500,
                 message: t
