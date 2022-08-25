@@ -20,9 +20,9 @@ public class UnimerchApplication implements WebMvcConfigurer {
     public ResourceBundleMessageSource messageSource() {
         ResourceBundleMessageSource source = new ResourceBundleMessageSource();
         source.setBasenames(
-                "static/messages/messages_vi",
-                "static/views/group_content_vi",
-                "static/views/amzn_acc_content_vi");
+                "static/texts/messages/messages_vi",
+                "static/texts/views/group_content_vi",
+                "static/texts/views/amzn_acc_content_vi");
         source.setDefaultEncoding("UTF-8");
         source.setUseCodeAsDefaultMessage(true);
         return source;
