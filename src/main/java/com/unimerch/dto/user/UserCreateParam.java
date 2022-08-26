@@ -21,18 +21,17 @@ import javax.validation.constraints.Size;
 @Accessors(chain = true)
 public class UserCreateParam {
 
-    @NotBlank(message = "Username is required.")
-    @Size(min = 5, max = 80, message = "The length of full name must be between 5 and 80 characters.")
+    @NotBlank(message = "{validation.inputEmpty}")
+    @Size(min = 3, max = 80, message = "validation.fullNameLength")
     private String fullName;
 
-    @NotBlank(message = "Username is required.")
-    @Size(min = 3, max = 50, message = "The length of username must be between 3 and 128 characters.")
+    @NotBlank(message = "validation.inputEmpty")
+    @Size(min = 3, max = 50, message = "{validation.usernameLength}")
     private String username;
 
-    @NotBlank(message = "Password is required.")
+    @NotBlank(message = "{validation.inputEmpty}")
     @Pattern(regexp = ValidationUtils.PASSWORD_REGEX,
-            message = ValidationUtils.VALID_PASSWORD)
-    @Size(max = 128, message = "Maximum password length: 128 characters.")
+            message = "{validation.validPassword}")
     private String password;
 
 }
