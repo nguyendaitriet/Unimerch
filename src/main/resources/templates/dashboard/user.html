@@ -39,7 +39,8 @@
                         <div class="card shadow mb-4">
                             <!-- Card Header - Dropdown -->
                             <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
-                                <h4 class="m-0 font-weight-bold text-primary" th:text="#{user.tabHeader}">Users Overview</h4>
+                                <h4 class="m-0 font-weight-bold text-primary" th:text="#{user.tabHeader}">Users
+                                    Overview</h4>
                             </div>
 
                             <!-- Card Body -->
@@ -135,7 +136,7 @@
                 contentType: 'application/json',
                 type: 'POST',
                 url: page.urls.findAllUsers,
-                data: function(d) {
+                data: function (d) {
                     return JSON.stringify(d);
                 },
                 dataSrc: 'data'
@@ -223,18 +224,13 @@
         let currentUser = new User();
         let currenRow;
 
-        page.dialogs.element.btnCreateUser.on("click", function() {
-            // page.dialogs.element.frmCreateUser.submit();
-            page.commands.doCreateUser();
-        })
-
-        page.element.tableUser.on('click', 'button.assign-group', function() {
+        page.element.tableUser.on('click', 'button.assign-group', function () {
             currentUser = table.row($(this).parents('tr')).data();
 
             window.location.href = '/dashboard/user/group/' + currentUser.id;
         });
 
-        page.element.tableUser.on('click', 'button.change-password', function() {
+        page.element.tableUser.on('click', 'button.change-password', function () {
             currentUser = table.row($(this).parents('tr')).data();
 
             page.dialogs.element.fullNameCP.val(currentUser.fullName);
@@ -244,12 +240,7 @@
             page.dialogs.element.mdCPUser.modal("show");
         });
 
-        page.dialogs.element.btnCPUser.on("click", function() {
-            // page.dialogs.element.frmCPUser.submit();
-            page.commands.doCPUser(currentUser);
-        })
-
-        page.element.tableUser.on('click', 'button.change-status', function() {
+        page.element.tableUser.on('click', 'button.change-status', function () {
             currenRow = table.row($(this).parents('tr'));
             currentUser = currenRow.data();
 
@@ -259,9 +250,83 @@
                         page.commands.doChangeStatus(currentUser, currenRow);
                 })
         });
+
+        page.dialogs.element.btnCreateUser.on("click", function () {
+            page.dialogs.element.frmCreateUser.submit();
+        });
+
+        page.dialogs.element.frmCreateUser.validate({
+            onkeyup: function (element) {
+                $(element).valid()
+            },
+            onclick: false,
+            onfocusout: false,
+            rules: {
+                fullNameCreate: {
+                    required: true,
+                    minLength: 5,
+                    maxLength: 80
+                },
+                usernameCreate: {
+                    required: true,
+                    minLength: 3,
+                    maxLength: 50
+                },
+                passwordCreate: {
+                    required: true,
+                    passwordRegex: true
+                }
+            },
+            messages: {
+                fullNameCreate: {
+                    required:,
+                    minLength:,
+                    maxLength:
+                },
+                usernameCreate: {
+                    required:,
+                    minLength:,
+                    maxLength:
+                },
+                passwordCreate: {
+                    required:,
+                    passwordRegex:
+                }
+            },
+            submitHandler: function () {
+                page.commands.doCreateUser();
+            }
+        });
+
+        page.dialogs.element.btnCPUser.on("click", function () {
+            page.dialogs.element.frmCPUser.submit();
+        })
+
+        page.dialogs.element.frmCPUser.validate({
+            onkeyup: function (element) {
+                $(element).valid()
+            },
+            onclick: false,
+            onfocusout: false,
+            rules: {
+                passwordCP: {
+                    required: true,
+                    passwordRegex: true
+                }
+            },
+            messages: {
+                passwordCP: {
+                    required:,
+                    passwordRegex:
+                }
+            },
+            submitHandler: function () {
+                page.commands.doCPUser(currentUser);
+            }
+        });
     });
 
-    page.commands.doCreateUser = function() {
+    page.commands.doCreateUser = function () {
         let user = new User();
 
         user.fullName = page.dialogs.element.fullNameCreate.val();
@@ -352,15 +417,19 @@
             })
     }
 
+    $.validator.addMethod("passwordRegex", function (value, element) {
+            return this.optional(element) || /^(?=.*[A-Za-z])(?=.*\\d)(?=.*[@$!%*#?&])[A-Za-z\\d@$!%*#?&]{5,}$/.test(value)
+        },
+    )
+
     //reset modal on close
-    page.dialogs.element.mdCreateUser.on('hidden.bs.modal', function() {
+    page.dialogs.element.mdCreateUser.on('hidden.bs.modal', function () {
         page.dialogs.element.frmCreateUser[0].reset();
-        //         createUserValidator.resetForm();
-        // page.dialogs.alertDanger.mdCreateUser.removeClass("show").addClass("hide");
+        // page.dialogs.element.frmCreateUser[0].validate().resetForm();
         // $("#mdCreateUser input").removeClass("error");
     })
 
-    page.dialogs.element.mdCPUser.on('hidden.bs.modal', function() {
+    page.dialogs.element.mdCPUser.on('hidden.bs.modal', function () {
         page.dialogs.element.frmCPUser[0].reset();
     })
 
