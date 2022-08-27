@@ -7,6 +7,10 @@ import com.unimerch.dto.user.LoginParam;
 import com.unimerch.repository.model.AmznAccount;
 import org.springframework.data.jpa.datatables.mapping.DataTablesInput;
 import org.springframework.data.jpa.datatables.mapping.DataTablesOutput;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.io.IOException;
+import java.util.List;
 
 public interface AmznAccountService {
 
@@ -19,4 +23,6 @@ public interface AmznAccountService {
     AmznAccResult update(String id, AmznAccParam amznAccParam);
 
     void delete(String id);
+
+    List<AmznAccResult> importFile(MultipartFile amznAccFile) throws IOException;
 }

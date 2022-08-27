@@ -12,6 +12,7 @@
                     </button>
                 </div>
                 <div class="modal-body">
+
                     <form class="mb-3" id="frmCreateAmznAcc" autocomplete="off">
                         <div class="row mb-3">
                             <div class="col-xl-4">
@@ -35,6 +36,33 @@
                 <div class="modal-footer">
                     <button type="button" class="btn btn-primary" id="btnCreateAmznAcc" th:text="#{amznAcc.btnCreate}">Create</button>
                     <button type="button" class="btn btn-secondary" data-dismiss="modal" th:text="#{amznAcc.btnClose}">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</th:block>
+
+
+<th:block th:fragment="import-amzn-acc">
+    <div id="mdImportAmznAcc" class="modal fade" tabindex="-1" role="dialog">
+        <div class="modal-dialog modal-dialog-centered" data-backdrop="static" data-keyboard="false">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title text-center" th:text="#{amznAcc.uploadTitle}">Upload file</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <form enctype="multipart/form-data" id="frmImportAmznAcc">
+                        <div class="dropzone">
+                            <img src="/assets/img/upload.svg" class="upload-icon"  alt="not found"/>
+                            <input type="file" class="upload-input" id="fileUploadAmznAcc" name="fileUploadAmznAcc"/>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer tex">
+                    <button type="button" class="btnUpload" id="btnImportAmznAcc" th:text="#{btn.upload}">Upload file</button>
                 </div>
             </div>
         </div>
@@ -80,5 +108,7 @@
         </div>
     </div>
 </th:block>
+
+
 
 </html>
