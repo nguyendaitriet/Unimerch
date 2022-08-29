@@ -248,7 +248,8 @@
                         previous: 'Previous',
                         next:     'Next'
                     }
-                }
+                },
+                emptyTable: `${noDataInTable}`
             },
             pageLength: 10,
             lengthChange: false,
@@ -366,7 +367,12 @@
 
         page.dialogs.element.btnImportAmznAcc.on('click', function () {
             const formData = new FormData();
-            formData.append('fileUploadAmznAcc', $('#fileUploadAmznAcc')[0].files[0]);
+            let fileUpload = $('#fileUploadAmznAcc')[0].files[0];
+            if (fileUpload === undefined) {
+                App.IziToast.showErrorAlert(`${noDataSelected}`);
+                return;
+            }
+            formData.append('fileUploadAmznAcc', fileUpload);
 
             $.ajax({
                 url: page.urls.importAmznAcc,
@@ -376,8 +382,17 @@
                 processData: false,
             })
             .done((data) => {
-                alert('file uploaded');
-
+                let tableAmznAcc = page.element.tableAmznAcc.DataTable();
+                data.forEach((amznAcc) => {
+                    tableAmznAcc.row.add({
+                        'id': amznAcc.id,
+                        'username': amznAcc.username
+                    })
+                    tableAmznAcc.order([0, 'desc']).draw();
+                });
+                $('#fileUploadAmznAcc').val('');
+                page.dialogs.element.mdImportAmznAcc.modal("hide");
+                App.SweetAlert.showSuccessAlert(SUCCESS_CREATED);
             })
             .fail((jqXHR) => {
                 App.handleFailedTasks(jqXHR)

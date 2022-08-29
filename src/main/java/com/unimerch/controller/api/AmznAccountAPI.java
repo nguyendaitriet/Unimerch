@@ -14,6 +14,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.Valid;
 import java.io.IOException;
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/amznAccounts")
@@ -38,9 +39,8 @@ public class AmznAccountAPI {
     //    @PreAuthorize("hasAnyAuthority('MANAGER')")
     @PostMapping("/import")
     public ResponseEntity<?> importNewAmznAcc(@RequestParam MultipartFile fileUploadAmznAcc) throws IOException {
-        System.out.println(fileUploadAmznAcc);
-        amznAccountService.importFile(fileUploadAmznAcc);
-        return new ResponseEntity<> (HttpStatus.OK);
+        List<AmznAccResult> amznAccResultList = amznAccountService.importFile(fileUploadAmznAcc);
+        return new ResponseEntity<> (amznAccResultList, HttpStatus.OK);
     }
 
     //    @PreAuthorize("hasAnyAuthority('MANAGER')")

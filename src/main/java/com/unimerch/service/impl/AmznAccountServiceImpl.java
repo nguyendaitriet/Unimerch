@@ -4,6 +4,7 @@ import com.unimerch.dto.amznacc.AmznAccParam;
 import com.unimerch.dto.amznacc.AmznAccResult;
 import com.unimerch.dto.user.LoginParam;
 import com.unimerch.exception.DuplicateDataException;
+import com.unimerch.exception.InvalidFileFormat;
 import com.unimerch.exception.InvalidIdException;
 import com.unimerch.exception.ServerErrorException;
 import com.unimerch.mapper.AmznAccountMapper;
@@ -15,6 +16,7 @@ import com.unimerch.repository.model.AmznAccount;
 import com.unimerch.repository.model.Group;
 import com.unimerch.service.AmznAccountService;
 import com.unimerch.util.ValidationUtils;
+import org.apache.poi.openxml4j.exceptions.NotOfficeXmlFileException;
 import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -84,11 +86,11 @@ public class AmznAccountServiceImpl implements AmznAccountService {
 
     @Override
     public AmznAccResult create(AmznAccParam amznAccCreateParam) {
+        String username = amznAccCreateParam.getUsername().trim().toLowerCase();
+        if (amznAccountRepository.existsByUsername(username)) {
+            throw new DuplicateDataException(messageSource.getMessage("validation.amznAccUsernameExists", null, Locale.getDefault()));
+        }
         try {
-            String username = amznAccCreateParam.getUsername().trim().toLowerCase();
-            if (amznAccountRepository.existsByUsername(username)) {
-                throw new DuplicateDataException(messageSource.getMessage("validation.amznAccUsernameExists", null, Locale.getDefault()));
-            }
             amznAccCreateParam.setUsername(username);
             AmznAccount newAccount = amznAccountRepository.save(amznAccountMapper.toAmznAcc(amznAccCreateParam));
             return amznAccountMapper.toAmznAccResult(newAccount);
@@ -122,11 +124,16 @@ public class AmznAccountServiceImpl implements AmznAccountService {
     }
 
     @Override
-    public List<AmznAccResult> importFile(MultipartFile amznAccFile) throws IOException {
+    public List<AmznAccResult> importFile(MultipartFile amznAccFile) {
 
         List<AmznAccResult> amznAccResultList = new ArrayList<>();
-        Workbook workbook = new XSSFWorkbook(amznAccFile.getInputStream());
-        Sheet sheet = workbook.getSheetAt(0);
+        Workbook workbook;
+        Sheet sheet;
+        try {
+            workbook = new XSSFWorkbook(amznAccFile.getInputStream());
+        } catch (IOException | NotOfficeXmlFileException e) {
+            throw new InvalidFileFormat(messageSource.getMessage("validation.invalidFileFormat", null, Locale.getDefault()));
+        }
 
 //        for (Row row : sheet) {
 //            String amznUsername = null;
@@ -178,6 +185,7 @@ public class AmznAccountServiceImpl implements AmznAccountService {
 //            }
 //        }
 
+        sheet = workbook.getSheetAt(0);
         int usernameColumnIndex = 0;
         int usernameRowIndex = 0;
         for (Row row : sheet) {

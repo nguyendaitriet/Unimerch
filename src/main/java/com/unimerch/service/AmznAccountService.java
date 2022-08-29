@@ -24,5 +24,5 @@ public interface AmznAccountService {
 
     void delete(String id);
 
-    List<AmznAccResult> importFile(MultipartFile amznAccFile) throws IOException;
+    List<AmznAccResult> importFile(MultipartFile amznAccFile);
 }

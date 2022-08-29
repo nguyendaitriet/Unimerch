@@ -229,7 +229,7 @@
         });
 
         if (amznAccSelected.length === 0) {
-            App.IziToast.showErrorAlert('No data selected!');
+            App.IziToast.showErrorAlert(`${noDataSelected}`);
             return;
         }
 
@@ -254,7 +254,7 @@
             App.SweetAlert.showSuccessAlert(SUCCESS_CREATED);
         })
         .fail(function (jqXHR) {
-            handleFailedTasks(jqXHR);
+            App.handleFailedTasks(jqXHR);
         })
     }
     page.commands.doDeletedAmznAcc = (currentGroup, currentAmznAcc, currentRowAmznAcc) => {
@@ -333,7 +333,8 @@
                         previous: 'Previous',
                         next:     'Next'
                     }
-                }
+                },
+                emptyTable: `${noDataInTable}`
             },
             pageLength: 10,
             lengthChange: false,
@@ -568,7 +569,8 @@
                                 previous: 'Previous',
                                 next:     'Next'
                             }
-                        }
+                        },
+                        emptyTable: `${noDataInTable}`
                     },
                     pageLength: 8,
                     lengthChange: false,
