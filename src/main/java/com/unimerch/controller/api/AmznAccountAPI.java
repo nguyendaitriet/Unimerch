@@ -2,23 +2,19 @@ package com.unimerch.controller.api;
 
 import com.unimerch.dto.amznacc.AmznAccParam;
 import com.unimerch.dto.amznacc.AmznAccResult;
-import com.unimerch.dto.group.GroupItemResult;
-import com.unimerch.dto.user.LoginParam;
-import com.unimerch.dto.user.UserCreateParam;
-import com.unimerch.dto.user.UserItemResult;
 import com.unimerch.service.AmznAccountService;
-import com.unimerch.service.impl.AmznAccountServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.jpa.datatables.mapping.DataTablesInput;
 import org.springframework.data.jpa.datatables.mapping.DataTablesOutput;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.Valid;
 import java.util.List;
+import java.io.IOException;
 
 @RestController
 @RequestMapping("/api/amznAccounts")
@@ -44,6 +40,13 @@ public class AmznAccountAPI {
     public ResponseEntity<?> createAmznAcc(@Validated @RequestBody AmznAccParam amznAccCreateParam) {
         AmznAccResult newAmznAcc = amznAccountService.create(amznAccCreateParam);
         return new ResponseEntity<>(newAmznAcc, HttpStatus.CREATED);
+    }
+
+    //    @PreAuthorize("hasAnyAuthority('MANAGER')")
+    @PostMapping("/import")
+    public ResponseEntity<?> importNewAmznAcc(@RequestParam MultipartFile fileUploadAmznAcc) throws IOException {
+        List<AmznAccResult> amznAccResultList = amznAccountService.importFile(fileUploadAmznAcc);
+        return new ResponseEntity<> (amznAccResultList, HttpStatus.OK);
     }
 
     //    @PreAuthorize("hasAnyAuthority('MANAGER')")

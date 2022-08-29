@@ -16,6 +16,6 @@ import javax.validation.constraints.NotBlank;
 @Accessors(chain = true)
 public class GroupUpdateParam {
 
-    @NotBlank(message = "Group title must NOT be empty.")
+    @NotBlank(message = "{validation.inputEmpty}")
     private String title;
 }

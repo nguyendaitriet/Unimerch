@@ -29,8 +29,6 @@
                 <!-- Page Heading -->
                 <div class="d-sm-flex align-items-center justify-content-between mb-4">
                     <h1 class="h3 mb-0 text-gray-800" th:text="#{group.pageTitle}"></h1>
-                    <a href="#" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm"><i
-                            class="fas fa-download fa-sm text-white-50"></i> Generate Report</a>
                 </div>
 
                 <div class="row">
@@ -231,7 +229,7 @@
         });
 
         if (amznAccSelected.length === 0) {
-            App.IziToast.showErrorAlert('No data selected!');
+            App.IziToast.showErrorAlert(`${noDataSelected}`);
             return;
         }
 
@@ -256,7 +254,7 @@
             App.SweetAlert.showSuccessAlert(SUCCESS_CREATED);
         })
         .fail(function (jqXHR) {
-            handleFailedTasks(jqXHR);
+            App.handleFailedTasks(jqXHR);
         })
     }
     page.commands.doDeletedAmznAcc = (currentGroup, currentAmznAcc, currentRowAmznAcc) => {
@@ -335,7 +333,8 @@
                         previous: 'Previous',
                         next:     'Next'
                     }
-                }
+                },
+                emptyTable: `${noDataInTable}`
             },
             pageLength: 10,
             lengthChange: false,
@@ -570,7 +569,8 @@
                                 previous: 'Previous',
                                 next:     'Next'
                             }
-                        }
+                        },
+                        emptyTable: `${noDataInTable}`
                     },
                     pageLength: 8,
                     lengthChange: false,

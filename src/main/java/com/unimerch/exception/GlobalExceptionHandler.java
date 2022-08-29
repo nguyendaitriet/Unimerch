@@ -55,6 +55,15 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
     return new ResponseEntity<>(body, HttpStatus.CONFLICT);
   }
 
+  @ExceptionHandler(InvalidFileFormat.class)
+  public ResponseEntity<?> invalidFileFormat(InvalidFileFormat ex, WebRequest request) {
+    Map<String, String> body = new HashMap<>();
+
+    body.put("message", ex.getMessage());
+
+    return new ResponseEntity<>(body, HttpStatus.CONFLICT);
+  }
+
   @ExceptionHandler(ServerErrorException.class)
   public ResponseEntity<?> serverErrorException(ServerErrorException ex, WebRequest request) {
     Map<String, String> body = new HashMap<>();

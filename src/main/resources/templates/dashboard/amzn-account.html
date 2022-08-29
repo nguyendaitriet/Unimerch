@@ -29,8 +29,6 @@
                 <!-- Page Heading -->
                 <div class="d-sm-flex align-items-center justify-content-between mb-4">
                     <h1 class="h3 mb-0 text-gray-800" th:text="#{amznAcc.pageTitle}"></h1>
-                    <a href="#" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm"><i
-                            class="fas fa-download fa-sm text-white-50"></i> Generate Report</a>
                 </div>
 
                 <div class="row">
@@ -79,6 +77,7 @@
 
 <th:block th:replace="layout/modals-amzn-acc :: create-amzn-acc"/>
 <th:block th:replace="layout/modals-amzn-acc :: update-amzn-acc"/>
+<th:block th:replace="layout/modals-amzn-acc :: import-amzn-acc"/>
 <th:block th:replace="layout/texts :: texts"/>
 
 <th:block th:replace="layout/script :: script-dashboard"/>
@@ -88,6 +87,7 @@
         urls: {
             findAllAmznAccs: App.BASE_URL_AMZN_ACCOUNT,
             createAmznAcc: App.BASE_URL_AMZN_ACCOUNT + "/create",
+            importAmznAcc: App.BASE_URL_AMZN_ACCOUNT + "/import",
             updateAmznAcc: App.BASE_URL_AMZN_ACCOUNT + "/update/",
             deleteAmznAcc: App.BASE_URL_AMZN_ACCOUNT + "/delete/",
         },
@@ -112,6 +112,9 @@
     page.dialogs.element.amznAccPasswordCreate = $('#amznAccPasswordCreate');
 
     page.dialogs.element.mdImportAmznAcc = $('#mdImportAmznAcc');
+    page.dialogs.element.frmImportAmznAcc = $('#frmImportAmznAcc');
+    page.dialogs.element.fileUploadAmznAcc = $('#fileUploadAmznAcc')[0].files[0];
+    page.dialogs.element.btnImportAmznAcc = $('#btnImportAmznAcc');
 
     page.dialogs.element.mdUpdateAmznAcc = $('#mdUpdateAmznAcc');
     page.dialogs.element.frmUpdateAmznAcc = $('#frmUpdateAmznAcc');
@@ -245,7 +248,8 @@
                         previous: 'Previous',
                         next:     'Next'
                     }
-                }
+                },
+                emptyTable: `${noDataInTable}`
             },
             pageLength: 10,
             lengthChange: false,
@@ -360,6 +364,40 @@
                     }
                 })
         });
+
+        page.dialogs.element.btnImportAmznAcc.on('click', function () {
+            const formData = new FormData();
+            let fileUpload = $('#fileUploadAmznAcc')[0].files[0];
+            if (fileUpload === undefined) {
+                App.IziToast.showErrorAlert(`${noDataSelected}`);
+                return;
+            }
+            formData.append('fileUploadAmznAcc', fileUpload);
+
+            $.ajax({
+                url: page.urls.importAmznAcc,
+                type: 'POST',
+                data: formData,
+                contentType: false,
+                processData: false,
+            })
+            .done((data) => {
+                let tableAmznAcc = page.element.tableAmznAcc.DataTable();
+                data.forEach((amznAcc) => {
+                    tableAmznAcc.row.add({
+                        'id': amznAcc.id,
+                        'username': amznAcc.username
+                    })
+                    tableAmznAcc.order([0, 'desc']).draw();
+                });
+                $('#fileUploadAmznAcc').val('');
+                page.dialogs.element.mdImportAmznAcc.modal("hide");
+                App.SweetAlert.showSuccessAlert(SUCCESS_CREATED);
+            })
+            .fail((jqXHR) => {
+                App.handleFailedTasks(jqXHR)
+            })
+        })
 
     });
 

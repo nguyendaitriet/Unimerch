@@ -22,10 +22,10 @@ import javax.validation.constraints.Size;
 public class UserCreateParam {
 
     @NotBlank(message = "{validation.inputEmpty}")
-    @Size(min = 3, max = 80, message = "validation.fullNameLength")
+    @Size(min = 3, max = 80, message = "{validation.fullNameLength}")
     private String fullName;
 
-    @NotBlank(message = "validation.inputEmpty")
+    @NotBlank(message = "{validation.inputEmpty}")
     @Size(min = 3, max = 50, message = "{validation.usernameLength}")
     private String username;
 
