@@ -18,6 +18,7 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/amznAccounts")
@@ -30,6 +31,12 @@ public class AmznAccountAPI {
     @PostMapping
     public DataTablesOutput<AmznAccResult> findAllAmznAccountsPageable(@Valid @RequestBody DataTablesInput input) {
         return amznAccountService.findAll(input);
+    }
+
+    @GetMapping("/findAll")
+    public ResponseEntity<?> findAllAmznAccounts() {
+        List<AmznAccResult> amznAccResults = amznAccountService.findAll();
+        return new ResponseEntity<>(amznAccResults, HttpStatus.OK);
     }
 
     //    @PreAuthorize("hasAnyAuthority('MANAGER')")

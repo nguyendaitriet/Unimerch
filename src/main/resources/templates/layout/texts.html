@@ -10,14 +10,15 @@
         var iziToastTitleError = [[#{iziToast.title.error}]];
         
         // error
+        var SUCCESS_CREATED = [[#{success.created}]];
+        var SUCCESS_UPDATED = [[#{success.updated}]];
+        var SUCCESS_REMOVED = [[#{success.removed}]];
         var ERROR_400 = [[#{error.400}]];
         var ERROR_401 = [[#{error.401}]]
         var ERROR_403 = [[#{error.403}]];
         var ERROR_404 = [[#{error.404}]];
         var ERROR_500 = [[#{error.serverError}]];
-        var SUCCESS_CREATED = [[#{success.created}]];
-        var SUCCESS_UPDATED = [[#{success.updated}]];
-        var SUCCESS_REMOVED = [[#{success.removed}]];
+        var ERROR_GRP_RETRIEVE = [[#{error.retrieveGrpSideBar}]]
         
         //user
         var statusActive = [[#{user.table.status.active}]];
@@ -48,5 +49,11 @@
         //user-asgn
         var btnAssignNew = [[#{user_asgn.table.btnAdd}]];
         var btnTitleRemove = [[#{user_asgn.table.btnTitle.remove}]];
+
+        //validation
+        var validEmpty = [[#{validation.inputEmpty}]]
+        var validPassword = [[#{validation.validPassword}]];
+        var validFullNameLength = [[#{validation.fullNameLength}]]
+        var validUsernameLength = [[#{validation.usernameLength}]]
     </script>
 </th:block>

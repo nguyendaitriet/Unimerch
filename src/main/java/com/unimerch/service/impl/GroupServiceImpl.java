@@ -22,8 +22,10 @@ import org.springframework.data.jpa.datatables.mapping.Column;
 import org.springframework.data.jpa.datatables.mapping.DataTablesInput;
 import org.springframework.data.jpa.datatables.mapping.DataTablesOutput;
 import org.springframework.stereotype.Service;
+
 import javax.transaction.Transactional;
 import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 @Transactional
@@ -54,8 +56,10 @@ public class GroupServiceImpl implements GroupService {
     private ValidationUtils validationUtils;
 
     @Override
-    public List<Group> findAll() {
-        return groupRepository.findAll();
+    public List<GroupItemResult> findAll() {
+        return groupRepository.findAll()
+                .stream().map(group -> groupMapper.toGroupItemResult(group))
+                .collect(Collectors.toList());
     }
 
     @Override
@@ -83,6 +87,11 @@ public class GroupServiceImpl implements GroupService {
             throw new InvalidIdException(messageSource.getMessage("validation.idNotExist", null, Locale.getDefault()));
         }
         return optionalGroup.get();
+    }
+
+    @Override
+    public GroupItemResult findGroupItemResultById(String id) {
+        return groupMapper.toGroupItemResult(findById(id));
     }
 
     @Override

@@ -16,11 +16,13 @@ import java.util.Optional;
 
 public interface GroupService {
 
-    List<Group> findAll();
+    List<GroupItemResult> findAll();
 
     DataTablesOutput<GroupItemResult> findAll(DataTablesInput input);
 
     Group findById(String id);
+
+    GroupItemResult findGroupItemResultById(String id);
 
     GroupItemResult createGroup(GroupCreateParam groupCreateParam);
 

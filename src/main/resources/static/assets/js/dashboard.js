@@ -64,7 +64,7 @@ class App {
                     Swal.showLoading();
                     const b = Swal.getHtmlContainer().querySelector('b');
                     timerInterval = setInterval(() => {
-                        b.textContent = Math.round(Swal.getTimerLeft()/1000)
+                        b.textContent = Math.round(Swal.getTimerLeft() / 1000)
                     }, 1000)
                 },
                 willClose: () => {
@@ -169,6 +169,54 @@ class App {
             location.href = "/logout";
         }, timeout);
     }
+
+    static handleFilter(containerId, filterId, dataClassName) {
+        let rawKeywords, keywords, groupName;
+        let filter = $('#' + filterId);
+        let rows = $('#' + containerId + ' .' + dataClassName);
+
+        filter.on('input', () => {
+            rawKeywords = $("#sidebar-grp-search").val();
+            keywords = rawKeywords.toUpperCase();
+
+            $.each(rows, function (index, row) {
+                groupName = $(row).text();
+                if (groupName.toUpperCase().includes(keywords)) {
+                    $(row).css('display', '');
+                } else {
+                    $(row).css('display', 'none');
+                }
+            })
+        })
+    }
+
+    static handleGroupsFilterSidebar() {
+        let container = $('#filter-sidebar');
+
+        $.ajax({
+            "headers": {
+                "accept": "application/json",
+                "content-type": "application/json"
+            },
+            "type": "GET",
+            "url": App.BASE_URL_GROUP + "/findAllGroups",
+        })
+            .done((groups) => {
+                let str = `
+                <a class="collapse-item" href="/dashboard">All accounts</a>
+            `
+
+                $.each(groups, function (index, group) {
+                    str += `<a class="collapse-item" href="/dashboard/${group.id}">${group.title}</a>`
+                })
+                container.append(str);
+
+                this.handleFilter('filter-sidebar', 'sidebar-grp-search', 'collapse-item');
+            })
+            .fail((jqXHR) => {
+                App.IziToast.showErrorAlert(ERROR_GRP_RETRIEVE);
+            })
+    }
 }
 
 class User {
@@ -186,3 +234,8 @@ class Group {
         this.title = title;
     }
 }
+
+
+(() => {
+    App.handleGroupsFilterSidebar();
+})()

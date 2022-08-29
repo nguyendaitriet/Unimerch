@@ -24,6 +24,7 @@ import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
 import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 @Transactional
@@ -75,6 +76,13 @@ public class AmznAccountServiceImpl implements AmznAccountService {
         } catch (Exception e) {
             throw new ServerErrorException(messageSource.getMessage("error.500", null, Locale.getDefault()));
         }
+    }
+
+    @Override
+    public List<AmznAccResult> findAll() {
+        return amznAccountRepository.findAll()
+                .stream().map(account -> amznAccountMapper.toAmznAccResult(account))
+                .collect(Collectors.toList());
     }
 
     @Override

@@ -1,7 +1,9 @@
 package com.unimerch.controller;
 
+import com.unimerch.dto.group.GroupItemResult;
 import com.unimerch.repository.model.Group;
 import com.unimerch.service.GroupService;
+import com.unimerch.service.UserService;
 import com.unimerch.service.impl.GroupServiceImpl;
 import com.unimerch.service.impl.UserServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,12 +22,24 @@ import java.util.Optional;
 @RequestMapping("/dashboard")
 public class DashboardController {
     @Autowired
-    private UserServiceImpl userService;
+    private UserService userService;
 
+    @Autowired
+    private GroupService groupService;
 
     @GetMapping("")
     public ModelAndView showDashboardPage() {
         return new ModelAndView("/dashboard/dashboard");
+    }
+
+    @GetMapping("/{id}")
+    public ModelAndView showRevenues(@PathVariable String id) {
+        ModelAndView mav = new ModelAndView("/dashboard/dashboard");
+
+        GroupItemResult group = groupService.findGroupItemResultById(id);
+        mav.addObject("group", group);
+
+        return mav;
     }
 
     @GetMapping("/user")

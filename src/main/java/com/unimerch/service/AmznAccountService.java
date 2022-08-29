@@ -8,9 +8,13 @@ import com.unimerch.repository.model.AmznAccount;
 import org.springframework.data.jpa.datatables.mapping.DataTablesInput;
 import org.springframework.data.jpa.datatables.mapping.DataTablesOutput;
 
+import java.util.List;
+
 public interface AmznAccountService {
 
     DataTablesOutput<AmznAccResult> findAll(DataTablesInput input);
+
+    List<AmznAccResult> findAll();
 
     AmznAccount findById(String id);
 

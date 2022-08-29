@@ -2,7 +2,6 @@
 <html xmlns:th="http://www.thymeleaf.org" lang="en">
 <head>
     <th:block th:replace="layout/head :: dashboard-head"/>
-    <link rel="stylesheet" href="/assets/css/dashboard-custom.css">
     <title th:text="#{user.pageTitle}">Users Management</title>
 </head>
 <body id="page-top">
@@ -255,42 +254,37 @@
             page.dialogs.element.frmCreateUser.submit();
         });
 
-        page.dialogs.element.frmCreateUser.validate({
-            onkeyup: function (element) {
-                $(element).valid()
-            },
-            onclick: false,
-            onfocusout: false,
+        const createUserValidator = page.dialogs.element.frmCreateUser.validate({
             rules: {
                 fullNameCreate: {
                     required: true,
-                    minLength: 5,
-                    maxLength: 80
+                    minlength: 5,
+                    maxlength: 80
                 },
                 usernameCreate: {
                     required: true,
-                    minLength: 3,
-                    maxLength: 50
+                    minlength: 3,
+                    maxlength: 50
                 },
                 passwordCreate: {
                     required: true,
-                    passwordRegex: true
+                    passwordregex: true
                 }
             },
             messages: {
                 fullNameCreate: {
-                    required: '',
-                    minLength:  '',
-                    maxLength: ''
+                    required: validEmpty,
+                    minlength: validFullNameLength,
+                    maxlength: validFullNameLength
                 },
                 usernameCreate: {
-                    required: '',
-                    minLength: '',
-                    maxLength: ''
+                    required: validEmpty,
+                    minlength: validUsernameLength,
+                    maxlength: validUsernameLength
                 },
                 passwordCreate: {
-                    required: '',
-                    passwordRegex: ''
+                    required: validEmpty,
+                    passwordregex: validPassword
                 }
             },
             submitHandler: function () {
@@ -302,28 +296,36 @@
             page.dialogs.element.frmCPUser.submit();
         })
 
-        page.dialogs.element.frmCPUser.validate({
-            onkeyup: function (element) {
-                $(element).valid()
-            },
-            onclick: false,
-            onfocusout: false,
+        const CPUserValidator = page.dialogs.element.frmCPUser.validate({
             rules: {
                 passwordCP: {
                     required: true,
-                    passwordRegex: true
+                    passwordregex: true
                 }
             },
             messages: {
                 passwordCP: {
-                    required: '',
-                    passwordRegex: ''
+                    required: validEmpty,
+                    passwordregex: validPassword
                 }
             },
             submitHandler: function () {
                 page.commands.doCPUser(currentUser);
             }
         });
+
+        //reset modal on close
+        page.dialogs.element.mdCreateUser.on('hidden.bs.modal', function () {
+            page.dialogs.element.frmCreateUser[0].reset();
+            createUserValidator.resetForm();
+            $("#mdCreateUser input").removeClass("error");
+        })
+
+        page.dialogs.element.mdCPUser.on('hidden.bs.modal', function () {
+            page.dialogs.element.frmCPUser[0].reset();
+            CPUserValidator.resetForm();
+            $("#mdCPUser input").removeClass("error");
+        })
     });
 
     page.commands.doCreateUser = function () {
@@ -352,7 +354,6 @@
                     'fullName': user.fullName,
                     'disabled': user.disabled
                 })
-                // .draw('full-hold');
 
                 tableUser.order([0, 'desc']).draw();
 
@@ -417,20 +418,8 @@
             })
     }
 
-    $.validator.addMethod("passwordRegex", function (value, element) {
-            return this.optional(element) || /^(?=.*[A-Za-z])(?=.*\\d)(?=.*[@$!%*#?&])[A-Za-z\\d@$!%*#?&]{5,}$/.test(value)
-        },
-    )
-
-    //reset modal on close
-    page.dialogs.element.mdCreateUser.on('hidden.bs.modal', function () {
-        page.dialogs.element.frmCreateUser[0].reset();
-        // page.dialogs.element.frmCreateUser[0].validate().resetForm();
-        // $("#mdCreateUser input").removeClass("error");
-    })
-
-    page.dialogs.element.mdCPUser.on('hidden.bs.modal', function () {
-        page.dialogs.element.frmCPUser[0].reset();
+    $.validator.addMethod("passwordregex", function (value, element) {
+        return this.optional(element) || /^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{5,128}$/.test(value)
     })
 
 </script>
