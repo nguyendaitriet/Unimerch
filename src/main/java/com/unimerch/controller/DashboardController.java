@@ -29,7 +29,9 @@ public class DashboardController {
 
     @GetMapping("")
     public ModelAndView showDashboardPage() {
-        return new ModelAndView("/dashboard/dashboard");
+        ModelAndView mav = new ModelAndView("/dashboard/dashboard");
+        mav.addObject("group", new Group());
+        return mav;
     }
 
     @GetMapping("/{id}")

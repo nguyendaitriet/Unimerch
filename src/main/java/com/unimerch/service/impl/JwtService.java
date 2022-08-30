@@ -1,6 +1,6 @@
 package com.unimerch.service.impl;
 
-import com.unimerch.repository.model.UserPrinciple;
+import com.unimerch.security.user.UserPrinciple;
 import io.jsonwebtoken.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

@@ -9,4 +9,7 @@ import org.springframework.stereotype.Repository;
 public interface AmznAccountRepository extends JpaRepository<AmznAccount, Integer> {
 
     boolean existsByUsername(String username);
+
+    AmznAccount getByUsername(String username);
+
 }

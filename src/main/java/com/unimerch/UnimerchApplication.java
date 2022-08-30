@@ -1,7 +1,10 @@
 package com.unimerch;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.autoconfigure.jackson.Jackson2ObjectMapperBuilderCustomizer;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.support.ResourceBundleMessageSource;
 import org.springframework.data.jpa.datatables.repository.DataTablesRepositoryFactoryBean;

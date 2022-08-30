@@ -1,5 +1,6 @@
-package com.unimerch.repository.model;
+package com.unimerch.security.user;
 
+import com.unimerch.repository.model.User;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -11,6 +12,8 @@ import java.util.Objects;
 
 public class UserPrinciple implements UserDetails {
 
+    private User user;
+
     private static final long serialVersionUID = 1L;
 
     private final Integer id;
@@ -20,6 +23,14 @@ public class UserPrinciple implements UserDetails {
     private final String password;
 
     private final Collection<? extends GrantedAuthority> roles;
+
+    public UserPrinciple(User user) {
+        this.user = user;
+        this.id = null;
+        this.username = null;
+        this.password = null;
+        this.roles = null;
+    }
 
     public UserPrinciple(Integer id,
                          String username, String password,

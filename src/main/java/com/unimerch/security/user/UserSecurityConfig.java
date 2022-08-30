@@ -1,10 +1,16 @@
-package com.unimerch.security;
+package com.unimerch.security.user;
 
+import com.unimerch.security.CustomAccessDeniedHandler;
+import com.unimerch.security.JwtAuthenticationFilter;
+import com.unimerch.security.RestAuthenticationEntryPoint;
 import com.unimerch.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Primary;
+import org.springframework.core.annotation.Order;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.BeanIds;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
@@ -14,15 +20,22 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 @Configuration
 @EnableWebSecurity
 @EnableGlobalMethodSecurity(prePostEnabled = true)
-public class SecurityConfig extends WebSecurityConfigurerAdapter {
+@Order(1)
+public class UserSecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Autowired
     private UserService userService;
+
+    @Bean
+    public CustomUserDetailsService customUserDetailsService() {
+        return new CustomUserDetailsService();
+    }
 
     @Bean
     public JwtAuthenticationFilter jwtAuthenticationFilter() {
@@ -46,19 +59,36 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     }
 
     @Bean
-    public PasswordEncoder passwordEncoder() {
+    @Primary
+    public PasswordEncoder passwordEncoder1() {
         return new BCryptPasswordEncoder(10);
     }
 
     @Autowired
     public void configureGlobalSecurity(AuthenticationManagerBuilder auth) throws Exception {
-        auth.userDetailsService(userService).passwordEncoder(passwordEncoder());
+        auth.userDetailsService(userService).passwordEncoder(passwordEncoder1());
     }
 
+    @Bean
+    public DaoAuthenticationProvider authenticationProvider1() {
+        DaoAuthenticationProvider authProvider = new DaoAuthenticationProvider();
+        authProvider.setUserDetailsService(customUserDetailsService());
+        authProvider.setPasswordEncoder(passwordEncoder1());
+
+        return authProvider;
+    }
+
+    @Bean
+    public AuthenticationSuccessHandler myAuthenticationSuccessHandler(){
+        return new MySimpleUrlAuthenticationSuccessHandler();
+    }
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http.csrf().ignoringAntMatchers("/**");
         http.httpBasic().authenticationEntryPoint(restServicesEntryPoint());
+
+        http.authenticationProvider(authenticationProvider1());
+
 
         http.authorizeRequests()
                 .antMatchers("/api/auth/login", "/login").permitAll()
@@ -77,11 +107,12 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .anyRequest().authenticated()
                 .and()
                 .formLogin()
-                .loginProcessingUrl("/login")
+                .loginProcessingUrl("/login/user")
                 .loginPage("/login")
                 .usernameParameter("username")
                 .passwordParameter("password")
                 .defaultSuccessUrl("/")
+//                .successHandler(myAuthenticationSuccessHandler())
                 .and()
                 .logout()
                 .logoutUrl("/logout")

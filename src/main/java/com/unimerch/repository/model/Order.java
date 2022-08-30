@@ -59,5 +59,18 @@ public class Order {
     @JoinColumn(name = "amzn_account_id", nullable = false)
     private AmznAccount amznAccount;
 
+    public Order(String asin, Instant date, String title, String info, Integer purchased, Integer cancelled, Integer returned, BigDecimal revenue, BigDecimal royalties, String currency) {
+        this.asin = asin;
+        this.date = date;
+        this.title = title;
+        this.info = info;
+        this.purchased = purchased;
+        this.cancelled = cancelled;
+        this.returned = returned;
+        this.revenue = revenue;
+        this.royalties = royalties;
+        this.currency = currency;
+    }
+
 
 }

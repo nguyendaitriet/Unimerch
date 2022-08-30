@@ -11,6 +11,7 @@ import com.unimerch.repository.BrgGroupUserRepository;
 import com.unimerch.repository.UserRepository;
 import com.unimerch.repository.datatable.UserDataTableRepository;
 import com.unimerch.repository.model.*;
+import com.unimerch.security.user.UserPrinciple;
 import com.unimerch.service.UserService;
 import com.unimerch.util.PrincipalUtils;
 import com.unimerch.util.ValidationUtils;
