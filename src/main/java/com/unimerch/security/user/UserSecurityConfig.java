@@ -89,7 +89,6 @@ public class UserSecurityConfig extends WebSecurityConfigurerAdapter {
 
         http.authenticationProvider(authenticationProvider1());
 
-
         http.authorizeRequests()
                 .antMatchers("/api/auth/login", "/login").permitAll()
                 .antMatchers("/", "/api/users/**", "/api/groups/**").authenticated()
