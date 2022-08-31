@@ -40,7 +40,7 @@
                         <div class="card shadow mb-4">
                             <!-- Card Header -->
                             <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
-                                <h6 class="m-0 font-weight-bold text-primary custom-card-title" th:text="${group.title}">Accounts</h6>
+                                <h6 class="m-0 font-weight-bold text-primary custom-card-title" th:text="#{dashboard.filterTitle}">Accounts</h6>
                             </div>
                             <div class="input-group input-group-sm mt-2 filter-group">
                                 <div class="input-group-prepend">
@@ -49,7 +49,7 @@
                                         </span>
                                 </div>
                                 <input id="dashboard-user-search" class="form-control" type="text"
-                                       placeholder="Find...">
+                                       th:placeholder="#{dashboard.filterPlaceHolder}">
                             </div>
 
                             <div class="scrollbar-user bg-white mt-2 custom-scrollbar">
@@ -69,17 +69,17 @@
                                 <li class="nav-item">
                                     <a class="m-0 font-weight-bold text-primary nav-link active custom-card-title"
                                        data-toggle="tab" href="#dashboard" role="tab" aria-controls="dashboard"
-                                       aria-selected="true">Dashboard</a>
+                                       aria-selected="true" th:text="#{dashboard.tab.dashboard}">Dashboard</a>
                                 </li>
                                 <li class="nav-item">
                                     <a class="m-0 font-weight-bold text-primary nav-link custom-card-title"
                                        data-toggle="tab" href="#analytics" role="tab" aria-controls="analytics"
-                                       aria-selected="false">Analytics</a>
+                                       aria-selected="false" th:text="#{dashboard.tab.analytics}">Analytics</a>
                                 </li>
                                 <li class="nav-item">
                                     <a class="m-0 font-weight-bold text-primary nav-link custom-card-title"
                                        data-toggle="tab" href="#accountdie" role="tab" aria-controls="accountdie"
-                                       aria-selected="false">Account Die</a>
+                                       aria-selected="false" th:text="#{dashboard.tab.accountDie}">Account Die</a>
                                 </li>
                             </ul>
 
@@ -94,10 +94,12 @@
                                             <div class="row" id="chartHolder" style="height:380px; width:100%;"></div>
                                             <div class="row mt-4 text-center justify-content-center small">
                                                     <span class="mr-4">
-                                                        <i class="fas fa-square text-primary"></i><br> Royalties
+                                                        <i class="fas fa-square text-primary"></i>
+                                                        <br th:text="#{dashboard.chart.legend.royalties}">
                                                     </span>
                                                 <span class="mr-4">
-                                                        <i class="fas fa-square text-success"></i><br> Number Sold
+                                                        <i class="fas fa-square text-success"></i>
+                                                    <br th:text="#{dashboard.chart.legend.numberSold}">
                                                     </span>
                                             </div>
                                         </div>
@@ -108,7 +110,8 @@
                                                 <div class="card-body">
                                                     <div class="row no-gutters align-items-center mb-2">
                                                         <div class="col mr-2">
-                                                            <div class="text-center font-weight-bold text-primary text-uppercase">
+                                                            <div class="text-center font-weight-bold text-primary text-uppercase"
+                                                            th:text="#{dashboard.card.title.todaySale}">
                                                                 Today's Sale
                                                                 <br>
                                                                 (29/08/2022)
@@ -125,7 +128,7 @@
                                                         <div>
                                                             100/10
                                                         </div>
-                                                        <div>
+                                                        <div th:text="#{dashboard.card.field.soldCancelled}">
                                                             Sold/Cancelled
                                                         </div>
                                                     </div>
@@ -133,7 +136,7 @@
                                                         <div>
                                                             40
                                                         </div>
-                                                        <div>
+                                                        <div th:text="#{dashboard.card.field.returned}">
                                                             Returned
                                                         </div>
                                                     </div>
@@ -141,7 +144,7 @@
                                                         <div>
                                                             $1234.0
                                                         </div>
-                                                        <div>
+                                                        <div th:text="#{dashboard.card.field.royalties}">
                                                             Royalties
                                                         </div>
                                                     </div>
@@ -157,7 +160,8 @@
                                                 <div class="card-body">
                                                     <div class="row no-gutters align-items-center mb-2 custom-card-header">
                                                         <div class="col mr-2">
-                                                            <div class="h6 text-center font-weight-bold text-primary text-uppercase">
+                                                            <div class="h6 text-center font-weight-bold text-primary text-uppercase"
+                                                                 th:text="#{dashboard.card.title.allTimes}">
                                                                 All Times
                                                             </div>
                                                         </div>
@@ -194,7 +198,8 @@
                                                 <div class="card-body">
                                                     <div class="row no-gutters align-items-center mb-2 custom-card-header">
                                                         <div class="col mr-2">
-                                                            <div class="h6 text-center font-weight-bold text-primary text-uppercase">
+                                                            <div class="h6 text-center font-weight-bold text-primary text-uppercase"
+                                                            th:text="#{dashboard.card.title.yesterday}">
                                                                 Yesterday
                                                                 <br>
                                                                 (00/00/0000)
@@ -233,7 +238,8 @@
                                                 <div class="card-body">
                                                     <div class="row no-gutters align-items-center mb-2 custom-card-header">
                                                         <div class="col mr-2">
-                                                            <div class="h6 text-center font-weight-bold text-primary text-uppercase">
+                                                            <div class="h6 text-center font-weight-bold text-primary text-uppercase"
+                                                            th:text="#{dashboard.card.title.last7Days}">
                                                                 Last 7 Days
                                                                 <br>
                                                                 (00/00/0000)
@@ -272,7 +278,8 @@
                                                 <div class="card-body">
                                                     <div class="row no-gutters align-items-center mb-2 custom-card-header">
                                                         <div class="col mr-2">
-                                                            <div class="h6 text-center font-weight-bold text-primary text-uppercase">
+                                                            <div class="h6 text-center font-weight-bold text-primary text-uppercase"
+                                                            th:text="#{dashboard.card.title.thisMonth}">
                                                                 This Month
                                                                 <br>
                                                                 (00/00/0000)
@@ -311,7 +318,8 @@
                                                 <div class="card-body">
                                                     <div class="row no-gutters align-items-center mb-2 custom-card-header">
                                                         <div class="col mr-2">
-                                                            <div class="h6 text-center font-weight-bold text-primary text-uppercase">
+                                                            <div class="h6 text-center font-weight-bold text-primary text-uppercase"
+                                                            th:text="#{dashboard.card.title.previousMonth}">
                                                                 Previous Month
                                                                 <br>
                                                                 (00/00/0000)
@@ -351,17 +359,17 @@
                                         <li class="nav-item">
                                             <a class="m-0 font-weight-bold text-primary nav-link active custom-card-title"
                                                data-toggle="tab" href="#today" role="tab" aria-controls="today"
-                                               aria-selected="true">Today</a>
+                                               aria-selected="true" th:text="#{dashboard.tab.today}">Today</a>
                                         </li>
                                         <li class="nav-item">
                                             <a class="m-0 font-weight-bold text-primary nav-link custom-card-title"
                                                data-toggle="tab" href="#thirtyday" role="tab" aria-controls="thirtyday"
-                                               aria-selected="false">30 Days</a>
+                                               aria-selected="false" th:text="#{dashboard.tab.thirtyDays}">30 Days</a>
                                         </li>
                                         <li class="nav-item">
                                             <a class="m-0 font-weight-bold text-primary nav-link custom-card-title"
                                                data-toggle="tab" href="#thismonth" role="tab" aria-controls="thismonth"
-                                               aria-selected="false">This month</a>
+                                               aria-selected="false" th:text="#{dashboard.tab.thisMonth}">This month</a>
                                         </li>
                                     </ul>
 
@@ -479,7 +487,6 @@
 
 <script>
     let currentGrpId = window.location.pathname.split('/')[2];
-    console.log(currentGrpId);
 
     let page = {
         urls: {
@@ -567,13 +574,13 @@
             +'</KoolChart>`;
 
     var chartData = [
-        {"Month": "Jan", "Profit": 20, "Cost": 120, "Revenue": 2300},
-        {"Month": "Feb", "Profit": 30, "Cost": 160, "Revenue": 1200},
-        {"Month": "Mar", "Profit": 52, "Cost": 150, "Revenue": 1600},
-        {"Month": "Apr", "Profit": 45, "Cost": 190, "Revenue": 1300},
-        {"Month": "May", "Profit": 62, "Cost": 180, "Revenue": 1000},
-        {"Month": "Jun", "Profit": 82, "Cost": 250, "Revenue": 1200},
-        {"Month": "Oct", "Profit": 42, "Cost": 120, "Revenue": 1000}
+        {"Month": "Jan", "Profit": 20, "Cost": 120},
+        {"Month": "Feb", "Profit": 30, "Cost": 160},
+        {"Month": "Mar", "Profit": 52, "Cost": 150},
+        {"Month": "Apr", "Profit": 45, "Cost": 190},
+        {"Month": "May", "Profit": 62, "Cost": 180},
+        {"Month": "Jun", "Profit": 82, "Cost": 250},
+        {"Month": "Oct", "Profit": 42, "Cost": 120}
     ];
 
     function handleFilterDashboard(groupId) {
@@ -581,9 +588,8 @@
 
         let url = page.urls.findAmznAccInGrp + groupId;
 
-        if (groupId === undefined) {
+        if (isNaN(groupId) || groupId === '')
             url = page.urls.findAllAmznAccount;
-        }
 
         $.ajax({
             "headers": {
@@ -594,7 +600,6 @@
             "url": url,
         })
             .done((accounts) => {
-                console.log(accounts);
                 let str = ``;
 
                 $.each(accounts, function (index, account) {
@@ -605,9 +610,11 @@
                 App.handleFilter('filter-dashboard', 'dashboard-user-search', 'list-group-item');
             })
             .fail((jqXHR) => {
-                alert("fail");
+                App.handleFailedTasks(jqXHR);
             })
     }
+
+
 
     handleFilterDashboard(currentGrpId);
 </script>

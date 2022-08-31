@@ -2,7 +2,7 @@
 <html xmlns:th="http://www.thymeleaf.org" lang="en">
 <head>
     <th:block th:replace="layout/head :: dashboard-head"/>
-    <link rel="stylesheet" href="/assets/css/dashboard-custom.css">
+    <link rel="stylesheet" href="/assets/css/dashboard.css">
     <title th:text="#{user_asgn.pageTitle}">Assign Groups To User</title>
 </head>
 <body id="page-top">
@@ -32,10 +32,10 @@
                     <h1 class="h3 mb-0 text-gray-800" th:text="|#{user_asgn.pageHeading} ${username}|"></h1>
                 </div>
 
-                <div class="row">
+                <div class="row justify-content-lg-center">
 
                     <!-- Users -->
-                    <div class="col">
+                    <div class="col-lg-7">
                         <div class="card shadow mb-4">
                             <!-- Card Header - Dropdown -->
                             <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">

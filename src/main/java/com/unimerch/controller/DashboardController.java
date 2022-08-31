@@ -1,22 +1,17 @@
 package com.unimerch.controller;
 
 import com.unimerch.dto.group.GroupItemResult;
-import com.unimerch.repository.model.Group;
 import com.unimerch.service.GroupService;
 import com.unimerch.service.UserService;
-import com.unimerch.service.impl.GroupServiceImpl;
-import com.unimerch.service.impl.UserServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
+import org.springframework.context.MessageSource;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
-import java.util.Optional;
+import java.util.Locale;
 
 @Controller
 @RequestMapping("/dashboard")
@@ -27,14 +22,23 @@ public class DashboardController {
     @Autowired
     private GroupService groupService;
 
-    @GetMapping("")
+    @Autowired
+    private MessageSource messageSource;
+
+    @GetMapping({"", "/"})
     public ModelAndView showDashboardPage() {
-        return new ModelAndView("/dashboard/dashboard");
+        ModelAndView mav = new ModelAndView("/dashboard/dashboard-admin");
+
+        GroupItemResult group = new GroupItemResult();
+        group.setTitle(messageSource.getMessage("dashboard.allAccounts", null, Locale.getDefault()));
+        mav.addObject("group", group);
+
+        return mav;
     }
 
     @GetMapping("/{id}")
     public ModelAndView showRevenues(@PathVariable String id) {
-        ModelAndView mav = new ModelAndView("/dashboard/dashboard");
+        ModelAndView mav = new ModelAndView("/dashboard/dashboard-admin");
 
         GroupItemResult group = groupService.findGroupItemResultById(id);
         mav.addObject("group", group);

@@ -14,9 +14,7 @@
         <hr class="sidebar-divider my-0">
 
         <!-- Nav Item - Dashboard -->
-        <li class="nav-item"
-            th:classappend="${(#httpServletRequest.requestURI == '/dashboard')
-            || (#httpServletRequest.requestURI == '/dashboard/')} ? 'active' : ''">
+        <li class="nav-item" id="nav-item-dashboard">
             <a class="nav-link collapsed" href="/dashboard" data-toggle="collapse" data-target="#collapseDashboard"
                aria-expanded="true" aria-controls="collapseDashboard">
                 <i class="fas fa-fw fa-tachometer-alt"></i>
@@ -31,7 +29,7 @@
                         </div>
                         <input id="sidebar-grp-search" class="form-control" type="text" th:placeholder="#{placeholder.searchBox}">
                     </div>
-
+                    <a class="collapse-item" href="/dashboard" th:text="#{filter.allAccounts}"></a>
                     <!-- Group Items -->
 
                 </div>

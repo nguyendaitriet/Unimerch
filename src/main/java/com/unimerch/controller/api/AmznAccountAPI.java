@@ -29,6 +29,7 @@ public class AmznAccountAPI {
         return amznAccountService.findAll(input);
     }
 
+    //    @PreAuthorize("hasAnyAuthority('MANAGER')")
     @GetMapping("/findAll")
     public ResponseEntity<?> findAllAmznAccounts() {
         List<AmznAccResult> amznAccResults = amznAccountService.findAll();

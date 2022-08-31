@@ -176,7 +176,7 @@ class App {
         let rows = $('#' + containerId + ' .' + dataClassName);
 
         filter.on('input', () => {
-            rawKeywords = $("#sidebar-grp-search").val();
+            rawKeywords = filter.val();
             keywords = rawKeywords.toUpperCase();
 
             $.each(rows, function (index, row) {
@@ -202,20 +202,50 @@ class App {
             "url": App.BASE_URL_GROUP + "/findAllGroups",
         })
             .done((groups) => {
-                let str = `
-                <a class="collapse-item" href="/dashboard">All accounts</a>
-            `
+                let str = ``
 
                 $.each(groups, function (index, group) {
-                    str += `<a class="collapse-item" href="/dashboard/${group.id}">${group.title}</a>`
+                    str += `<a class="collapse-item" data-id="${group.id}" href="/dashboard/${group.id}">${group.title}</a>`
                 })
                 container.append(str);
 
                 this.handleFilter('filter-sidebar', 'sidebar-grp-search', 'collapse-item');
+
+                this.handleStatusNavDashboard();
+                this.handleCollapsedFilterSidebar();
             })
             .fail((jqXHR) => {
                 App.IziToast.showErrorAlert(ERROR_GRP_RETRIEVE);
             })
+    }
+
+    static handleStatusNavDashboard() {
+        let currentURL = window.location.pathname.split('/');
+        let domain = currentURL[1];
+        let id = currentURL[2];
+        let navDashboard = $("#nav-item-dashboard");
+        let rows = $("#filter-sidebar .collapse-item");
+
+        if (id === '')
+            id = undefined;
+
+        if (domain === 'dashboard' && ((Number(id)) || id === undefined))
+            navDashboard.addClass("active");
+
+        $.each(rows, function (index, row) {
+            if ($(row).data('id') == id)
+                $(row).addClass('active');
+            // if (row.id.substring(6) === id)
+            //     $(row).addClass('active');
+        })
+    }
+
+    static handleCollapsedFilterSidebar() {
+        let container = $('#filter-sidebar');
+        let collapsedField = $("#collapseDashboard");
+
+        if (container.find(".active")[0])
+            collapsedField.collapse("show")
     }
 }
 

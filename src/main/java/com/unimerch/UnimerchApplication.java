@@ -28,7 +28,8 @@ public class UnimerchApplication implements WebMvcConfigurer {
                 "static/texts/views/group_content_vi",
                 "static/texts/views/amzn_acc_content_vi",
                 "static/texts/views/user_content_vi",
-                "static/texts/views/user_asgn_content_vi");
+                "static/texts/views/user_asgn_content_vi",
+                "static/texts/views/errorpage_content_vi");
         source.setDefaultEncoding("UTF-8");
         source.setUseCodeAsDefaultMessage(true);
         return source;
