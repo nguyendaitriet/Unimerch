@@ -5,8 +5,10 @@ import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.databind.DeserializationContext;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.deser.std.StdDeserializer;
+import com.unimerch.dto.order.OrderCardItemResult;
 import com.unimerch.dto.order.OrderData;
 import com.unimerch.repository.model.Order;
+import org.springframework.stereotype.Component;
 
 import java.io.IOException;
 import java.math.BigDecimal;
@@ -14,6 +16,7 @@ import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
 
+@Component
 public class OrderMapper extends StdDeserializer<OrderData> {
 
     public OrderMapper() {
@@ -49,5 +52,31 @@ public class OrderMapper extends StdDeserializer<OrderData> {
 
         orderData.setOrderList(orderList);
         return orderData;
+    }
+
+    public OrderCardItemResult toOrderCardItem(List<Order> ordersList, String date) {
+        OrderCardItemResult today = new OrderCardItemResult();
+
+        Integer purchased = 0;
+        Integer cancelled = 0;
+        Integer returned = 0;
+        BigDecimal royalties = BigDecimal.ZERO;
+
+        for (Order order : ordersList) {
+            purchased += order.getPurchased();
+            cancelled += order.getCancelled();
+            returned += order.getReturned();
+            royalties = royalties.add(order.getRoyalties());
+        }
+
+        Integer numberSold = purchased - cancelled;
+
+        return today
+                .setDate(date)
+                .setPurchased(purchased)
+                .setCancelled(cancelled)
+                .setNumberSold(numberSold)
+                .setReturned(returned)
+                .setRoyalties(royalties);
     }
 }

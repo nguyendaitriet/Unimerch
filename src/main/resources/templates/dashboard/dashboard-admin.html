@@ -178,7 +178,7 @@
 
                                                         <div class="col">
                                                             <div class="row mt-1 no-gutters d-flex justify-content-end">
-                                                                100/10
+                                                                100-10
                                                             </div>
                                                             <div class="row mt-1 no-gutters d-flex justify-content-end">
                                                                 40
@@ -485,6 +485,8 @@
 
 <th:block th:replace="layout/script :: script-dashboard"/>
 
+<th:block th:replace="layout/texts :: texts"/>
+
 <script>
     let currentGrpId = window.location.pathname.split('/')[2];
 
@@ -526,7 +528,7 @@
     var layoutStr =
         `<KoolChart backgroundColor="#FFFFFF"  borderStyle="none">'
                 +'<Options>'
-                    +'<Caption text="Revenues Dashboard" fontSize="20"/>'
+                    +'<Caption text="${chartCaption}" fontSize="20"/>'
                 +'</Options>'
 
                 +'<NumberFormatter id="numfmt" useThousandsSeparator="true"/>'

@@ -24,7 +24,7 @@ public class UnimerchApplication implements WebMvcConfigurer {
         source.setBasenames(
                 "static/texts/views/common_content_vi",
                 "static/texts/messages/messages_vi",
-                "static/texts/views/dashboard_content_vi",
+                "static/texts/views/dashboard_content_en",
                 "static/texts/views/group_content_vi",
                 "static/texts/views/amzn_acc_content_vi",
                 "static/texts/views/user_content_vi",
