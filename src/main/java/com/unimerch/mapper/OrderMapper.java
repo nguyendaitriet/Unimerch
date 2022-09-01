@@ -14,7 +14,9 @@ import java.io.IOException;
 import java.math.BigDecimal;
 import java.time.Instant;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @Component
 public class OrderMapper extends StdDeserializer<OrderData> {
@@ -33,6 +35,7 @@ public class OrderMapper extends StdDeserializer<OrderData> {
         JsonNode ordertList = orderNode.fields().next().getValue();
         OrderData orderData = new OrderData();
         List<Order> orderList = new ArrayList<>();
+        Set<String> asinList = new HashSet<>();
 
         for (JsonNode node : ordertList) {
 
@@ -47,10 +50,12 @@ public class OrderMapper extends StdDeserializer<OrderData> {
             BigDecimal royalties = BigDecimal.valueOf(node.get("royalties").get("value").asDouble());
             String currency = node.get("revenue").get("code").textValue();
 
+            asinList.add(asin);
             orderList.add(new Order(asin, date, title, info, purchased, cancelled, returned, revenue, royalties, currency));
         }
 
         orderData.setOrderList(orderList);
+        orderData.setAsinList(asinList);
         return orderData;
     }
 

@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.util.List;
+import java.util.Set;
 
 @Getter
 @Setter
@@ -14,5 +15,5 @@ import java.util.List;
 @AllArgsConstructor
 public class OrderData {
     private List<Order> orderList;
-
+    private Set<String> asinList;
 }

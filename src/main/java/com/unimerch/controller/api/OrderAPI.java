@@ -1,6 +1,7 @@
 package com.unimerch.controller.api;
 
 import com.unimerch.dto.order.OrderCardItemResult;
+import com.unimerch.dto.order.OrderData;
 import com.unimerch.service.OrderService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -18,8 +19,8 @@ public class OrderAPI {
 
     @PostMapping
     public ResponseEntity<?> saveOrder(@RequestBody String data) {
-        orderService.saveOrderData(data, "");
-        return new ResponseEntity<>(HttpStatus.OK);
+        OrderData orderData = orderService.saveOrderData(data, "");
+        return new ResponseEntity<>(orderData.getAsinList(), HttpStatus.OK);
     }
 
     @GetMapping("/acc/{id}")

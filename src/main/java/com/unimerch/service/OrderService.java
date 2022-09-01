@@ -1,11 +1,12 @@
 package com.unimerch.service;
 
 import com.unimerch.dto.order.OrderCardItemResult;
+import com.unimerch.dto.order.OrderData;
 
 import java.util.Map;
 
 public interface OrderService {
-    void saveOrderData(String data, String jwt);
+    OrderData saveOrderData(String data, String jwt);
 
     Map<String, OrderCardItemResult> getCardsUser(Integer id);
 

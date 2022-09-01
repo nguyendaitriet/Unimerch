@@ -46,7 +46,7 @@ public class OrderServiceImpl implements OrderService {
     @Autowired
     private TimeUtils timeUtils;
 
-    public void saveOrderData(String data, String jwt) {
+    public OrderData saveOrderData(String data, String jwt) {
         ObjectMapper mapper = new ObjectMapper();
         SimpleModule module = new SimpleModule();
         module.addDeserializer(OrderData.class, new OrderMapper());
@@ -61,6 +61,8 @@ public class OrderServiceImpl implements OrderService {
                 order.setAmznAccount(amznAccount);
                 orderRepository.save(order);
             });
+
+            return orderData;
         } catch (JsonProcessingException | ServerErrorException e) {
             throw new ServerErrorException(messageSource.getMessage("error.500", null, Locale.getDefault()));
         }
