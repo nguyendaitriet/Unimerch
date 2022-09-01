@@ -54,8 +54,8 @@ public class TimeUtils {
         return toDayMonthYear(localYesterday);
     }
 
-    public Instant getInstantLastSevenDays() {
-        LocalDate lastSevenDay = LocalDate.now().minusDays(6);
+    public Instant getInstantLastSomeDays(int days) {
+        LocalDate lastSevenDay = LocalDate.now().minusDays(days - 1);
         ZonedDateTime zdtLastWeek = lastSevenDay.atStartOfDay(zoneIdVN);
 
         return zdtLastWeek.toInstant();

@@ -11,7 +11,6 @@ import com.unimerch.repository.AmznAccountRepository;
 import com.unimerch.repository.OrderRepository;
 import com.unimerch.repository.model.AmznAccount;
 import com.unimerch.repository.model.Order;
-import com.unimerch.service.GroupService;
 import com.unimerch.service.OrderService;
 import com.unimerch.util.TimeUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -116,7 +115,7 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     public OrderCardItemResult getCardUserLastSevenDays(Integer amznAccId) {
-        Instant startTime = timeUtils.getInstantLastSevenDays();
+        Instant startTime = timeUtils.getInstantLastSomeDays(7);
 
         List<Order> ordersLastWeek = orderRepository.findByAmznAccIdWithStartDate(amznAccId, startTime);
 
@@ -201,7 +200,7 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     public OrderCardItemResult getCardGroupLastSevenDays(Integer groupId) {
-        Instant startTime = timeUtils.getInstantLastSevenDays();
+        Instant startTime = timeUtils.getInstantLastSomeDays(7);
 
         List<Order> ordersLastWeek = orderRepository.findByGroupIdWithStartDate(groupId, startTime);
 
@@ -286,7 +285,7 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     public OrderCardItemResult getCardAllAccLastSevenDays() {
-        Instant startTime = timeUtils.getInstantLastSevenDays();
+        Instant startTime = timeUtils.getInstantLastSomeDays(7);
 
         List<Order> ordersLastWeek = orderRepository.findAllWithStartDate(startTime);
 
