@@ -7,31 +7,45 @@ import java.util.Map;
 public interface OrderService {
     void saveOrderData(String data, String jwt);
 
-    Map<String, OrderCardItemResult> getCardsUser(Integer id);
+    Map<String, OrderCardItemResult> getCardsUser(Integer amznAccId);
 
-    OrderCardItemResult getCardUserAllTime(Integer id);
+    OrderCardItemResult getCardUserAllTime(Integer amznAccId);
 
-    OrderCardItemResult getCardUserToday(Integer id);
+    OrderCardItemResult getCardUserToday(Integer amznAccId);
 
-    OrderCardItemResult getCardUserYesterday(Integer id);
+    OrderCardItemResult getCardUserYesterday(Integer amznAccId);
 
-    OrderCardItemResult getCardUserLastSevenDays(Integer id);
+    OrderCardItemResult getCardUserLastSevenDays(Integer amznAccId);
 
-    OrderCardItemResult getCardUserThisMonth(Integer id);
+    OrderCardItemResult getCardUserThisMonth(Integer amznAccId);
 
-    OrderCardItemResult getCardUserPreviousMonth(Integer id);
+    OrderCardItemResult getCardUserPreviousMonth(Integer amznAccId);
 
-    Map<String, OrderCardItemResult> getCardsGroup(Integer id);
+    Map<String, OrderCardItemResult> getCardsGroup(Integer groupId);
 
-    OrderCardItemResult getGetCardGroupAllTime(Integer id);
+    OrderCardItemResult getCardGroupAllTime(Integer groupId);
 
-    OrderCardItemResult getCardGroupToday(Integer id);
+    OrderCardItemResult getCardGroupToday(Integer groupIdd);
 
-    OrderCardItemResult getCardGroupYesterday(Integer id);
+    OrderCardItemResult getCardGroupYesterday(Integer groupId);
 
-    OrderCardItemResult getCardGroupLastWeek(Integer id);
+    OrderCardItemResult getCardGroupLastSevenDays(Integer groupId);
 
-    OrderCardItemResult getCardGroupThisMonth(Integer id);
+    OrderCardItemResult getCardGroupThisMonth(Integer groupId);
 
-    OrderCardItemResult getCardGroupPreviousMonth(Integer id);
+    OrderCardItemResult getCardGroupPreviousMonth(Integer groupId);
+
+    Map<String, OrderCardItemResult> getCardAllAcc();
+
+    OrderCardItemResult getCardAllAccAllTime();
+
+    OrderCardItemResult getCardAllAccToday();
+
+    OrderCardItemResult getCardAllAccYesterday();
+
+    OrderCardItemResult getCardAllAccLastSevenDays();
+
+    OrderCardItemResult getCardAllAccThisMonth();
+
+    OrderCardItemResult getCardAllAccPreviousMonth();
 }

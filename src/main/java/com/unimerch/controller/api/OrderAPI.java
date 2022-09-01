@@ -7,7 +7,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
 import java.util.Map;
 
 @RestController
@@ -20,6 +19,12 @@ public class OrderAPI {
     public ResponseEntity<?> saveOrder(@RequestBody String data) {
         orderService.saveOrderData(data, "");
         return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+    @GetMapping("/all")
+    public ResponseEntity<?> getSaleCardsAll() {
+        Map<String, OrderCardItemResult> orderCards = orderService.getCardAllAcc();
+        return new ResponseEntity<>(orderCards, HttpStatus.OK);
     }
 
     @GetMapping("/acc/{id}")

@@ -3,6 +3,7 @@ class App {
 
     static BASE_URL_AUTHORIZATION = this.DOMAIN + "/api/auth";
     static BASE_URL_DASHBOARD = this.DOMAIN + "/api/dashboard";
+    static BASE_URL_ORDER = this.DOMAIN + "/api/orders";
     static BASE_URL_USER = this.DOMAIN + "/api/users";
     static BASE_URL_USER_GROUPS = this.DOMAIN + "/api/users/asgnGrp";
     static BASE_URL_AMZN_ACCOUNT = this.DOMAIN + "/api/amznAccounts";
