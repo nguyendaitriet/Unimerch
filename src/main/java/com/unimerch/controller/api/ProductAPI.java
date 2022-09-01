@@ -27,4 +27,5 @@ public class ProductAPI {
         List<ProductItemResult> productItemResultList = productService.findAllTodaySoldProduct(amznAccId);
         return new ResponseEntity<>(productItemResultList, HttpStatus.OK);
     }
+
 }
