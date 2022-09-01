@@ -494,6 +494,9 @@
         urls: {
             findAllAmznAccount: App.BASE_URL_AMZN_ACCOUNT + "/findAll",
             findAmznAccInGrp: App.BASE_URL_GROUP + "/showAmznAccInsideGroup/",
+            findAllOrders: App.BASE_URL_ORDER + "/all",
+            findOrdersByGroupId: App.BASE_URL_ORDER + "/grp/",
+            findOrdersByAmznId: App.BASE_URL_ORDER + "/acc/",
             findAllTodaySoldTableItem: App.BASE_URL_PRODUCT + "/findAllTodaySoldTableItem"
         },
         element: {},
@@ -506,7 +509,6 @@
     }
 
     page.element.tableTodaySold = $("#tableTodaySold");
-
 
     $(document).ready(function () {
         KoolChart.create("chart1", "chartHolder", chartVars, "100%", "100%");
