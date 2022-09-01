@@ -377,7 +377,7 @@
                                         <!-- Table - Today -->
                                         <div class="tab-pane fade show active" id="today" role="tabpanel"
                                              aria-labelledby="today-tab">
-                                            <table>
+                                            <table class="table" id="tableTodaySold">
                                                 <thead>
                                                 <tr>
                                                     <th>Sold</th>
@@ -496,7 +496,8 @@
             findAmznAccInGrp: App.BASE_URL_GROUP + "/showAmznAccInsideGroup/",
             findAllOrders: App.BASE_URL_ORDER + "/all",
             findOrdersByGroupId: App.BASE_URL_ORDER + "/grp/",
-            findOrdersByAmznId: App.BASE_URL_ORDER + "/acc/"
+            findOrdersByAmznId: App.BASE_URL_ORDER + "/acc/",
+            findAllTodaySoldTableItem: App.BASE_URL_PRODUCT + "/findAllTodaySoldTableItem"
         },
         element: {},
         commands: {},
@@ -507,9 +508,54 @@
         }
     }
 
-    var navBar = $("#topNav");
-    var hdrHeight = $("header").height();
+    page.element.tableTodaySold = $("#tableTodaySold");
 
+    $(document).ready(function () {
+        KoolChart.create("chart1", "chartHolder", chartVars, "100%", "100%");
+        handleFilterDashboard(currentGrpId);
+
+        page.element.tableTodaySold.DataTable({
+            ajax: {
+                contentType: 'application/json',
+                url: page.urls.findAllTodaySoldTableItem,
+                type: 'POST',
+                data: (d) => JSON.stringify(d),
+                dataSrc: 'data'
+            },
+            info: false,
+            pagingType: 'simple_numbers',
+            processing: true,
+            serverSide: true,
+            columns: [
+                {data: 'quantitySold'},
+                {data: 'productName'},
+                {data: 'royalties'},
+                {data: 'price'},
+                {data: 'amznAccUsername'},
+            ],
+            language: {
+                search: `<i class="fas fa-search text-primary"></i> `,
+                paginate: {
+                    previous: `<i class="fas fa-angle-left"></i>`,
+                    next:     `<i class="fas fa-angle-right"></i>`
+                },
+                aria: {
+                    paginate: {
+                        previous: 'Previous',
+                        next:     'Next'
+                    }
+                },
+                emptyTable: `${noDataInTable}`
+            },
+            pageLength: 10,
+            lengthChange: false,
+            dom: 'Bfrtip',
+        });
+    })
+
+    var navBar = $("#topNav");
+
+    var hdrHeight = $("header").height();
 
     $(window).scroll(function () {
         if ($(this).scrollTop() > hdrHeight + 50) {
@@ -520,8 +566,6 @@
     });
 
     var chartVars = "KoolOnLoadCallFunction=chartReadyHandler";
-
-    KoolChart.create("chart1", "chartHolder", chartVars, "100%", "100%");
 
     function chartReadyHandler(id) {
         $('#' + id)[0].setLayout(layoutStr);
@@ -621,7 +665,6 @@
 
 
 
-    handleFilterDashboard(currentGrpId);
 </script>
 </body>
 
