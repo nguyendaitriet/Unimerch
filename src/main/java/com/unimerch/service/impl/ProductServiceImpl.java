@@ -5,6 +5,7 @@ import com.unimerch.repository.ProductRepository;
 import com.unimerch.repository.datatable.ProductTableRepository;
 import com.unimerch.repository.model.Order;
 import com.unimerch.service.ProductService;
+import com.unimerch.util.TimeUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.jpa.datatables.mapping.DataTablesInput;
 import org.springframework.data.jpa.datatables.mapping.DataTablesOutput;
@@ -26,23 +27,25 @@ public class ProductServiceImpl implements ProductService {
     @Autowired
     private ProductRepository productRepository;
 
+    @Autowired
+    private TimeUtils timeUtils;
+
     @Override
     public List<ProductItemResult> findAllTodaySoldProduct(Integer amznAccId) {
-        Instant randomDate = Instant.parse("2022-07-02T00:00:00.000-07:00");
+        Instant today = timeUtils.getInstantToday();
+        return productRepository.getProductItemResultList(today, amznAccId);
+    }
 
-//        List<ProductItemResult> productItemResultList =
-//                productRepository.getProductItemResultList(randomDate, amznAccId)
-//                        .stream()
-//                        .map(t -> new ProductItemResult(
-//                                t.get(0, Integer.class),
-//                                t.get(1, String.class),
-//                                t.get(2, BigDecimal.class),
-//                                t.get(3, BigDecimal.class),
-//                                t.get(4, Integer.class),
-//                                t.get(5, String.class)
-//                        ))
-//                        .collect(Collectors.toList());
-        return null;
+    @Override
+    public List<ProductItemResult> findAllThisMonthSoldProduct(Integer amznAccId) {
+        Instant firstDayOfThisMonth = timeUtils.getInstantThisMonth();
+        return productRepository.getProductItemResultList(firstDayOfThisMonth, amznAccId);
+    }
+
+    @Override
+    public List<ProductItemResult> findAllLast30DaysSoldProduct(Integer amznAccId) {
+        Instant startDate = timeUtils.getInstantLastSomeDays(30);
+        return productRepository.getProductItemResultList(startDate, amznAccId);
     }
 
 }

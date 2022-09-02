@@ -12,10 +12,10 @@ import java.math.BigDecimal;
 @Getter
 @Setter
 public class ProductItemResult {
-    private int quantitySold;
+    private Integer quantitySold;
     private String productName;
     private BigDecimal royalties;
     private BigDecimal price;
-    private int amznAccUsername;
+    private Integer amznAccUsername;
     private String asin;
 }

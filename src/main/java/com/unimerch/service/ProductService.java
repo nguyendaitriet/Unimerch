@@ -7,5 +7,10 @@ import org.springframework.data.jpa.datatables.mapping.DataTablesOutput;
 import java.util.List;
 
 public interface ProductService {
+
     List<ProductItemResult> findAllTodaySoldProduct(Integer amznAccId);
+
+    List<ProductItemResult> findAllThisMonthSoldProduct(Integer amznAccId);
+
+    List<ProductItemResult> findAllLast30DaysSoldProduct(Integer amznAccId);
 }
