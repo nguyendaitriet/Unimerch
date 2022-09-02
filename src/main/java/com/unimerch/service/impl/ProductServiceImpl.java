@@ -1,25 +1,20 @@
 package com.unimerch.service.impl;
 
 import com.unimerch.dto.product.ProductItemResult;
+import com.unimerch.exception.InvalidIdException;
+import com.unimerch.repository.BrgGroupAmznAccountRepository;
 import com.unimerch.repository.ProductRepository;
-import com.unimerch.repository.datatable.ProductTableRepository;
-import com.unimerch.repository.model.Order;
 import com.unimerch.service.ProductService;
 import com.unimerch.util.TimeUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.jpa.datatables.mapping.DataTablesInput;
-import org.springframework.data.jpa.datatables.mapping.DataTablesOutput;
-import org.springframework.data.jpa.domain.Specification;
+import org.springframework.context.MessageSource;
 import org.springframework.stereotype.Service;
 
-import javax.persistence.criteria.CriteriaBuilder;
-import javax.persistence.criteria.CriteriaQuery;
-import javax.persistence.criteria.Predicate;
-import javax.persistence.criteria.Root;
-import java.math.BigDecimal;
+
 import java.time.Instant;
+import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
+import java.util.Locale;
 
 @Service
 public class ProductServiceImpl implements ProductService {
@@ -30,22 +25,53 @@ public class ProductServiceImpl implements ProductService {
     @Autowired
     private TimeUtils timeUtils;
 
+    @Autowired
+    private MessageSource messageSource;
+
+    @Autowired
+    private BrgGroupAmznAccountRepository brgGroupAmznAccountRepository;
+
     @Override
-    public List<ProductItemResult> findAllTodaySoldProduct(Integer amznAccId) {
+    public List<ProductItemResult> findAllTodaySoldProduct(Integer id, int choice) {
         Instant today = timeUtils.getInstantToday();
-        return productRepository.getProductItemResultList(today, amznAccId);
+        return getProductItemResult(today, id, choice);
     }
 
     @Override
-    public List<ProductItemResult> findAllThisMonthSoldProduct(Integer amznAccId) {
+    public List<ProductItemResult> findAllThisMonthSoldProduct(Integer id, int choice) {
         Instant firstDayOfThisMonth = timeUtils.getInstantThisMonth();
-        return productRepository.getProductItemResultList(firstDayOfThisMonth, amznAccId);
+        return getProductItemResult(firstDayOfThisMonth, id, choice);
     }
 
     @Override
-    public List<ProductItemResult> findAllLast30DaysSoldProduct(Integer amznAccId) {
+    public List<ProductItemResult> findAllLast30DaysSoldProduct(Integer id, int choice) {
         Instant startDate = timeUtils.getInstantLastSomeDays(30);
-        return productRepository.getProductItemResultList(startDate, amznAccId);
+        return getProductItemResult(startDate, id, choice);
+    }
+
+    private List<ProductItemResult> getProductItemResult(Instant instant, Integer id, int choice) {
+        List<ProductItemResult> productItemResultList = new ArrayList<>();
+        List<Integer> amznAccIdList = new ArrayList<>();
+        switch (choice) {
+            //With amazon account id
+            case 1:
+                amznAccIdList.add(id);
+                productItemResultList = productRepository.getProductItemResultList(instant, amznAccIdList);
+                break;
+            //With group id
+            case 2:
+                amznAccIdList.addAll(brgGroupAmznAccountRepository.getAmznAccIdInGroup(id));
+                productItemResultList = productRepository.getProductItemResultList(instant, amznAccIdList);
+                break;
+            //All amazon account
+            case 3:
+                productItemResultList = productRepository.getProductItemResultList(instant);
+                break;
+        }
+        if (productItemResultList.isEmpty()) {
+            throw new InvalidIdException(messageSource.getMessage("validation.idNotExist", null, Locale.getDefault()));
+        }
+        return productItemResultList;
     }
 
 }

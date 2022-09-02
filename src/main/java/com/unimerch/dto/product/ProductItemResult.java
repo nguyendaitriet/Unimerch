@@ -5,6 +5,10 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import javax.persistence.ColumnResult;
+import javax.persistence.ConstructorResult;
+import javax.persistence.NamedNativeQuery;
+import javax.persistence.SqlResultSetMapping;
 import java.math.BigDecimal;
 
 @NoArgsConstructor
@@ -16,6 +20,15 @@ public class ProductItemResult {
     private String productName;
     private BigDecimal royalties;
     private BigDecimal price;
-    private Integer amznAccUsername;
+    private String amznAccUsername;
     private String asin;
+
+    public ProductItemResult(Long quantitySold, String productName, BigDecimal royalties, BigDecimal price, String amznAccUsername, String asin) {
+        this.quantitySold = quantitySold.intValue();
+        this.productName = productName;
+        this.royalties = royalties;
+        this.price = price;
+        this.amznAccUsername = amznAccUsername;
+        this.asin = asin;
+    }
 }

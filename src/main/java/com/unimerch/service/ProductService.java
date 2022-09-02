@@ -8,9 +8,9 @@ import java.util.List;
 
 public interface ProductService {
 
-    List<ProductItemResult> findAllTodaySoldProduct(Integer amznAccId);
+    List<ProductItemResult> findAllTodaySoldProduct(Integer id, int choice);
 
-    List<ProductItemResult> findAllThisMonthSoldProduct(Integer amznAccId);
+    List<ProductItemResult> findAllThisMonthSoldProduct(Integer id, int choice);
 
-    List<ProductItemResult> findAllLast30DaysSoldProduct(Integer amznAccId);
+    List<ProductItemResult> findAllLast30DaysSoldProduct(Integer id, int choice);
 }

@@ -45,7 +45,7 @@ public class OrderServiceImpl implements OrderService {
         module.addDeserializer(OrderData.class, new OrderMapper());
         mapper.registerModule(module);
 
-        AmznAccount amznAccount = amznAccountRepository.getByUsername("26");
+        AmznAccount amznAccount = amznAccountRepository.getByUsername("1");
 
         try {
             OrderData orderData = mapper.readValue(data, OrderData.class);

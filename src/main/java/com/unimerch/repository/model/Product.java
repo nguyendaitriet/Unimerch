@@ -20,7 +20,7 @@ import java.math.BigDecimal;
         name = "get_product_item_result",
         query =
                 "SELECT  " +
-                    "SUM(o.purchased)-SUM(o.cancelled) AS quantitySold, " +
+                    "SUM(o.purchased - o.cancelled) AS quantitySold, " +
                     "o.title AS productName, " +
                     "SUM(o.royalties) AS royalties, " +
                     "p.price, " +
@@ -29,7 +29,7 @@ import java.math.BigDecimal;
                 "FROM orders AS o " +
                 "INNER JOIN products AS p " +
                 "ON p.ASIN = o.ASIN " +
-                "WHERE o.amzn_account_id = :amznAccId " +
+                "WHERE o.amzn_account_id IN (:amznAccId) " +
                 "AND o.date >= :startDay " +
                 "GROUP BY o.ASIN",
         resultSetMapping = "product_item_result"
@@ -43,7 +43,7 @@ import java.math.BigDecimal;
                         @ColumnResult(name = "productName", type = String.class),
                         @ColumnResult(name = "royalties", type = BigDecimal.class),
                         @ColumnResult(name = "price", type = BigDecimal.class),
-                        @ColumnResult(name = "amznAccUsername", type = Integer.class),
+                        @ColumnResult(name = "amznAccUsername", type = String.class),
                         @ColumnResult(name = "asin", type = String.class)
                 }
         )
