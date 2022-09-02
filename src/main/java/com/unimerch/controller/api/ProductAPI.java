@@ -22,14 +22,14 @@ public class ProductAPI {
         return new ResponseEntity<>(productItemResultList, HttpStatus.OK);
     }
 
-    @GetMapping("/findAllThisMonthSold")
-    public ResponseEntity<?> findAllThisMonthSold() {
+    @GetMapping("/findAllThisMonthSoldAllAmznAcc")
+    public ResponseEntity<?> findAllThisMonthSoldAllAmznAcc() {
         List<ProductItemResult> productItemResultList = productService.findAllThisMonthSoldProduct(null, 3);
         return new ResponseEntity<>(productItemResultList, HttpStatus.OK);
     }
 
-    @GetMapping("/findAllLast30DaysSold")
-    public ResponseEntity<?> findAllLast30DaysSold() {
+    @GetMapping("/findAllLast30DaysSoldAllAmznAcc")
+    public ResponseEntity<?> findAllLast30DaysSoldAllAmznAcc() {
         List<ProductItemResult> productItemResultList = productService.findAllLast30DaysSoldProduct(null, 3);
         return new ResponseEntity<>(productItemResultList, HttpStatus.OK);
     }
