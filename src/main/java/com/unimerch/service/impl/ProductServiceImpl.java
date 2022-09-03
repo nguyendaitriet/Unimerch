@@ -1,24 +1,20 @@
 package com.unimerch.service.impl;
 
 import com.unimerch.dto.product.ProductItemResult;
+import com.unimerch.exception.InvalidIdException;
+import com.unimerch.repository.BrgGroupAmznAccountRepository;
 import com.unimerch.repository.ProductRepository;
-import com.unimerch.repository.datatable.ProductTableRepository;
-import com.unimerch.repository.model.Order;
 import com.unimerch.service.ProductService;
+import com.unimerch.util.TimeUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.jpa.datatables.mapping.DataTablesInput;
-import org.springframework.data.jpa.datatables.mapping.DataTablesOutput;
-import org.springframework.data.jpa.domain.Specification;
+import org.springframework.context.MessageSource;
 import org.springframework.stereotype.Service;
 
-import javax.persistence.criteria.CriteriaBuilder;
-import javax.persistence.criteria.CriteriaQuery;
-import javax.persistence.criteria.Predicate;
-import javax.persistence.criteria.Root;
-import java.math.BigDecimal;
+
 import java.time.Instant;
+import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
+import java.util.Locale;
 
 @Service
 public class ProductServiceImpl implements ProductService {
@@ -26,23 +22,53 @@ public class ProductServiceImpl implements ProductService {
     @Autowired
     private ProductRepository productRepository;
 
-    @Override
-    public List<ProductItemResult> findAllTodaySoldProduct(Integer amznAccId) {
-        Instant randomDate = Instant.parse("2022-07-02T00:00:00.000-07:00");
+    @Autowired
+    private TimeUtils timeUtils;
 
-//        List<ProductItemResult> productItemResultList =
-//                productRepository.getProductItemResultList(randomDate, amznAccId)
-//                        .stream()
-//                        .map(t -> new ProductItemResult(
-//                                t.get(0, Integer.class),
-//                                t.get(1, String.class),
-//                                t.get(2, BigDecimal.class),
-//                                t.get(3, BigDecimal.class),
-//                                t.get(4, Integer.class),
-//                                t.get(5, String.class)
-//                        ))
-//                        .collect(Collectors.toList());
-        return null;
+    @Autowired
+    private MessageSource messageSource;
+
+    @Autowired
+    private BrgGroupAmznAccountRepository brgGroupAmznAccountRepository;
+
+    @Override
+    public List<ProductItemResult> findAllTodaySoldProduct(Integer id, int choice) {
+        Instant today = timeUtils.getInstantToday();
+        return getProductItemResult(today, id, choice);
+    }
+
+    @Override
+    public List<ProductItemResult> findAllThisMonthSoldProduct(Integer id, int choice) {
+        Instant firstDayOfThisMonth = timeUtils.getInstantThisMonth();
+        return getProductItemResult(firstDayOfThisMonth, id, choice);
+    }
+
+    @Override
+    public List<ProductItemResult> findAllLast30DaysSoldProduct(Integer id, int choice) {
+        Instant startDate = timeUtils.getInstantLastSomeDays(30);
+        return getProductItemResult(startDate, id, choice);
+    }
+
+    private List<ProductItemResult> getProductItemResult(Instant instant, Integer id, int choice) {
+        List<ProductItemResult> productItemResultList = new ArrayList<>();
+        List<Integer> amznAccIdList = new ArrayList<>();
+        switch (choice) {
+            //With amazon account id
+            case 1:
+                amznAccIdList.add(id);
+                productItemResultList = productRepository.getProductItemResultList(instant, amznAccIdList);
+                break;
+            //With group id
+            case 2:
+                amznAccIdList.addAll(brgGroupAmznAccountRepository.getAmznAccIdInGroup(id));
+                productItemResultList = productRepository.getProductItemResultList(instant, amznAccIdList);
+                break;
+            //All amazon account
+            case 3:
+                productItemResultList = productRepository.getProductItemResultList(instant);
+                break;
+        }
+        return productItemResultList;
     }
 
 }

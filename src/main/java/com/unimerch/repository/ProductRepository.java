@@ -1,6 +1,5 @@
 package com.unimerch.repository;
 
-import com.querydsl.core.Tuple;
 import com.unimerch.dto.product.ProductItemResult;
 import com.unimerch.repository.model.Product;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -13,23 +12,21 @@ import java.util.List;
 
 @Repository
 public interface ProductRepository extends JpaRepository<Product, String> {
+    @Query(name = "get_product_item_result", nativeQuery = true)
+    List<ProductItemResult> getProductItemResultList(@Param("startDay")Instant startDay, @Param("amznAccId") List<Integer> amznAccId);
 
-    @Query(
-        value = "SELECT  " +
-                    "SUM(o.purchased)-SUM(o.cancelled) AS quantitySold, " +
-                    "o.title AS productName, " +
-                    "SUM(o.royalties) AS royalties, " +
-                    "p.price, " +
-                    "o.amzn_account_id AS amznAccUsername, " +
-                    "o.ASIN AS asin " +
-                "FROM orders AS o " +
-                "INNER JOIN products AS p " +
-                "ON p.ASIN = o.ASIN " +
-                "WHERE o.amzn_account_id = :amznAccId " +
-                "AND o.date >= :today " +
-                "GROUP BY o.ASIN",
-        nativeQuery = true
-    )
-    List<Tuple> getProductItemResultList(@Param("today")Instant today, @Param("amznAccId") Integer amznAccId);
-
+    @Query("SELECT NEW com.unimerch.dto.product.ProductItemResult (" +
+                "SUM(o.purchased - o.cancelled), " +
+                "o.title, " +
+                "SUM(o.royalties), " +
+                "p.price, " +
+                "o.amznAccount.username, " +
+                "o.asin " +
+            ")" +
+            "FROM Order AS o " +
+            "INNER JOIN Product AS p " +
+            "ON p.id = o.asin " +
+            "AND o.date >= :startDay " +
+            "GROUP BY o.asin")
+    List<ProductItemResult> getProductItemResultList(@Param("startDay")Instant startDay);
 }

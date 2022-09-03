@@ -31,15 +31,15 @@ public interface BrgGroupAmznAccountRepository extends JpaRepository<BrgGroupAmz
             "WHERE br.group.id = :id ")
     List<AmznAccount> getAmznAccInGroup(@Param("id") Integer id);
 
+    @Query("SELECT br.amznAccount.id " +
+            "FROM BrgGroupAmznAccount AS br " +
+            "WHERE br.group.id = :id ")
+    List<Integer> getAmznAccIdInGroup(@Param("id") Integer id);
+
     @Query("DELETE FROM BrgGroupAmznAccount AS br " +
             "WHERE (br.group.id = :groupId AND br.amznAccount.id = :amznAccId) ")
     @Modifying
     void deleteAmznAccFromGroup(@Param("amznAccId") Integer amznAccId, @Param("groupId") Integer groupId);
-
-//    @Query("DELETE FROM BrgGroupAmznAccount AS br " +
-//            "WHERE (br.amznAccount.id = :amznAccId) ")
-//    @Modifying
-//    void deleteByAmznAccountId(@Param("amznAccId") Integer amznAccId);
 
     void deleteByAmznAccount_Id(Integer amznAccId);
 }
