@@ -36,7 +36,8 @@
                     <div class="col-md-7">
                         <div class="card shadow mb-4">
                             <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
-                                <h4 class="m-0 font-weight-bold text-primary" th:text="#{group.groupTableTitle}">Groups Management</h4>
+                                <h4 class="m-0 font-weight-bold text-primary" th:text="#{group.groupTableTitle}">Groups
+                                    Management</h4>
                             </div>
 
                             <div class="card-body">
@@ -57,7 +58,8 @@
                     <div class="col-md-5">
                         <div class="card shadow mb-4">
                             <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between bg-primary">
-                                <h6 class="group-title m-0 font-weight-bold text-light" th:text="#{group.amznAccTableTitle}">Amazon Account</h6>
+                                <h6 class="group-title m-0 font-weight-bold text-light"
+                                    th:text="#{group.amznAccTableTitle}">Amazon Account</h6>
                             </div>
                             <div class="card-body">
                                 <table id="table-amzn-acc-in" class="border-0 stripe nowrap" style="width: 100%;">
@@ -159,19 +161,19 @@
             url: page.urls.createGroup,
             data: JSON.stringify(newGroup)
         })
-        .done((data) => {
-            let tableGroup = page.element.tableGroup.DataTable();
-            tableGroup.row.add({
-                'id': data.id,
-                'title': data.title
+            .done((data) => {
+                let tableGroup = page.element.tableGroup.DataTable();
+                tableGroup.row.add({
+                    'id': data.id,
+                    'title': data.title
+                })
+                tableGroup.order([0, 'desc']).draw();
+                page.dialogs.element.mdCreateGroup.modal("hide");
+                App.SweetAlert.showSuccessAlert(SUCCESS_CREATED);
             })
-            tableGroup.order([0, 'desc']).draw();
-            page.dialogs.element.mdCreateGroup.modal("hide");
-            App.SweetAlert.showSuccessAlert(SUCCESS_CREATED);
-        })
-        .fail(function (jqXHR) {
-            App.handleFailedTasks(jqXHR);
-        })
+            .fail(function (jqXHR) {
+                App.handleFailedTasks(jqXHR);
+            })
     }
     page.commands.doUpdateGroup = (currentGroup, currentRowGroup) => {
         let group = {};
@@ -186,21 +188,21 @@
             url: page.urls.updateGroup + currentGroup.id,
             data: JSON.stringify(group)
         })
-        .done((data) => {
-            let tableGroup = page.element.tableGroup.DataTable();
-            tableGroup.row(currentRowGroup).data({
-                'id': data.id,
-                'title': data.title
-            }).draw('full-hold');
-            page.dialogs.element.frmUpdateGroup[0].reset();
-            page.dialogs.element.mdUpdateGroup.modal("hide");
-            App.SweetAlert.showSuccessAlert(SUCCESS_UPDATED);
-        })
-        .fail(function (jqXHR) {
-            App.handleFailedTasks(jqXHR);
-        })
+            .done((data) => {
+                let tableGroup = page.element.tableGroup.DataTable();
+                tableGroup.row(currentRowGroup).data({
+                    'id': data.id,
+                    'title': data.title
+                }).draw('full-hold');
+                page.dialogs.element.frmUpdateGroup[0].reset();
+                page.dialogs.element.mdUpdateGroup.modal("hide");
+                App.SweetAlert.showSuccessAlert(SUCCESS_UPDATED);
+            })
+            .fail(function (jqXHR) {
+                App.handleFailedTasks(jqXHR);
+            })
     }
-    page.commands.doDeleteGroup = (currentGroup, currentRowGroup) => {
+    page.commands.doDeleteGroup = (currentGroup, currentRowGroup, tableAmznAccIn) => {
         $.ajax({
             type: "DELETE",
             url: page.urls.deleteGroup + currentGroup.id,
@@ -208,13 +210,15 @@
             .done((data) => {
                 let tableGroup = page.element.tableGroup.DataTable();
                 tableGroup.row(currentRowGroup).remove().draw('full-hold');
-                page.element.tableAmznAccOut.DataTable().clear().draw();
-                page.element.tableAmznAccIn.DataTable().clear().draw();
-                page.element.groupTitle.html('');
+                if (tableAmznAccIn) {
+                    page.element.tableAmznAccOut.DataTable().clear().draw();
+                    page.element.tableAmznAccIn.DataTable().clear().draw();
+                    page.element.groupTitle.html('');
+                }
                 App.SweetAlert.showSuccessAlert(SUCCESS_REMOVED);
             })
             .fail(function (jqXHR) {
-                handleFailedTasks(jqXHR);
+                App.handleFailedTasks(jqXHR);
             })
     }
 
@@ -223,8 +227,8 @@
 
         let amznAccSelected = [];
 
-        let rows_selected = tableAmznAccOut.rows({selected:true}).data()
-        $.each(rows_selected, function(index, value){
+        let rows_selected = tableAmznAccOut.rows({selected: true}).data()
+        $.each(rows_selected, function (index, value) {
             amznAccSelected.push(value.id);
         });
 
@@ -242,20 +246,20 @@
             url: page.urls.addAmznAccountToGroup + currentGroup.id,
             data: JSON.stringify({amznAccSelected})
         })
-        .done((data) => {
-            data.forEach((amznAcc) => {
-                tableAmznAccIn.row.add({
-                    'id': amznAcc.id,
-                    'username': amznAcc.username
-                })
-                tableAmznAccIn.order([0, 'desc']).draw();
-            });
-            page.dialogs.element.mdAddAmznAccToGroup.modal("hide");
-            App.SweetAlert.showSuccessAlert(SUCCESS_CREATED);
-        })
-        .fail(function (jqXHR) {
-            App.handleFailedTasks(jqXHR);
-        })
+            .done((data) => {
+                data.forEach((amznAcc) => {
+                    tableAmznAccIn.row.add({
+                        'id': amznAcc.id,
+                        'username': amznAcc.username
+                    })
+                    tableAmznAccIn.order([0, 'desc']).draw();
+                });
+                page.dialogs.element.mdAddAmznAccToGroup.modal("hide");
+                App.SweetAlert.showSuccessAlert(SUCCESS_CREATED);
+            })
+            .fail(function (jqXHR) {
+                App.handleFailedTasks(jqXHR);
+            })
     }
     page.commands.doDeletedAmznAcc = (currentGroup, currentAmznAcc, currentRowAmznAcc) => {
         $.ajax({
@@ -283,7 +287,7 @@
     }
 
     $(document).ready(function () {
-        
+
         let tableGroup = page.element.tableGroup.DataTable({
             ajax: {
                 contentType: 'application/json',
@@ -326,12 +330,12 @@
                 search: `<i class="fas fa-search text-primary"></i> `,
                 paginate: {
                     previous: `<i class="fas fa-angle-left"></i>`,
-                    next:     `<i class="fas fa-angle-right"></i>`
+                    next: `<i class="fas fa-angle-right"></i>`
                 },
                 aria: {
                     paginate: {
                         previous: 'Previous',
-                        next:     'Next'
+                        next: 'Next'
                     }
                 },
                 emptyTable: `${noDataInTable}`
@@ -406,12 +410,12 @@
                         search: `<i class="fas fa-search text-primary"></i> `,
                         paginate: {
                             previous: `<i class="fas fa-angle-left"></i>`,
-                            next:     `<i class="fas fa-angle-right"></i>`
+                            next: `<i class="fas fa-angle-right"></i>`
                         },
                         aria: {
                             paginate: {
                                 previous: 'Previous',
-                                next:     'Next'
+                                next: 'Next'
                             }
                         },
                         emptyTable: `${noDataInTable}`
@@ -456,7 +460,7 @@
             App.SweetAlert.showDeleteDialog()
                 .then((result) => {
                     if (result.isConfirmed) {
-                        page.commands.doDeleteGroup(currentGroup, currentRowGroup);
+                        page.commands.doDeleteGroup(currentGroup, currentRowGroup, tableAmznAccIn);
                         currentGroup = undefined;
                     }
                 })
@@ -525,6 +529,7 @@
         });
 
         page.dialogs.element.mdAddAmznAccToGroup.on('shown.bs.modal', () => {
+
             if (currentGroup === undefined) {
                 return;
             }
@@ -562,12 +567,12 @@
                         search: `<i class="fas fa-search text-primary"></i> `,
                         paginate: {
                             previous: `<i class="fas fa-angle-left"></i>`,
-                            next:     `<i class="fas fa-angle-right"></i>`
+                            next: `<i class="fas fa-angle-right"></i>`
                         },
                         aria: {
                             paginate: {
                                 previous: 'Previous',
-                                next:     'Next'
+                                next: 'Next'
                             }
                         },
                         emptyTable: `${noDataInTable}`
@@ -579,7 +584,7 @@
             } else {
                 tableAmznAccOut.ajax.url(page.urls.findAllAmznAccOutGroup + currentGroup.id).load();
             }
-            page.element.tableAmznAccOut.css('cursor','pointer');
+            page.element.tableAmznAccOut.css('cursor', 'pointer');
         });
 
         page.dialogs.element.mdAddAmznAccToGroup.on('hidden.bs.modal', () => {
