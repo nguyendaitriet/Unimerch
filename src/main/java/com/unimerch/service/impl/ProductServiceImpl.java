@@ -68,9 +68,6 @@ public class ProductServiceImpl implements ProductService {
                 productItemResultList = productRepository.getProductItemResultList(instant);
                 break;
         }
-        if (productItemResultList.isEmpty()) {
-            throw new InvalidIdException(messageSource.getMessage("validation.idNotExist", null, Locale.getDefault()));
-        }
         return productItemResultList;
     }
 
