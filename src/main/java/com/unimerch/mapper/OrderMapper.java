@@ -6,6 +6,8 @@ import com.fasterxml.jackson.databind.DeserializationContext;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.deser.std.StdDeserializer;
 import com.unimerch.dto.order.OrderCardItemResult;
+import com.unimerch.dto.order.OrderChartColumn;
+import com.unimerch.dto.order.OrderChartResult;
 import com.unimerch.dto.order.OrderData;
 import com.unimerch.repository.model.Order;
 import org.springframework.stereotype.Component;
@@ -24,6 +26,7 @@ public class OrderMapper extends StdDeserializer<OrderData> {
     public OrderMapper() {
         this(null);
     }
+
     public OrderMapper(Class<?> vc) {
         super(vc);
     }
@@ -42,7 +45,7 @@ public class OrderMapper extends StdDeserializer<OrderData> {
             String asin = node.get("asin").textValue();
             Instant date = Instant.parse(node.get("period").textValue());
             String title = node.get("asinName").textValue();
-            String info  = node.get("variationInfo").toString();
+            String info = node.get("variationInfo").toString();
             Integer purchased = node.get("unitsSold").asInt();
             Integer cancelled = node.get("unitsCancelled").asInt();
             Integer returned = node.get("unitsReturned").asInt();
@@ -80,8 +83,36 @@ public class OrderMapper extends StdDeserializer<OrderData> {
                 .setDate(date)
                 .setPurchased(purchased)
                 .setCancelled(cancelled)
-                .setNumberSold(numberSold)
+                .setSold(numberSold)
                 .setReturned(returned)
                 .setRoyalties(royalties);
+    }
+
+    public OrderChartColumn toOrderChartColumn(Order order, String date) {
+        Integer numberSold = order.getPurchased() - order.getCancelled();
+
+        return new OrderChartColumn()
+                .setDate(date)
+                .setSold(numberSold)
+                .setRoyalties(order.getRoyalties());
+    }
+
+    public OrderChartResult toOrderChartResult(List<Order> orderList, List<String> dateList) {
+        List<OrderChartColumn> columnList = new ArrayList<>();
+        int maxRoyalties = 0;
+        int intervalRoyalties = 0;
+        int maxSold = 0;
+        int intervalSold = 0;
+
+        for (int i = 0; i < dateList.size(); i++) {
+            columnList.add(toOrderChartColumn(orderList.get(i), dateList.get(i)));
+        }
+
+        return new OrderChartResult()
+                .setMaxRoyalties(maxRoyalties)
+                .setIntervalRoyalties(intervalRoyalties)
+                .setColumns(columnList)
+                .setMaxSold(maxSold)
+                .setIntervalSold(intervalSold);
     }
 }

@@ -13,16 +13,10 @@ import java.math.BigDecimal;
 @NoArgsConstructor
 @AllArgsConstructor
 @Accessors(chain = true)
-public class OrderCardItemResult {
+public class OrderChartColumn {
     private String date;
 
-    private Integer sold;
-
-    private Integer purchased;
-
-    private Integer cancelled;
-
-    private Integer returned;
-
     private BigDecimal royalties;
+
+    private int sold;
 }

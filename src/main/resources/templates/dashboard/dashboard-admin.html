@@ -29,7 +29,10 @@
 
                 <!-- Page Heading -->
                 <div class="d-sm-flex align-items-center justify-content-between mb-4">
-                    <h1 class="h3 mb-0 text-gray-800" th:text="${group.title}">Dashboard</h1>
+                    <a class="h3 mb-0 text-gray-800 text-decoration-none" th:text="${group.title}"
+                       th:href="@{'/dashboard/' + ${(group.id != 0) ? group.id : ''}}">
+                        Dashboard
+                    </a>
                     <a href="#" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm"><i
                             class="fas fa-download fa-sm text-white-50"></i> Generate Report</a>
                 </div>
@@ -169,7 +172,7 @@
 
                                                     <div class="row">
                                                         <div class="col-6 d-flex flex-row justify-content-center align-items-center">
-                                                            <div id="allTimePurchased" class="h3 mb-0 text-gray-800">
+                                                            <div id="allTimePurchased" class="h3 mb-0 text-gray-800 font-weight-bold">
                                                                 0
                                                             </div>
                                                         </div>
@@ -208,7 +211,7 @@
 
                                                     <div class="row">
                                                         <div class="col-6 d-flex flex-row justify-content-center align-items-center">
-                                                            <div id="yesterdayPurchased" class="h3 mb-0 text-gray-800">
+                                                            <div id="yesterdayPurchased" class="h3 mb-0 text-gray-800 font-weight-bold">
                                                                 0
                                                             </div>
                                                         </div>
@@ -247,7 +250,7 @@
 
                                                     <div class="row">
                                                         <div class="col-6 d-flex flex-row justify-content-center align-items-center">
-                                                            <div id="lastSevenDaysPurchased" class="h3 mb-0 text-gray-800">
+                                                            <div id="lastSevenDaysPurchased" class="h3 mb-0 text-gray-800 font-weight-bold">
                                                                 0
                                                             </div>
                                                         </div>
@@ -286,7 +289,7 @@
 
                                                     <div class="row">
                                                         <div class="col-6 d-flex flex-row justify-content-center align-items-center">
-                                                            <div id="thisMonthPurchased" class="h3 mb-0 text-gray-800">
+                                                            <div id="thisMonthPurchased" class="h3 mb-0 text-gray-800 font-weight-bold">
                                                                 0
                                                             </div>
                                                         </div>
@@ -325,7 +328,7 @@
 
                                                     <div class="row">
                                                         <div class="col-6 d-flex flex-row justify-content-center align-items-center">
-                                                            <div id="previousMonthPurchased" class="h3 mb-0 text-gray-800">
+                                                            <div id="previousMonthPurchased" class="h3 mb-0 text-gray-800 font-weight-bold">
                                                                 0
                                                             </div>
                                                         </div>
@@ -634,7 +637,7 @@
 
                 +'<Combination2DChart showDataTips="true">'
                     +'<horizontalAxis>'
-                        +'<CategoryAxis categoryField="Month" padding="1"/>'
+                        +'<CategoryAxis categoryField="Date"/>'
                     +'</horizontalAxis>'
 
                     +'<verticalAxis>'
@@ -642,7 +645,7 @@
                     +'</verticalAxis>'
 
                     +'<series>'
-                        +'<Column2DSeries labelPosition="outside" yField="Profit" displayName="Profit" showValueLabels="[5]" columnWidthRatio="0.54">'
+                        +'<Column2DSeries labelPosition="none" yField="Royalties" displayName="Royalties" columnWidthRatio="0.54">'
                             +'<fill>'
                                 +'<SolidColor color="#41b2e6"/>'
                             +'</fill>'
@@ -651,7 +654,7 @@
                             +'</showDataEffect>'
                         +'</Column2DSeries>'
 
-                        +'<Line2DSeries radius="6" yField="Cost" displayName="Cost" itemRenderer="CircleItemRenderer">'
+                        +'<Line2DSeries radius="6" yField="Sold" displayName="Sold" itemRenderer="CircleItemRenderer">'
                             +'<verticalAxis>'
                                 +'<LinearAxis id="vAxis2" interval="40" maximum="320"/>'
                             +'</verticalAxis>'
@@ -675,16 +678,16 @@
             +'</KoolChart>`;
 
     var chartData = [
-        {"Month": "Jan", "Profit": 20, "Cost": 120},
-        {"Month": "Feb", "Profit": 30, "Cost": 160},
-        {"Month": "Mar", "Profit": 52, "Cost": 150},
-        {"Month": "Apr", "Profit": 45, "Cost": 190},
-        {"Month": "May", "Profit": 62, "Cost": 180},
-        {"Month": "Jun", "Profit": 82, "Cost": 250},
-        {"Month": "Oct", "Profit": 42, "Cost": 120}
+        {"Date": "Jan", "Royalties": 20, "Sold": 120},
+        {"Date": "Feb", "Royalties": 30, "Sold": 160},
+        {"Date": "Mar", "Royalties": 52, "Sold": 150},
+        {"Date": "Apr", "Royalties": 45, "Sold": 190},
+        {"Date": "May", "Royalties": 62, "Sold": 180},
+        {"Date": "Jun", "Royalties": 82, "Sold": 250},
+        {"Date": "Oct", "Royalties": 42, "Sold": 120}
     ];
 
-    // cards
+    // onclick-user
     $("#filter-dashboard").on('click', '.list-group-item', function () {
         $("#filter-dashboard .list-group-item").removeClass('active');
         $(this).addClass('active');

@@ -6,23 +6,21 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.experimental.Accessors;
 
-import java.math.BigDecimal;
+import java.util.List;
 
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @Accessors(chain = true)
-public class OrderCardItemResult {
-    private String date;
+public class OrderChartResult {
+    private int maxRoyalties;
 
-    private Integer sold;
+    private int intervalRoyalties;
 
-    private Integer purchased;
+    private int maxSold;
 
-    private Integer cancelled;
+    private int intervalSold;
 
-    private Integer returned;
-
-    private BigDecimal royalties;
+    private List<OrderChartColumn> columns;
 }

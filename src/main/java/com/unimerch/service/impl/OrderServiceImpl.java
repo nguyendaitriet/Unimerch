@@ -4,6 +4,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.module.SimpleModule;
 import com.unimerch.dto.order.OrderCardItemResult;
+import com.unimerch.dto.order.OrderChartResult;
 import com.unimerch.dto.order.OrderData;
 import com.unimerch.exception.ServerErrorException;
 import com.unimerch.mapper.OrderMapper;
@@ -59,6 +60,27 @@ public class OrderServiceImpl implements OrderService {
         } catch (JsonProcessingException | ServerErrorException e) {
             throw new ServerErrorException(messageSource.getMessage("error.500", null, Locale.getDefault()));
         }
+    }
+
+    @Override
+    public OrderChartResult getChartAllAcc() {
+        OrderChartResult orderChartResult = new OrderChartResult();
+
+        Instant startDate = timeUtils.getInstantLastSomeDays(7);
+        List<Order> orderList = orderRepository.findAllWithStartDate(startDate);
+
+
+        return orderChartResult;
+    }
+
+    @Override
+    public OrderChartResult getChartUser(Integer id) {
+        return null;
+    }
+
+    @Override
+    public OrderChartResult getChartGroup(Integer id) {
+        return null;
     }
 
     @Override
