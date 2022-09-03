@@ -74,8 +74,8 @@ public class OrderServiceImpl implements OrderService {
         OrderCardItemResult yesterday = getCardUserYesterday(amznAccId);
         ordersList.put("yesterday", yesterday);
 
-        OrderCardItemResult lastSevenDay = getCardUserLastSevenDays(amznAccId);
-        ordersList.put("lastSevenDay", lastSevenDay);
+        OrderCardItemResult lastSevenDays = getCardUserLastSevenDays(amznAccId);
+        ordersList.put("lastSevenDays", lastSevenDays);
 
         OrderCardItemResult thisMonth = getCardUserThisMonth(amznAccId);
         ordersList.put("thisMonth", thisMonth);
@@ -158,8 +158,8 @@ public class OrderServiceImpl implements OrderService {
         OrderCardItemResult yesterday = getCardGroupYesterday(groupId);
         ordersList.put("yesterday", yesterday);
 
-        OrderCardItemResult lastSevenDay = getCardGroupLastSevenDays(groupId);
-        ordersList.put("lastSevenDay", lastSevenDay);
+        OrderCardItemResult lastSevenDays = getCardGroupLastSevenDays(groupId);
+        ordersList.put("lastSevenDays", lastSevenDays);
 
         OrderCardItemResult thisMonth = getCardGroupThisMonth(groupId);
         ordersList.put("thisMonth", thisMonth);
@@ -243,8 +243,8 @@ public class OrderServiceImpl implements OrderService {
         OrderCardItemResult yesterday = getCardAllAccYesterday();
         ordersList.put("yesterday", yesterday);
 
-        OrderCardItemResult lastSevenDay = getCardAllAccLastSevenDays();
-        ordersList.put("lastSevenDay", lastSevenDay);
+        OrderCardItemResult lastSevenDays = getCardAllAccLastSevenDays();
+        ordersList.put("lastSevenDays", lastSevenDays);
 
         OrderCardItemResult thisMonth = getCardAllAccThisMonth();
         ordersList.put("thisMonth", thisMonth);

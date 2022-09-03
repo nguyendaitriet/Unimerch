@@ -45,7 +45,7 @@ public interface OrderRepository extends JpaRepository<Order, Integer> {
 
     @Query("SELECT o " +
             "FROM Order o " +
-            "WHERE o.amznAccount.id = " +
+            "WHERE o.amznAccount.id IN " +
                 "(SELECT br.amznAccount.id " +
                 "FROM BrgGroupAmznAccount br " +
                 "WHERE br.group.id = :groupId)")
@@ -54,7 +54,7 @@ public interface OrderRepository extends JpaRepository<Order, Integer> {
     @Query("SELECT o " +
             "FROM Order o " +
             "WHERE o.date >= :timeStart " +
-            "AND o.amznAccount.id = " +
+            "AND o.amznAccount.id IN " +
                 "(SELECT br.amznAccount.id " +
                 "FROM BrgGroupAmznAccount br " +
                 "WHERE br.group.id = :groupId)")
@@ -65,7 +65,7 @@ public interface OrderRepository extends JpaRepository<Order, Integer> {
             "FROM Order o " +
             "WHERE o.date >= :timeStart " +
             "AND o.date < :timeEnd " +
-            "AND o.amznAccount.id = " +
+            "AND o.amznAccount.id IN " +
                 "(SELECT br.amznAccount.id " +
                 "FROM BrgGroupAmznAccount br " +
                 "WHERE br.group.id = :groupId)")

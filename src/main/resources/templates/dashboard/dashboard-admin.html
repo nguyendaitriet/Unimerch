@@ -53,7 +53,7 @@
                             </div>
 
                             <div class="scrollbar-user bg-white mt-2 custom-scrollbar">
-                                <ul id="filter-dashboard" class="list-group">
+                                <ul id="filter-dashboard" class="list-group list-group-flush">
                                     <!-- User Items -->
 
                                 </ul>
@@ -110,41 +110,40 @@
                                                 <div class="card-body">
                                                     <div class="row no-gutters align-items-center mb-2">
                                                         <div class="col mr-2">
-                                                            <div class="text-center font-weight-bold text-primary text-uppercase"
-                                                            th:text="#{dashboard.card.title.todaySale}">
+                                                            <div class="text-center font-weight-bold text-primary text-uppercase">
                                                                 Today's Sale
                                                                 <br>
-                                                                (29/08/2022)
+                                                                <span id="todayDate"></span>
                                                             </div>
 
                                                             <hr class="sidebar-divider my-2">
 
-                                                            <div class="h2 text-center mb-0 font-weight-bold text-gray-800">
-                                                                40,000
+                                                            <div id="todayPurchased" class="h2 text-center mb-0 font-weight-bold text-gray-800">
+                                                                0
                                                             </div>
                                                         </div>
                                                     </div>
                                                     <div class="row mt-1 no-gutters d-flex justify-content-between">
                                                         <div>
-                                                            100/10
+                                                            <span id="todaySold">0</span> - <span id="todayCancelled">0</span>
                                                         </div>
-                                                        <div th:text="#{dashboard.card.field.soldCancelled}">
-                                                            Sold/Cancelled
+                                                        <div>
+                                                            Sold-Cancelled
                                                         </div>
                                                     </div>
                                                     <div class="row mt-1 no-gutters d-flex justify-content-between">
-                                                        <div>
-                                                            40
+                                                        <div id="todayReturned">
+                                                            0
                                                         </div>
-                                                        <div th:text="#{dashboard.card.field.returned}">
+                                                        <div>
                                                             Returned
                                                         </div>
                                                     </div>
                                                     <div class="row mt-1 no-gutters d-flex justify-content-between">
-                                                        <div>
-                                                            $1234.0
+                                                        <div id="todayRoyalties">
+                                                            0
                                                         </div>
-                                                        <div th:text="#{dashboard.card.field.royalties}">
+                                                        <div>
                                                             Royalties
                                                         </div>
                                                     </div>
@@ -160,8 +159,7 @@
                                                 <div class="card-body">
                                                     <div class="row no-gutters align-items-center mb-2 custom-card-header">
                                                         <div class="col mr-2">
-                                                            <div class="h6 text-center font-weight-bold text-primary text-uppercase"
-                                                                 th:text="#{dashboard.card.title.allTimes}">
+                                                            <div class="h6 text-center font-weight-bold text-primary text-uppercase">
                                                                 All Times
                                                             </div>
                                                         </div>
@@ -171,20 +169,20 @@
 
                                                     <div class="row">
                                                         <div class="col-6 d-flex flex-row justify-content-center align-items-center">
-                                                            <div class="h3 mb-0 text-gray-800">
-                                                                40,000
+                                                            <div id="allTimePurchased" class="h3 mb-0 text-gray-800">
+                                                                0
                                                             </div>
                                                         </div>
 
                                                         <div class="col">
                                                             <div class="row mt-1 no-gutters d-flex justify-content-end">
-                                                                100-10
+                                                                <span id="allTimeSold">0</span> - <span id="allTimeCancelled">0</span>
                                                             </div>
-                                                            <div class="row mt-1 no-gutters d-flex justify-content-end">
-                                                                40
+                                                            <div id="allTimeReturned" class="row mt-1 no-gutters d-flex justify-content-end">
+                                                                0
                                                             </div>
-                                                            <div class="row mt-1 no-gutters d-flex justify-content-end">
-                                                                $1234.0
+                                                            <div id="allTimeRoyalties" class="row mt-1 no-gutters d-flex justify-content-end">
+                                                                0
                                                             </div>
                                                         </div>
                                                     </div>
@@ -198,11 +196,10 @@
                                                 <div class="card-body">
                                                     <div class="row no-gutters align-items-center mb-2 custom-card-header">
                                                         <div class="col mr-2">
-                                                            <div class="h6 text-center font-weight-bold text-primary text-uppercase"
-                                                            th:text="#{dashboard.card.title.yesterday}">
+                                                            <div class="h6 text-center font-weight-bold text-primary text-uppercase">
                                                                 Yesterday
                                                                 <br>
-                                                                (00/00/0000)
+                                                                <span id="yesterdayDate"></span>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -211,20 +208,20 @@
 
                                                     <div class="row">
                                                         <div class="col-6 d-flex flex-row justify-content-center align-items-center">
-                                                            <div class="h3 mb-0 text-gray-800">
-                                                                40,000
+                                                            <div id="yesterdayPurchased" class="h3 mb-0 text-gray-800">
+                                                                0
                                                             </div>
                                                         </div>
 
                                                         <div class="col">
                                                             <div class="row mt-1 no-gutters d-flex justify-content-end">
-                                                                100/10
+                                                                <span id="yesterdaySold">0</span> - <span id="yesterdayCancelled">0</span>
                                                             </div>
-                                                            <div class="row mt-1 no-gutters d-flex justify-content-end">
-                                                                40
+                                                            <div id="yesterdayReturned" class="row mt-1 no-gutters d-flex justify-content-end">
+                                                                0
                                                             </div>
-                                                            <div class="row mt-1 no-gutters d-flex justify-content-end">
-                                                                $1234.0
+                                                            <div id="yesterdayRoyalties" class="row mt-1 no-gutters d-flex justify-content-end">
+                                                                0
                                                             </div>
                                                         </div>
                                                     </div>
@@ -238,11 +235,10 @@
                                                 <div class="card-body">
                                                     <div class="row no-gutters align-items-center mb-2 custom-card-header">
                                                         <div class="col mr-2">
-                                                            <div class="h6 text-center font-weight-bold text-primary text-uppercase"
-                                                            th:text="#{dashboard.card.title.last7Days}">
+                                                            <div class="h6 text-center font-weight-bold text-primary text-uppercase">
                                                                 Last 7 Days
                                                                 <br>
-                                                                (00/00/0000)
+                                                                <span id="lastSevenDaysDate"></span>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -251,20 +247,20 @@
 
                                                     <div class="row">
                                                         <div class="col-6 d-flex flex-row justify-content-center align-items-center">
-                                                            <div class="h3 mb-0 text-gray-800">
-                                                                40,000
+                                                            <div id="lastSevenDaysPurchased" class="h3 mb-0 text-gray-800">
+                                                                0
                                                             </div>
                                                         </div>
 
                                                         <div class="col">
                                                             <div class="row mt-1 no-gutters d-flex justify-content-end">
-                                                                100/10
+                                                                <span id="lastSevenDaysSold">0</span> - <span id="lastSevenDaysCancelled">0</span>
                                                             </div>
-                                                            <div class="row mt-1 no-gutters d-flex justify-content-end">
-                                                                40
+                                                            <div id="lastSevenDaysReturned" class="row mt-1 no-gutters d-flex justify-content-end">
+                                                                0
                                                             </div>
-                                                            <div class="row mt-1 no-gutters d-flex justify-content-end">
-                                                                $1234.0
+                                                            <div id="lastSevenDaysRoyalties" class="row mt-1 no-gutters d-flex justify-content-end">
+                                                                0
                                                             </div>
                                                         </div>
                                                     </div>
@@ -278,11 +274,10 @@
                                                 <div class="card-body">
                                                     <div class="row no-gutters align-items-center mb-2 custom-card-header">
                                                         <div class="col mr-2">
-                                                            <div class="h6 text-center font-weight-bold text-primary text-uppercase"
-                                                            th:text="#{dashboard.card.title.thisMonth}">
+                                                            <div class="h6 text-center font-weight-bold text-primary text-uppercase">
                                                                 This Month
                                                                 <br>
-                                                                (00/00/0000)
+                                                                <span id="thisMonthDate"></span>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -291,20 +286,20 @@
 
                                                     <div class="row">
                                                         <div class="col-6 d-flex flex-row justify-content-center align-items-center">
-                                                            <div class="h3 mb-0 text-gray-800">
-                                                                40,000
+                                                            <div id="thisMonthPurchased" class="h3 mb-0 text-gray-800">
+                                                                0
                                                             </div>
                                                         </div>
 
                                                         <div class="col">
                                                             <div class="row mt-1 no-gutters d-flex justify-content-end">
-                                                                100/10
+                                                                <span id="thisMonthSold">0</span> - <span id="thisMonthCancelled">0</span>
                                                             </div>
-                                                            <div class="row mt-1 no-gutters d-flex justify-content-end">
-                                                                40
+                                                            <div id="thisMonthReturned" class="row mt-1 no-gutters d-flex justify-content-end">
+                                                                0
                                                             </div>
-                                                            <div class="row mt-1 no-gutters d-flex justify-content-end">
-                                                                $1234.0
+                                                            <div id="thisMonthRoyalties" class="row mt-1 no-gutters d-flex justify-content-end">
+                                                                0
                                                             </div>
                                                         </div>
                                                     </div>
@@ -318,11 +313,10 @@
                                                 <div class="card-body">
                                                     <div class="row no-gutters align-items-center mb-2 custom-card-header">
                                                         <div class="col mr-2">
-                                                            <div class="h6 text-center font-weight-bold text-primary text-uppercase"
-                                                            th:text="#{dashboard.card.title.previousMonth}">
+                                                            <div class="h6 text-center font-weight-bold text-primary text-uppercase">
                                                                 Previous Month
                                                                 <br>
-                                                                (00/00/0000)
+                                                                <span id="previousMonthDate"></span>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -331,20 +325,20 @@
 
                                                     <div class="row">
                                                         <div class="col-6 d-flex flex-row justify-content-center align-items-center">
-                                                            <div class="h3 mb-0 text-gray-800">
-                                                                40,000
+                                                            <div id="previousMonthPurchased" class="h3 mb-0 text-gray-800">
+                                                                0
                                                             </div>
                                                         </div>
 
                                                         <div class="col">
                                                             <div class="row mt-1 no-gutters d-flex justify-content-end">
-                                                                100/10
+                                                                <span id="previousMonthSold">0</span> - <span id="previousMonthCancelled">0</span>
                                                             </div>
-                                                            <div class="row mt-1 no-gutters d-flex justify-content-end">
-                                                                40
+                                                            <div id="previousMonthReturned" class="row mt-1 no-gutters d-flex justify-content-end">
+                                                                0
                                                             </div>
-                                                            <div class="row mt-1 no-gutters d-flex justify-content-end">
-                                                                $1234.0
+                                                            <div id="previousMonthRoyalties" class="row mt-1 no-gutters d-flex justify-content-end">
+                                                                0
                                                             </div>
                                                         </div>
                                                     </div>
@@ -483,11 +477,14 @@
     <i class="fas fa-angle-up"></i>
 </a>
 
+<div id="spinner"></div>
+
 <th:block th:replace="layout/script :: script-dashboard"/>
 
 <th:block th:replace="layout/texts :: texts"/>
 
 <script>
+
     let currentGrpId = window.location.pathname.split('/')[2];
 
     let page = {
@@ -510,49 +507,93 @@
 
     page.element.tableTodaySold = $("#tableTodaySold");
 
+    page.dialogs.element.todayDate = $("#todayDate");
+    page.dialogs.element.todayPurchased = $("#todayPurchased");
+    page.dialogs.element.todaySold = $("#todaySold");
+    page.dialogs.element.todayCancelled = $("#todayCancelled");
+    page.dialogs.element.todayReturned = $("#todayReturned");
+    page.dialogs.element.todayRoyalties = $("#todayRoyalties");
+
+    page.dialogs.element.allTimePurchased = $("#allTimePurchased");
+    page.dialogs.element.allTimeSold = $("#allTimeSold");
+    page.dialogs.element.allTimeCancelled = $("#allTimeCancelled");
+    page.dialogs.element.allTimeReturned = $("#allTimeReturned");
+    page.dialogs.element.allTimeRoyalties = $("#allTimeRoyalties");
+
+    page.dialogs.element.yesterdayDate = $("#yesterdayDate");
+    page.dialogs.element.yesterdayPurchased = $("#yesterdayPurchased");
+    page.dialogs.element.yesterdaySold = $("#yesterdaySold");
+    page.dialogs.element.yesterdayCancelled = $("#yesterdayCancelled");
+    page.dialogs.element.yesterdayReturned = $("#yesterdayReturned");
+    page.dialogs.element.yesterdayRoyalties = $("#yesterdayRoyalties");
+
+    page.dialogs.element.lastSevenDaysDate = $("#lastSevenDaysDate");
+    page.dialogs.element.lastSevenDaysPurchased = $("#lastSevenDaysPurchased");
+    page.dialogs.element.lastSevenDaysSold = $("#lastSevenDaysSold");
+    page.dialogs.element.lastSevenDaysCancelled = $("#lastSevenDaysCancelled");
+    page.dialogs.element.lastSevenDaysReturned = $("#lastSevenDaysReturned");
+    page.dialogs.element.lastSevenDaysRoyalties = $("#lastSevenDaysRoyalties");
+
+    page.dialogs.element.thisMonthDate = $("#thisMonthDate");
+    page.dialogs.element.thisMonthPurchased = $("#thisMonthPurchased");
+    page.dialogs.element.thisMonthSold = $("#thisMonthSold");
+    page.dialogs.element.thisMonthCancelled = $("#thisMonthCancelled");
+    page.dialogs.element.thisMonthReturned = $("#thisMonthReturned");
+    page.dialogs.element.thisMonthRoyalties = $("#thisMonthRoyalties");
+
+    page.dialogs.element.previousMonthDate = $("#previousMonthDate");
+    page.dialogs.element.previousMonthPurchased = $("#previousMonthPurchased");
+    page.dialogs.element.previousMonthSold = $("#previousMonthSold");
+    page.dialogs.element.previousMonthCancelled = $("#previousMonthCancelled");
+    page.dialogs.element.previousMonthReturned = $("#previousMonthReturned");
+    page.dialogs.element.previousMonthRoyalties = $("#previousMonthRoyalties");
+
+    page.element.spinner = $('#spinner');
+
     $(document).ready(function () {
         KoolChart.create("chart1", "chartHolder", chartVars, "100%", "100%");
-        handleFilterDashboard(currentGrpId);
+        handleContentDashboard(currentGrpId);
 
-        page.element.tableTodaySold.DataTable({
-            ajax: {
-                contentType: 'application/json',
-                url: page.urls.findAllTodaySoldTableItem,
-                type: 'POST',
-                data: (d) => JSON.stringify(d),
-                dataSrc: 'data'
-            },
-            info: false,
-            pagingType: 'simple_numbers',
-            processing: true,
-            serverSide: true,
-            columns: [
-                {data: 'quantitySold'},
-                {data: 'productName'},
-                {data: 'royalties'},
-                {data: 'price'},
-                {data: 'amznAccUsername'},
-            ],
-            language: {
-                search: `<i class="fas fa-search text-primary"></i> `,
-                paginate: {
-                    previous: `<i class="fas fa-angle-left"></i>`,
-                    next:     `<i class="fas fa-angle-right"></i>`
-                },
-                aria: {
-                    paginate: {
-                        previous: 'Previous',
-                        next:     'Next'
-                    }
-                },
-                emptyTable: `${noDataInTable}`
-            },
-            pageLength: 10,
-            lengthChange: false,
-            dom: 'Bfrtip',
-        });
+        // page.element.tableTodaySold.DataTable({
+        //     ajax: {
+        //         contentType: 'application/json',
+        //         url: page.urls.findAllTodaySoldTableItem,
+        //         type: 'POST',
+        //         data: (d) => JSON.stringify(d),
+        //         dataSrc: 'data'
+        //     },
+        //     info: false,
+        //     pagingType: 'simple_numbers',
+        //     processing: true,
+        //     serverSide: true,
+        //     columns: [
+        //         {data: 'quantitySold'},
+        //         {data: 'productName'},
+        //         {data: 'royalties'},
+        //         {data: 'price'},
+        //         {data: 'amznAccUsername'},
+        //     ],
+        //     language: {
+        //         search: `<i class="fas fa-search text-primary"></i> `,
+        //         paginate: {
+        //             previous: `<i class="fas fa-angle-left"></i>`,
+        //             next:     `<i class="fas fa-angle-right"></i>`
+        //         },
+        //         aria: {
+        //             paginate: {
+        //                 previous: 'Previous',
+        //                 next:     'Next'
+        //             }
+        //         },
+        //         emptyTable: `${noDataInTable}`
+        //     },
+        //     pageLength: 10,
+        //     lengthChange: false,
+        //     dom: 'Bfrtip',
+        // });
     })
 
+    //sticky Filter
     var navBar = $("#topNav");
 
     var hdrHeight = $("header").height();
@@ -632,14 +673,18 @@
         {"Month": "Oct", "Profit": 42, "Cost": 120}
     ];
 
-    function handleFilterDashboard(groupId) {
-        let container = $('#filter-dashboard');
+    // cards
+    $("#filter-dashboard").on('click', '.list-group-item', function () {
+        $("#filter-dashboard .list-group-item").removeClass('active');
+        $(this).addClass('active');
 
-        let url = page.urls.findAmznAccInGrp + groupId;
+        let currentUserId = $(this).data('id');
+        let url = page.urls.findOrdersByAmznId + currentUserId;
 
-        if (isNaN(groupId) || groupId === '')
-            url = page.urls.findAllAmznAccount;
+        getCards(url);
+    })
 
+    function getCards(url) {
         $.ajax({
             "headers": {
                 "accept": "application/json",
@@ -647,23 +692,95 @@
             },
             "type": "GET",
             "url": url,
+            "beforeSend": () => page.element.spinner.show(),
+            "complete": () => page.element.spinner.hide()
         })
-            .done((accounts) => {
-                let str = ``;
+            .done((cards) => {
+                page.dialogs.element.todayDate.text(cards.today.date);
+                page.dialogs.element.todayPurchased.text(cards.today.purchased);
+                page.dialogs.element.todaySold.text(cards.today.sold);
+                page.dialogs.element.todayCancelled.text(cards.today.cancelled);
+                page.dialogs.element.todayReturned.text(cards.today.returned);
+                page.dialogs.element.todayRoyalties.text(cards.today.royalties);
 
-                $.each(accounts, function (index, account) {
-                    str += `<li class="list-group-item">${account.username}</li>`
-                })
+                page.dialogs.element.allTimePurchased.text(cards.allTime.purchased);
+                page.dialogs.element.allTimeSold.text(cards.allTime.sold);
+                page.dialogs.element.allTimeCancelled.text(cards.allTime.cancelled);
+                page.dialogs.element.allTimeReturned.text(cards.allTime.returned);
+                page.dialogs.element.allTimeRoyalties.text(cards.allTime.royalties);
 
-                container.append(str);
-                App.handleFilter('filter-dashboard', 'dashboard-user-search', 'list-group-item');
+                page.dialogs.element.yesterdayDate.text(cards.yesterday.date);
+                page.dialogs.element.yesterdayPurchased.text(cards.yesterday.purchased);
+                page.dialogs.element.yesterdaySold.text(cards.yesterday.sold);
+                page.dialogs.element.yesterdayCancelled.text(cards.yesterday.cancelled);
+                page.dialogs.element.yesterdayReturned.text(cards.yesterday.returned);
+                page.dialogs.element.yesterdayRoyalties.text(cards.yesterday.royalties);
+
+                page.dialogs.element.lastSevenDaysDate.text(cards.lastSevenDays.date);
+                page.dialogs.element.lastSevenDaysPurchased.text(cards.lastSevenDays.purchased);
+                page.dialogs.element.lastSevenDaysSold.text(cards.lastSevenDays.sold);
+                page.dialogs.element.lastSevenDaysCancelled.text(cards.lastSevenDays.cancelled);
+                page.dialogs.element.lastSevenDaysReturned.text(cards.lastSevenDays.returned);
+                page.dialogs.element.lastSevenDaysRoyalties.text(cards.lastSevenDays.royalties);
+
+                page.dialogs.element.thisMonthDate.text(cards.thisMonth.date);
+                page.dialogs.element.thisMonthPurchased.text(cards.thisMonth.purchased);
+                page.dialogs.element.thisMonthSold.text(cards.thisMonth.sold);
+                page.dialogs.element.thisMonthCancelled.text(cards.thisMonth.cancelled);
+                page.dialogs.element.thisMonthReturned.text(cards.thisMonth.returned);
+                page.dialogs.element.thisMonthRoyalties.text(cards.thisMonth.royalties);
+
+                page.dialogs.element.previousMonthDate.text(cards.previousMonth.date);
+                page.dialogs.element.previousMonthPurchased.text(cards.previousMonth.purchased);
+                page.dialogs.element.previousMonthSold.text(cards.previousMonth.sold);
+                page.dialogs.element.previousMonthCancelled.text(cards.previousMonth.cancelled);
+                page.dialogs.element.previousMonthReturned.text(cards.previousMonth.returned);
+                page.dialogs.element.previousMonthRoyalties.text(cards.previousMonth.royalties);
             })
             .fail((jqXHR) => {
                 App.handleFailedTasks(jqXHR);
             })
     }
 
+    function handleContentDashboard(groupId) {
+        let listUrl = page.urls.findAmznAccInGrp + groupId;
+        let dataUrl = page.urls.findOrdersByGroupId + groupId;
 
+        if (isNaN(groupId) || groupId === '') {
+            listUrl = page.urls.findAllAmznAccount;
+            dataUrl = page.urls.findAllOrders;
+        }
+
+        $.ajax({
+            "headers": {
+                "accept": "application/json",
+                "content-type": "application/json"
+            },
+            "type": "GET",
+            "url": listUrl,
+        })
+            .done((accounts) => {
+                handleFilterDashboard(accounts);
+                getCards(dataUrl);
+            })
+            .fail((jqXHR) => {
+                App.handleFailedTasks(jqXHR);
+            })
+    }
+
+    function handleFilterDashboard(accounts) {
+        let container = $('#filter-dashboard');
+        let str = ``;
+
+        $.each(accounts, function (index, account) {
+            str += `<btn data-id="${account.id}" class="btn list-group-item list-group-item-action">
+                        ${account.username}
+                    </btn>`
+        })
+
+        container.append(str);
+        App.handleFilter('filter-dashboard', 'dashboard-user-search', 'list-group-item');
+    }
 
 </script>
 </body>
