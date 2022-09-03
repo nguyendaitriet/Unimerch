@@ -353,17 +353,23 @@
                                         <li class="nav-item">
                                             <a class="m-0 font-weight-bold text-primary nav-link active custom-card-title"
                                                data-toggle="tab" href="#today" role="tab" aria-controls="today"
-                                               aria-selected="true" th:text="#{dashboard.tab.today}">Today</a>
+                                               aria-selected="true" th:text="#{dashboard.tab.today}" id="todayLink">
+                                                Today
+                                            </a>
                                         </li>
                                         <li class="nav-item">
                                             <a class="m-0 font-weight-bold text-primary nav-link custom-card-title"
                                                data-toggle="tab" href="#thirtyday" role="tab" aria-controls="thirtyday"
-                                               aria-selected="false" th:text="#{dashboard.tab.thirtyDays}">30 Days</a>
+                                               aria-selected="false" th:text="#{dashboard.tab.thirtyDays}" id="thirtyDaysLink">
+                                                30 Days
+                                            </a>
                                         </li>
                                         <li class="nav-item">
                                             <a class="m-0 font-weight-bold text-primary nav-link custom-card-title"
                                                data-toggle="tab" href="#thismonth" role="tab" aria-controls="thismonth"
-                                               aria-selected="false" th:text="#{dashboard.tab.thisMonth}">This month</a>
+                                               aria-selected="false" th:text="#{dashboard.tab.thisMonth}" id="thisMonthLink">
+                                                This month
+                                            </a>
                                         </li>
                                     </ul>
 
@@ -378,7 +384,7 @@
                                                     <th>Product</th>
                                                     <th>Royalties</th>
                                                     <th>Price</th>
-                                                    <th>User</th>
+                                                    <th>Username</th>
                                                 </tr>
                                                 </thead>
                                             </table>
@@ -386,14 +392,14 @@
                                         <!-- Table - 30 Days -->
                                         <div class="tab-pane fade show" id="thirtyday" role="tabpanel"
                                              aria-labelledby="thirtyday-tab">
-                                            <table>
-                                                <thead>
+                                            <table class="table" id="table30DaysSold">
+                                                <thead class="text-dark">
                                                 <tr>
                                                     <th>Sold</th>
                                                     <th>Product</th>
                                                     <th>Royalties</th>
                                                     <th>Price</th>
-                                                    <th>User</th>
+                                                    <th>Username</th>
                                                 </tr>
                                                 </thead>
                                             </table>
@@ -401,9 +407,9 @@
                                         <!-- Table - This month -->
                                         <div class="tab-pane fade show" id="thismonth" role="tabpanel"
                                              aria-labelledby="thismonth-tab">
-                                            <table>
+                                            <table class="table" id="tableThisMonthSold">
                                                 <thead>
-                                                <tr>
+                                                <tr class="text-dark">
                                                     <th>Sold</th>
                                                     <th>Product</th>
                                                     <th>Royalties</th>
@@ -494,7 +500,9 @@
             findAllOrders: App.BASE_URL_ORDER + "/all",
             findOrdersByGroupId: App.BASE_URL_ORDER + "/grp/",
             findOrdersByAmznId: App.BASE_URL_ORDER + "/acc/",
-            findAllTodaySoldTableItem: App.BASE_URL_PRODUCT + "/findAllTodaySoldAllAmznAcc"
+            findAllTodaySoldAllAmznAcc: App.BASE_URL_PRODUCT + "/findAllTodaySoldAllAmznAcc",
+            findAllLast30DaysSoldAllAmznAcc: App.BASE_URL_PRODUCT + "/findAllLast30DaysSoldAllAmznAcc",
+            findAllThisMonthSoldAllAmznAcc: App.BASE_URL_PRODUCT + "/findAllThisMonthSoldAllAmznAcc"
         },
         element: {},
         commands: {},
@@ -506,6 +514,12 @@
     }
 
     page.element.tableTodaySold = $("#tableTodaySold");
+    page.element.table30DaysSold = $("#table30DaysSold");
+    page.element.tableThisMonthSold = $("#tableThisMonthSold");
+
+    page.element.todayLink = $("#todayLink");
+    page.element.thirtyDaysLink = $("#thirtyDaysLink");
+    page.element.thisMonthLink = $("#thisMonthLink");
 
     page.dialogs.element.todayDate = $("#todayDate");
     page.dialogs.element.todayPurchased = $("#todayPurchased");
@@ -550,15 +564,11 @@
 
     page.element.spinner = $('#spinner');
 
-    $(document).ready(function () {
-        KoolChart.create("chart1", "chartHolder", chartVars, "100%", "100%");
-
-        handleContentDashboard(currentGrpId);
-
+    page.commands.initTodaySoldTable = () => {
         page.element.tableTodaySold.DataTable({
             ajax: {
                 contentType: 'application/json',
-                url: page.urls.findAllTodaySoldTableItem,
+                url: '/assets/json/data.json',
                 dataSrc: ''
             },
             info: false,
@@ -603,6 +613,114 @@
             lengthChange: true,
             dom: 'Bfrtip',
         });
+    }
+    page.commands.init30DaysSoldTable = () => {
+        page.element.table30DaysSold.DataTable({
+            ajax: {
+                contentType: 'application/json',
+                url: '/assets/json/data.json',
+                dataSrc: ''
+            },
+            info: false,
+            pagingType: 'simple_numbers',
+            processing: true,
+            columns: [
+                {data: 'quantitySold'},
+                {data: 'productName'},
+                {data: 'royalties'},
+                {data: 'price'},
+                {data: 'amznAccUsername'},
+            ],
+            columnDefs: [
+                {
+                    targets: 1,
+                    orderable: false,
+                    render: (data, type, row) =>
+                        `<a href='https://www.amazon.com/dp/${row.asin}' title='${btnManage}'>
+                            ${row.productName}
+                        </a>`
+                },
+                {
+                    targets: 0,
+                    className: "text-dark"
+                }
+            ],
+            language: {
+                search: `<i class="fas fa-search text-primary"></i> `,
+                paginate: {
+                    previous: `<i class="fas fa-angle-left"></i>`,
+                    next:     `<i class="fas fa-angle-right"></i>`
+                },
+                aria: {
+                    paginate: {
+                        previous: 'Previous',
+                        next:     'Next'
+                    }
+                },
+                emptyTable: `${noDataInTable}`
+            },
+            pageLength: 10,
+            lengthChange: true,
+            dom: 'Bfrtip',
+        });
+    }
+    page.commands.initThisMonthSoldTable = () => {
+        page.element.tableThisMonthSold.DataTable({
+            ajax: {
+                contentType: 'application/json',
+                url: '/assets/json/data.json',
+                dataSrc: ''
+            },
+            info: false,
+            pagingType: 'simple_numbers',
+            processing: true,
+            columns: [
+                {data: 'quantitySold'},
+                {data: 'productName'},
+                {data: 'royalties'},
+                {data: 'price'},
+                {data: 'amznAccUsername'},
+            ],
+            columnDefs: [
+                {
+                    targets: 1,
+                    orderable: false,
+                    render: (data, type, row) =>
+                        `<a href='https://www.amazon.com/dp/${row.asin}' title='${btnManage}'>
+                            ${row.productName}
+                        </a>`
+                },
+                {
+                    targets: 0,
+                    className: "text-dark"
+                }
+            ],
+            language: {
+                search: `<i class="fas fa-search text-primary"></i> `,
+                paginate: {
+                    previous: `<i class="fas fa-angle-left"></i>`,
+                    next:     `<i class="fas fa-angle-right"></i>`
+                },
+                aria: {
+                    paginate: {
+                        previous: 'Previous',
+                        next:     'Next'
+                    }
+                },
+                emptyTable: `${noDataInTable}`
+            },
+            pageLength: 10,
+            lengthChange: true,
+            dom: 'Bfrtip',
+        });
+    }
+
+    $(document).ready(function () {
+        KoolChart.create("chart1", "chartHolder", chartVars, "100%", "100%");
+        page.commands.initTodaySoldTable();
+        page.commands.init30DaysSoldTable();
+        page.commands.initThisMonthSoldTable();
+        handleContentDashboard(currentGrpId);
     })
 
     //sticky Filter
@@ -761,6 +879,9 @@
         if (isNaN(groupId) || groupId === '') {
             listUrl = page.urls.findAllAmznAccount;
             dataUrl = page.urls.findAllOrders;
+            page.element.tableTodaySold.DataTable().ajax.url(page.urls.findAllTodaySoldAllAmznAcc).load();
+            page.element.table30DaysSold.DataTable().ajax.url(page.urls.findAllLast30DaysSoldAllAmznAcc).load();
+            page.element.tableThisMonthSold.DataTable().ajax.url(page.urls.findAllThisMonthSoldAllAmznAcc).load();
         }
 
         $.ajax({
