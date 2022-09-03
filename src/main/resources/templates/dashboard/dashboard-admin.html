@@ -500,9 +500,18 @@
             findAllOrders: App.BASE_URL_ORDER + "/all",
             findOrdersByGroupId: App.BASE_URL_ORDER + "/grp/",
             findOrdersByAmznId: App.BASE_URL_ORDER + "/acc/",
+
             findAllTodaySoldAllAmznAcc: App.BASE_URL_PRODUCT + "/findAllTodaySoldAllAmznAcc",
             findAllLast30DaysSoldAllAmznAcc: App.BASE_URL_PRODUCT + "/findAllLast30DaysSoldAllAmznAcc",
-            findAllThisMonthSoldAllAmznAcc: App.BASE_URL_PRODUCT + "/findAllThisMonthSoldAllAmznAcc"
+            findAllThisMonthSoldAllAmznAcc: App.BASE_URL_PRODUCT + "/findAllThisMonthSoldAllAmznAcc",
+
+            findAllTodaySoldInGroup: App.BASE_URL_PRODUCT + "/findAllTodaySoldInGroup/",
+            findAllLast30DaysSoldInGroup: App.BASE_URL_PRODUCT + "/findAllLast30DaysSoldInGroup/",
+            findAllThisMonthSoldInGroup: App.BASE_URL_PRODUCT + "/findAllThisMonthSoldInGroup/",
+
+            findAllTodaySoldEveryAmznAcc: App.BASE_URL_PRODUCT + "/findAllTodaySoldEveryAmznAcc/",
+            findAllLast30DaysSoldEveryAmznAcc: App.BASE_URL_PRODUCT + "/findAllLast30DaysSoldEveryAmznAcc/",
+            findAllThisMonthSoldEveryAmznAcc: App.BASE_URL_PRODUCT + "/findAllThisMonthSoldEveryAmznAcc/",
         },
         element: {},
         commands: {},
@@ -584,7 +593,6 @@
             columnDefs: [
                 {
                     targets: 1,
-                    orderable: false,
                     render: (data, type, row) =>
                         `<a href='https://www.amazon.com/dp/${row.asin}' title='${btnManage}'>
                             ${row.productName}
@@ -592,8 +600,8 @@
                 },
                 {
                     targets: 0,
-                    className: "text-dark"
-                }
+                    className: "text-dark",
+                },
             ],
             language: {
                 search: `<i class="fas fa-search text-primary"></i> `,
@@ -634,7 +642,6 @@
             columnDefs: [
                 {
                     targets: 1,
-                    orderable: false,
                     render: (data, type, row) =>
                         `<a href='https://www.amazon.com/dp/${row.asin}' title='${btnManage}'>
                             ${row.productName}
@@ -684,7 +691,6 @@
             columnDefs: [
                 {
                     targets: 1,
-                    orderable: false,
                     render: (data, type, row) =>
                         `<a href='https://www.amazon.com/dp/${row.asin}' title='${btnManage}'>
                             ${row.productName}
@@ -812,7 +818,15 @@
         let url = page.urls.findOrdersByAmznId + currentUserId;
 
         getCards(url);
+        getProductSoldDataForEachAmznAcc(currentUserId);
     })
+
+    function getProductSoldDataForEachAmznAcc(amznAccId) {
+        page.element.tableTodaySold.DataTable().ajax.url(page.urls.findAllTodaySoldEveryAmznAcc + amznAccId).load();
+        page.element.table30DaysSold.DataTable().ajax.url(page.urls.findAllLast30DaysSoldEveryAmznAcc + amznAccId).load();
+        page.element.tableThisMonthSold.DataTable().ajax.url(page.urls.findAllThisMonthSoldEveryAmznAcc + amznAccId).load();
+
+    }
 
     function getCards(url) {
         $.ajax({
@@ -882,7 +896,12 @@
             page.element.tableTodaySold.DataTable().ajax.url(page.urls.findAllTodaySoldAllAmznAcc).load();
             page.element.table30DaysSold.DataTable().ajax.url(page.urls.findAllLast30DaysSoldAllAmznAcc).load();
             page.element.tableThisMonthSold.DataTable().ajax.url(page.urls.findAllThisMonthSoldAllAmznAcc).load();
+        } else {
+            page.element.tableTodaySold.DataTable().ajax.url(page.urls.findAllTodaySoldInGroup + groupId).load();
+            page.element.table30DaysSold.DataTable().ajax.url(page.urls.findAllLast30DaysSoldInGroup + groupId).load();
+            page.element.tableThisMonthSold.DataTable().ajax.url(page.urls.findAllThisMonthSoldInGroup + groupId).load();
         }
+
 
         $.ajax({
             "headers": {
