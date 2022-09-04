@@ -215,6 +215,11 @@
                     page.element.tableAmznAccIn.DataTable().clear().draw();
                     page.element.groupTitle.html('');
                 }
+                $('#filter-sidebar .collapse-item').each((index, value) => {
+                    if ($(value).data('id') == currentGroup.id) {
+                        $(value).remove();
+                    }
+                })
                 App.SweetAlert.showSuccessAlert(SUCCESS_REMOVED);
             })
             .fail(function (jqXHR) {
