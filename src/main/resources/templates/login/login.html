@@ -50,11 +50,20 @@
             "url": page.urls.login,
             "data": JSON.stringify(user)
         })
-            .done(() => {
+            .done((resp) => {
                 App.IziToast.showSuccessAlert("Logging in...");
-                setTimeout(() => {
-                    location.href = "/dashboard";
-                }, 800)
+
+                for (let role of resp.roles) {
+                    if (role.authority == "USER") {
+                        setTimeout(function () {
+                            window.location.href = "/users";
+                        }, 800);
+                        return;
+                    }
+                    setTimeout(function () {
+                        window.location.href = "/dashboard";
+                    }, 800);
+                }
             })
             .fail((jqXHR) => {
                 if (jqXHR.status === 401) {
@@ -66,6 +75,13 @@
                 }
             })
     })
+
+    page.dialogs.element.frmLogin.keypress(function(event){
+        var keycode = (event.keyCode ? event.keyCode : event.which);
+        if(keycode == '13'){
+            page.element.btnLogin.click();
+        }
+    });
 </script>
 </body>
 </html>

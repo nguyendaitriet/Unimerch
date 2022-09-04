@@ -6,14 +6,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
 
 @Controller
-public class HomeController {
-    @GetMapping("/")
-    public String redirectToDashBoard() {
-        return "redirect:/dashboard";
-    }
-
-    @GetMapping("/login")
-    public ModelAndView showLoginForm() {
-        return new ModelAndView("/login/login");
+@RequestMapping("/users")
+public class UserDashboardController {
+    @GetMapping
+    public ModelAndView showUserDashboard() {
+        ModelAndView modelAndView = new ModelAndView("/dashboard/dashboard-user");
+        return modelAndView;
     }
 }
