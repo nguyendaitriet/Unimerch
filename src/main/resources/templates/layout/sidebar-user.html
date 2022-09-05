@@ -1,0 +1,47 @@
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<th:block th:fragment="sidebar">
+    <ul class="navbar-nav bg-gradient-primary sidebar sidebar-dark accordion" id="accordionSidebar">
+
+        <!-- Sidebar - Brand -->
+        <a class="sidebar-brand d-flex align-items-center justify-content-center" href="/dashboard/">
+            <div class="sidebar-brand-icon rotate-n-15">
+                <i class="fas fa-chart-line"></i>
+            </div>
+            <div class="sidebar-brand-text mx-3">Unimerch</div>
+        </a>
+
+        <!-- Divider -->
+        <hr class="sidebar-divider my-0">
+
+        <!-- Nav Item - Dashboard -->
+        <li class="nav-item" id="nav-item-dashboard">
+            <a class="nav-link collapsed" href="/dashboard" data-toggle="collapse" data-target="#collapseDashboard"
+               aria-expanded="true" aria-controls="collapseDashboard">
+                <i class="fas fa-fw fa-tachometer-alt"></i>
+                <span th:text="#{sidebar.navItem.dashboard.title}">Dashboard</span></a>
+            <div id="collapseDashboard" class="collapse" data-parent="#accordionSidebar">
+                <div id="filter-sidebar" class="bg-white py-2 collapse-inner rounded scrollbar-sidebar custom-scrollbar">
+                    <div class="input-group input-group-sm filter-group">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text">
+                                <i class="fas fa-search"></i>
+                            </span>
+                        </div>
+                        <input id="sidebar-grp-search" class="form-control" type="text" th:placeholder="#{placeholder.searchBox}">
+                    </div>
+                    <!-- Group Items -->
+
+                </div>
+            </div>
+        </li>
+
+        <!-- Divider -->
+        <hr class="sidebar-divider d-none d-md-block">
+
+        <!-- Sidebar Toggler (Sidebar) -->
+        <div class="text-center d-none d-md-inline">
+            <button class="rounded-circle border-0" id="sidebarToggle"></button>
+        </div>
+
+    </ul>
+</th:block>

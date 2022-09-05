@@ -82,6 +82,7 @@ public class UserAPI {
         return new ResponseEntity<>(groupList, HttpStatus.OK);
     }
 
+    //    @PreAuthorize("hasAnyAuthority('MANAGER')")
     @GetMapping("/asgnGrpNot/{id}")
     public ResponseEntity<?> findUnassignedGroups(@PathVariable String id) {
         List<GroupItemResult> groupList = userService.findUnassignedGroups(id);

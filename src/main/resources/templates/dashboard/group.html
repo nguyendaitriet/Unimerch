@@ -168,6 +168,10 @@
                     'title': data.title
                 })
                 tableGroup.order([0, 'desc']).draw();
+
+                let str = `<a class="collapse-item" data-id="${data.id}" href="/dashboard/${data.id}">${data.title}</a>`
+                $('#filter-sidebar').append(str);
+
                 page.dialogs.element.mdCreateGroup.modal("hide");
                 App.SweetAlert.showSuccessAlert(SUCCESS_CREATED);
             })
