@@ -14,13 +14,9 @@ import java.util.List;
 @AllArgsConstructor
 @Accessors(chain = true)
 public class OrderChartResult {
-    private int maxRoyalties;
+    private long maxRoyaltiesAxis;
 
-    private int intervalRoyalties;
-
-    private int maxSold;
-
-    private int intervalSold;
+    private long maxSoldAxis;
 
     private List<OrderChartColumn> columns;
 }

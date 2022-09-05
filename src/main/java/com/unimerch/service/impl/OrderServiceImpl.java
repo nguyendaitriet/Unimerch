@@ -4,6 +4,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.module.SimpleModule;
 import com.unimerch.dto.order.OrderCardItemResult;
+import com.unimerch.dto.order.OrderChartColumn;
 import com.unimerch.dto.order.OrderChartResult;
 import com.unimerch.dto.order.OrderData;
 import com.unimerch.exception.ServerErrorException;
@@ -64,23 +65,56 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     public OrderChartResult getChartAllAcc() {
-        OrderChartResult orderChartResult = new OrderChartResult();
+        List<OrderChartColumn> columnList = new ArrayList<>();
+        List<String> dateList = timeUtils.getCardsLastSevenDays();
+        int columnNumber = 7;
+        int dateListIndex = 0;
 
-        Instant startDate = timeUtils.getInstantLastSomeDays(7);
-        List<Order> orderList = orderRepository.findAllWithStartDate(startDate);
+        while (columnNumber > 0) {
+            Instant startDate = timeUtils.getInstantLastSomeDays(columnNumber);
+            Instant endDate = timeUtils.getInstantLastSomeDays(--columnNumber);
 
+            List<Order> orderColumn = orderRepository.findAllWithTimeRange(startDate, endDate);
+            columnList.add(orderMapper.toOrderChartColumn(orderColumn, dateList.get(dateListIndex++)));
+        }
 
-        return orderChartResult;
+        return orderMapper.toOrderChartResult(columnList);
     }
 
     @Override
-    public OrderChartResult getChartUser(Integer id) {
-        return null;
+    public OrderChartResult getChartUser(Integer amznAccId) {
+        List<OrderChartColumn> columnList = new ArrayList<>();
+        List<String> dateList = timeUtils.getCardsLastSevenDays();
+        int columnNumber = 7;
+        int dateListIndex = 0;
+
+        while (columnNumber > 0) {
+            Instant startDate = timeUtils.getInstantLastSomeDays(columnNumber);
+            Instant endDate = timeUtils.getInstantLastSomeDays(--columnNumber);
+
+            List<Order> orderColumn = orderRepository.findByAmznAccIdWithTimeRange(amznAccId, startDate, endDate);
+            columnList.add(orderMapper.toOrderChartColumn(orderColumn, dateList.get(dateListIndex++)));
+        }
+
+        return orderMapper.toOrderChartResult(columnList);
     }
 
     @Override
-    public OrderChartResult getChartGroup(Integer id) {
-        return null;
+    public OrderChartResult getChartGroup(Integer groupId) {
+        List<OrderChartColumn> columnList = new ArrayList<>();
+        List<String> dateList = timeUtils.getCardsLastSevenDays();
+        int columnNumber = 7;
+        int dateListIndex = 0;
+
+        while (columnNumber > 0) {
+            Instant startDate = timeUtils.getInstantLastSomeDays(columnNumber);
+            Instant endDate = timeUtils.getInstantLastSomeDays(--columnNumber);
+
+            List<Order> orderColumn = orderRepository.findByGroupIdWithTimeRange(groupId, startDate, endDate);
+            columnList.add(orderMapper.toOrderChartColumn(orderColumn, dateList.get(dateListIndex++)));
+        }
+
+        return orderMapper.toOrderChartResult(columnList);
     }
 
     @Override

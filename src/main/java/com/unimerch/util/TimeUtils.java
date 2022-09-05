@@ -4,8 +4,12 @@ import org.springframework.stereotype.Component;
 
 import java.time.*;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 @Component
 public class TimeUtils {
@@ -97,5 +101,16 @@ public class TimeUtils {
     public String getCardTimePreviousMonth() {
         LocalDate firstDayOfLastMonth = YearMonth.now().minusMonths(1).atDay(1);
         return toMonthYear(firstDayOfLastMonth);
+    }
+
+    public List<String> getCardsLastSevenDays() {
+        List<String> cards = new ArrayList<>();
+
+        LocalDate start = LocalDate.now().minusDays(6);
+
+        IntStream.range(0, 7).mapToObj(start::plusDays).collect(Collectors.toList())
+                .forEach(localDate -> cards.add(toDayMonthYear(localDate)));
+
+        return cards;
     }
 }

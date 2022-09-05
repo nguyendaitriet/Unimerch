@@ -248,7 +248,7 @@ class App {
         let collapsedField = $("#collapseDashboard");
 
         if (container.find(".active")[0])
-            collapsedField.collapse("show")
+            collapsedField.collapse("show");
     }
 }
 

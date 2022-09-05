@@ -10,6 +10,8 @@ import com.unimerch.dto.order.OrderChartColumn;
 import com.unimerch.dto.order.OrderChartResult;
 import com.unimerch.dto.order.OrderData;
 import com.unimerch.repository.model.Order;
+import com.unimerch.util.ChartUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.io.IOException;
@@ -22,6 +24,8 @@ import java.util.Set;
 
 @Component
 public class OrderMapper extends StdDeserializer<OrderData> {
+    @Autowired
+    ChartUtils chartUtils;
 
     public OrderMapper() {
         this(null);
@@ -63,23 +67,23 @@ public class OrderMapper extends StdDeserializer<OrderData> {
     }
 
     public OrderCardItemResult toOrderCardItem(List<Order> ordersList, String date) {
-        OrderCardItemResult today = new OrderCardItemResult();
+        OrderCardItemResult cardItem = new OrderCardItemResult();
 
-        Integer purchased = 0;
+        Integer numberSold = 0;
         Integer cancelled = 0;
         Integer returned = 0;
         BigDecimal royalties = BigDecimal.ZERO;
 
         for (Order order : ordersList) {
-            purchased += order.getPurchased();
+            numberSold += order.getPurchased();
             cancelled += order.getCancelled();
             returned += order.getReturned();
             royalties = royalties.add(order.getRoyalties());
         }
 
-        Integer numberSold = purchased - cancelled;
+        Integer purchased = numberSold - cancelled;
 
-        return today
+        return cardItem
                 .setDate(date)
                 .setPurchased(purchased)
                 .setCancelled(cancelled)
@@ -88,31 +92,41 @@ public class OrderMapper extends StdDeserializer<OrderData> {
                 .setRoyalties(royalties);
     }
 
-    public OrderChartColumn toOrderChartColumn(Order order, String date) {
-        Integer numberSold = order.getPurchased() - order.getCancelled();
+    public OrderChartColumn toOrderChartColumn(List<Order> orderList, String date) {
+        int columnNumSold = 0;
+        BigDecimal columnRoyalties = BigDecimal.ZERO;
+
+        for (Order order : orderList) {
+            columnNumSold += order.getPurchased() - order.getCancelled();
+            columnRoyalties = columnRoyalties.add(order.getRoyalties());
+        }
 
         return new OrderChartColumn()
                 .setDate(date)
-                .setSold(numberSold)
-                .setRoyalties(order.getRoyalties());
+                .setSold(columnNumSold)
+                .setRoyalties(columnRoyalties);
     }
 
-    public OrderChartResult toOrderChartResult(List<Order> orderList, List<String> dateList) {
-        List<OrderChartColumn> columnList = new ArrayList<>();
-        int maxRoyalties = 0;
-        int intervalRoyalties = 0;
-        int maxSold = 0;
-        int intervalSold = 0;
+    public OrderChartResult toOrderChartResult(List<OrderChartColumn> columnList) {
+        BigDecimal maxRoyalties = BigDecimal.ZERO;
+        long maxSold = 0;
 
-        for (int i = 0; i < dateList.size(); i++) {
-            columnList.add(toOrderChartColumn(orderList.get(i), dateList.get(i)));
+        for (OrderChartColumn column : columnList) {
+            if (column.getRoyalties().compareTo(maxRoyalties) > 0)
+                maxRoyalties = column.getRoyalties();
+            if (column.getSold() > maxSold)
+                maxSold = column.getSold();
         }
 
+        if (maxRoyalties.compareTo(BigDecimal.ZERO) == 0)
+            maxRoyalties = BigDecimal.TEN;
+
+        if (maxSold == 0)
+            maxSold = 10;
+
         return new OrderChartResult()
-                .setMaxRoyalties(maxRoyalties)
-                .setIntervalRoyalties(intervalRoyalties)
-                .setColumns(columnList)
-                .setMaxSold(maxSold)
-                .setIntervalSold(intervalSold);
+                .setMaxRoyaltiesAxis(chartUtils.getMaxAxis(maxRoyalties))
+                .setMaxSoldAxis(chartUtils.getMaxAxis(BigDecimal.valueOf(maxSold)))
+                .setColumns(columnList);
     }
 }
