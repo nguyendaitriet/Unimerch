@@ -269,6 +269,6 @@ class Group {
 }
 
 
-(() => {
-    App.handleGroupsFilterSidebar();
-})()
+// (() => {
+//     App.handleGroupsFilterSidebar();
+// })()

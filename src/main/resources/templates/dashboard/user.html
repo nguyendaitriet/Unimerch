@@ -130,6 +130,7 @@
     page.dialogs.element.btnCPUser = $('#btnCPUser');
 
     $(document).ready(function () {
+        App.handleGroupsFilterSidebar();
 
         let table = page.element.tableUser.DataTable({
             ajax: {

@@ -117,7 +117,7 @@
     page.dialogs.element.btnAssignGrpUser = $('#btnAssignGrpUser');
 
     $(document).ready(function () {
-
+        App.handleGroupsFilterSidebar();
         let mainTable = page.element.tbAsgnedGrps.DataTable({
             ajax: {
                 contentType: 'application/json',

@@ -749,7 +749,9 @@
     }
 
     $(document).ready(function () {
-       page.commands.initTodaySoldTable();
+        App.handleGroupsFilterSidebar();
+
+        page.commands.initTodaySoldTable();
        page.commands.init30DaysSoldTable();
        page.commands.initThisMonthSoldTable();
        page.commands.handleContentDashboard(currentGrpId);
@@ -804,6 +806,9 @@
                     `<KoolChart backgroundColor="#FFFFFF"  borderStyle="none">'
                     +'<Options>'
                         +'<Caption text="${chartCaption}" fontSize="20"/>'
+                        +'<SubCaption text="Royalties" textAlign="left" height="0"/>'
+                        +'<SubCaption text="Sold" textAlign="right"/>'
+                        +'<SubCaption/>'
                     +'</Options>'
 
                     +'<NumberFormatter id="numfmt" useThousandsSeparator="true"/>'
