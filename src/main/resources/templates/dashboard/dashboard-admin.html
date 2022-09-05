@@ -625,7 +625,7 @@
                 {
                     targets: 1,
                     render: (data, type, row) =>
-                        `<a href='https://www.amazon.com/dp/${row.asin}' title='${btnManage}'>
+                        `<a href='https://www.amazon.com/dp/${row.asin}' title='${btnManage}'target='_blank'>
                             ${row.productName}
                         </a>`
                 },
@@ -633,6 +633,10 @@
                     targets: 0,
                     className: "text-dark",
                 },
+                {
+                    targets: '_all',
+                    orderable: false
+                }
             ],
             language: {
                 search: `<i class="fas fa-search text-primary"></i> `,
@@ -674,13 +678,17 @@
                 {
                     targets: 1,
                     render: (data, type, row) =>
-                        `<a href='https://www.amazon.com/dp/${row.asin}' title='${btnManage}'>
+                        `<a href='https://www.amazon.com/dp/${row.asin}' title='${btnManage}' target='_blank'>
                             ${row.productName}
                         </a>`
                 },
                 {
                     targets: 0,
                     className: "text-dark"
+                },
+                {
+                    targets: '_all',
+                    orderable: false
                 }
             ],
             language: {
@@ -723,13 +731,17 @@
                 {
                     targets: 1,
                     render: (data, type, row) =>
-                        `<a href='https://www.amazon.com/dp/${row.asin}' title='${btnManage}'>
+                        `<a href='https://www.amazon.com/dp/${row.asin}' title='${btnManage}' target='_blank'>
                             ${row.productName}
                         </a>`
                 },
                 {
                     targets: 0,
                     className: "text-dark"
+                },
+                {
+                    targets: '_all',
+                    orderable: false
                 }
             ],
             language: {

@@ -70,7 +70,10 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
         http.authorizeRequests()
                 .antMatchers("/api/auth/login", "/login").permitAll()
-                .antMatchers("/", "/api/users/**", "/api/groups/**").authenticated()
+                .antMatchers("/", "/dashboard/**","/api/amznAccounts/**").hasAnyAuthority("MANAGER")
+                .antMatchers("/api/products/**", "/api/orders/**", "/api/users/**",
+                        "/api/groups/**","/api/users/asgnGrp/**").authenticated()
+                .antMatchers("/users/**","/api/groups/showAmznAccInsideGroup/**").hasAnyAuthority("USER")
                 .antMatchers("/assets/**", "/messages/**").permitAll()
                 .antMatchers(
                         "/v2/api-docs",
