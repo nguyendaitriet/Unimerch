@@ -64,6 +64,19 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
+    public int getNumberSoldInDayByAmznId(Integer amznAccId) {
+        Instant startTime = timeUtils.getInstantToday();
+        List<Order> orderList = orderRepository.findByAmznAccIdWithStartDate(amznAccId, startTime);
+        int numberSold = 0;
+
+        for (Order order : orderList) {
+            numberSold += order.getPurchased() - order.getCancelled();
+        }
+
+        return numberSold;
+    }
+
+    @Override
     public OrderChartResult getChartAllAcc() {
         List<OrderChartColumn> columnList = new ArrayList<>();
         List<String> dateList = timeUtils.getCardsLastSevenDays();

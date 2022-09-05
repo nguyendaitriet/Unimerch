@@ -113,10 +113,6 @@ nav a {
     padding: 22px;
 }
 
-nav a:hover {
-    background: #193449;
-}
-
 /* Sticky Navigation */
 .navScrolled {
     position: fixed;

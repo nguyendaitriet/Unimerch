@@ -33,4 +33,11 @@ public class PrincipalUtils {
         return userName;
     }
 
+    public String getPrincipalRoleCode() {
+        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        String userName = ((UserDetails) principal).getUsername();
+        User user = userService.getByUsername(userName);
+        return user.getRole().getCode();
+    }
+
 }

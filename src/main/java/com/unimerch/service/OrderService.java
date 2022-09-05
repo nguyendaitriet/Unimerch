@@ -9,6 +9,8 @@ import java.util.Map;
 public interface OrderService {
     OrderData saveOrderData(String data, String jwt);
 
+    int getNumberSoldInDayByAmznId(Integer amznAccId);
+
     OrderChartResult getChartAllAcc();
 
     OrderChartResult getChartUser(Integer id);

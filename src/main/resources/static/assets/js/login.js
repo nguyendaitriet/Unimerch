@@ -43,6 +43,20 @@ class App {
             });
         }
     }
+
+    static handleFailedTasks(jqXHR) {
+        switch (jqXHR.status) {
+            case 401:
+                App.IziToast.showErrorAlert(ERROR_LOGIN_401);
+                break;
+            case 403:
+                App.IziToast.showErrorAlert(ERROR_LOGIN_403);
+                break;
+            default:
+                App.IziToast.showErrorAlert(ERROR_LOGIN_500);
+                break;
+        }
+    }
 }
 
 class User {

@@ -1,5 +1,6 @@
 package com.unimerch.service.impl;
 
+import com.unimerch.dto.amznacc.AmznAccFilterItemResult;
 import com.unimerch.dto.amznacc.AmznAccParam;
 import com.unimerch.dto.amznacc.AmznAccResult;
 import com.unimerch.dto.user.LoginParam;
@@ -86,9 +87,9 @@ public class AmznAccountServiceImpl implements AmznAccountService {
     }
 
     @Override
-    public List<AmznAccResult> findAll() {
+    public List<AmznAccFilterItemResult> findAllFilter() {
         return amznAccountRepository.findAll()
-                .stream().map(account -> amznAccountMapper.toAmznAccResult(account))
+                .stream().map(account -> amznAccountMapper.toAmznAccFilterItemResult(account))
                 .collect(Collectors.toList());
     }
 

@@ -1,5 +1,6 @@
 package com.unimerch.controller.api;
 
+import com.unimerch.dto.amznacc.AmznAccFilterItemResult;
 import com.unimerch.dto.amznacc.AmznAccParam;
 import com.unimerch.dto.amznacc.AmznAccResult;
 import com.unimerch.service.AmznAccountService;
@@ -30,13 +31,6 @@ public class AmznAccountAPI {
     }
 
     //    @PreAuthorize("hasAnyAuthority('MANAGER')")
-    @GetMapping("/findAll")
-    public ResponseEntity<?> findAllAmznAccounts() {
-        List<AmznAccResult> amznAccResults = amznAccountService.findAll();
-        return new ResponseEntity<>(amznAccResults, HttpStatus.OK);
-    }
-
-    //    @PreAuthorize("hasAnyAuthority('MANAGER')")
     @PostMapping("/create")
     public ResponseEntity<?> createAmznAcc(@Validated @RequestBody AmznAccParam amznAccCreateParam) {
         AmznAccResult newAmznAcc = amznAccountService.create(amznAccCreateParam);
@@ -62,6 +56,13 @@ public class AmznAccountAPI {
     public ResponseEntity<?> deleteAmznAcc(@PathVariable String id){
         amznAccountService.delete(id);
         return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+    //    @PreAuthorize("hasAnyAuthority('MANAGER')")
+    @GetMapping("/findAllFilter")
+    public ResponseEntity<?> findAllAmznAccFilter() {
+        List<AmznAccFilterItemResult> amznAccResults = amznAccountService.findAllFilter();
+        return new ResponseEntity<>(amznAccResults, HttpStatus.OK);
     }
 
 }

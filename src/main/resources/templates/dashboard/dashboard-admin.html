@@ -98,11 +98,11 @@
                                             <div class="row" id="chartHolder" style="height:380px; width:100%;"></div>
                                             <div class="row mt-4 text-center justify-content-center small">
                                                     <span class="mr-4">
-                                                        <i class="fas fa-square text-primary"></i>
+                                                        <i class="fas fa-square" style="color: #41b2e6"></i>
                                                         <br th:text="#{dashboard.chart.legend.royalties}">
                                                     </span>
                                                 <span class="mr-4">
-                                                        <i class="fas fa-square text-success"></i>
+                                                        <i class="fas fa-square" style="color: #f9bd03"></i>
                                                     <br th:text="#{dashboard.chart.legend.numberSold}">
                                                     </span>
                                             </div>
@@ -523,8 +523,8 @@
 
     let page = {
         urls: {
-            findAllAmznAccount: App.BASE_URL_AMZN_ACCOUNT + "/findAll",
-            findAmznAccInGrp: App.BASE_URL_GROUP + "/showAmznAccInsideGroup/",
+            findAllAmznAccountFilter: App.BASE_URL_AMZN_ACCOUNT + "/findAllFilter",
+            findAmznAccInGrpFilter: App.BASE_URL_GROUP + "/findInGrpFilter/",
             findCardsAll: App.BASE_URL_ORDER + "/card-all",
             findCardsByGroupId: App.BASE_URL_ORDER + "/card-grp/",
             findCardsByAmznId: App.BASE_URL_ORDER + "/card-acc/",
@@ -933,12 +933,12 @@
     }
 
     page.commands.handleContentDashboard = (groupId) => {
-        let listUserUrl = page.urls.findAmznAccInGrp + groupId;
+        let listUserUrl = page.urls.findAmznAccInGrpFilter + groupId;
         let chartDataUrl = page.urls.findChartByGroupId + groupId;
         let cardDataUrl = page.urls.findCardsByGroupId + groupId;
 
         if (isNaN(groupId) || groupId === '') {
-            listUserUrl = page.urls.findAllAmznAccount;
+            listUserUrl = page.urls.findAllAmznAccountFilter;
             chartDataUrl = page.urls.findChartAll;
             cardDataUrl = page.urls.findCardsAll;
             page.element.tableTodaySold.DataTable().ajax.url(page.urls.findAllTodaySoldAllAmznAcc).load();
@@ -949,7 +949,6 @@
             page.element.table30DaysSold.DataTable().ajax.url(page.urls.findAllLast30DaysSoldInGroup + groupId).load();
             page.element.tableThisMonthSold.DataTable().ajax.url(page.urls.findAllThisMonthSoldInGroup + groupId).load();
         }
-
 
         $.ajax({
             "headers": {
@@ -989,7 +988,7 @@
 
         $.each(accounts, function (index, account) {
             str += `<btn data-id="${account.id}" class="btn list-group-item list-group-item-action">
-                        ${account.username}
+                        (${account.soldToday}) ${account.username}
                     </btn>`
         })
 

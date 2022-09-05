@@ -1,4 +1,13 @@
 <html xmlns:th="http://www.thymeleaf.org" lang="en">
+<th:block th:fragment="texts-login">
+    <script type="text/javascript" th:inline="javascript">
+        //error
+        var ERROR_LOGIN_401 = [[#{error.login.401}]];
+        var ERROR_LOGIN_403 = [[#{error.login.403}]];
+        var ERROR_LOGIN_500 = [[#{error.serverError}]];
+    </script>
+</th:block>
+
 <th:block th:fragment="texts">
     <script type="text/javascript" th:inline="javascript">
         //common

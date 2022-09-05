@@ -14,6 +14,8 @@
 
 <a href="https://codegym.vn/">Codegym.vn</a>
 
+<th:block th:replace="layout/texts :: texts-login"/>
+
 <th:block th:replace="layout/script :: script-login"/>
 
 <script>
@@ -66,13 +68,7 @@
                 }
             })
             .fail((jqXHR) => {
-                if (jqXHR.status === 401) {
-                    App.IziToast.showErrorAlert(App.ERROR_401);
-                } if (jqXHR.status === 403) {
-                    App.IziToast.showErrorAlert(App.ERROR_403);
-                } else {
-                    App.IziToast.showErrorAlert(App.ERROR_500);
-                }
+                App.handleFailedTasks(jqXHR);
             })
     })
 

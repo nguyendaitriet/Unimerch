@@ -1,5 +1,6 @@
 package com.unimerch.controller.api;
 
+import com.unimerch.dto.amznacc.AmznAccFilterItemResult;
 import com.unimerch.dto.amznacc.AmznAccResult;
 import com.unimerch.dto.group.GroupCreateParam;
 import com.unimerch.dto.group.GroupItemResult;
@@ -103,6 +104,12 @@ public class GroupAPI {
     public ResponseEntity<?> deleteAmznAccFromGroup(@PathVariable int amznAccId, @PathVariable int groupId) {
         groupService.deleteAmznAccFromGroup(amznAccId, groupId);
         return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+    @GetMapping("/findInGrpFilter/{id}")
+    public ResponseEntity<?> findAllAmznAccountsInGroup(@PathVariable Integer id) {
+        List<AmznAccFilterItemResult> amznAccResultList = groupService.findAllAmznAccInGrpFilter(id);
+        return new ResponseEntity<>(amznAccResultList, HttpStatus.OK);
     }
 
 }

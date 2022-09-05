@@ -1,18 +1,16 @@
 package com.unimerch.service;
 
+import com.unimerch.dto.amznacc.AmznAccFilterItemResult;
 import com.unimerch.dto.amznacc.AmznAccResult;
 import com.unimerch.dto.group.GroupCreateParam;
 import com.unimerch.dto.group.GroupItemResult;
 import com.unimerch.dto.group.GroupUpdateParam;
-import com.unimerch.repository.model.AmznAccount;
 import com.unimerch.repository.model.Group;
 import org.springframework.data.jpa.datatables.mapping.DataTablesInput;
 import org.springframework.data.jpa.datatables.mapping.DataTablesOutput;
-import org.springframework.data.repository.query.Param;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 public interface GroupService {
 
@@ -38,4 +36,5 @@ public interface GroupService {
 
     void deleteAmznAccFromGroup(int amznAccId, int groupId);
 
+    List<AmznAccFilterItemResult> findAllAmznAccInGrpFilter(Integer groupId);
 }

@@ -1,14 +1,19 @@
 package com.unimerch.mapper;
 
+import com.unimerch.dto.amznacc.AmznAccFilterItemResult;
 import com.unimerch.dto.amznacc.AmznAccParam;
 import com.unimerch.dto.amznacc.AmznAccResult;
 import com.unimerch.dto.user.LoginParam;
 import com.unimerch.repository.model.AmznAccount;
 import com.unimerch.repository.model.BrgGroupAmznAccount;
+import com.unimerch.service.OrderService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
 public class AmznAccountMapper {
+    @Autowired
+    OrderService orderService;
 
     public AmznAccResult toAmznAccResult(BrgGroupAmznAccount brgGroupAmznAccount) {
         return new AmznAccResult()
@@ -37,5 +42,12 @@ public class AmznAccountMapper {
                 .setTotalRemoved(0);
     }
 
+    public AmznAccFilterItemResult toAmznAccFilterItemResult(AmznAccount amznAccount) {
+        int soldToday = orderService.getNumberSoldInDayByAmznId(amznAccount.getId());
 
+        return new AmznAccFilterItemResult()
+                .setId(amznAccount.getId())
+                .setUsername(amznAccount.getUsername())
+                .setSoldToday(soldToday);
+    }
 }

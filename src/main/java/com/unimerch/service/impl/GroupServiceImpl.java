@@ -1,5 +1,6 @@
 package com.unimerch.service.impl;
 
+import com.unimerch.dto.amznacc.AmznAccFilterItemResult;
 import com.unimerch.dto.amznacc.AmznAccResult;
 import com.unimerch.dto.group.GroupCreateParam;
 import com.unimerch.dto.group.GroupItemResult;
@@ -209,4 +210,10 @@ public class GroupServiceImpl implements GroupService {
         }
     }
 
+    @Override
+    public List<AmznAccFilterItemResult> findAllAmznAccInGrpFilter(Integer groupId) {
+        return brgGroupAmznAccRepo.getAmznAccInGroup(groupId)
+                .stream().map(amznAccount -> amznAccountMapper.toAmznAccFilterItemResult(amznAccount))
+                .collect(Collectors.toList());
+    }
 }
