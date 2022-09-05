@@ -21,6 +21,13 @@ public class PrincipalUtils {
         return user.getId();
     }
 
+    public String getPrincipalRoleCode() {
+        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        String userName = ((UserDetails) principal).getUsername();
+        User user = userService.getByUsername(userName);
+        return user.getRole().getCode();
+    }
+
     public String getPrincipalUsername() {
         String userName;
         Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
@@ -32,5 +39,6 @@ public class PrincipalUtils {
         }
         return userName;
     }
+
 
 }
