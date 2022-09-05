@@ -605,13 +605,12 @@
     page.element.spinner = $('#spinner');
 
     page.commands.initTodaySoldTable = () => {
-        page.element.tableTodaySold.DataTable({
+        let todaySoldTable = page.element.tableTodaySold.DataTable({
             ajax: {
                 contentType: 'application/json',
                 url: '/assets/json/data.json',
                 dataSrc: ''
             },
-            info: false,
             pagingType: 'simple_numbers',
             processing: true,
             columns: [
@@ -633,10 +632,6 @@
                     targets: 0,
                     className: "text-dark",
                 },
-                {
-                    targets: '_all',
-                    orderable: false
-                }
             ],
             language: {
                 search: `<i class="fas fa-search text-primary"></i> `,
@@ -652,19 +647,17 @@
                 },
                 emptyTable: `${noDataInTable}`
             },
-            pageLength: 10,
-            lengthChange: true,
-            dom: 'Bfrtip',
         });
+
+        todaySoldTable.order([ 0, "desc" ]).draw();
     }
     page.commands.init30DaysSoldTable = () => {
-        page.element.table30DaysSold.DataTable({
+        let thirtyDaysSoldTable = page.element.table30DaysSold.DataTable({
             ajax: {
                 contentType: 'application/json',
                 url: '/assets/json/data.json',
                 dataSrc: ''
             },
-            info: false,
             pagingType: 'simple_numbers',
             processing: true,
             columns: [
@@ -686,10 +679,6 @@
                     targets: 0,
                     className: "text-dark"
                 },
-                {
-                    targets: '_all',
-                    orderable: false
-                }
             ],
             language: {
                 search: `<i class="fas fa-search text-primary"></i> `,
@@ -705,19 +694,18 @@
                 },
                 emptyTable: `${noDataInTable}`
             },
-            pageLength: 10,
-            lengthChange: true,
-            dom: 'Bfrtip',
         });
+
+        thirtyDaysSoldTable.order([ 0, "desc" ]).draw();
+
     }
     page.commands.initThisMonthSoldTable = () => {
-        page.element.tableThisMonthSold.DataTable({
+        let thisMonthSoldTable  = page.element.tableThisMonthSold.DataTable({
             ajax: {
                 contentType: 'application/json',
                 url: '/assets/json/data.json',
                 dataSrc: ''
             },
-            info: false,
             pagingType: 'simple_numbers',
             processing: true,
             columns: [
@@ -739,10 +727,6 @@
                     targets: 0,
                     className: "text-dark"
                 },
-                {
-                    targets: '_all',
-                    orderable: false
-                }
             ],
             language: {
                 search: `<i class="fas fa-search text-primary"></i> `,
@@ -758,17 +742,17 @@
                 },
                 emptyTable: `${noDataInTable}`
             },
-            pageLength: 10,
-            lengthChange: true,
-            dom: 'Bfrtip',
         });
+
+        thisMonthSoldTable.order([ 0, "desc" ]).draw();
+
     }
 
     $(document).ready(function () {
-        page.commands.initTodaySoldTable();
-        page.commands.init30DaysSoldTable();
-        page.commands.initThisMonthSoldTable();
-        page.commands.handleContentDashboard(currentGrpId);
+       page.commands.initTodaySoldTable();
+       page.commands.init30DaysSoldTable();
+       page.commands.initThisMonthSoldTable();
+       page.commands.handleContentDashboard(currentGrpId);
     })
 
     //sticky Filter

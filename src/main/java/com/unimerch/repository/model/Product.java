@@ -31,8 +31,7 @@ import java.math.BigDecimal;
                 "ON p.ASIN = o.ASIN " +
                 "WHERE o.amzn_account_id IN (:amznAccId) " +
                 "AND o.date >= :startDay " +
-                "GROUP BY o.ASIN " +
-                "ORDER BY quantitySold DESC",
+                "GROUP BY o.ASIN ",
         resultSetMapping = "product_item_result"
 )
 @SqlResultSetMapping(
