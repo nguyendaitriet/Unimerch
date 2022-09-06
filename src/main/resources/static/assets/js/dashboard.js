@@ -229,17 +229,26 @@ class App {
         let navDashboard = $("#nav-item-dashboard");
         let rows = $("#filter-sidebar .collapse-item");
 
-        if (id === '')
+        if (id === '') {
             id = undefined;
+        }
+        console.log(domain);
+        console.log(id);
+        console.log(currentURL);
 
-        if (domain === 'dashboard' && ((Number(id)) || id === undefined))
+        if ((domain === 'dashboard' || domain === 'users') && ((Number(id)) || id === undefined)) {
             navDashboard.addClass("active");
+        }
 
         $.each(rows, function (index, row) {
-            if ($(row).data('id') == id)
+            if (domain == 'users' && id === undefined) {
                 $(row).addClass('active');
-            // if (row.id.substring(6) === id)
-            //     $(row).addClass('active');
+                return false;
+            }
+            if ($(row).data('id') == id) {
+                $(row).addClass('active');
+                return false;
+            }
         })
     }
 
