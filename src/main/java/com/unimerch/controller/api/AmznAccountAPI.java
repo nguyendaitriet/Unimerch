@@ -3,6 +3,7 @@ package com.unimerch.controller.api;
 import com.unimerch.dto.amznacc.AmznAccFilterItemResult;
 import com.unimerch.dto.amznacc.AmznAccParam;
 import com.unimerch.dto.amznacc.AmznAccResult;
+import com.unimerch.dto.order.OrderData;
 import com.unimerch.service.AmznAccountService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.jpa.datatables.mapping.DataTablesInput;
@@ -24,10 +25,22 @@ public class AmznAccountAPI {
     @Autowired
     private AmznAccountService amznAccountService;
 
+    @PutMapping("/updateMetadata")
+    public ResponseEntity<?> updateMetadata(@RequestBody String data) {
+        amznAccountService.updateMetadata(data, "");
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+
     //    @PreAuthorize("hasAnyAuthority('MANAGER')")
     @PostMapping
     public DataTablesOutput<AmznAccResult> findAllAmznAccountsPageable(@Valid @RequestBody DataTablesInput input) {
         return amznAccountService.findAll(input);
+    }
+
+    //    @PreAuthorize("hasAnyAuthority('MANAGER')")
+    @GetMapping("/findAllAmznAccs")
+    public ResponseEntity<?> findAllAmznAccounts() {
+        return new ResponseEntity<>(amznAccountService.findAll(), HttpStatus.OK);
     }
 
     //    @PreAuthorize("hasAnyAuthority('MANAGER')")

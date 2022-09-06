@@ -14,6 +14,8 @@ public interface AmznAccountService {
 
     DataTablesOutput<AmznAccResult> findAll(DataTablesInput input);
 
+    List<AmznAccResult> findAll();
+
     List<AmznAccFilterItemResult> findAllFilter();
 
     AmznAccount findById(String id);
@@ -25,4 +27,6 @@ public interface AmznAccountService {
     void delete(String id);
 
     List<AmznAccResult> importFile(MultipartFile amznAccFile);
+
+    void updateMetadata(String data, String jwt);
 }

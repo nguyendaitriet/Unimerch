@@ -91,6 +91,13 @@ public class AmznAccountServiceImpl implements AmznAccountService {
     }
 
     @Override
+    public List<AmznAccResult> findAll() {
+        return amznAccountRepository.findAll()
+                .stream().map(account -> amznAccountMapper.toAmznAccResult(account))
+                .collect(Collectors.toList());
+    }
+
+    @Override
     public List<AmznAccFilterItemResult> findAllFilter() {
         return amznAccountRepository.findAll()
                 .stream().map(account -> amznAccountMapper.toAmznAccFilterItemResult(account))
@@ -258,6 +265,11 @@ public class AmznAccountServiceImpl implements AmznAccountService {
         }
 
         return amznAccResultList;
+    }
+
+    @Override
+    public void updateMetadata(String data, String jwt) {
+
     }
 
 }
