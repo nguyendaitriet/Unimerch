@@ -200,6 +200,7 @@
     }
 
     $(document).ready(function () {
+        App.handleGroupsFilterSidebar();
 
         let tableAmznAcc = page.element.tableAmznAcc.DataTable({
             ajax: {
@@ -211,7 +212,6 @@
             },
             info: false,
             pagingType: 'simple_numbers',
-            processing: true,
             serverSide: true,
             columns: [
                 {data: 'id'},

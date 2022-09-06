@@ -296,6 +296,7 @@
     }
 
     $(document).ready(function () {
+        App.handleGroupsFilterSidebar();
 
         let tableGroup = page.element.tableGroup.DataTable({
             ajax: {
@@ -307,7 +308,6 @@
             },
             info: false,
             pagingType: 'simple_numbers',
-            processing: true,
             serverSide: true,
             columns: [
                 {data: 'id'},
@@ -389,7 +389,6 @@
                     },
                     info: false,
                     pagingType: 'simple_numbers',
-                    processing: true,
                     columns: [
                         {data: 'id'},
                         {data: 'username'},
@@ -551,7 +550,6 @@
                     },
                     info: false,
                     pagingType: 'simple_numbers',
-                    processing: true,
                     columns: [
                         {data: 'id'},
                         {data: 'username'},
