@@ -27,18 +27,19 @@ public class ChartUtils {
     }
 
     public BigDecimal beautifyMaxAxis(BigDecimal num, int numberDigits) {
+        if (num.compareTo(BigDecimal.ZERO) == 0) {
+            num = num.add(BigDecimal.TEN);
+            return num;
+        }
+
         int ten = 10;
         BigDecimal divisor = BigDecimal.valueOf(Math.pow(ten, numberDigits - 2));
-
         BigDecimal firstTwoDigits = num.divide(divisor);
 
         if (!firstTwoDigits.remainder(BigDecimal.valueOf(2)).equals(BigDecimal.ZERO))
             firstTwoDigits = firstTwoDigits.add(BigDecimal.ONE);
 
         num = firstTwoDigits.multiply(divisor);
-
-        if (num.compareTo(BigDecimal.ZERO) == 0)
-            num = num.add(BigDecimal.TEN);
 
         return num;
     }
