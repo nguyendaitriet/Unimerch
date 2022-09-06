@@ -33,16 +33,14 @@
                        th:href="@{'/dashboard/' + ${(group.id != 0) ? group.id : ''}}">
                         Dashboard
                     </a>
-                    <a href="#" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm"><i
-                            class="fas fa-download fa-sm text-white-50"></i> Generate Report</a>
                 </div>
 
                 <div class="row">
                     <!-- User Filter-->
-                    <div class="col-3 col-md-2">
+                    <div id="sticky-filter" class="col-3 col-md-2">
                         <div class="card shadow mb-4">
                             <!-- Card Header -->
-                            <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+                            <div id="sticky-filter-header" class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
                                 <h6 class="m-0 font-weight-bold text-primary custom-card-title"
                                     th:text="#{dashboard.filterTitle}">Accounts</h6>
                             </div>
@@ -511,7 +509,6 @@
     <i class="fas fa-angle-up"></i>
 </a>
 
-<div id="spinner"></div>
 
 <th:block th:replace="layout/script :: script-dashboard"/>
 
@@ -601,8 +598,6 @@
     page.dialogs.element.previousMonthCancelled = $("#previousMonthCancelled");
     page.dialogs.element.previousMonthReturned = $("#previousMonthReturned");
     page.dialogs.element.previousMonthRoyalties = $("#previousMonthRoyalties");
-
-    page.element.spinner = $('#spinner');
 
     page.commands.initTodaySoldTable = () => {
         let todaySoldTable = page.element.tableTodaySold.DataTable({
@@ -756,15 +751,17 @@
     })
 
     //sticky Filter
-    var navBar = $("#topNav");
+    var stickyFilter = $("#sticky-filter");
 
-    var hdrHeight = $("header").height();
+    var stickyFilterHeader = $("#sticky-filter-header").height();
+    console.log(stickyFilterHeader);
 
     $(window).scroll(function () {
-        if ($(this).scrollTop() > hdrHeight + 50) {
-            navBar.addClass("navScrolled");
+        console.log('window scrolltop: ' + $(this).scrollTop());
+        if ($(this).scrollTop() > stickyFilterHeader + 120) {
+            stickyFilter.addClass("navScrolled");
         } else {
-            navBar.removeClass("navScrolled");
+            stickyFilter.removeClass("navScrolled");
         }
     });
 
@@ -793,9 +790,7 @@
                 "content-type": "application/json"
             },
             "type": "GET",
-            "url": url,
-            "beforeSend": () => page.element.spinner.show(),
-            "complete": () => page.element.spinner.hide()
+            "url": url
         })
             .done((chart) => {
                 chartData = chart.columns;
@@ -865,9 +860,7 @@
                 "content-type": "application/json"
             },
             "type": "GET",
-            "url": url,
-            "beforeSend": () => page.element.spinner.show(),
-            "complete": () => page.element.spinner.hide()
+            "url": url
         })
             .done((cards) => {
                 page.dialogs.element.todayDate.text(cards.today.date);
@@ -875,41 +868,46 @@
                 page.dialogs.element.todaySold.text(cards.today.sold);
                 page.dialogs.element.todayCancelled.text(cards.today.cancelled);
                 page.dialogs.element.todayReturned.text(cards.today.returned);
-                page.dialogs.element.todayRoyalties.text(cards.today.royalties);
+                page.dialogs.element.todayRoyalties.text(App.formatNumberComma(cards.today.royalties));
 
                 page.dialogs.element.allTimePurchased.text(cards.allTime.purchased);
                 page.dialogs.element.allTimeSold.text(cards.allTime.sold);
                 page.dialogs.element.allTimeCancelled.text(cards.allTime.cancelled);
                 page.dialogs.element.allTimeReturned.text(cards.allTime.returned);
-                page.dialogs.element.allTimeRoyalties.text(cards.allTime.royalties);
+                page.dialogs.element.allTimeRoyalties
+                    .text(App.formatNumberComma(cards.allTime.royalties));
 
                 page.dialogs.element.yesterdayDate.text(cards.yesterday.date);
                 page.dialogs.element.yesterdayPurchased.text(cards.yesterday.purchased);
                 page.dialogs.element.yesterdaySold.text(cards.yesterday.sold);
                 page.dialogs.element.yesterdayCancelled.text(cards.yesterday.cancelled);
                 page.dialogs.element.yesterdayReturned.text(cards.yesterday.returned);
-                page.dialogs.element.yesterdayRoyalties.text(cards.yesterday.royalties);
+                page.dialogs.element.yesterdayRoyalties
+                    .text(App.formatNumberComma(cards.yesterday.royalties));
 
                 page.dialogs.element.lastSevenDaysDate.text(cards.lastSevenDays.date);
                 page.dialogs.element.lastSevenDaysPurchased.text(cards.lastSevenDays.purchased);
                 page.dialogs.element.lastSevenDaysSold.text(cards.lastSevenDays.sold);
                 page.dialogs.element.lastSevenDaysCancelled.text(cards.lastSevenDays.cancelled);
                 page.dialogs.element.lastSevenDaysReturned.text(cards.lastSevenDays.returned);
-                page.dialogs.element.lastSevenDaysRoyalties.text(cards.lastSevenDays.royalties);
+                page.dialogs.element.lastSevenDaysRoyalties
+                    .text(App.formatNumberComma(cards.lastSevenDays.royalties));
 
                 page.dialogs.element.thisMonthDate.text(cards.thisMonth.date);
                 page.dialogs.element.thisMonthPurchased.text(cards.thisMonth.purchased);
                 page.dialogs.element.thisMonthSold.text(cards.thisMonth.sold);
                 page.dialogs.element.thisMonthCancelled.text(cards.thisMonth.cancelled);
                 page.dialogs.element.thisMonthReturned.text(cards.thisMonth.returned);
-                page.dialogs.element.thisMonthRoyalties.text(cards.thisMonth.royalties);
+                page.dialogs.element.thisMonthRoyalties
+                    .text(App.formatNumberComma(cards.thisMonth.royalties));
 
                 page.dialogs.element.previousMonthDate.text(cards.previousMonth.date);
                 page.dialogs.element.previousMonthPurchased.text(cards.previousMonth.purchased);
                 page.dialogs.element.previousMonthSold.text(cards.previousMonth.sold);
                 page.dialogs.element.previousMonthCancelled.text(cards.previousMonth.cancelled);
                 page.dialogs.element.previousMonthReturned.text(cards.previousMonth.returned);
-                page.dialogs.element.previousMonthRoyalties.text(cards.previousMonth.royalties);
+                page.dialogs.element.previousMonthRoyalties
+                    .text(App.formatNumberComma(cards.previousMonth.royalties));
             })
             .fail((jqXHR) => {
                 App.handleFailedTasks(jqXHR);

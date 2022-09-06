@@ -118,12 +118,6 @@ public class OrderMapper extends StdDeserializer<OrderData> {
                 maxSold = column.getSold();
         }
 
-        if (maxRoyalties.compareTo(BigDecimal.ZERO) == 0)
-            maxRoyalties = BigDecimal.TEN;
-
-        if (maxSold == 0)
-            maxSold = 10;
-
         return new OrderChartResult()
                 .setMaxRoyaltiesAxis(chartUtils.getMaxAxis(maxRoyalties))
                 .setMaxSoldAxis(chartUtils.getMaxAxis(BigDecimal.valueOf(maxSold)))

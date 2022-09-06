@@ -107,11 +107,11 @@ class App {
         $(".num-comma").number(true, 0, ',', ',');
     }
 
-    static formatNumberSpace(x) {
-        if (x == null) {
+    static formatNumberComma(x) {
+        if (x == null)
             return x;
-        }
-        return x.toString().replace(/ /g, "").replace(/\B(?=(\d{3})+(?!\d))/g, " ");
+
+        return '$' + x.toString().replace(/ /g, "").replace(/\B(?=(\d{3})+(?!\d))/g, ",");
     }
 
     static removeFormatNumberSpace(x) {
@@ -250,6 +250,20 @@ class App {
         if (container.find(".active")[0])
             collapsedField.collapse("show");
     }
+
+    static handleSpinner() {
+        let str = `<div id="spinner"></div>`;
+        $('body').append(str);
+
+        let spinner = $('#spinner');
+        $(document)
+            .ajaxStart(function () {
+                spinner.show();
+            })
+            .ajaxStop(function () {
+                spinner.hide();
+            });
+    }
 }
 
 class User {
@@ -271,4 +285,5 @@ class Group {
 
 (() => {
     App.handleGroupsFilterSidebar();
+    App.handleSpinner();
 })()
