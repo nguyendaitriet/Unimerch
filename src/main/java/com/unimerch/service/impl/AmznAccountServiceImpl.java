@@ -294,9 +294,4 @@ public class AmznAccountServiceImpl implements AmznAccountService {
         return amznAccResultList;
     }
 
-    @Override
-    public void updateMetadata(String data, String jwt) {
-
-    }
-
 }
