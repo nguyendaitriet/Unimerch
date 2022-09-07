@@ -45,11 +45,11 @@
                             <!-- Card Body -->
                             <div class="card-body">
                                 <!-- Table Body -->
-                                <table id="table-assigned-groups" class="cell-border stripe nowrap"
+                                <table id="table-assigned-groups" class="table table-striped table-bordered dt-responsive nowrap"
                                        style="width: 100%;">
                                     <thead>
                                     <tr>
-                                        <th>#</th>
+                                        <th style="visibility: hidden">#</th>
                                         <th th:text="#{user_asgn.table.th.fullName}">Group's title</th>
                                         <th th:text="#{user_asgn.table.th.action}">Action</th>
                                     </tr>
@@ -117,7 +117,6 @@
     page.dialogs.element.btnAssignGrpUser = $('#btnAssignGrpUser');
 
     $(document).ready(function () {
-
         let mainTable = page.element.tbAsgnedGrps.DataTable({
             ajax: {
                 contentType: 'application/json',
@@ -135,7 +134,8 @@
                 {
                     targets: 0,
                     className: 'text-center',
-                    type: 'natural'
+                    type: 'natural',
+                    visible: false
                 },
                 {
                     targets: -1,
@@ -182,7 +182,12 @@
         })
 
         page.element.tbAsgnedGrps.on('click', '.remove-assigned-group', function () {
-            let currentRow = mainTable.row($(this).parents('tr'));
+            let currentRowDOM = $(this).parents('tr');
+
+            if (currentRowDOM.hasClass('child'))
+                currentRowDOM = currentRowDOM.prev();
+
+            let currentRow = mainTable.row(currentRowDOM);
             let currentGroup = currentRow.data();
 
             page.commands.doRemoveGroup(currentGroup.id, currentRow);
@@ -203,6 +208,11 @@
             ],
             columnDefs: [
                 {
+                  targets: 0,
+                  className: 'text-center',
+                  visible: false
+                },
+                {
                     targets: 1,
                     className: 'text-center',
                     type: 'natural'
@@ -222,9 +232,14 @@
             pageLength: 6,
             lengthChange: false,
             language: {
-                search: `<i class="fas fa-search text-primary"></i> `
+                search: `<i class="fas fa-search text-primary"></i> `,
             },
+            dom: '<"table-quickselect">frtip'
         })
+
+        $('div.table-quickselect')
+            .html(`<p class="font-italic font-weight-light" style="margin-bottom: 0;">${tableQuickSelectP1}</p>
+             <p class="font-italic font-weight-light">${tableQuickSelectP2}</p>`);
 
         page.dialogs.element.btnAssignGrpUser.on('click', function () {
             let selectedRows = sideTable.rows({selected: true}).data();

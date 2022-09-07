@@ -45,10 +45,10 @@
                             <!-- Card Body -->
                             <div class="card-body">
                                 <!-- Table Body -->
-                                <table id="table-user" class="cell-border stripe nowrap" style="width: 100%;">
+                                <table id="table-user" class="table table-striped table-bordered dt-responsive nowrap" style="width: 100%;">
                                     <thead>
                                     <tr>
-                                        <th>#</th>
+                                        <th style="visibility: hidden">#</th>
                                         <th th:text="#{user.table.th.username}">Username</th>
                                         <th th:text="#{user.table.th.fullName}">Full name</th>
                                         <th th:text="#{user.table.th.status}">Status</th>
@@ -153,7 +153,8 @@
             columnDefs: [
                 {
                     targets: 0,
-                    className: 'text-center'
+                    className: 'text-center',
+                    visible: false
                 },
                 {
                     targets: [1, 2],
@@ -222,16 +223,29 @@
         });
 
         let currentUser = new User();
-        let currenRow;
+        let currentRowDOM;
+        let currentRow;
 
         page.element.tableUser.on('click', 'button.assign-group', function () {
-            currentUser = table.row($(this).parents('tr')).data();
+            currentRowDOM = $(this).parents('tr');
+
+            if (currentRowDOM.hasClass('child'))
+                currentRowDOM = currentRowDOM.prev();
+
+            currentRow = table.row(currentRowDOM);
+            currentUser = currentRow.data();
 
             window.location.href = '/dashboard/user/group/' + currentUser.id;
         });
 
         page.element.tableUser.on('click', 'button.change-password', function () {
-            currentUser = table.row($(this).parents('tr')).data();
+            currentRowDOM = $(this).parents('tr');
+
+            if (currentRowDOM.hasClass('child'))
+                currentRowDOM = currentRowDOM.prev();
+
+            currentRow = table.row(currentRowDOM);
+            currentUser = currentRow.data();
 
             page.dialogs.element.fullNameCP.val(currentUser.fullName);
             page.dialogs.element.usernameCP.val(currentUser.username);
@@ -241,13 +255,18 @@
         });
 
         page.element.tableUser.on('click', 'button.change-status', function () {
-            currenRow = table.row($(this).parents('tr'));
-            currentUser = currenRow.data();
+            currentRowDOM = $(this).parents('tr');
+
+            if (currentRowDOM.hasClass('child'))
+                currentRowDOM = currentRowDOM.prev();
+
+            currentRow = table.row(currentRowDOM);
+            currentUser = currentRow.data();
 
             App.SweetAlert.showChangeStatusDialog(currentUser.disabled)
                 .then((result) => {
                     if (result.isConfirmed)
-                        page.commands.doChangeStatus(currentUser, currenRow);
+                        page.commands.doChangeStatus(currentUser, currentRow);
                 })
         });
 

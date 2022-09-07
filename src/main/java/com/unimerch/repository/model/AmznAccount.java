@@ -22,7 +22,7 @@ public class AmznAccount {
     @Column(name = "id", nullable = false)
     private Integer id;
 
-    @Column(name = "password", nullable = false, length = 50)
+    @Column(name = "password", nullable = false, length = 128)
     private String password;
 
     @Column(name = "username", nullable = false, length = 50)

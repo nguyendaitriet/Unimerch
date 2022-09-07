@@ -754,11 +754,10 @@
     var stickyFilter = $("#sticky-filter");
 
     var stickyFilterHeader = $("#sticky-filter-header").height();
-    console.log(stickyFilterHeader);
 
     $(window).scroll(function () {
         console.log('window scrolltop: ' + $(this).scrollTop());
-        if ($(this).scrollTop() > stickyFilterHeader + 120) {
+        if ($(this).scrollTop() > stickyFilterHeader + 125) {
             stickyFilter.addClass("navScrolled");
         } else {
             stickyFilter.removeClass("navScrolled");
