@@ -588,8 +588,12 @@
                     },
                     pageLength: 8,
                     lengthChange: false,
-                    dom: 'Bfrtip',
+                    dom: '<"table-quickselect">frtip'
                 });
+
+                $('div.table-quickselect')
+                    .html(`<p class="font-italic font-weight-light" style="margin-bottom: 0;">${tableQuickSelectP1}</p>
+                    <p class="font-italic font-weight-light">${tableQuickSelectP2}</p>`);
             } else {
                 tableAmznAccOut.ajax.url(page.urls.findAllAmznAccOutGroup + currentGroup.id).load();
             }
