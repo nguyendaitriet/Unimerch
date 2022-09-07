@@ -24,6 +24,12 @@ public class AmznAccountAPI {
     @Autowired
     private AmznAccountService amznAccountService;
 
+    @PutMapping("/updateMetadata")
+    public ResponseEntity<?> updateMetadata(@RequestBody String data) {
+        amznAccountService.updateMetadata(data, "");
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+
     //    @PreAuthorize("hasAnyAuthority('MANAGER')")
     @PostMapping
     public DataTablesOutput<AmznAccResult> findAllAmznAccountsPageable(@Valid @RequestBody DataTablesInput input) {

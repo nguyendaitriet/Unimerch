@@ -1,14 +1,21 @@
 package com.unimerch.service.impl;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.module.SimpleModule;
 import com.unimerch.dto.amznacc.AmznAccFilterItemResult;
 import com.unimerch.dto.amznacc.AmznAccParam;
 import com.unimerch.dto.amznacc.AmznAccResult;
+import com.unimerch.dto.amznacc.Metadata;
+import com.unimerch.dto.order.OrderData;
 import com.unimerch.dto.user.LoginParam;
 import com.unimerch.exception.DuplicateDataException;
 import com.unimerch.exception.InvalidFileFormat;
 import com.unimerch.exception.InvalidIdException;
 import com.unimerch.exception.ServerErrorException;
 import com.unimerch.mapper.AmznAccountMapper;
+import com.unimerch.mapper.MetadataMapper;
+import com.unimerch.mapper.OrderMapper;
 import com.unimerch.repository.AmznAccountRepository;
 import com.unimerch.repository.BrgGroupAmznAccountRepository;
 import com.unimerch.repository.OrderRepository;
@@ -57,6 +64,9 @@ public class AmznAccountServiceImpl implements AmznAccountService {
     private MessageSource messageSource;
 
     @Autowired
+    private MetadataMapper metadataMapper;
+
+    @Autowired
     private ValidationUtils validationUtils;
 
     @Override
@@ -71,6 +81,23 @@ public class AmznAccountServiceImpl implements AmznAccountService {
             throw new InvalidIdException(messageSource.getMessage("validation.idNotExist", null, Locale.getDefault()));
         }
         return optionalAmznAcc.get();
+    }
+
+    @Override
+    public void updateMetadata(String data, String jwt) {
+        ObjectMapper mapper = new ObjectMapper();
+        SimpleModule module = new SimpleModule();
+        module.addDeserializer(Metadata.class, new MetadataMapper());
+        mapper.registerModule(module);
+        try {
+            Metadata metadata = mapper.readValue(data, Metadata.class);
+            Optional<AmznAccount> amznAccountOptional = amznAccountRepository.findByUsername("2");
+            AmznAccount amznAccount = metadataMapper.updateAmznAccMetadata(amznAccountOptional.get(), metadata);
+            amznAccountRepository.save(amznAccount);
+        } catch (JsonProcessingException | ServerErrorException e) {
+            throw new ServerErrorException(messageSource.getMessage("error.500", null, Locale.getDefault()));
+        }
+
     }
 
     @Override

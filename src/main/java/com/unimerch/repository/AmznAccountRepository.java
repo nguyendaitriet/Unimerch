@@ -5,10 +5,14 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.stereotype.Repository;
 
+import java.util.Optional;
+
 @Repository
 public interface AmznAccountRepository extends JpaRepository<AmznAccount, Integer> {
 
     boolean existsByUsername(String username);
 
     AmznAccount getByUsername(String username);
+
+    Optional<AmznAccount> findByUsername(String username);
 }

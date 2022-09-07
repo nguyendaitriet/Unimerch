@@ -12,6 +12,8 @@ import java.util.List;
 
 public interface AmznAccountService {
 
+    void updateMetadata(String data, String jwt);
+
     DataTablesOutput<AmznAccResult> findAll(DataTablesInput input);
 
     List<AmznAccFilterItemResult> findAllFilter();
