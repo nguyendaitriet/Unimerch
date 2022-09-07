@@ -32,6 +32,7 @@ import org.springframework.context.MessageSource;
 import org.springframework.data.jpa.datatables.mapping.Column;
 import org.springframework.data.jpa.datatables.mapping.DataTablesInput;
 import org.springframework.data.jpa.datatables.mapping.DataTablesOutput;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -68,6 +69,9 @@ public class AmznAccountServiceImpl implements AmznAccountService {
 
     @Autowired
     private ValidationUtils validationUtils;
+
+    @Autowired
+    private PasswordEncoder passwordEncoder;
 
     @Override
     public AmznAccount findById(String id) {
@@ -114,6 +118,13 @@ public class AmznAccountServiceImpl implements AmznAccountService {
     }
 
     @Override
+    public List<AmznAccResult> findAll() {
+        return amznAccountRepository.findAll()
+                .stream().map(account -> amznAccountMapper.toAmznAccResult(account))
+                .collect(Collectors.toList());
+    }
+
+    @Override
     public List<AmznAccFilterItemResult> findAllFilter() {
         return amznAccountRepository.findAll()
                 .stream().map(account -> amznAccountMapper.toAmznAccFilterItemResult(account))
@@ -123,11 +134,13 @@ public class AmznAccountServiceImpl implements AmznAccountService {
     @Override
     public AmznAccResult create(AmznAccParam amznAccCreateParam) {
         String username = amznAccCreateParam.getUsername().trim().toLowerCase();
+        String password = amznAccCreateParam.getPassword();
         if (amznAccountRepository.existsByUsername(username)) {
             throw new DuplicateDataException(messageSource.getMessage("validation.amznAccUsernameExists", null, Locale.getDefault()));
         }
         try {
             amznAccCreateParam.setUsername(username);
+            amznAccCreateParam.setPassword(passwordEncoder.encode(password));
             AmznAccount newAccount = amznAccountRepository.save(amznAccountMapper.toAmznAcc(amznAccCreateParam));
             return amznAccountMapper.toAmznAccResult(newAccount);
         } catch (Exception e) {
@@ -139,7 +152,7 @@ public class AmznAccountServiceImpl implements AmznAccountService {
     public AmznAccResult update(String id, AmznAccParam amznAccParam) {
         AmznAccount amznAccount = findById(id);
         try {
-            amznAccount.setPassword(amznAccParam.getPassword());
+            amznAccount.setPassword(passwordEncoder.encode(amznAccParam.getPassword()));
             amznAccount = amznAccountRepository.save(amznAccount);
             return amznAccountMapper.toAmznAccResult(amznAccount);
         } catch (Exception e) {
@@ -269,6 +282,7 @@ public class AmznAccountServiceImpl implements AmznAccountService {
             }
 
             try {
+                amznPassword = passwordEncoder.encode(amznPassword);
                 AmznAccParam newAmznAccParam = new AmznAccParam(amznUsername, amznPassword);
                 AmznAccount newAmznAcc = amznAccountRepository.save(amznAccountMapper.toAmznAcc(newAmznAccParam));
                 amznAccResultList.add(amznAccountMapper.toAmznAccResult(newAmznAcc));
@@ -278,6 +292,11 @@ public class AmznAccountServiceImpl implements AmznAccountService {
         }
 
         return amznAccResultList;
+    }
+
+    @Override
+    public void updateMetadata(String data, String jwt) {
+
     }
 
 }

@@ -44,7 +44,7 @@
                                 <table id="table-group" class="table stripe nowrap" style="width: 100%;">
                                     <thead>
                                     <tr>
-                                        <th>#</th>
+                                        <th style="visibility: hidden">#</th>
                                         <th th:text="#{group.groupTitle}">Group Title</th>
                                         <th th:text="#{group.action}">Action</th>
                                     </tr>
@@ -53,7 +53,6 @@
                             </div>
                         </div>
                     </div>
-
 
                     <div class="col-md-5">
                         <div class="card shadow mb-4">
@@ -108,7 +107,7 @@
 <script>
     let page = {
         urls: {
-            findAllGroups: App.BASE_URL_GROUP,
+            findAllGroups: App.BASE_URL_GROUP + "/findAllGroups",
             findAllAmznAccInGroup: App.BASE_URL_GROUP + "/showAmznAccInsideGroup/",
             findAllAmznAccOutGroup: App.BASE_URL_GROUP + "/showAmznAccOutsideGroup/",
             createGroup: App.BASE_URL_GROUP + "/create",
@@ -302,13 +301,11 @@
             ajax: {
                 contentType: 'application/json',
                 url: page.urls.findAllGroups,
-                type: 'POST',
-                data: (d) => JSON.stringify(d),
-                dataSrc: 'data'
+                dataSrc: ''
+
             },
             info: false,
             pagingType: 'simple_numbers',
-            serverSide: true,
             columns: [
                 {data: 'id'},
                 {data: 'title'},
@@ -317,7 +314,11 @@
             columnDefs: [
                 {
                     targets: 0,
-                    className: "text-center",
+                    visible: false
+                },
+                {
+                    targets: 1,
+                    type: 'natural'
                 },
                 {
                     targets: -1,

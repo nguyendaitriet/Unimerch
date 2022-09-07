@@ -71,6 +71,7 @@ public class GroupServiceImpl implements GroupService {
             columnMap.remove(null);
             List<Column> columnList = new ArrayList<>(columnMap.values());
             input.setColumns(columnList);
+
             return groupDataTableRepository.findAll(input, group -> groupMapper.toGroupItemResult(group));
         } catch (Exception e) {
             throw new ServerErrorException(messageSource.getMessage("error.500", null, Locale.getDefault()));
