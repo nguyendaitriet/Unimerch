@@ -607,7 +607,6 @@
                 dataSrc: ''
             },
             pagingType: 'simple_numbers',
-            processing: true,
             columns: [
                 {data: 'quantitySold'},
                 {data: 'productName'},
@@ -654,7 +653,6 @@
                 dataSrc: ''
             },
             pagingType: 'simple_numbers',
-            processing: true,
             columns: [
                 {data: 'quantitySold'},
                 {data: 'productName'},
@@ -702,7 +700,6 @@
                 dataSrc: ''
             },
             pagingType: 'simple_numbers',
-            processing: true,
             columns: [
                 {data: 'quantitySold'},
                 {data: 'productName'},
@@ -744,7 +741,9 @@
     }
 
     $(document).ready(function () {
-       page.commands.initTodaySoldTable();
+        App.handleGroupsFilterSidebar();
+
+        page.commands.initTodaySoldTable();
        page.commands.init30DaysSoldTable();
        page.commands.initThisMonthSoldTable();
        page.commands.handleContentDashboard(currentGrpId);
@@ -798,6 +797,9 @@
                     `<KoolChart backgroundColor="#FFFFFF"  borderStyle="none">'
                     +'<Options>'
                         +'<Caption text="${chartCaption}" fontSize="20"/>'
+                        +'<SubCaption text="Royalties $" textAlign="left" height="0" fontSize="15"/>'
+                        +'<SubCaption text="Sold" textAlign="right" fontSize="15"/>'
+                        +'<SubCaption/>'
                     +'</Options>'
 
                     +'<NumberFormatter id="numfmt" useThousandsSeparator="true"/>'

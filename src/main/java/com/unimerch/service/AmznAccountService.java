@@ -12,7 +12,11 @@ import java.util.List;
 
 public interface AmznAccountService {
 
+    void updateMetadata(String data, String jwt);
+
     DataTablesOutput<AmznAccResult> findAll(DataTablesInput input);
+
+    List<AmznAccResult> findAll();
 
     List<AmznAccFilterItemResult> findAllFilter();
 
@@ -25,4 +29,6 @@ public interface AmznAccountService {
     void delete(String id);
 
     List<AmznAccResult> importFile(MultipartFile amznAccFile);
+
+    void updateMetadata(String data, String jwt);
 }

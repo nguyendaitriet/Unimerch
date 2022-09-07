@@ -43,7 +43,7 @@
                                 <table id="table-amzn-acc" class="table stripe nowrap" style="width: 100%;">
                                     <thead>
                                     <tr>
-                                        <th>#</th>
+                                        <th style="visibility: hidden">#</th>
                                         <th th:text="#{amznAcc.amznAccTitle}">Amzn Acc Title</th>
                                         <th th:text="#{amznAcc.action}">Action</th>
                                     </tr>
@@ -85,7 +85,7 @@
 <script>
     let page = {
         urls: {
-            findAllAmznAccs: App.BASE_URL_AMZN_ACCOUNT,
+            findAllAmznAccs: App.BASE_URL_AMZN_ACCOUNT + "/findAllAmznAccs",
             createAmznAcc: App.BASE_URL_AMZN_ACCOUNT + "/create",
             importAmznAcc: App.BASE_URL_AMZN_ACCOUNT + "/import",
             updateAmznAcc: App.BASE_URL_AMZN_ACCOUNT + "/update/",
@@ -200,19 +200,16 @@
     }
 
     $(document).ready(function () {
+        App.handleGroupsFilterSidebar();
 
         let tableAmznAcc = page.element.tableAmznAcc.DataTable({
             ajax: {
                 contentType: 'application/json',
                 url: page.urls.findAllAmznAccs,
-                type: 'POST',
-                data: (d) => JSON.stringify(d),
-                dataSrc: 'data'
+                dataSrc: ''
             },
             info: false,
             pagingType: 'simple_numbers',
-            processing: true,
-            serverSide: true,
             columns: [
                 {data: 'id'},
                 {data: 'username'},
@@ -220,9 +217,12 @@
             ],
             columnDefs: [
                 {
+                  targets: 0,
+                  visible: false
+                },
+                {
                     targets: 1,
                     type: 'natural',
-                    orderable: false
                 },
                 {
                     targets: -1,
@@ -373,7 +373,7 @@
                 return;
             }
             formData.append('fileUploadAmznAcc', fileUpload);
-
+            page.dialogs.element.mdImportAmznAcc.modal("hide");
             $.ajax({
                 url: page.urls.importAmznAcc,
                 type: 'POST',
@@ -388,10 +388,9 @@
                         'id': amznAcc.id,
                         'username': amznAcc.username
                     })
-                    tableAmznAcc.order([0, 'desc']).draw();
+                    tableAmznAcc.order([0, 'asc']).draw();
                 });
                 $('#fileUploadAmznAcc').val('');
-                page.dialogs.element.mdImportAmznAcc.modal("hide");
                 App.SweetAlert.showSuccessAlert(SUCCESS_CREATED);
             })
             .fail((jqXHR) => {
