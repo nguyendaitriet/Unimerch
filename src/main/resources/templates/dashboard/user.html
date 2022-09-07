@@ -198,7 +198,7 @@
             language: {
                 search: `<i class="fas fa-search text-primary"></i> `
             },
-            dom: 'Bfrtip',
+            dom: '<"container-fluid"<"row mb-2"<"col"B><"col"f>>>rtp',
             buttons: {
                 dom: {
                     button: {
@@ -221,6 +221,9 @@
                 ]
             },
         });
+
+        table.buttons().container()
+            .appendTo('#table-user .col-md-6:eq(0)');
 
         let currentUser = new User();
         let currentRowDOM;
