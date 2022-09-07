@@ -30,5 +30,4 @@ public interface AmznAccountService {
 
     List<AmznAccResult> importFile(MultipartFile amznAccFile);
 
-    void updateMetadata(String data, String jwt);
 }
