@@ -17,13 +17,11 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
-
     @Autowired
     private JwtService jwtService;
 
     @Autowired
     private UserService userService;
-
 
     private String getBearerTokenRequest(HttpServletRequest request) {
         String authHeader = request.getHeader("Authorization");
@@ -65,7 +63,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             }
 
         } catch (Exception e) {
-            logger.error("Can NOT set user authentication -> Message: {0}", e);
+            logger.error("Can NOT set uni authentication -> Message: {0}", e);
         }
 
         filterChain.doFilter(request, response);

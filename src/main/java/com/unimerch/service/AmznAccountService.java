@@ -30,4 +30,5 @@ public interface AmznAccountService {
 
     List<AmznAccResult> importFile(MultipartFile amznAccFile);
 
+    AmznAccResult findByUsername(String username);
 }

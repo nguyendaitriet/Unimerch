@@ -779,11 +779,14 @@
         //     .then(() => {
                 // if (userId) {
                     page.commands.createSideBarGroupList(userId).then(() => {
+
                         if (isNaN(currentGrpId) || currentGrpId === '') {
                             currentGrpId = $('#filter-sidebar .collapse-item').data('id');
                             page.element.groupHeader.html($('#filter-sidebar .collapse-item').html());
                         }
-                        page.commands.handleContentDashboard(currentGrpId);
+                        if (currentGrpId) {
+                            page.commands.handleContentDashboard(currentGrpId);
+                        }
                     });
                 // }
             // })
