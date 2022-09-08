@@ -1,17 +1,16 @@
-package com.unimerch.security.amznacc;
+package com.unimerch.security.amzn;
 
 import com.unimerch.repository.model.AmznAccount;
-import com.unimerch.repository.model.User;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.Collection;
 
-public class AmznAccPrinciple implements UserDetails {
+public class AmznUserPrinciple implements UserDetails {
 
     private AmznAccount amznAccount;
 
-    public AmznAccPrinciple(AmznAccount amznAccount) {
+    public AmznUserPrinciple(AmznAccount amznAccount) {
         this.amznAccount = amznAccount;
     }
 

@@ -3,10 +3,7 @@ package com.unimerch.service.impl;
 import com.unimerch.dto.amznacc.AmznAccParam;
 import com.unimerch.dto.amznacc.AmznAccResult;
 import com.unimerch.dto.user.LoginParam;
-import com.unimerch.exception.DuplicateDataException;
-import com.unimerch.exception.InvalidFileFormat;
-import com.unimerch.exception.InvalidIdException;
-import com.unimerch.exception.ServerErrorException;
+import com.unimerch.exception.*;
 import com.unimerch.mapper.AmznAccountMapper;
 import com.unimerch.repository.AmznAccountRepository;
 import com.unimerch.repository.BrgGroupAmznAccountRepository;
@@ -14,6 +11,7 @@ import com.unimerch.repository.OrderRepository;
 import com.unimerch.repository.datatable.AmznAccTableRepository;
 import com.unimerch.repository.model.AmznAccount;
 import com.unimerch.repository.model.Group;
+import com.unimerch.repository.model.User;
 import com.unimerch.service.AmznAccountService;
 import com.unimerch.util.ValidationUtils;
 import org.apache.poi.openxml4j.exceptions.NotOfficeXmlFileException;
@@ -87,9 +85,7 @@ public class AmznAccountServiceImpl implements AmznAccountService {
 
     @Override
     public List<AmznAccResult> findAll() {
-        return amznAccountRepository.findAll()
-                .stream().map(account -> amznAccountMapper.toAmznAccResult(account))
-                .collect(Collectors.toList());
+        return amznAccountRepository.findAll().stream().map(account -> amznAccountMapper.toAmznAccResult(account)).collect(Collectors.toList());
     }
 
     @Override
@@ -201,8 +197,7 @@ public class AmznAccountServiceImpl implements AmznAccountService {
             String amznPassword = null;
             boolean isUsernameExisted = false;
             for (Cell cell : row) {
-                if (cell.getCellType() == CellType.STRING &&
-                        cell.getRichStringCellValue().getString().trim().equalsIgnoreCase("username")) {
+                if (cell.getCellType() == CellType.STRING && cell.getRichStringCellValue().getString().trim().equalsIgnoreCase("username")) {
                     usernameColumnIndex = cell.getColumnIndex();
                     usernameRowIndex = cell.getRowIndex();
                     break;
@@ -250,6 +245,13 @@ public class AmznAccountServiceImpl implements AmznAccountService {
         }
 
         return amznAccResultList;
+    }
+
+    @Override
+    public AmznAccResult findByUsername(String username) {
+        AmznAccount amznUser = amznAccountRepository.findByUsername(username);
+        if (amznUser == null) throw new UserNotFoundException("{exception.userNotFound}");
+        return amznAccountMapper.toAmznAccResult(amznUser);
     }
 
 }

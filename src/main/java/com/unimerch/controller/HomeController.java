@@ -18,8 +18,5 @@ public class HomeController {
         return new ModelAndView("/login/login");
     }
 
-    @GetMapping("/loginAmznAcc")
-    public ModelAndView showLoginFormAmznAcc() {
-        return new ModelAndView("/login/login");
-    }
+
 }

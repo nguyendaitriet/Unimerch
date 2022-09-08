@@ -5,6 +5,7 @@ import com.unimerch.dto.amznacc.AmznAccResult;
 import com.unimerch.dto.group.GroupItemResult;
 import com.unimerch.dto.user.LoginParam;
 import com.unimerch.repository.model.AmznAccount;
+import com.unimerch.repository.model.User;
 import org.springframework.data.jpa.datatables.mapping.DataTablesInput;
 import org.springframework.data.jpa.datatables.mapping.DataTablesOutput;
 import org.springframework.web.multipart.MultipartFile;
@@ -29,4 +30,6 @@ public interface AmznAccountService {
     void delete(String id);
 
     List<AmznAccResult> importFile(MultipartFile amznAccFile);
+
+    AmznAccResult findByUsername(String username);
 }
