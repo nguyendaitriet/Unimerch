@@ -159,7 +159,7 @@
             language: {
                 search: `<i class="fas fa-search text-primary"></i> `
             },
-            dom: '<"container-fluid"<"row"<"col"B><"col"f>>>rtp',
+            dom: '<"row mb-2"<"col"B><"col"f>>rtp',
             buttons: {
                 dom: {
                     button: {
@@ -234,12 +234,12 @@
             language: {
                 search: `<i class="fas fa-search text-primary"></i> `,
             },
-            dom: '<"container-fluid"<"row"<"col table-quickselect"><"col"f>>>rtp'
+            dom: '<"d-flex justify-content-around flex-column flex-sm-row mb-2"<"align-self-center align-self-sm-start table-quickselect"><"align-self-center align-self-sm-start"f>>tp'
         })
 
         $('div.table-quickselect')
-            .html(`<p class="font-italic font-weight-light" style="margin-bottom: 0;">${tableQuickSelectP1}</p>
-             <p class="font-italic font-weight-light">${tableQuickSelectP2}</p>`);
+            .html(`<p class="font-italic font-weight-light text-center text-sm-left" style="margin-bottom: 0;">${tableQuickSelectP1}</p>
+             <p class="font-italic font-weight-light text-center text-sm-left">${tableQuickSelectP2}</p>`);
 
         page.dialogs.element.btnAssignGrpUser.on('click', function () {
             let selectedRows = sideTable.rows({selected: true}).data();
