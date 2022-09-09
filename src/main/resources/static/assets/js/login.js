@@ -57,6 +57,21 @@ class App {
                 break;
         }
     }
+
+    static allowShowingPassword(form) {
+        let password = form.find('.password').get(0);
+        let checkbox = form.find('.show-password');
+
+        password.type = 'password';
+
+        checkbox.on('change', function () {
+            if (checkbox.is(':checked')) {
+                password.type = 'text';
+            } else {
+                password.type = 'password';
+            }
+        })
+    }
 }
 
 class User {

@@ -7,8 +7,12 @@
 <body>
 
 <form class="login" id="frmLogin" autocomplete="off">
-    <input type="text" placeholder="Username" id="username">
-    <input type="password" placeholder="Password" id="password">
+    <input type="text" th:placeholder="#{form.placeholder.username}" id="username">
+    <input type="password" th:placeholder="#{form.placeholder.password}" id="password" class="password">
+    <div id="show-password">
+        <input type="checkbox" class="show-password">
+        <span th:text="#{form.showPassword}"></span>
+    </div>
     <button type="button" id="btnLogin">Login</button>
 </form>
 
@@ -72,12 +76,14 @@
             })
     })
 
-    page.dialogs.element.frmLogin.keypress(function(event){
+    page.dialogs.element.frmLogin.keypress(function (event) {
         var keycode = (event.keyCode ? event.keyCode : event.which);
-        if(keycode == '13'){
+        if (keycode == '13') {
             page.element.btnLogin.click();
         }
     });
+
+    App.allowShowingPassword(page.dialogs.element.frmLogin);
 </script>
 </body>
 </html>

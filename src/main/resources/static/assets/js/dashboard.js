@@ -107,11 +107,19 @@ class App {
         $(".num-comma").number(true, 0, ',', ',');
     }
 
-    static formatNumberComma(x) {
+    static fmtNumComma(x) {
         if (x == null)
             return x;
 
-        return '$' + x.toString().replace(/ /g, "").replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+        return x.toString().replace(/ /g, "").replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+    }
+
+    static fmtNumWMetricSuffix(x) {
+        if (x >= 1000000)
+            return this.fmtNumComma((x / 1000000).toFixed(1).replace(/\.0$/, '')) + 'M';
+        if (x >= 1000)
+            return this.fmtNumComma((x / 1000).toFixed(1).replace(/\.0$/, '')) + 'k';
+        return x;
     }
 
     static removeFormatNumberSpace(x) {
@@ -229,9 +237,8 @@ class App {
         let navDashboard = $("#nav-item-dashboard");
         let rows = $("#filter-sidebar .collapse-item");
 
-        if (id === '') {
+        if (id === '')
             id = undefined;
-        }
 
         if ((domain === 'dashboard' || domain === 'users') && ((Number(id)) || id === undefined)) {
             navDashboard.addClass("active");

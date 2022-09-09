@@ -59,6 +59,16 @@ body {
     animation: wawes 7s infinite;
 }
 
+#show-password {
+    padding: 2px 2px;
+}
+
+#show-password>span {
+    font-family: "Asap", sans-serif;
+    font-size: 16px;
+    color: #2B4865
+}
+
 .login>input {
     font-family: "Asap", sans-serif;
     display: block;

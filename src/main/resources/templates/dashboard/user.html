@@ -163,7 +163,7 @@
                 {
                     targets: 3,
                     className: 'text-center',
-                    render: (data, type, row) => data ? `${statusDisabled}` : `${statusActive}`,
+                    render: (data, row) => data ? `${statusDisabled}` : `${statusActive}`,
                     createdCell: (cell, data) => data ? $(cell).addClass('text-danger') : $(cell).addClass('text-success')
                 },
                 {
