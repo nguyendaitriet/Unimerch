@@ -54,6 +54,7 @@ public class UniUserSecurityConfig extends WebSecurityConfigurerAdapter {
 //    public AuthenticationManager authenticationManager() throws Exception {
 //        return super.authenticationManager();
 //    }
+
     @Bean(BeanNameConstant.UNI_AUTHENTICATION_MANAGER_NAME)
     @Override
     public AuthenticationManager authenticationManagerBean() throws Exception {
