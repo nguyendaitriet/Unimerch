@@ -405,7 +405,7 @@
                                         <!-- Table - Today -->
                                         <div class="tab-pane fade show active" id="today" role="tabpanel"
                                              aria-labelledby="today-tab">
-                                            <table class="table" id="tableTodaySold">
+                                            <table class="table table-striped table-bordered dt-responsive" id="tableTodaySold">
                                                 <thead>
                                                 <tr class="text-dark">
                                                     <th>Sold</th>
@@ -420,7 +420,7 @@
                                         <!-- Table - 30 Days -->
                                         <div class="tab-pane fade show" id="thirtyday" role="tabpanel"
                                              aria-labelledby="thirtyday-tab">
-                                            <table class="table" id="table30DaysSold">
+                                            <table class="table table-striped table-bordered dt-responsive" id="table30DaysSold">
                                                 <thead class="text-dark">
                                                 <tr>
                                                     <th>Sold</th>
@@ -435,7 +435,7 @@
                                         <!-- Table - This month -->
                                         <div class="tab-pane fade show" id="thismonth" role="tabpanel"
                                              aria-labelledby="thismonth-tab">
-                                            <table class="table" id="tableThisMonthSold">
+                                            <table class="table table-striped table-bordered dt-responsive" id="tableThisMonthSold">
                                                 <thead>
                                                 <tr class="text-dark">
                                                     <th>Sold</th>
@@ -645,6 +645,7 @@
                 },
                 emptyTable: `${noDataInTable}`
             },
+            dom: '<"row mb-2"<"col"l><"col"f>>rtp'
         });
         todaySoldTable.order([ 0, "desc" ]).draw();
 
@@ -691,6 +692,7 @@
                 },
                 emptyTable: `${noDataInTable}`
             },
+            dom: '<"row mb-2"<"col"l><"col"f>>rtp'
         });
 
         thirtyDaysSoldTable.order([ 0, "desc" ]).draw();
@@ -737,6 +739,7 @@
                 },
                 emptyTable: `${noDataInTable}`
             },
+            dom: '<"row mb-2"<"col"l><"col"f>>rtp'
         });
 
         thisMonthSoldTable.order([ 0, "desc" ]).draw();
@@ -774,26 +777,19 @@
     }
 
     $(document).ready(function () {
+        page.commands.createSideBarGroupList(userId).then(() => {
 
-        // $.when($("#filter-sidebar .collapse-item").remove())
-        //     .then(() => {
-                // if (userId) {
-                    page.commands.createSideBarGroupList(userId).then(() => {
-
-                        if (isNaN(currentGrpId) || currentGrpId === '') {
-                            currentGrpId = $('#filter-sidebar .collapse-item').data('id');
-                            page.element.groupHeader.html($('#filter-sidebar .collapse-item').html());
-                        }
-                        if (currentGrpId) {
-                            page.commands.handleContentDashboard(currentGrpId);
-                        }
-                    });
-                // }
-            // })
+            if (isNaN(currentGrpId) || currentGrpId === '') {
+                currentGrpId = $('#filter-sidebar .collapse-item').data('id');
+                page.element.groupHeader.html($('#filter-sidebar .collapse-item').html());
+            }
+            if (currentGrpId) {
+                page.commands.handleContentDashboard(currentGrpId);
+            }
+        });
         page.commands.initTodaySoldTable();
         page.commands.init30DaysSoldTable();
         page.commands.initThisMonthSoldTable();
-        // page.commands.handleContentDashboard(currentGrpId);
     })
 
     //sticky Filter
