@@ -61,7 +61,7 @@
                                     th:text="#{group.amznAccTableTitle}">Amazon Account</h6>
                             </div>
                             <div class="card-body">
-                                <table id="table-amzn-acc-in" class="border-0 stripe nowrap" style="width: 100%;">
+                                <table id="table-amzn-acc-in" class="table-borderless stripe nowrap table" style="width: 100%;">
                                     <thead>
                                     <tr>
                                         <th>#</th>
@@ -352,7 +352,7 @@
             },
             pageLength: 10,
             lengthChange: false,
-            dom: 'Bfrtip',
+            dom: '<"row mb-2"<"col"B><"col"f>>rtp',
             buttons: {
                 dom: {
                     button: {
@@ -431,7 +431,7 @@
                     },
                     pageLength: 10,
                     lengthChange: false,
-                    dom: 'Bfrtip',
+                    dom: '<"row mb-2"<"col"B><"col"f>>rtp',
                     buttons: {
                         dom: {
                             button: {
@@ -590,9 +590,8 @@
                     dom: '<"d-flex justify-content-around flex-column flex-sm-row mb-2"<"align-self-center align-self-sm-start table-quickselect"><"align-self-center align-self-sm-start"f>>tp'
                 });
 
-                $('div.table-quickselect')
-                    .html(`<p class="font-italic font-weight-light text-center text-sm-left" style="margin-bottom: 0;">${tableQuickSelectP1}</p>
-                    <p class="font-italic font-weight-light text-center text-sm-left">${tableQuickSelectP2}</p>`);
+                $('div.table-quickselect').html(`<p class="font-italic font-weight-light text-center text-sm-left" style="margin-bottom: 0;">${tableQuickSelectP1}</p>
+                <p class="font-italic font-weight-light text-center text-sm-left">${tableQuickSelectP2}</p>`);
             } else {
                 tableAmznAccOut.ajax.url(page.urls.findAllAmznAccOutGroup + currentGroup.id).load();
             }
