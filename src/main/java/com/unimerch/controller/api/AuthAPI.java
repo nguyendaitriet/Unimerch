@@ -3,9 +3,11 @@ package com.unimerch.controller.api;
 import com.unimerch.dto.user.LoginParam;
 import com.unimerch.repository.model.JwtResponse;
 import com.unimerch.repository.model.User;
+import com.unimerch.security.BeanNameConstant;
 import com.unimerch.service.UserService;
 import com.unimerch.service.impl.JwtService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseCookie;
@@ -25,6 +27,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class AuthAPI {
 
     @Autowired
+    @Qualifier(BeanNameConstant.UNI_AUTHENTICATION_MANAGER_NAME)
     private AuthenticationManager authenticationManager;
 
     @Autowired

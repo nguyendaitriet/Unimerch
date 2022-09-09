@@ -1,5 +1,6 @@
-package com.unimerch.repository.model;
+package com.unimerch.security.uni;
 
+import com.unimerch.repository.model.User;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -9,10 +10,8 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Objects;
 
-public class UserPrinciple implements UserDetails {
-
+public class UniUserPrinciple implements UserDetails {
     private static final long serialVersionUID = 1L;
-
     private final Integer id;
 
     private final String username;
@@ -21,21 +20,21 @@ public class UserPrinciple implements UserDetails {
 
     private final Collection<? extends GrantedAuthority> roles;
 
-    public UserPrinciple(Integer id,
-                         String username, String password,
-                         Collection<? extends GrantedAuthority> roles) {
+    public UniUserPrinciple(Integer id,
+                            String username, String password,
+                            Collection<? extends GrantedAuthority> roles) {
         this.id = id;
         this.username = username;
         this.password = password;
         this.roles = roles;
     }
 
-    public static UserPrinciple build(User user) {
+    public static UniUserPrinciple build(User user) {
         List<GrantedAuthority> authorities = new ArrayList<GrantedAuthority>();
         SimpleGrantedAuthority authority = new SimpleGrantedAuthority(user.getRole().getCode());
         authorities.add(authority);
 
-        return new UserPrinciple(
+        return new UniUserPrinciple(
                 user.getId(),
                 user.getUsername(),
                 user.getPasswordHash(),
@@ -88,13 +87,13 @@ public class UserPrinciple implements UserDetails {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
 
-        UserPrinciple user = (UserPrinciple) o;
+        UniUserPrinciple user = (UniUserPrinciple) o;
         return Objects.equals(id, user.id);
     }
 
     @Override
     public int hashCode() {
-        return super.hashCode();
+        return Objects.hash(id);
     }
 }
 
