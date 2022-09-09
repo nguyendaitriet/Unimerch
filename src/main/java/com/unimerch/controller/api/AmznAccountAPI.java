@@ -3,7 +3,6 @@ package com.unimerch.controller.api;
 import com.unimerch.dto.amznacc.AmznAccFilterItemResult;
 import com.unimerch.dto.amznacc.AmznAccParam;
 import com.unimerch.dto.amznacc.AmznAccResult;
-import com.unimerch.dto.order.OrderData;
 import com.unimerch.service.AmznAccountService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.jpa.datatables.mapping.DataTablesInput;
@@ -77,5 +76,27 @@ public class AmznAccountAPI {
         List<AmznAccFilterItemResult> amznAccResults = amznAccountService.findAllFilter();
         return new ResponseEntity<>(amznAccResults, HttpStatus.OK);
     }
+
+    @GetMapping("/analytics-all")
+    public ResponseEntity<?> findAllAnalytics() {
+        return null;
+    }
+
+    @GetMapping("/analytics-acc/{id}")
+    public ResponseEntity<?> findAnalyticsByAmznAccId(@PathVariable Integer id) {
+        return null;
+    }
+
+    @GetMapping("/analytics-grp/{id}")
+    public ResponseEntity<?> findAnalyticsByGroupId(@PathVariable Integer id) {
+        return null;
+    }
+    @GetMapping("/die-all")
+    public ResponseEntity<?> findAllAccountDie() {
+        return null;
+    }
+
+//    @GetMapping("/die-acc/{id}")
+//    @GetMapping("/die-grp/{id}")
 
 }
