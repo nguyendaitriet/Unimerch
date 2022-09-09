@@ -10,7 +10,9 @@ import org.springframework.core.annotation.Order;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.BeanIds;
+import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -66,27 +68,28 @@ public class AmznUserSecurityConfig extends WebSecurityConfigurerAdapter {
         http.authenticationProvider(authenticationProvider2());
 
         http.authorizeRequests()
-                .antMatchers("/api/auth/login", "/login").permitAll()
-                .antMatchers("/", "/api/users/**", "/api/groups/**").authenticated()
+//                .antMatchers("/api/auth/login", "/login").permitAll()
+                .antMatchers("/api/auth/login", "/login/**").permitAll()
+//                .antMatchers("/", "/api/users/**", "/api/groups/**").authenticated()
                 .antMatchers("/assets/**", "/messages/**").permitAll()
-                .antMatchers(
-                        "/v2/api-docs",
-                        "/swagger-resources/configuration/ui",
-                        "/configuration/ui",
-                        "/swagger-resources",
-                        "/swagger-resources/configuration/security",
-                        "/configuration/security",
-                        "/swagger-ui.html",
-                        "/webjars/**"
-                ).permitAll()
+//                .antMatchers(
+//                        "/v2/api-docs",
+//                        "/swagger-resources/configuration/ui",
+//                        "/configuration/ui",
+//                        "/swagger-resources",
+//                        "/swagger-resources/configuration/security",
+//                        "/configuration/security",
+//                        "/swagger-ui.html",
+//                        "/webjars/**"
+//                ).permitAll()
                 .anyRequest().authenticated()
                 .and()
                 .formLogin()
                 .loginProcessingUrl("/login/amznAcc")
-                .loginPage("/login")
+//                .loginPage("/login")
                 .usernameParameter("username")
                 .passwordParameter("password")
-                .defaultSuccessUrl("/")
+//                .defaultSuccessUrl("/")
                 .and()
                 .logout()
                 .logoutUrl("/logout")

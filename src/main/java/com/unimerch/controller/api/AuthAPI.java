@@ -1,9 +1,12 @@
 package com.unimerch.controller.api;
 
+import com.unimerch.dto.amznacc.AmznAccResult;
 import com.unimerch.dto.user.LoginParam;
+import com.unimerch.repository.model.AmznAccount;
 import com.unimerch.repository.model.JwtResponse;
 import com.unimerch.repository.model.User;
 import com.unimerch.security.BeanNameConstant;
+import com.unimerch.service.AmznAccountService;
 import com.unimerch.service.UserService;
 import com.unimerch.service.impl.JwtService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,11 +33,18 @@ public class AuthAPI {
     @Qualifier(BeanNameConstant.UNI_AUTHENTICATION_MANAGER_NAME)
     private AuthenticationManager authenticationManager;
 
+//    @Autowired
+//    @Qualifier(BeanNameConstant.AMZN_AUTHENTICATION_MANAGER_NAME)
+//    private AuthenticationManager authenticationManager2;
+
     @Autowired
     private JwtService jwtService;
 
     @Autowired
     private UserService userService;
+
+    @Autowired
+    private AmznAccountService amznAccountService;
 
     @PostMapping("/login")
     public ResponseEntity<?> login(@RequestBody LoginParam user) {
@@ -74,6 +84,44 @@ public class AuthAPI {
                 .body(jwtResponse);
 
     }
+
+//    @PostMapping("/login/amznAcc")
+//    public ResponseEntity<?> loginAmznAcc(@RequestBody LoginParam user) {
+//
+//        Authentication authentication = authenticationManager2.authenticate(
+//                new UsernamePasswordAuthenticationToken(user.getUsername(), user.getPassword()));
+//
+//        SecurityContextHolder.getContext().setAuthentication(authentication);
+//
+//        AmznAccResult currentAmznAcc = amznAccountService.findByUsername(user.getUsername());
+//
+//
+//        String jwt = jwtService.generateTokenLogin(authentication);
+//
+//        UserDetails userDetails = (UserDetails) authentication.getPrincipal();
+//
+//        JwtResponse jwtResponse = new JwtResponse(
+//                jwt,
+//                currentAmznAcc.getId(),
+//                userDetails.getUsername(),
+//                currentAmznAcc.getUsername(),
+//                userDetails.getAuthorities()
+//        );
+//
+//        ResponseCookie springCookie = ResponseCookie.from("JWT", jwt)
+//                .httpOnly(false)
+//                .secure(false)
+//                .path("/")
+//                .maxAge(60 * 1000)
+//                .domain("localhost")
+//                .build();
+//
+//        return ResponseEntity
+//                .ok()
+//                .header(HttpHeaders.SET_COOKIE, springCookie.toString())
+//                .body(jwtResponse);
+//
+//    }
 
 
 }
