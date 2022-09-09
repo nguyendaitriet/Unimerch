@@ -1,6 +1,6 @@
 package com.unimerch.service.impl;
 
-import com.unimerch.repository.model.UserPrinciple;
+import com.unimerch.security.uni.UniUserPrinciple;
 import io.jsonwebtoken.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -18,7 +18,7 @@ public class JwtService {
     private static final Logger logger = LoggerFactory.getLogger(JwtService.class.getName());
 
     public String generateTokenLogin(Authentication authentication) {
-        UserPrinciple userPrincipal = (UserPrinciple) authentication.getPrincipal();
+        UniUserPrinciple userPrincipal = (UniUserPrinciple) authentication.getPrincipal();
 
         return Jwts.builder()
                 .setSubject((userPrincipal.getUsername()))
