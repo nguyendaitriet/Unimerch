@@ -6,7 +6,7 @@ import com.fasterxml.jackson.databind.DeserializationContext;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.deser.std.StdDeserializer;
 import com.unimerch.dto.amznacc.Metadata;
-import com.unimerch.repository.model.AmznAccount;
+import com.unimerch.repository.model.AmznUser;
 import org.springframework.stereotype.Component;
 
 import java.io.IOException;
@@ -40,7 +40,7 @@ public class MetadataMapper extends StdDeserializer<Metadata> {
                 overallDesignCount, overallDesignLimit, tier, totalRejected, totalRemoved);
     }
 
-    public AmznAccount updateAmznAccMetadata (AmznAccount amznAccount, Metadata metadata) {
+    public AmznUser updateAmznAccMetadata (AmznUser amznAccount, Metadata metadata) {
         amznAccount.setDailyProductCount(metadata.getDailyProductCount());
         amznAccount.setDailyProductLimit(metadata.getDailyProductLimit());
         amznAccount.setOverallProductCount(metadata.getOverallProductCount());

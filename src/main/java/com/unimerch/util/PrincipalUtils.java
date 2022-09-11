@@ -1,18 +1,16 @@
 package com.unimerch.util;
 
 import com.unimerch.repository.model.User;
-import com.unimerch.service.UserService;
+import com.unimerch.service.UniUserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 
-import java.util.Optional;
-
 @Component
 public class PrincipalUtils {
     @Autowired
-    UserService userService;
+    UniUserService userService;
 
     public int getPrincipalId() {
         Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();

@@ -3,8 +3,7 @@ package com.unimerch.mapper;
 import com.unimerch.dto.amznacc.AmznAccFilterItemResult;
 import com.unimerch.dto.amznacc.AmznAccParam;
 import com.unimerch.dto.amznacc.AmznAccResult;
-import com.unimerch.dto.user.LoginParam;
-import com.unimerch.repository.model.AmznAccount;
+import com.unimerch.repository.model.AmznUser;
 import com.unimerch.repository.model.BrgGroupAmznAccount;
 import com.unimerch.service.OrderService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,14 +20,14 @@ public class AmznAccountMapper {
                 .setUsername((brgGroupAmznAccount.getAmznAccount().getUsername()));
     }
 
-    public AmznAccResult toAmznAccResult(AmznAccount amznAccount) {
+    public AmznAccResult toAmznAccResult(AmznUser amznAccount) {
         return new AmznAccResult()
                 .setId(amznAccount.getId())
                 .setUsername(amznAccount.getUsername());
     }
 
-    public AmznAccount toAmznAcc(AmznAccParam amznAccCreateParam) {
-        return new AmznAccount()
+    public AmznUser toAmznAcc(AmznAccParam amznAccCreateParam) {
+        return new AmznUser()
                 .setUsername(amznAccCreateParam.getUsername())
                 .setPassword(amznAccCreateParam.getPassword())
                 .setDailyProductCount(0)
@@ -42,7 +41,7 @@ public class AmznAccountMapper {
                 .setTotalRemoved(0);
     }
 
-    public AmznAccFilterItemResult toAmznAccFilterItemResult(AmznAccount amznAccount) {
+    public AmznAccFilterItemResult toAmznAccFilterItemResult(AmznUser amznAccount) {
         int soldToday = orderService.getNumberSoldInDayByAmznId(amznAccount.getId());
 
         return new AmznAccFilterItemResult()

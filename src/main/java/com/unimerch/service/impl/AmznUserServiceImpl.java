@@ -7,20 +7,15 @@ import com.unimerch.dto.amznacc.AmznAccFilterItemResult;
 import com.unimerch.dto.amznacc.AmznAccParam;
 import com.unimerch.dto.amznacc.AmznAccResult;
 import com.unimerch.dto.amznacc.Metadata;
-import com.unimerch.dto.order.OrderData;
-import com.unimerch.dto.user.LoginParam;
 import com.unimerch.exception.*;
 import com.unimerch.mapper.AmznAccountMapper;
 import com.unimerch.mapper.MetadataMapper;
-import com.unimerch.mapper.OrderMapper;
-import com.unimerch.repository.AmznAccountRepository;
+import com.unimerch.repository.AmznUserRepository;
 import com.unimerch.repository.BrgGroupAmznAccountRepository;
 import com.unimerch.repository.OrderRepository;
 import com.unimerch.repository.datatable.AmznAccTableRepository;
-import com.unimerch.repository.model.AmznAccount;
-import com.unimerch.repository.model.Group;
-import com.unimerch.repository.model.User;
-import com.unimerch.service.AmznAccountService;
+import com.unimerch.repository.model.AmznUser;
+import com.unimerch.service.AmznUserService;
 import com.unimerch.util.ValidationUtils;
 import org.apache.poi.openxml4j.exceptions.NotOfficeXmlFileException;
 import org.apache.poi.ss.usermodel.*;
@@ -35,14 +30,13 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.transaction.Transactional;
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
 @Transactional
-public class AmznAccountServiceImpl implements AmznAccountService {
+public class AmznUserServiceImpl implements AmznUserService {
 
     @Autowired
     private AmznAccTableRepository amznAccTableRepository;
@@ -51,7 +45,7 @@ public class AmznAccountServiceImpl implements AmznAccountService {
     private AmznAccountMapper amznAccountMapper;
 
     @Autowired
-    private AmznAccountRepository amznAccountRepository;
+    private AmznUserRepository amznAccountRepository;
 
     @Autowired
     private BrgGroupAmznAccountRepository brgGroupAmznAccountRepository;
@@ -72,13 +66,13 @@ public class AmznAccountServiceImpl implements AmznAccountService {
     private PasswordEncoder passwordEncoder;
 
     @Override
-    public AmznAccount findById(String id) {
+    public AmznUser findById(String id) {
         if (!validationUtils.isIdValid(id)) {
             throw new InvalidIdException(messageSource.getMessage("validation.idNotExist", null, Locale.getDefault()));
         }
 
         int validId = Integer.parseInt(id);
-        Optional<AmznAccount> optionalAmznAcc = amznAccountRepository.findById(validId);
+        Optional<AmznUser> optionalAmznAcc = amznAccountRepository.findById(validId);
         if (!optionalAmznAcc.isPresent()) {
             throw new InvalidIdException(messageSource.getMessage("validation.idNotExist", null, Locale.getDefault()));
         }
@@ -93,9 +87,9 @@ public class AmznAccountServiceImpl implements AmznAccountService {
         mapper.registerModule(module);
         try {
             Metadata metadata = mapper.readValue(data, Metadata.class);
-            Optional<AmznAccount> amznAccountOptional = amznAccountRepository.findByUsername("2");
-            AmznAccount amznAccount = metadataMapper.updateAmznAccMetadata(amznAccountOptional.get(), metadata);
-            amznAccountRepository.save(amznAccount);
+            AmznUser user = amznAccountRepository.findByUsername("2");
+            user = metadataMapper.updateAmznAccMetadata(user, metadata);
+            amznAccountRepository.save(user);
         } catch (JsonProcessingException | ServerErrorException e) {
             throw new ServerErrorException(messageSource.getMessage("error.500", null, Locale.getDefault()));
         }
@@ -137,7 +131,7 @@ public class AmznAccountServiceImpl implements AmznAccountService {
         try {
             amznAccCreateParam.setUsername(username);
             amznAccCreateParam.setPassword(passwordEncoder.encode(password));
-            AmznAccount newAccount = amznAccountRepository.save(amznAccountMapper.toAmznAcc(amznAccCreateParam));
+            AmznUser newAccount = amznAccountRepository.save(amznAccountMapper.toAmznAcc(amznAccCreateParam));
             return amznAccountMapper.toAmznAccResult(newAccount);
         } catch (Exception e) {
             throw new ServerErrorException(messageSource.getMessage("error.500", null, Locale.getDefault()));
@@ -146,7 +140,7 @@ public class AmznAccountServiceImpl implements AmznAccountService {
 
     @Override
     public AmznAccResult update(String id, AmznAccParam amznAccParam) {
-        AmznAccount amznAccount = findById(id);
+        AmznUser amznAccount = findById(id);
         try {
             amznAccount.setPassword(passwordEncoder.encode(amznAccParam.getPassword()));
             amznAccount = amznAccountRepository.save(amznAccount);
@@ -158,7 +152,7 @@ public class AmznAccountServiceImpl implements AmznAccountService {
 
     @Override
     public void delete(String id) {
-        AmznAccount amznAccount = findById(id);
+        AmznUser amznAccount = findById(id);
         try {
             orderRepository.deleteByAmznAccount_Id(amznAccount.getId());
             brgGroupAmznAccountRepository.deleteByAmznAccount_Id(amznAccount.getId());
@@ -279,7 +273,7 @@ public class AmznAccountServiceImpl implements AmznAccountService {
             try {
                 amznPassword = passwordEncoder.encode(amznPassword);
                 AmznAccParam newAmznAccParam = new AmznAccParam(amznUsername, amznPassword);
-                AmznAccount newAmznAcc = amznAccountRepository.save(amznAccountMapper.toAmznAcc(newAmznAccParam));
+                AmznUser newAmznAcc = amznAccountRepository.save(amznAccountMapper.toAmznAcc(newAmznAccParam));
                 amznAccResultList.add(amznAccountMapper.toAmznAccResult(newAmznAcc));
             } catch (Exception e) {
                 throw new ServerErrorException(messageSource.getMessage("error.500", null, Locale.getDefault()));
@@ -291,9 +285,10 @@ public class AmznAccountServiceImpl implements AmznAccountService {
 
     @Override
     public AmznAccResult findByUsername(String username) {
-        Optional<AmznAccount> amznUser = amznAccountRepository.findByUsername(username);
-        if (!amznUser.isPresent()) throw new UserNotFoundException("{exception.userNotFound}");
-        return amznAccountMapper.toAmznAccResult(amznUser.get());
+        AmznUser user = amznAccountRepository.findByUsername(username);
+        if (user == null)
+            throw new UserNotFoundException("{exception.userNotFound}");
+        return amznAccountMapper.toAmznAccResult(user);
     }
 
 }

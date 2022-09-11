@@ -2,12 +2,11 @@ package com.unimerch.controller.api;
 
 import com.unimerch.dto.amznacc.AmznAccResult;
 import com.unimerch.dto.user.LoginParam;
-import com.unimerch.repository.model.AmznAccount;
 import com.unimerch.repository.model.JwtResponse;
 import com.unimerch.repository.model.User;
 import com.unimerch.security.BeanNameConstant;
-import com.unimerch.service.AmznAccountService;
-import com.unimerch.service.UserService;
+import com.unimerch.service.AmznUserService;
+import com.unimerch.service.UniUserService;
 import com.unimerch.service.impl.JwtService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -22,106 +21,50 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/api/auth")
 public class AuthAPI {
-
     @Autowired
     @Qualifier(BeanNameConstant.UNI_AUTHENTICATION_MANAGER_NAME)
-    private AuthenticationManager authenticationManager;
-
-//    @Autowired
-//    @Qualifier(BeanNameConstant.AMZN_AUTHENTICATION_MANAGER_NAME)
-//    private AuthenticationManager authenticationManager2;
-
+    private AuthenticationManager uniAuthenticationManager;
+    @Autowired
+    @Qualifier(BeanNameConstant.AMZN_AUTHENTICATION_MANAGER_NAME)
+    private AuthenticationManager amznAuthenticationManager;
     @Autowired
     private JwtService jwtService;
-
     @Autowired
-    private UserService userService;
-
+    private UniUserService uniUserService;
     @Autowired
-    private AmznAccountService amznAccountService;
+    private AmznUserService amznUserService;
 
-    @PostMapping("/login")
-    public ResponseEntity<?> login(@RequestBody LoginParam user) {
-
-        Authentication authentication = authenticationManager.authenticate(
-                new UsernamePasswordAuthenticationToken(user.getUsername(), user.getPassword()));
-
-        SecurityContextHolder.getContext().setAuthentication(authentication);
-
-        User currentUser = userService.getByUsername(user.getUsername());
-        if (currentUser.isDisabled()) {
+    @PostMapping("/api/login")
+    public ResponseEntity<?> uniLogin(@RequestBody LoginParam loginParam) {
+        System.out.println("/api/login");
+        Authentication authentication = uniAuthenticationManager.authenticate(new UsernamePasswordAuthenticationToken(loginParam.getUsername(), loginParam.getPassword()));
+        User user = uniUserService.getByUsername(loginParam.getUsername());
+        if (user.isDisabled()) {
             return new ResponseEntity<>(HttpStatus.FORBIDDEN);
         }
-
-        String jwt = jwtService.generateTokenLogin(authentication);
-        UserDetails userDetails = (UserDetails) authentication.getPrincipal();
-
-        JwtResponse jwtResponse = new JwtResponse(
-                jwt,
-                currentUser.getId(),
-                userDetails.getUsername(),
-                currentUser.getUsername(),
-                userDetails.getAuthorities()
-        );
-
-        ResponseCookie springCookie = ResponseCookie.from("JWT", jwt)
-                .httpOnly(false)
-                .secure(false)
-                .path("/")
-                .maxAge(60 * 1000)
-                .domain("localhost")
-                .build();
-
-        return ResponseEntity
-                .ok()
-                .header(HttpHeaders.SET_COOKIE, springCookie.toString())
-                .body(jwtResponse);
-
+        return setCookies(authentication, user.getId().toString());
     }
 
-//    @PostMapping("/login/amznAcc")
-//    public ResponseEntity<?> loginAmznAcc(@RequestBody LoginParam user) {
-//
-//        Authentication authentication = authenticationManager2.authenticate(
-//                new UsernamePasswordAuthenticationToken(user.getUsername(), user.getPassword()));
-//
-//        SecurityContextHolder.getContext().setAuthentication(authentication);
-//
-//        AmznAccResult currentAmznAcc = amznAccountService.findByUsername(user.getUsername());
-//
-//
-//        String jwt = jwtService.generateTokenLogin(authentication);
-//
-//        UserDetails userDetails = (UserDetails) authentication.getPrincipal();
-//
-//        JwtResponse jwtResponse = new JwtResponse(
-//                jwt,
-//                currentAmznAcc.getId(),
-//                userDetails.getUsername(),
-//                currentAmznAcc.getUsername(),
-//                userDetails.getAuthorities()
-//        );
-//
-//        ResponseCookie springCookie = ResponseCookie.from("JWT", jwt)
-//                .httpOnly(false)
-//                .secure(false)
-//                .path("/")
-//                .maxAge(60 * 1000)
-//                .domain("localhost")
-//                .build();
-//
-//        return ResponseEntity
-//                .ok()
-//                .header(HttpHeaders.SET_COOKIE, springCookie.toString())
-//                .body(jwtResponse);
-//
-//    }
+    @PostMapping("/api/amzn/login")
+    public ResponseEntity<?> amznLogin(@RequestBody LoginParam loginParam) {
+        System.out.println("/api/amzn/login");
+        Authentication authentication = amznAuthenticationManager.authenticate(new UsernamePasswordAuthenticationToken(loginParam.getUsername(), loginParam.getPassword()));
+        AmznAccResult user = amznUserService.findByUsername(loginParam.getUsername());
+        return setCookies(authentication, user.getId().toString());
+    }
 
 
+    private ResponseEntity<?> setCookies(Authentication authentication, String userId) {
+        String accessToken = jwtService.generateTokenLogin(authentication);
+        UserDetails userDetails = (UserDetails) authentication.getPrincipal();
+        JwtResponse jwtResponse = new JwtResponse(accessToken, Integer.parseInt(userId), userDetails.getUsername(), userDetails.getAuthorities());
+
+        ResponseCookie springCookie = ResponseCookie.from("JWT", accessToken).httpOnly(false).secure(false).path("/").maxAge(60 * 1000).domain("localhost").build();
+
+        return ResponseEntity.ok().header(HttpHeaders.SET_COOKIE, springCookie.toString()).body(jwtResponse);
+    }
 }

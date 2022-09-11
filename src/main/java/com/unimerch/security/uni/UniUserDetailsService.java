@@ -16,6 +16,7 @@ public class UniUserDetailsService implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+        System.out.println("UniUserDetailsService.loadUserByUsername");
         User user = userRepository.getByUsername(username);
         if (user == null) {
             throw new UsernameNotFoundException("No uni found with the given email.");

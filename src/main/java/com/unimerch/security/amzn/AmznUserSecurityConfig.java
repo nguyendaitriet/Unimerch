@@ -9,17 +9,14 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.core.annotation.Order;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
-import org.springframework.security.config.BeanIds;
-import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
-import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.access.AccessDeniedHandler;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
-import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
 
 import javax.servlet.Filter;
 
@@ -39,19 +36,14 @@ public class AmznUserSecurityConfig extends WebSecurityConfigurerAdapter {
     @Autowired
     private AuthenticationSuccessHandler authenticationSuccessHandler;
     @Autowired
+    @Qualifier(BeanNameConstant.AMZN_JWT_FILTER_NAME)
     private Filter jwtAuthenticationFilter;
 
-//    @Bean(BeanNameConstant.AMZN_AUTHENTICATION_MANAGER_NAME)
-//    @Override
-//    public AuthenticationManager authenticationManager() throws Exception {
-//        return super.authenticationManager();
-//    }
-
-//    @Bean(BeanNameConstant.AMZN_AUTHENTICATION_MANAGER_NAME)
-//    @Override
-//    public AuthenticationManager authenticationManagerBean() throws Exception {
-//        return super.authenticationManagerBean();
-//    }
+    @Bean(BeanNameConstant.AMZN_AUTHENTICATION_MANAGER_NAME)
+    @Override
+    public AuthenticationManager authenticationManagerBean() throws Exception {
+        return super.authenticationManagerBean();
+    }
 
     @Bean
     public DaoAuthenticationProvider authenticationProvider2() {
@@ -66,38 +58,12 @@ public class AmznUserSecurityConfig extends WebSecurityConfigurerAdapter {
         http.csrf().ignoringAntMatchers("/**");
         http.httpBasic().authenticationEntryPoint(restAuthenticationEntryPoint);
         http.authenticationProvider(authenticationProvider2());
-
         http.authorizeRequests()
-//                .antMatchers("/api/auth/login", "/login").permitAll()
-                .antMatchers("/api/auth/login", "/login/**").permitAll()
-//                .antMatchers("/", "/api/users/**", "/api/groups/**").authenticated()
-                .antMatchers("/assets/**", "/messages/**").permitAll()
-//                .antMatchers(
-//                        "/v2/api-docs",
-//                        "/swagger-resources/configuration/ui",
-//                        "/configuration/ui",
-//                        "/swagger-resources",
-//                        "/swagger-resources/configuration/security",
-//                        "/configuration/security",
-//                        "/swagger-ui.html",
-//                        "/webjars/**"
-//                ).permitAll()
-                .anyRequest().authenticated()
-                .and()
-                .formLogin()
-                .loginProcessingUrl("/login/amznAcc")
-//                .loginPage("/login")
-                .usernameParameter("username")
-                .passwordParameter("password")
-//                .defaultSuccessUrl("/")
-                .and()
-                .logout()
-                .logoutUrl("/logout")
-                .deleteCookies("JWT")
-                .invalidateHttpSession(true)
+                .antMatchers("/api/amzn/login").permitAll()
+                .antMatchers("/api/amzn/updateMetadata").authenticated()
                 .and()
                 .csrf().disable();
-        http.addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
+        http.addFilterBefore(jwtAuthenticationFilter, BasicAuthenticationFilter.class)
                 .exceptionHandling().accessDeniedHandler(accessDeniedHandler);
         http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
         http.cors();

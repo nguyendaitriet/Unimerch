@@ -16,7 +16,7 @@ import java.time.Instant;
 @Setter
 @Table(name = "amzn_accounts")
 @Accessors(chain = true)
-public class AmznAccount {
+public class AmznUser {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", nullable = false)

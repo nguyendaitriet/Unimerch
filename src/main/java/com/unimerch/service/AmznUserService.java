@@ -3,14 +3,14 @@ package com.unimerch.service;
 import com.unimerch.dto.amznacc.AmznAccFilterItemResult;
 import com.unimerch.dto.amznacc.AmznAccParam;
 import com.unimerch.dto.amznacc.AmznAccResult;
-import com.unimerch.repository.model.AmznAccount;
+import com.unimerch.repository.model.AmznUser;
 import org.springframework.data.jpa.datatables.mapping.DataTablesInput;
 import org.springframework.data.jpa.datatables.mapping.DataTablesOutput;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
-public interface AmznAccountService {
+public interface AmznUserService {
 
     void updateMetadata(String data, String jwt);
 
@@ -20,7 +20,7 @@ public interface AmznAccountService {
 
     List<AmznAccFilterItemResult> findAllFilter();
 
-    AmznAccount findById(String id);
+    AmznUser findById(String id);
 
     AmznAccResult create(AmznAccParam amznAccCreateParam);
 

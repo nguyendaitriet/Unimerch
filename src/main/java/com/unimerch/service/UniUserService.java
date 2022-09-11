@@ -10,9 +10,10 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 
 import java.util.List;
 
-public interface UserService extends UserDetailsService {
+public interface UniUserService extends UserDetailsService {
     DataTablesOutput<UserItemResult> findAllUserDTOExclSelf(DataTablesInput input, String principalUsername);
 
+    //TODO:Tại sao entity lại được sử dụng ra tới controller
     User getByUsername(String username);
 
     User findById(String id);

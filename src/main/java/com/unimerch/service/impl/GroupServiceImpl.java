@@ -10,7 +10,7 @@ import com.unimerch.exception.InvalidIdException;
 import com.unimerch.exception.ServerErrorException;
 import com.unimerch.mapper.AmznAccountMapper;
 import com.unimerch.mapper.GroupMapper;
-import com.unimerch.repository.AmznAccountRepository;
+import com.unimerch.repository.AmznUserRepository;
 import com.unimerch.repository.BrgGroupAmznAccountRepository;
 import com.unimerch.repository.datatable.GroupDataTableRepository;
 import com.unimerch.repository.GroupRepository;
@@ -18,7 +18,6 @@ import com.unimerch.repository.model.*;
 import com.unimerch.service.GroupService;
 import com.unimerch.util.ValidationUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.MessageSource;
 import org.springframework.data.jpa.datatables.mapping.Column;
 import org.springframework.data.jpa.datatables.mapping.DataTablesInput;
@@ -34,7 +33,7 @@ import java.util.stream.Collectors;
 public class GroupServiceImpl implements GroupService {
 
     @Autowired
-    private AmznAccountRepository amznAccountRepository;
+    private AmznUserRepository amznAccountRepository;
 
     @Autowired
     private GroupRepository groupRepository;
@@ -158,7 +157,7 @@ public class GroupServiceImpl implements GroupService {
             int groupId = group.getId();
             for (String amznAccIdString : amznAccIdList) {
                 int amznAccId = Integer.parseInt(amznAccIdString);
-                AmznAccount amznAccount = amznAccountRepository.findById(amznAccId).get();
+                AmznUser amznAccount = amznAccountRepository.findById(amznAccId).get();
                 BrgGroupAmznAccountId brgGroupAmznAccountId = new BrgGroupAmznAccountId(groupId, amznAccId);
                 BrgGroupAmznAccount brgGroupAmznAccount = new BrgGroupAmznAccount();
 
@@ -181,7 +180,7 @@ public class GroupServiceImpl implements GroupService {
         try {
             Group group = findById(id);
             List<AmznAccResult> amznAccResultList = new ArrayList<>();
-            List<AmznAccount> amznAccResult = brgGroupAmznAccRepo.getAmznAccInGroup(group.getId());
+            List<AmznUser> amznAccResult = brgGroupAmznAccRepo.getAmznAccInGroup(group.getId());
             amznAccResult.forEach((result) -> amznAccResultList.add(amznAccountMapper.toAmznAccResult(result)));
             return amznAccResultList;
         } catch (Exception e) {
@@ -194,7 +193,7 @@ public class GroupServiceImpl implements GroupService {
         try {
             Group group = findById(id);
             List<AmznAccResult> amznAccResultList = new ArrayList<>();
-            List<AmznAccount> amznAccResult = brgGroupAmznAccRepo.getAmznAccOutGroup(group.getId());
+            List<AmznUser> amznAccResult = brgGroupAmznAccRepo.getAmznAccOutGroup(group.getId());
             amznAccResult.forEach((result) -> amznAccResultList.add(amznAccountMapper.toAmznAccResult(result)));
             return amznAccResultList;
         } catch (Exception e) {

@@ -2,7 +2,7 @@ package com.unimerch.controller;
 
 import com.unimerch.dto.group.GroupItemResult;
 import com.unimerch.service.GroupService;
-import com.unimerch.service.UserService;
+import com.unimerch.service.UniUserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
 import org.springframework.stereotype.Controller;
@@ -17,7 +17,7 @@ import java.util.Locale;
 @RequestMapping("/dashboard")
 public class DashboardController {
     @Autowired
-    private UserService userService;
+    private UniUserService userService;
 
     @Autowired
     private GroupService groupService;

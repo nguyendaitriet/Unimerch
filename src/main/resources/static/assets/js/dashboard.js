@@ -1,12 +1,12 @@
 class App {
     static DOMAIN = location.origin;
-
-    static BASE_URL_AUTHORIZATION = this.DOMAIN + "/api/auth";
+    static API_ENDPOINT = this.DOMAIN + "/api";
+    static BASE_URL_AUTHORIZATION = `${this.API_ENDPOINT}/login`;
     static BASE_URL_DASHBOARD = this.DOMAIN + "/api/dashboard";
     static BASE_URL_ORDER = this.DOMAIN + "/api/orders";
     static BASE_URL_USER = this.DOMAIN + "/api/users";
     static BASE_URL_USER_GROUPS = this.DOMAIN + "/api/users/asgnGrp";
-    static BASE_URL_AMZN_ACCOUNT = this.DOMAIN + "/api/amznAccounts";
+    static BASE_URL_AMZN_ACCOUNT = this.DOMAIN + "/api/amzn";
     static BASE_URL_GROUP = this.DOMAIN + "/api/groups";
     static BASE_URL_ORDER = this.DOMAIN + "/api/orders";
     static BASE_URL_PRODUCT = this.DOMAIN + "/api/products";

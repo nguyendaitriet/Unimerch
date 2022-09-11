@@ -1,7 +1,6 @@
 package com.unimerch.repository;
 
-import com.unimerch.dto.amznacc.AmznAccResult;
-import com.unimerch.repository.model.AmznAccount;
+import com.unimerch.repository.model.AmznUser;
 import com.unimerch.repository.model.BrgGroupAmznAccount;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
@@ -15,21 +14,21 @@ import java.util.List;
 public interface BrgGroupAmznAccountRepository extends JpaRepository<BrgGroupAmznAccount, Integer> {
 
     @Query("SELECT a " +
-            "FROM AmznAccount AS a " +
+            "FROM AmznUser AS a " +
             "WHERE a.id NOT IN ( " +
                 "SELECT br.amznAccount.id " +
                 "FROM BrgGroupAmznAccount AS br " +
-                "INNER JOIN AmznAccount AS a " +
+                "INNER JOIN AmznUser AS a " +
                 "ON br.amznAccount.id = a.id " +
                 "WHERE br.group.id = :id) ")
-    List<AmznAccount> getAmznAccOutGroup(@Param("id") Integer id);
+    List<AmznUser> getAmznAccOutGroup(@Param("id") Integer id);
 
     @Query("SELECT a " +
             "FROM BrgGroupAmznAccount AS br " +
-            "INNER JOIN AmznAccount AS a " +
+            "INNER JOIN AmznUser AS a " +
             "ON br.amznAccount.id = a.id " +
             "WHERE br.group.id = :id ")
-    List<AmznAccount> getAmznAccInGroup(@Param("id") Integer id);
+    List<AmznUser> getAmznAccInGroup(@Param("id") Integer id);
 
     @Query("SELECT br.amznAccount.id " +
             "FROM BrgGroupAmznAccount AS br " +

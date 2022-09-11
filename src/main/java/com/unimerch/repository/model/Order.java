@@ -57,7 +57,7 @@ public class Order {
 
     @ManyToOne(optional = false)
     @JoinColumn(name = "amzn_account_id", nullable = false)
-    private AmznAccount amznAccount;
+    private AmznUser amznAccount;
 
     public Order(String asin, Instant date, String title, String info, Integer purchased, Integer cancelled, Integer returned, BigDecimal revenue, BigDecimal royalties, String currency) {
         this.asin = asin;

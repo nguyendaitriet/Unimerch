@@ -15,14 +15,12 @@ public class JwtResponse {
     private String token;
     private String type = "Bearer";
     private String username;
-    private String name;
     private Collection<? extends GrantedAuthority> roles;
 
-    public JwtResponse(String accessToken, Integer id, String username, String name, Collection<? extends GrantedAuthority> roles) {
+    public JwtResponse(String accessToken, Integer id, String username, Collection<? extends GrantedAuthority> roles) {
         this.token = accessToken;
         this.id = id;
         this.username = username;
-        this.name = name;
         this.roles = roles;
     }
 
@@ -33,7 +31,6 @@ public class JwtResponse {
                 ", token='" + token + '\'' +
                 ", type='" + type + '\'' +
                 ", username='" + username + '\'' +
-                ", name='" + name + '\'' +
                 ", roles=" + roles +
                 '}';
     }

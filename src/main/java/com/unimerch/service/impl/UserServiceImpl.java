@@ -12,7 +12,7 @@ import com.unimerch.repository.UserRepository;
 import com.unimerch.repository.datatable.UserDataTableRepository;
 import com.unimerch.repository.model.*;
 import com.unimerch.security.uni.UniUserPrinciple;
-import com.unimerch.service.UserService;
+import com.unimerch.service.UniUserService;
 import com.unimerch.util.PrincipalUtils;
 import com.unimerch.util.ValidationUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,11 +27,14 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Locale;
+import java.util.Optional;
 
 @Service
 @Transactional
-public class UserServiceImpl implements UserService {
+public class UserServiceImpl implements UniUserService {
     @Autowired
     private UserRepository userRepository;
 

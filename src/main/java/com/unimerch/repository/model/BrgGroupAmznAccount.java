@@ -27,7 +27,7 @@ public class BrgGroupAmznAccount {
     @MapsId("amznAccountId")
     @ManyToOne(optional = false)
     @JoinColumn(name = "amzn_account_id")
-    private AmznAccount amznAccount;
+    private AmznUser amznAccount;
 
 
 }

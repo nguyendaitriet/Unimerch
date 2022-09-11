@@ -3,7 +3,7 @@ package com.unimerch.controller.api;
 import com.unimerch.dto.group.GroupItemResult;
 import com.unimerch.dto.user.UserCreateParam;
 import com.unimerch.dto.user.UserItemResult;
-import com.unimerch.service.UserService;
+import com.unimerch.service.UniUserService;
 import com.unimerch.util.AppUtils;
 import com.unimerch.util.PrincipalUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,7 +28,7 @@ public class UserAPI {
     private AppUtils appUtils;
 
     @Autowired
-    private UserService userService;
+    private UniUserService userService;
 
     //    @PreAuthorize("hasAnyAuthority('MANAGER')")
     @PostMapping

@@ -6,11 +6,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Primary;
 import org.springframework.core.annotation.Order;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
+import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.http.SessionCreationPolicy;
@@ -18,13 +21,11 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.access.AccessDeniedHandler;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
-import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
 
 import javax.servlet.Filter;
 
 @Configuration
-@EnableWebSecurity
-@EnableGlobalMethodSecurity(prePostEnabled = true)
 @Order(1)
 public class UniUserSecurityConfig extends WebSecurityConfigurerAdapter {
     @Autowired
@@ -39,6 +40,7 @@ public class UniUserSecurityConfig extends WebSecurityConfigurerAdapter {
     @Autowired
     private AuthenticationSuccessHandler authenticationSuccessHandler;
     @Autowired
+    @Qualifier(BeanNameConstant.UNI_JWT_FILTER_NAME)
     private Filter jwtAuthenticationFilter;
 
     @Bean
@@ -49,16 +51,16 @@ public class UniUserSecurityConfig extends WebSecurityConfigurerAdapter {
         return authProvider;
     }
 
-//    @Bean(BeanNameConstant.UNI_AUTHENTICATION_MANAGER_NAME)
-//    @Override
-//    public AuthenticationManager authenticationManager() throws Exception {
-//        return super.authenticationManager();
-//    }
-
     @Bean(BeanNameConstant.UNI_AUTHENTICATION_MANAGER_NAME)
+    @Primary
     @Override
     public AuthenticationManager authenticationManagerBean() throws Exception {
         return super.authenticationManagerBean();
+    }
+
+    @Override
+    protected void configure(AuthenticationManagerBuilder auth) throws Exception {
+        auth.userDetailsService(userDetailsService);
     }
 
     @Override
@@ -66,13 +68,12 @@ public class UniUserSecurityConfig extends WebSecurityConfigurerAdapter {
         http.csrf().ignoringAntMatchers("/**");
         http.httpBasic().authenticationEntryPoint(restAuthenticationEntryPoint);
         http.authenticationProvider(authenticationProvider1());
-
         http.authorizeRequests()
-                .antMatchers("/api/auth/login", "/login").permitAll()
+                .antMatchers("/api/login", "/login").permitAll()
                 .antMatchers("/assets/**", "/messages/**").permitAll()
                 .antMatchers("/users/**").hasAnyAuthority("USER")
-                .antMatchers("/","/api/products/**", "/api/orders/**", "/api/users/**", "/api/groups/**").authenticated()
-                .antMatchers("/**", "/dashboard/**","/api/amznAccounts/**").hasAnyAuthority("MANAGER")
+                .antMatchers("/dashboard/**").hasAnyAuthority("MANAGER")
+                .antMatchers("/", "/api/products/**", "/api/orders/**", "/api/users/**", "/api/groups/**").authenticated()
                 .antMatchers(
                         "/v2/api-docs",
                         "/swagger-resources/configuration/ui",
@@ -83,15 +84,9 @@ public class UniUserSecurityConfig extends WebSecurityConfigurerAdapter {
                         "/swagger-ui.html",
                         "/webjars/**"
                 ).permitAll()
-                .anyRequest().authenticated()
                 .and()
                 .formLogin()
-                .loginProcessingUrl("/login/uni")
                 .loginPage("/login")
-                .usernameParameter("username")
-                .passwordParameter("password")
-                .defaultSuccessUrl("/")
-//                .successHandler(authenticationSuccessHandler)
                 .and()
                 .logout()
                 .logoutUrl("/logout")
@@ -100,8 +95,7 @@ public class UniUserSecurityConfig extends WebSecurityConfigurerAdapter {
                 .invalidateHttpSession(true)
                 .and()
                 .csrf().disable();
-
-        http.addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
+        http.addFilterBefore(jwtAuthenticationFilter, BasicAuthenticationFilter.class)
                 .exceptionHandling().accessDeniedHandler(accessDeniedHandler);
 
         http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);

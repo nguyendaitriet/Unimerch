@@ -1,7 +1,8 @@
 class App {
     static DOMAIN = location.origin;
 
-    static BASE_URL_AUTHORIZATION = this.DOMAIN + "/api/auth";
+    static API_ENDPOINT = this.DOMAIN + "/api";
+    static BASE_URL_AUTHENTICATION = `${this.API_ENDPOINT}/login`;
 
     static SweetAlert = class {
         static showSuccessAlert(t) {

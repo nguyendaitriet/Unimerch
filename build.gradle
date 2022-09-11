@@ -32,8 +32,6 @@ dependencies {
     runtimeOnly 'mysql:mysql-connector-java'
     annotationProcessor 'org.projectlombok:lombok'
     providedRuntime 'org.springframework.boot:spring-boot-starter-tomcat'
-    testImplementation 'org.springframework.boot:spring-boot-starter-test'
-    testImplementation 'org.springframework.security:spring-security-test'
 
     implementation 'io.swagger.core.v3:swagger-annotations:2.2.0'
     implementation 'io.swagger.core.v3:swagger-core:2.2.0'

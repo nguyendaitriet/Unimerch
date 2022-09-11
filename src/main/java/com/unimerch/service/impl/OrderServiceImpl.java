@@ -9,9 +9,9 @@ import com.unimerch.dto.order.OrderChartResult;
 import com.unimerch.dto.order.OrderData;
 import com.unimerch.exception.ServerErrorException;
 import com.unimerch.mapper.OrderMapper;
-import com.unimerch.repository.AmznAccountRepository;
+import com.unimerch.repository.AmznUserRepository;
 import com.unimerch.repository.OrderRepository;
-import com.unimerch.repository.model.AmznAccount;
+import com.unimerch.repository.model.AmznUser;
 import com.unimerch.repository.model.Order;
 import com.unimerch.service.OrderService;
 import com.unimerch.util.TimeUtils;
@@ -30,7 +30,7 @@ public class OrderServiceImpl implements OrderService {
     private OrderRepository orderRepository;
 
     @Autowired
-    private AmznAccountRepository amznAccountRepository;
+    private AmznUserRepository amznUserRepository;
 
     @Autowired
     private OrderMapper orderMapper;
@@ -47,13 +47,13 @@ public class OrderServiceImpl implements OrderService {
         module.addDeserializer(OrderData.class, new OrderMapper());
         mapper.registerModule(module);
 
-        AmznAccount amznAccount = amznAccountRepository.getByUsername("2");
+        AmznUser amznUser = amznUserRepository.findByUsername("2");
 
         try {
             OrderData orderData = mapper.readValue(data, OrderData.class);
 
             orderData.getOrderList().forEach(order -> {
-                order.setAmznAccount(amznAccount);
+                order.setAmznAccount(amznUser);
                 orderRepository.save(order);
             });
 

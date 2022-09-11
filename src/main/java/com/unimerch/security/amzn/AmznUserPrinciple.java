@@ -1,6 +1,6 @@
 package com.unimerch.security.amzn;
 
-import com.unimerch.repository.model.AmznAccount;
+import com.unimerch.repository.model.AmznUser;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
@@ -8,10 +8,10 @@ import java.util.Collection;
 
 public class AmznUserPrinciple implements UserDetails {
 
-    private AmznAccount amznAccount;
+    private AmznUser amznUser;
 
-    public AmznUserPrinciple(AmznAccount amznAccount) {
-        this.amznAccount = amznAccount;
+    public AmznUserPrinciple(AmznUser amznUser) {
+        this.amznUser = amznUser;
     }
 
     @Override
@@ -21,12 +21,12 @@ public class AmznUserPrinciple implements UserDetails {
 
     @Override
     public String getPassword() {
-        return amznAccount.getPassword();
+        return amznUser.getPassword();
     }
 
     @Override
     public String getUsername() {
-        return amznAccount.getUsername();
+        return amznUser.getUsername();
     }
 
     @Override
