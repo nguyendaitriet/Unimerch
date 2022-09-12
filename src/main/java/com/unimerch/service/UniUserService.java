@@ -13,10 +13,11 @@ import java.util.List;
 public interface UniUserService extends UserDetailsService {
     DataTablesOutput<UserItemResult> findAllUserDTOExclSelf(DataTablesInput input, String principalUsername);
 
-    //TODO:Tại sao entity lại được sử dụng ra tới controller
     User getByUsername(String username);
 
     User findById(String id);
+
+    UserItemResult findUserItemResultByUsername(String username);
 
     UserItemResult findUserListItemById(String id);
 

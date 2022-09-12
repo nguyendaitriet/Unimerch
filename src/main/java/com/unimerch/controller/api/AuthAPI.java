@@ -2,6 +2,7 @@ package com.unimerch.controller.api;
 
 import com.unimerch.dto.amznacc.AmznAccResult;
 import com.unimerch.dto.user.LoginParam;
+import com.unimerch.dto.user.UserItemResult;
 import com.unimerch.repository.model.JwtResponse;
 import com.unimerch.repository.model.User;
 import com.unimerch.security.BeanNameConstant;
@@ -42,7 +43,7 @@ public class AuthAPI {
     public ResponseEntity<?> uniLogin(@RequestBody LoginParam loginParam) {
         System.out.println("/api/login");
         Authentication authentication = uniAuthenticationManager.authenticate(new UsernamePasswordAuthenticationToken(loginParam.getUsername(), loginParam.getPassword()));
-        User user = uniUserService.getByUsername(loginParam.getUsername());
+        UserItemResult user = uniUserService.findUserItemResultByUsername(loginParam.getUsername());
         if (user.isDisabled()) {
             return new ResponseEntity<>(HttpStatus.FORBIDDEN);
         }
