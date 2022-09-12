@@ -18,10 +18,13 @@ public class JwtService {
     private static final Logger logger = LoggerFactory.getLogger(JwtService.class.getName());
 
     public String generateTokenLogin(Authentication authentication) {
-        UniUserPrinciple userPrincipal = (UniUserPrinciple) authentication.getPrincipal();
+//        System.out.println("1: " + authentication.getPrincipal());
+//        System.out.println("2: " + authentication.getName());
+//        System.out.println("3: " + authentication.getDetails());
+//        UniUserPrinciple userPrincipal = (UniUserPrinciple) authentication.getPrincipal();
 
         return Jwts.builder()
-                .setSubject((userPrincipal.getUsername()))
+                .setSubject(authentication.getName())
                 .setIssuedAt(new Date())
                 .setExpiration(new Date((new Date()).getTime() + JWT_TOKEN_VALIDITY * 60 * 60 * 24 * 30))
                 .signWith(SignatureAlgorithm.HS256, SECRET_KEY)

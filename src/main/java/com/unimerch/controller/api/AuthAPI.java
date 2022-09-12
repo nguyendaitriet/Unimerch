@@ -25,6 +25,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 public class AuthAPI {
+
     @Autowired
     @Qualifier(BeanNameConstant.UNI_AUTHENTICATION_MANAGER_NAME)
     private AuthenticationManager uniAuthenticationManager;
