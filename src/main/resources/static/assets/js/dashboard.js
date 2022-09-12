@@ -277,6 +277,26 @@ class App {
                 spinner.hide();
             });
     }
+
+    static handleBtnFullScreen() {
+        let btnFullScreen = $('#btn-full-screen');
+        let icon = $('#btn-full-screen>i');
+
+        btnFullScreen.on('click', function () {
+            if (document.fullscreenElement) {
+                document.exitFullscreen()
+                    .then(() => {
+                        icon.removeClass('fa-compress');
+                        icon.addClass('fa-expand');
+                    })
+                    .catch((err) => console.error(err))
+            } else {
+                document.documentElement.requestFullscreen();
+                icon.removeClass('fa-expand');
+                icon.addClass('fa-compress');
+            }
+        })
+    }
 }
 
 class User {
@@ -297,5 +317,6 @@ class Group {
 
 
 (() => {
+    App.handleBtnFullScreen();
     App.handleSpinner();
 })()
