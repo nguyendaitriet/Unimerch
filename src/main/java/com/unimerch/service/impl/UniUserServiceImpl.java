@@ -11,7 +11,7 @@ import com.unimerch.repository.BrgGroupUserRepository;
 import com.unimerch.repository.UserRepository;
 import com.unimerch.repository.datatable.UserDataTableRepository;
 import com.unimerch.repository.model.*;
-import com.unimerch.security.uni.UniUserPrinciple;
+import com.unimerch.security.UserPrinciple;
 import com.unimerch.service.UniUserService;
 import com.unimerch.util.PrincipalUtils;
 import com.unimerch.util.ValidationUtils;
@@ -183,8 +183,11 @@ public class UniUserServiceImpl implements UniUserService {
         Optional<User> userOptional = userRepository.findByUsername(username);
         if (!userOptional.isPresent())
             throw new UsernameNotFoundException(username);
-
-        return UniUserPrinciple.build(userOptional.get());
+        User user = userOptional.get();
+        return UserPrinciple.build(user.getId().toString(),
+                user.getUsername(),
+                user.getPasswordHash(),
+                user.getRole().getCode());
     }
 
     @Override

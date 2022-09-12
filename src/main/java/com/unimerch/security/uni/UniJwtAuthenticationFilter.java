@@ -1,6 +1,6 @@
 package com.unimerch.security.uni;
 
-import com.unimerch.security.BeanNameConstant;
+import com.unimerch.security.NameConstant;
 import com.unimerch.service.UniUserService;
 import com.unimerch.service.impl.JwtService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,7 +18,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
-@Component(BeanNameConstant.UNI_JWT_FILTER_NAME)
+@Component(NameConstant.UNI_JWT_FILTER_NAME)
 public class UniJwtAuthenticationFilter extends OncePerRequestFilter {
     @Autowired
     private JwtService jwtService;
@@ -39,6 +39,10 @@ public class UniJwtAuthenticationFilter extends OncePerRequestFilter {
         return null;
     }
 
+    private String getAuthorizationType(HttpServletRequest request) {
+        return request.getHeader("Authorization-Type");
+    }
+
     private String getCookieValue(HttpServletRequest req) {
         Cookie[] cookies = req.getCookies();
 
@@ -56,6 +60,12 @@ public class UniJwtAuthenticationFilter extends OncePerRequestFilter {
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
             throws ServletException, IOException {
+        System.out.println("UniJwtAuthenticationFilter");
+        String authorizationType = getAuthorizationType(request);
+        if (authorizationType != null) {
+            filterChain.doFilter(request, response);
+            return;
+        }
         try {
             String bearerToken = getBearerTokenRequest(request);
             if (bearerToken != null) {
@@ -68,7 +78,7 @@ public class UniJwtAuthenticationFilter extends OncePerRequestFilter {
         } catch (Exception e) {
             logger.error("Can NOT set uni authentication -> Message: {0}", e);
         }
-        System.out.println("JWTAuthenticationFilter");
+
         filterChain.doFilter(request, response);
     }
 

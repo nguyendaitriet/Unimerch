@@ -9,6 +9,7 @@ import org.springframework.data.jpa.datatables.mapping.DataTablesInput;
 import org.springframework.data.jpa.datatables.mapping.DataTablesOutput;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -36,7 +37,6 @@ public class AmznAPI {
         return amznUserService.findAll(input);
     }
 
-    //    @PreAuthorize("hasAnyAuthority('MANAGER')")
     @GetMapping("/findAllAmznAccs")
     public ResponseEntity<?> findAllAmznAccounts() {
         return new ResponseEntity<>(amznUserService.findAll(), HttpStatus.OK);
@@ -56,7 +56,7 @@ public class AmznAPI {
         return new ResponseEntity<> (amznAccResultList, HttpStatus.OK);
     }
 
-    //    @PreAuthorize("hasAnyAuthority('MANAGER')")
+    @PreAuthorize("hasAnyAuthority('MANAGER')")
     @PutMapping("/update/{id}")
     public ResponseEntity<?> updateAmznAcc(@RequestBody AmznAccParam amznAccParam, @PathVariable String id) {
         amznUserService.update(id, amznAccParam);
@@ -91,6 +91,7 @@ public class AmznAPI {
     public ResponseEntity<?> findAnalyticsByGroupId(@PathVariable Integer id) {
         return null;
     }
+
     @GetMapping("/die-all")
     public ResponseEntity<?> findAllAccountDie() {
         return null;

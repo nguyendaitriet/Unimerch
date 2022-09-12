@@ -1,6 +1,6 @@
 package com.unimerch.security.uni;
 
-import com.unimerch.security.BeanNameConstant;
+import com.unimerch.security.NameConstant;
 import com.unimerch.security.RestAuthenticationEntryPoint;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -11,10 +11,8 @@ import org.springframework.core.annotation.Order;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
-import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.builders.WebSecurity;
-import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -29,7 +27,7 @@ import javax.servlet.Filter;
 @Order(1)
 public class UniUserSecurityConfig extends WebSecurityConfigurerAdapter {
     @Autowired
-    @Qualifier(BeanNameConstant.UNI_USER_SECURITY_SERVICE_NAME)
+    @Qualifier(NameConstant.UNI_USER_SECURITY_SERVICE_NAME)
     private UserDetailsService userDetailsService;
     @Autowired
     private PasswordEncoder passwordEncoder;
@@ -40,7 +38,7 @@ public class UniUserSecurityConfig extends WebSecurityConfigurerAdapter {
     @Autowired
     private AuthenticationSuccessHandler authenticationSuccessHandler;
     @Autowired
-    @Qualifier(BeanNameConstant.UNI_JWT_FILTER_NAME)
+    @Qualifier(NameConstant.UNI_JWT_FILTER_NAME)
     private Filter jwtAuthenticationFilter;
 
     @Bean
@@ -51,7 +49,7 @@ public class UniUserSecurityConfig extends WebSecurityConfigurerAdapter {
         return authProvider;
     }
 
-    @Bean(BeanNameConstant.UNI_AUTHENTICATION_MANAGER_NAME)
+    @Bean(NameConstant.UNI_AUTHENTICATION_MANAGER_NAME)
     @Primary
     @Override
     public AuthenticationManager authenticationManagerBean() throws Exception {
@@ -63,17 +61,19 @@ public class UniUserSecurityConfig extends WebSecurityConfigurerAdapter {
         auth.userDetailsService(userDetailsService);
     }
 
+
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http.csrf().ignoringAntMatchers("/**");
         http.httpBasic().authenticationEntryPoint(restAuthenticationEntryPoint);
         http.authenticationProvider(authenticationProvider1());
         http.authorizeRequests()
-                .antMatchers("/api/login", "/login").permitAll()
-                .antMatchers("/assets/**", "/messages/**").permitAll()
+                .antMatchers("/api/login", "/login", "/api/amzn/login").permitAll()
+//                .antMatchers("/assets/**", "/messages/**").permitAll()
+                .antMatchers("/api/amzn/updateMetadata", "/api/orders").permitAll()
                 .antMatchers("/users/**").hasAnyAuthority("USER")
                 .antMatchers("/dashboard/**").hasAnyAuthority("MANAGER")
-                .antMatchers("/", "/api/products/**", "/api/orders/**", "/api/users/**", "/api/groups/**").authenticated()
+                .antMatchers("/", "/api/products/**", "/api/orders/**", "/api/users/**", "/api/groups/**", "/api/amzn/**").hasAnyAuthority("MANAGER", "USER")
                 .antMatchers(
                         "/v2/api-docs",
                         "/swagger-resources/configuration/ui",

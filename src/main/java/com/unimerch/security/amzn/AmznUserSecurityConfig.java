@@ -1,6 +1,6 @@
 package com.unimerch.security.amzn;
 
-import com.unimerch.security.BeanNameConstant;
+import com.unimerch.security.NameConstant;
 import com.unimerch.security.RestAuthenticationEntryPoint;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -25,7 +25,7 @@ import javax.servlet.Filter;
 public class AmznUserSecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Autowired
-    @Qualifier(BeanNameConstant.AMZN_USER_SECURITY_SERVICE_NAME)
+    @Qualifier(NameConstant.AMZN_USER_SECURITY_SERVICE_NAME)
     private UserDetailsService userDetailsService;
     @Autowired
     private PasswordEncoder passwordEncoder;
@@ -36,10 +36,10 @@ public class AmznUserSecurityConfig extends WebSecurityConfigurerAdapter {
     @Autowired
     private AuthenticationSuccessHandler authenticationSuccessHandler;
     @Autowired
-    @Qualifier(BeanNameConstant.AMZN_JWT_FILTER_NAME)
+    @Qualifier(NameConstant.AMZN_JWT_FILTER_NAME)
     private Filter jwtAuthenticationFilter;
 
-    @Bean(BeanNameConstant.AMZN_AUTHENTICATION_MANAGER_NAME)
+    @Bean(NameConstant.AMZN_AUTHENTICATION_MANAGER_NAME)
     @Override
     public AuthenticationManager authenticationManagerBean() throws Exception {
         return super.authenticationManagerBean();
@@ -60,7 +60,6 @@ public class AmznUserSecurityConfig extends WebSecurityConfigurerAdapter {
         http.authenticationProvider(authenticationProvider2());
         http.authorizeRequests()
                 .antMatchers("/api/amzn/login").permitAll()
-                .antMatchers("/api/amzn/updateMetadata").authenticated()
                 .and()
                 .csrf().disable();
         http.addFilterBefore(jwtAuthenticationFilter, BasicAuthenticationFilter.class)
