@@ -60,8 +60,6 @@ public class AmznUserSecurityConfig extends WebSecurityConfigurerAdapter {
         http.authenticationProvider(authenticationProvider2());
         http.authorizeRequests()
                 .antMatchers("/api/amzn/login").permitAll()
-                .antMatchers("/api/amzn/updateMetadata", "/api/orders").authenticated()
-                .antMatchers("/api/amzn/**").hasAnyAuthority("MANAGER","USER")
                 .and()
                 .csrf().disable();
         http.addFilterBefore(jwtAuthenticationFilter, BasicAuthenticationFilter.class)
