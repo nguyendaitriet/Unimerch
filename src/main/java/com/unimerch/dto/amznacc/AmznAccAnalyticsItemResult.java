@@ -11,8 +11,15 @@ import lombok.experimental.Accessors;
 @Getter
 @Setter
 @Accessors(chain = true)
-public class AmznAccFilterItemResult {
+public class AmznAccAnalyticsItemResult {
     private Integer id;
     private String username;
-    private int soldToday;
+    private Integer published;
+    private Integer tier;
+    private Integer slotRemaining;
+    private Integer slotTotal;
+    private Integer reject;
+    private Integer remove;
+    private Long sales;
+    private String note;
 }

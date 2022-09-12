@@ -8,6 +8,20 @@ body {
     font-family: "Asap", sans-serif;
 }
 
+#spinner {
+    display: none;
+    position: fixed;
+    z-index: 1000;
+    top: 0;
+    left: 0;
+    height: 100%;
+    width: 100%;
+    background: rgba(255, 255, 255, 0.25)
+    url('/assets/img/loading.gif')
+    50% 50%
+    no-repeat;
+}
+
 .login {
     overflow: hidden;
     background-color: white;

@@ -69,21 +69,21 @@
 
     let page = {
         urls: {
-            findAmznAccInGrp: App.BASE_URL_GROUP + "/findInGrpFilter/",
-            findCardsAll: App.BASE_URL_ORDER + "/card-all",
-            findCardsByGroupId: App.BASE_URL_ORDER + "/card-grp/",
-            findCardsByAmznId: App.BASE_URL_ORDER + "/card-acc/",
-            findChartAll: App.BASE_URL_ORDER + "/chart-all",
-            findChartByGroupId: App.BASE_URL_ORDER + "/chart-grp/",
-            findChartByUserId: App.BASE_URL_ORDER + "/chart-acc/",
+            findAmznAccInGrp: DBApp.BASE_URL_GROUP + "/findInGrpFilter/",
+            findCardsAll: DBApp.BASE_URL_ORDER + "/card-all",
+            findCardsByGroupId: DBApp.BASE_URL_ORDER + "/card-grp/",
+            findCardsByAmznId: DBApp.BASE_URL_ORDER + "/card-acc/",
+            findChartAll: DBApp.BASE_URL_ORDER + "/chart-all",
+            findChartByGroupId: DBApp.BASE_URL_ORDER + "/chart-grp/",
+            findChartByUserId: DBApp.BASE_URL_ORDER + "/chart-acc/",
 
-            findAllTodaySoldInGroup: App.BASE_URL_PRODUCT + "/findAllTodaySoldInGroup/",
-            findAllLast30DaysSoldInGroup: App.BASE_URL_PRODUCT + "/findAllLast30DaysSoldInGroup/",
-            findAllThisMonthSoldInGroup: App.BASE_URL_PRODUCT + "/findAllThisMonthSoldInGroup/",
+            findAllTodaySoldInGroup: DBApp.BASE_URL_PRODUCT + "/findAllTodaySoldInGroup/",
+            findAllLast30DaysSoldInGroup: DBApp.BASE_URL_PRODUCT + "/findAllLast30DaysSoldInGroup/",
+            findAllThisMonthSoldInGroup: DBApp.BASE_URL_PRODUCT + "/findAllThisMonthSoldInGroup/",
 
-            findAllTodaySoldEveryAmznAcc: App.BASE_URL_PRODUCT + "/findAllTodaySoldEveryAmznAcc/",
-            findAllLast30DaysSoldEveryAmznAcc: App.BASE_URL_PRODUCT + "/findAllLast30DaysSoldEveryAmznAcc/",
-            findAllThisMonthSoldEveryAmznAcc: App.BASE_URL_PRODUCT + "/findAllThisMonthSoldEveryAmznAcc/",
+            findAllTodaySoldEveryAmznAcc: DBApp.BASE_URL_PRODUCT + "/findAllTodaySoldEveryAmznAcc/",
+            findAllLast30DaysSoldEveryAmznAcc: DBApp.BASE_URL_PRODUCT + "/findAllLast30DaysSoldEveryAmznAcc/",
+            findAllThisMonthSoldEveryAmznAcc: DBApp.BASE_URL_PRODUCT + "/findAllThisMonthSoldEveryAmznAcc/",
         },
         element: {},
         commands: {},
@@ -108,7 +108,7 @@
                 "content-type": "application/json"
             },
             "type": "GET",
-            "url": App.BASE_URL_USER + "/asgnGrp" + "/" + userId,
+            "url": DBApp.BASE_URL_USER + "/asgnGrp" + "/" + userId,
         })
             .done((groups) => {
                 let str = ``
@@ -118,13 +118,13 @@
                 })
                 container.append(str);
 
-                App.handleFilter('filter-sidebar', 'sidebar-grp-search', 'collapse-item');
+                DBApp.handleFilter('filter-sidebar', 'sidebar-grp-search', 'collapse-item');
 
-                App.handleStatusNavDashboard();
-                App.handleCollapsedFilterSidebar();
+                DBApp.handleStatusNavDashboard();
+                DBApp.handleCollapsedFilterSidebar();
             })
             .fail((jqXHR) => {
-                App.IziToast.showErrorAlert(ERROR_GRP_RETRIEVE);
+                DBApp.IziToast.showErrorAlert(ERROR_GRP_RETRIEVE);
             })
     }
 

@@ -94,10 +94,10 @@
 
     let page = {
         urls: {
-            findAssignedGroups: App.BASE_URL_USER_GROUPS + "/" + currentUserId,
-            findUnassignedGroups: App.BASE_URL_USER_GROUPS + "Not/" + currentUserId,
-            assignNewGroups: App.BASE_URL_USER_GROUPS + "/" + currentUserId + "/add",
-            removeOldGroup: App.BASE_URL_USER_GROUPS + "/" + currentUserId + "/remove",
+            findAssignedGroups: CommonApp.BASE_URL_USER_GROUPS + "/" + currentUserId,
+            findUnassignedGroups: CommonApp.BASE_URL_USER_GROUPS + "Not/" + currentUserId,
+            assignNewGroups: CommonApp.BASE_URL_USER_GROUPS + "/" + currentUserId + "/add",
+            removeOldGroup: CommonApp.BASE_URL_USER_GROUPS + "/" + currentUserId + "/remove",
         },
         element: {},
         commands: {},
@@ -271,7 +271,7 @@
                 sideTable.ajax.reload();
             })
             .fail((jqXHR) => {
-                App.handleFailedTasks(jqXHR);
+                DBApp.handleFailedTasks(jqXHR);
             })
     }
 
@@ -301,10 +301,10 @@
 
                 page.dialogs.element.mdAssignGrpUser.modal('hide');
 
-                App.SweetAlert.showSuccessAlert(SUCCESS_UPDATED);
+                CommonApp.SweetAlert.showSuccessAlert(SUCCESS_UPDATED);
             })
             .fail((jqXHR) => {
-                App.handleFailedTasks(jqXHR);
+                DBApp.handleFailedTasks(jqXHR);
             })
     }
 

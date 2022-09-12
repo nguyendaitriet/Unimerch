@@ -85,11 +85,11 @@
 <script>
     let page = {
         urls: {
-            findAllAmznAccs: App.BASE_URL_AMZN_ACCOUNT + "/findAllAmznAccs",
-            createAmznAcc: App.BASE_URL_AMZN_ACCOUNT + "/create",
-            importAmznAcc: App.BASE_URL_AMZN_ACCOUNT + "/import",
-            updateAmznAcc: App.BASE_URL_AMZN_ACCOUNT + "/update/",
-            deleteAmznAcc: App.BASE_URL_AMZN_ACCOUNT + "/delete/",
+            findAllAmznAccs: CommonApp.BASE_URL_AMZN_ACCOUNT + "/findAllAmznAccs",
+            createAmznAcc: CommonApp.BASE_URL_AMZN_ACCOUNT + "/create",
+            importAmznAcc: CommonApp.BASE_URL_AMZN_ACCOUNT + "/import",
+            updateAmznAcc: CommonApp.BASE_URL_AMZN_ACCOUNT + "/update/",
+            deleteAmznAcc: CommonApp.BASE_URL_AMZN_ACCOUNT + "/delete/",
         },
         element: {},
         commands: {},
@@ -144,10 +144,10 @@
             })
             tableAmznAcc.order([0, 'desc']).draw();
             page.dialogs.element.mdCreateAmznAcc.modal("hide");
-            App.SweetAlert.showSuccessAlert(SUCCESS_CREATED);
+            CommonApp.SweetAlert.showSuccessAlert(SUCCESS_CREATED);
         })
         .fail(function (jqXHR) {
-            App.handleFailedTasks(jqXHR)
+            DBApp.handleFailedTasks(jqXHR)
         })
     }
 
@@ -165,10 +165,10 @@
         })
         .done((data) => {
             page.dialogs.element.mdUpdateAmznAcc.modal("hide");
-            App.SweetAlert.showSuccessAlert(SUCCESS_UPDATED);
+            CommonApp.SweetAlert.showSuccessAlert(SUCCESS_UPDATED);
         })
         .fail(function (jqXHR) {
-            App.handleFailedTasks(jqXHR)
+            DBApp.handleFailedTasks(jqXHR)
         })
     }
 
@@ -180,10 +180,10 @@
             .done((data) => {
                 let tableAmznAcc = page.element.tableAmznAcc.DataTable();
                 tableAmznAcc.row(currentRowAmznAcc).remove().draw('full-hold');
-                App.SweetAlert.showSuccessAlert(SUCCESS_REMOVED);
+                CommonApp.SweetAlert.showSuccessAlert(SUCCESS_REMOVED);
             })
             .fail(function (jqXHR) {
-                App.handleFailedTasks(jqXHR)
+                DBApp.handleFailedTasks(jqXHR)
             })
     }
 
@@ -200,7 +200,7 @@
     }
 
     $(document).ready(function () {
-        App.handleGroupsFilterSidebar();
+        DBApp.handleGroupsFilterSidebar();
 
         let tableAmznAcc = page.element.tableAmznAcc.DataTable({
             ajax: {
@@ -357,7 +357,7 @@
         page.element.tableAmznAcc.on('click', 'button.delete-amzn-acc', function () {
             currentRowAmznAcc = tableAmznAcc.row($(this).parents('tr'));
             currentAmznAcc = currentRowAmznAcc.data();
-            App.SweetAlert.showDeleteDialog()
+            CommonApp.SweetAlert.showDeleteDialog()
                 .then((result) => {
                     if (result.isConfirmed) {
                         page.dialogs.commands.doDeletedAmznAcc(currentAmznAcc, currentRowAmznAcc);
@@ -369,7 +369,7 @@
             const formData = new FormData();
             let fileUpload = $('#fileUploadAmznAcc')[0].files[0];
             if (fileUpload === undefined) {
-                App.IziToast.showErrorAlert(`${noDataSelected}`);
+                CommonApp.IziToast.showErrorAlert(`${noDataSelected}`);
                 return;
             }
             formData.append('fileUploadAmznAcc', fileUpload);
@@ -391,10 +391,10 @@
                     tableAmznAcc.order([0, 'asc']).draw();
                 });
                 $('#fileUploadAmznAcc').val('');
-                App.SweetAlert.showSuccessAlert(SUCCESS_CREATED);
+                CommonApp.SweetAlert.showSuccessAlert(SUCCESS_CREATED);
             })
             .fail((jqXHR) => {
-                App.handleFailedTasks(jqXHR)
+                DBApp.handleFailedTasks(jqXHR)
             })
         })
 

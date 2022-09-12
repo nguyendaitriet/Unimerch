@@ -1,5 +1,6 @@
 package com.unimerch.mapper;
 
+import com.unimerch.dto.amznacc.AmznAccAnalyticsItemResult;
 import com.unimerch.dto.amznacc.AmznAccFilterItemResult;
 import com.unimerch.dto.amznacc.AmznAccParam;
 import com.unimerch.dto.amznacc.AmznAccResult;
@@ -20,10 +21,10 @@ public class AmznAccountMapper {
                 .setUsername((brgGroupAmznAccount.getAmznAccount().getUsername()));
     }
 
-    public AmznAccResult toAmznAccResult(AmznUser amznAccount) {
+    public AmznAccResult toAmznAccResult(AmznUser amznUser) {
         return new AmznAccResult()
-                .setId(amznAccount.getId())
-                .setUsername(amznAccount.getUsername());
+                .setId(amznUser.getId())
+                .setUsername(amznUser.getUsername());
     }
 
     public AmznUser toAmznAcc(AmznAccParam amznAccCreateParam) {
@@ -41,12 +42,27 @@ public class AmznAccountMapper {
                 .setTotalRemoved(0);
     }
 
-    public AmznAccFilterItemResult toAmznAccFilterItemResult(AmznUser amznAccount) {
-        int soldToday = orderService.getNumberSoldInDayByAmznId(amznAccount.getId());
+    public AmznAccFilterItemResult toAmznAccFilterItemResult(AmznUser amznUser) {
+        int soldToday = orderService.getNumberSoldInDayByAmznId(amznUser.getId());
 
         return new AmznAccFilterItemResult()
-                .setId(amznAccount.getId())
-                .setUsername(amznAccount.getUsername())
+                .setId(amznUser.getId())
+                .setUsername(amznUser.getUsername())
                 .setSoldToday(soldToday);
+    }
+
+    public AmznAccAnalyticsItemResult toAmznAccAnalyticsItemResult(AmznUser amznUser) {
+        int slotRemaining = amznUser.getDailyProductLimit() - amznUser.getDailyProductCount();
+
+        return new AmznAccAnalyticsItemResult()
+                .setId(amznUser.getId())
+                .setUsername(amznUser.getUsername())
+                .setTier(amznUser.getTier())
+                .setSlotRemaining(slotRemaining)
+                .setSlotTotal(amznUser.getDailyProductLimit())
+                .setReject(amznUser.getTotalRejected())
+                .setRemove(amznUser.getTotalRemoved())
+                .setSales(null)
+                .setNote(amznUser.getNote());
     }
 }

@@ -524,22 +524,22 @@
 
     let page = {
         urls: {
-            findAllAmznAccount: App.BASE_URL_AMZN_ACCOUNT + "/findAll",
-            findAmznAccInGrp: App.BASE_URL_GROUP + "/findInGrpFilter/",
-            findCardsAll: App.BASE_URL_ORDER + "/card-all",
-            findCardsByGroupId: App.BASE_URL_ORDER + "/card-grp/",
-            findCardsByAmznId: App.BASE_URL_ORDER + "/card-acc/",
-            findChartAll: App.BASE_URL_ORDER + "/chart-all",
-            findChartByGroupId: App.BASE_URL_ORDER + "/chart-grp/",
-            findChartByUserId: App.BASE_URL_ORDER + "/chart-acc/",
+            findAllAmznAccount: CommonApp.BASE_URL_AMZN_ACCOUNT + "/findAll",
+            findAmznAccInGrp: CommonApp.BASE_URL_GROUP + "/findInGrpFilter/",
+            findCardsAll: CommonApp.BASE_URL_ORDER + "/card-all",
+            findCardsByGroupId: CommonApp.BASE_URL_ORDER + "/card-grp/",
+            findCardsByAmznId: CommonApp.BASE_URL_ORDER + "/card-acc/",
+            findChartAll: CommonApp.BASE_URL_ORDER + "/chart-all",
+            findChartByGroupId: CommonApp.BASE_URL_ORDER + "/chart-grp/",
+            findChartByUserId: CommonApp.BASE_URL_ORDER + "/chart-acc/",
 
-            findAllTodaySoldInGroup: App.BASE_URL_PRODUCT + "/findAllTodaySoldInGroup/",
-            findAllLast30DaysSoldInGroup: App.BASE_URL_PRODUCT + "/findAllLast30DaysSoldInGroup/",
-            findAllThisMonthSoldInGroup: App.BASE_URL_PRODUCT + "/findAllThisMonthSoldInGroup/",
+            findAllTodaySoldInGroup: CommonApp.BASE_URL_PRODUCT + "/findAllTodaySoldInGroup/",
+            findAllLast30DaysSoldInGroup: CommonApp.BASE_URL_PRODUCT + "/findAllLast30DaysSoldInGroup/",
+            findAllThisMonthSoldInGroup: CommonApp.BASE_URL_PRODUCT + "/findAllThisMonthSoldInGroup/",
 
-            findAllTodaySoldEveryAmznAcc: App.BASE_URL_PRODUCT + "/findAllTodaySoldEveryAmznAcc/",
-            findAllLast30DaysSoldEveryAmznAcc: App.BASE_URL_PRODUCT + "/findAllLast30DaysSoldEveryAmznAcc/",
-            findAllThisMonthSoldEveryAmznAcc: App.BASE_URL_PRODUCT + "/findAllThisMonthSoldEveryAmznAcc/",
+            findAllTodaySoldEveryAmznAcc: CommonApp.BASE_URL_PRODUCT + "/findAllTodaySoldEveryAmznAcc/",
+            findAllLast30DaysSoldEveryAmznAcc: CommonApp.BASE_URL_PRODUCT + "/findAllLast30DaysSoldEveryAmznAcc/",
+            findAllThisMonthSoldEveryAmznAcc: CommonApp.BASE_URL_PRODUCT + "/findAllThisMonthSoldEveryAmznAcc/",
         },
         element: {},
         commands: {},
@@ -756,7 +756,7 @@
                 "content-type": "application/json"
             },
             "type": "GET",
-            "url": App.BASE_URL_USER + "/asgnGrp" + "/" + userId,
+            "url": CommonApp.BASE_URL_USER + "/asgnGrp" + "/" + userId,
         })
             .done((groups) => {
                 let str = ``
@@ -766,13 +766,13 @@
                 })
                 container.append(str);
 
-                App.handleFilter('filter-sidebar', 'sidebar-grp-search', 'collapse-item');
+                DBApp.handleFilter('filter-sidebar', 'sidebar-grp-search', 'collapse-item');
 
-                App.handleStatusNavDashboard();
-                App.handleCollapsedFilterSidebar();
+                DBApp.handleStatusNavDashboard();
+                DBApp.handleCollapsedFilterSidebar();
             })
             .fail((jqXHR) => {
-                App.IziToast.showErrorAlert(ERROR_GRP_RETRIEVE);
+                CommonApp.IziToast.showErrorAlert(ERROR_GRP_RETRIEVE);
             })
     }
 
@@ -894,7 +894,7 @@
 
             })
             .fail((jqXHR) => {
-                App.handleFailedTasks(jqXHR);
+                DBApp.handleFailedTasks(jqXHR);
             })
     }
 
@@ -952,7 +952,7 @@
                 page.dialogs.element.previousMonthRoyalties.text(cards.previousMonth.royalties);
             })
             .fail((jqXHR) => {
-                App.handleFailedTasks(jqXHR);
+                DBApp.handleFailedTasks(jqXHR);
             })
     }
 
@@ -979,7 +979,7 @@
                 page.commands.getCards(cardDataUrl);
             })
             .fail((jqXHR) => {
-                App.handleFailedTasks(jqXHR);
+                DBApp.handleFailedTasks(jqXHR);
             })
     }
 
@@ -1008,7 +1008,7 @@
         })
 
         container.append(str);
-        App.handleFilter('filter-dashboard', 'dashboard-user-search', 'list-group-item');
+        DBApp.handleFilter('filter-dashboard', 'dashboard-user-search', 'list-group-item');
     }
 
 </script>

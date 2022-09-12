@@ -34,7 +34,7 @@ import java.util.Optional;
 
 @Service
 @Transactional
-public class UserServiceImpl implements UniUserService {
+public class UniUserServiceImpl implements UniUserService {
     @Autowired
     private UserRepository userRepository;
 
@@ -84,7 +84,11 @@ public class UserServiceImpl implements UniUserService {
 
     @Override
     public User getByUsername(String username) {
-        return userRepository.getByUsername(username);
+        Optional<User> optUser = userRepository.findByUsername(username);
+        if (!optUser.isPresent())
+            throw new UserNotFoundException(messageSource.getMessage("validation.usernameNotExist", null, Locale.getDefault()));
+
+        return optUser.get();
     }
 
     @Override

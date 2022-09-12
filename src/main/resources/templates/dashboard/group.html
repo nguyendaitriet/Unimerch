@@ -107,14 +107,14 @@
 <script>
     let page = {
         urls: {
-            findAllGroups: App.BASE_URL_GROUP + "/findAllGroups",
-            findAllAmznAccInGroup: App.BASE_URL_GROUP + "/showAmznAccInsideGroup/",
-            findAllAmznAccOutGroup: App.BASE_URL_GROUP + "/showAmznAccOutsideGroup/",
-            createGroup: App.BASE_URL_GROUP + "/create",
-            updateGroup: App.BASE_URL_GROUP + "/update/",
-            deleteGroup: App.BASE_URL_GROUP + "/delete/",
-            deleteAmznAccFromGroup: App.BASE_URL_GROUP + "/deleteAmznAccFromGroup/",
-            addAmznAccountToGroup: App.BASE_URL_GROUP + "/addAmznAccountToGroup/"
+            findAllGroups: CommonApp.BASE_URL_GROUP + "/findAllGroups",
+            findAllAmznAccInGroup: CommonApp.BASE_URL_GROUP + "/showAmznAccInsideGroup/",
+            findAllAmznAccOutGroup: CommonApp.BASE_URL_GROUP + "/showAmznAccOutsideGroup/",
+            createGroup: CommonApp.BASE_URL_GROUP + "/create",
+            updateGroup: CommonApp.BASE_URL_GROUP + "/update/",
+            deleteGroup: CommonApp.BASE_URL_GROUP + "/delete/",
+            deleteAmznAccFromGroup: CommonApp.BASE_URL_GROUP + "/deleteAmznAccFromGroup/",
+            addAmznAccountToGroup: CommonApp.BASE_URL_GROUP + "/addAmznAccountToGroup/"
         },
         element: {},
         commands: {},
@@ -172,10 +172,10 @@
                 $('#filter-sidebar').append(str);
 
                 page.dialogs.element.mdCreateGroup.modal("hide");
-                App.SweetAlert.showSuccessAlert(SUCCESS_CREATED);
+                CommonApp.SweetAlert.showSuccessAlert(SUCCESS_CREATED);
             })
             .fail(function (jqXHR) {
-                App.handleFailedTasks(jqXHR);
+                DBApp.handleFailedTasks(jqXHR);
             })
     }
     page.commands.doUpdateGroup = (currentGroup, currentRowGroup) => {
@@ -199,10 +199,10 @@
                 }).draw('full-hold');
                 page.dialogs.element.frmUpdateGroup[0].reset();
                 page.dialogs.element.mdUpdateGroup.modal("hide");
-                App.SweetAlert.showSuccessAlert(SUCCESS_UPDATED);
+                CommonApp.SweetAlert.showSuccessAlert(SUCCESS_UPDATED);
             })
             .fail(function (jqXHR) {
-                App.handleFailedTasks(jqXHR);
+                DBApp.handleFailedTasks(jqXHR);
             })
     }
     page.commands.doDeleteGroup = (currentGroup, currentRowGroup, tableAmznAccIn) => {
@@ -223,10 +223,10 @@
                         $(value).remove();
                     }
                 })
-                App.SweetAlert.showSuccessAlert(SUCCESS_REMOVED);
+                CommonApp.SweetAlert.showSuccessAlert(SUCCESS_REMOVED);
             })
             .fail(function (jqXHR) {
-                App.handleFailedTasks(jqXHR);
+                DBApp.handleFailedTasks(jqXHR);
             })
     }
 
@@ -241,7 +241,7 @@
         });
 
         if (amznAccSelected.length === 0) {
-            App.IziToast.showErrorAlert(`${noDataSelected}`);
+            CommonApp.IziToast.showErrorAlert(`${noDataSelected}`);
             return;
         }
 
@@ -263,10 +263,10 @@
                     tableAmznAccIn.order([0, 'desc']).draw();
                 });
                 page.dialogs.element.mdAddAmznAccToGroup.modal("hide");
-                App.SweetAlert.showSuccessAlert(SUCCESS_CREATED);
+                CommonApp.SweetAlert.showSuccessAlert(SUCCESS_CREATED);
             })
             .fail(function (jqXHR) {
-                App.handleFailedTasks(jqXHR);
+                DBApp.handleFailedTasks(jqXHR);
             })
     }
     page.commands.doDeletedAmznAcc = (currentGroup, currentAmznAcc, currentRowAmznAcc) => {
@@ -279,7 +279,7 @@
                 tableAmznAccIn.row(currentRowAmznAcc).remove().draw('page');
             })
             .fail(function (jqXHR) {
-                App.handleFailedTasks(jqXHR);
+                DBApp.handleFailedTasks(jqXHR);
             })
     }
 
@@ -295,7 +295,7 @@
     }
 
     $(document).ready(function () {
-        App.handleGroupsFilterSidebar();
+        DBApp.handleGroupsFilterSidebar();
 
         let tableGroup = page.element.tableGroup.DataTable({
             ajax: {
@@ -466,7 +466,7 @@
         page.element.tableGroup.on('click', 'button.delete-group', function () {
             currentRowGroup = tableGroup.row($(this).parents('tr'));
             currentGroup = currentRowGroup.data();
-            App.SweetAlert.showDeleteDialog()
+            CommonApp.SweetAlert.showDeleteDialog()
                 .then((result) => {
                     if (result.isConfirmed) {
                         page.commands.doDeleteGroup(currentGroup, currentRowGroup, tableAmznAccIn);

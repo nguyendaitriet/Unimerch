@@ -519,26 +519,26 @@
 
     let page = {
         urls: {
-            findAllAmznAccountFilter: App.BASE_URL_AMZN_ACCOUNT + "/findAllFilter",
-            findAmznAccInGrpFilter: App.BASE_URL_GROUP + "/findInGrpFilter/",
-            findCardsAll: App.BASE_URL_ORDER + "/card-all",
-            findCardsByGroupId: App.BASE_URL_ORDER + "/card-grp/",
-            findCardsByAmznId: App.BASE_URL_ORDER + "/card-acc/",
-            findChartAll: App.BASE_URL_ORDER + "/chart-all",
-            findChartByGroupId: App.BASE_URL_ORDER + "/chart-grp/",
-            findChartByUserId: App.BASE_URL_ORDER + "/chart-acc/",
+            findAllAmznAccountFilter: CommonApp.BASE_URL_AMZN_ACCOUNT + "/findAllFilter",
+            findAmznAccInGrpFilter: CommonApp.BASE_URL_GROUP + "/findInGrpFilter/",
+            findCardsAll: CommonApp.BASE_URL_ORDER + "/card-all",
+            findCardsByGroupId: CommonApp.BASE_URL_ORDER + "/card-grp/",
+            findCardsByAmznId: CommonApp.BASE_URL_ORDER + "/card-acc/",
+            findChartAll: CommonApp.BASE_URL_ORDER + "/chart-all",
+            findChartByGroupId: CommonApp.BASE_URL_ORDER + "/chart-grp/",
+            findChartByUserId: CommonApp.BASE_URL_ORDER + "/chart-acc/",
 
-            findAllTodaySoldAllAmznAcc: App.BASE_URL_PRODUCT + "/findAllTodaySoldAllAmznAcc",
-            findAllLast30DaysSoldAllAmznAcc: App.BASE_URL_PRODUCT + "/findAllLast30DaysSoldAllAmznAcc",
-            findAllThisMonthSoldAllAmznAcc: App.BASE_URL_PRODUCT + "/findAllThisMonthSoldAllAmznAcc",
+            findAllTodaySoldAllAmznAcc: CommonApp.BASE_URL_PRODUCT + "/findAllTodaySoldAllAmznAcc",
+            findAllLast30DaysSoldAllAmznAcc: CommonApp.BASE_URL_PRODUCT + "/findAllLast30DaysSoldAllAmznAcc",
+            findAllThisMonthSoldAllAmznAcc: CommonApp.BASE_URL_PRODUCT + "/findAllThisMonthSoldAllAmznAcc",
 
-            findAllTodaySoldInGroup: App.BASE_URL_PRODUCT + "/findAllTodaySoldInGroup/",
-            findAllLast30DaysSoldInGroup: App.BASE_URL_PRODUCT + "/findAllLast30DaysSoldInGroup/",
-            findAllThisMonthSoldInGroup: App.BASE_URL_PRODUCT + "/findAllThisMonthSoldInGroup/",
+            findAllTodaySoldInGroup: CommonApp.BASE_URL_PRODUCT + "/findAllTodaySoldInGroup/",
+            findAllLast30DaysSoldInGroup: CommonApp.BASE_URL_PRODUCT + "/findAllLast30DaysSoldInGroup/",
+            findAllThisMonthSoldInGroup: CommonApp.BASE_URL_PRODUCT + "/findAllThisMonthSoldInGroup/",
 
-            findAllTodaySoldEveryAmznAcc: App.BASE_URL_PRODUCT + "/findAllTodaySoldEveryAmznAcc/",
-            findAllLast30DaysSoldEveryAmznAcc: App.BASE_URL_PRODUCT + "/findAllLast30DaysSoldEveryAmznAcc/",
-            findAllThisMonthSoldEveryAmznAcc: App.BASE_URL_PRODUCT + "/findAllThisMonthSoldEveryAmznAcc/",
+            findAllTodaySoldEveryAmznAcc: CommonApp.BASE_URL_PRODUCT + "/findAllTodaySoldEveryAmznAcc/",
+            findAllLast30DaysSoldEveryAmznAcc: CommonApp.BASE_URL_PRODUCT + "/findAllLast30DaysSoldEveryAmznAcc/",
+            findAllThisMonthSoldEveryAmznAcc: CommonApp.BASE_URL_PRODUCT + "/findAllThisMonthSoldEveryAmznAcc/",
         },
         element: {},
         commands: {},
@@ -743,7 +743,7 @@
     }
 
     $(document).ready(function () {
-        App.handleGroupsFilterSidebar();
+        DBApp.handleGroupsFilterSidebar();
 
         page.commands.initTodaySoldTable();
        page.commands.init30DaysSoldTable();
@@ -784,7 +784,7 @@
     var chartVars = "KoolOnLoadCallFunction=chartReadyHandler";
 
     function formatAxis(id, value) {
-        return App.fmtNumWMetricSuffix(value);
+        return DBApp.fmtNumWMetricSuffix(value);
     }
 
     page.commands.getChart = (url) => {
@@ -857,7 +857,7 @@
 
             })
             .fail((jqXHR) => {
-                App.handleFailedTasks(jqXHR);
+                DBApp.handleFailedTasks(jqXHR);
             })
     }
 
@@ -873,77 +873,77 @@
             .done((cards) => {
                 page.dialogs.element.todayDate.text(cards.today.date);
                 page.dialogs.element.todayPurchased
-                    .text(App.fmtNumComma(cards.today.purchased));
+                    .text(DBApp.fmtNumComma(cards.today.purchased));
                 page.dialogs.element.todaySold
-                    .text(App.fmtNumComma(cards.today.sold));
+                    .text(DBApp.fmtNumComma(cards.today.sold));
                 page.dialogs.element.todayCancelled
-                    .text(App.fmtNumComma(cards.today.cancelled));
+                    .text(DBApp.fmtNumComma(cards.today.cancelled));
                 page.dialogs.element.todayReturned
-                    .text(App.fmtNumComma(cards.today.returned));
+                    .text(DBApp.fmtNumComma(cards.today.returned));
                 page.dialogs.element.todayRoyalties
-                    .text('$' + App.fmtNumComma(cards.today.royalties));
+                    .text('$' + DBApp.fmtNumComma(cards.today.royalties));
 
                 page.dialogs.element.allTimePurchased
-                    .text(App.fmtNumComma(cards.allTime.purchased));
+                    .text(DBApp.fmtNumComma(cards.allTime.purchased));
                 page.dialogs.element.allTimeSold
-                    .text(App.fmtNumComma(cards.allTime.sold));
+                    .text(DBApp.fmtNumComma(cards.allTime.sold));
                 page.dialogs.element.allTimeCancelled
-                    .text(App.fmtNumComma(cards.allTime.cancelled));
+                    .text(DBApp.fmtNumComma(cards.allTime.cancelled));
                 page.dialogs.element.allTimeReturned
-                    .text(App.fmtNumComma(cards.allTime.returned));
+                    .text(DBApp.fmtNumComma(cards.allTime.returned));
                 page.dialogs.element.allTimeRoyalties
-                    .text('$' + App.fmtNumComma(cards.allTime.royalties));
+                    .text('$' + DBApp.fmtNumComma(cards.allTime.royalties));
 
                 page.dialogs.element.yesterdayDate.text(cards.yesterday.date);
                 page.dialogs.element.yesterdayPurchased
-                    .text(App.fmtNumComma(cards.yesterday.purchased));
+                    .text(DBApp.fmtNumComma(cards.yesterday.purchased));
                 page.dialogs.element.yesterdaySold
-                    .text(App.fmtNumComma(cards.yesterday.sold));
+                    .text(DBApp.fmtNumComma(cards.yesterday.sold));
                 page.dialogs.element.yesterdayCancelled
-                    .text(App.fmtNumComma(cards.yesterday.cancelled));
+                    .text(DBApp.fmtNumComma(cards.yesterday.cancelled));
                 page.dialogs.element.yesterdayReturned
-                    .text(App.fmtNumComma(cards.yesterday.returned));
+                    .text(DBApp.fmtNumComma(cards.yesterday.returned));
                 page.dialogs.element.yesterdayRoyalties
-                    .text('$' + App.fmtNumComma(cards.yesterday.royalties));
+                    .text('$' + DBApp.fmtNumComma(cards.yesterday.royalties));
 
                 page.dialogs.element.lastSevenDaysDate.text(cards.lastSevenDays.date);
                 page.dialogs.element.lastSevenDaysPurchased
-                    .text(App.fmtNumComma(cards.lastSevenDays.purchased));
+                    .text(DBApp.fmtNumComma(cards.lastSevenDays.purchased));
                 page.dialogs.element.lastSevenDaysSold
-                    .text(App.fmtNumComma(cards.lastSevenDays.sold));
+                    .text(DBApp.fmtNumComma(cards.lastSevenDays.sold));
                 page.dialogs.element.lastSevenDaysCancelled
-                    .text(App.fmtNumComma(cards.lastSevenDays.cancelled));
+                    .text(DBApp.fmtNumComma(cards.lastSevenDays.cancelled));
                 page.dialogs.element.lastSevenDaysReturned
-                    .text(App.fmtNumComma(cards.lastSevenDays.returned));
+                    .text(DBApp.fmtNumComma(cards.lastSevenDays.returned));
                 page.dialogs.element.lastSevenDaysRoyalties
-                    .text('$' + App.fmtNumComma(cards.lastSevenDays.royalties));
+                    .text('$' + DBApp.fmtNumComma(cards.lastSevenDays.royalties));
 
                 page.dialogs.element.thisMonthDate.text(cards.thisMonth.date);
                 page.dialogs.element.thisMonthPurchased
-                    .text(App.fmtNumComma(cards.thisMonth.purchased));
+                    .text(DBApp.fmtNumComma(cards.thisMonth.purchased));
                 page.dialogs.element.thisMonthSold
-                    .text(App.fmtNumComma(cards.thisMonth.sold));
+                    .text(DBApp.fmtNumComma(cards.thisMonth.sold));
                 page.dialogs.element.thisMonthCancelled
-                    .text(App.fmtNumComma(cards.thisMonth.cancelled));
+                    .text(DBApp.fmtNumComma(cards.thisMonth.cancelled));
                 page.dialogs.element.thisMonthReturned
-                    .text(App.fmtNumComma(cards.thisMonth.returned));
+                    .text(DBApp.fmtNumComma(cards.thisMonth.returned));
                 page.dialogs.element.thisMonthRoyalties
-                    .text('$' + App.fmtNumComma(cards.thisMonth.royalties));
+                    .text('$' + DBApp.fmtNumComma(cards.thisMonth.royalties));
 
                 page.dialogs.element.previousMonthDate.text(cards.previousMonth.date);
                 page.dialogs.element.previousMonthPurchased
-                    .text(App.fmtNumComma(cards.previousMonth.purchased));
+                    .text(DBApp.fmtNumComma(cards.previousMonth.purchased));
                 page.dialogs.element.previousMonthSold
-                    .text(App.fmtNumComma(cards.previousMonth.sold));
+                    .text(DBApp.fmtNumComma(cards.previousMonth.sold));
                 page.dialogs.element.previousMonthCancelled
-                    .text(App.fmtNumComma(cards.previousMonth.cancelled));
+                    .text(DBApp.fmtNumComma(cards.previousMonth.cancelled));
                 page.dialogs.element.previousMonthReturned
-                    .text(App.fmtNumComma(cards.previousMonth.returned));
+                    .text(DBApp.fmtNumComma(cards.previousMonth.returned));
                 page.dialogs.element.previousMonthRoyalties
-                    .text('$' + App.fmtNumComma(cards.previousMonth.royalties));
+                    .text('$' + DBApp.fmtNumComma(cards.previousMonth.royalties));
             })
             .fail((jqXHR) => {
-                App.handleFailedTasks(jqXHR);
+                DBApp.handleFailedTasks(jqXHR);
             })
     }
 
@@ -979,7 +979,7 @@
                 page.commands.getCards(cardDataUrl);
             })
             .fail((jqXHR) => {
-                App.handleFailedTasks(jqXHR);
+                DBApp.handleFailedTasks(jqXHR);
             })
     }
 
@@ -1008,7 +1008,7 @@
         })
 
         container.append(str);
-        App.handleFilter('filter-dashboard', 'dashboard-user-search', 'list-group-item');
+        DBApp.handleFilter('filter-dashboard', 'dashboard-user-search', 'list-group-item');
     }
 
 </script>

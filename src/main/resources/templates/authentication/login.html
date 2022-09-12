@@ -25,7 +25,7 @@
 <script>
     let page = {
         urls: {
-            login: App.BASE_URL_AUTHENTICATION,
+            login: CommonApp.BASE_URL_AUTHORIZATION,
         },
         element: {},
         commands: {},
@@ -57,7 +57,7 @@
             "data": JSON.stringify(user)
         })
             .done((resp) => {
-                App.IziToast.showSuccessAlert("Logging in...");
+                CommonApp.IziToast.showSuccessAlert("Logging in...");
 
                 for (let role of resp.roles) {
                     if (role.authority == "USER") {
@@ -72,7 +72,7 @@
                 }
             })
             .fail((jqXHR) => {
-                App.handleFailedTasks(jqXHR);
+                LGApp.handleFailedTasks(jqXHR);
             })
     })
 
@@ -83,7 +83,7 @@
         }
     });
 
-    App.allowShowingPassword(page.dialogs.element.frmLogin);
+    CommonApp.allowShowingPassword(page.dialogs.element.frmLogin);
 </script>
 </body>
 </html>
