@@ -1,6 +1,5 @@
-package com.unimerch.security.uni;
+package com.unimerch.security;
 
-import com.unimerch.repository.model.User;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -10,39 +9,41 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Objects;
 
-public class UniUserPrinciple implements UserDetails {
-    private static final long serialVersionUID = 1L;
-    private final Integer id;
+public class UserPrinciple implements UserDetails {
+    private final String id;
 
     private final String username;
 
     private final String password;
 
-    private final Collection<? extends GrantedAuthority> roles;
+    private final Collection<? extends GrantedAuthority> authorities;
 
-    public UniUserPrinciple(Integer id,
-                            String username, String password,
-                            Collection<? extends GrantedAuthority> roles) {
+    public UserPrinciple(String id,
+                         String username, String password,
+                         Collection<? extends GrantedAuthority> authorities) {
         this.id = id;
         this.username = username;
         this.password = password;
-        this.roles = roles;
+        this.authorities = authorities;
     }
 
-    public static UniUserPrinciple build(User user) {
-        List<GrantedAuthority> authorities = new ArrayList<GrantedAuthority>();
-        SimpleGrantedAuthority authority = new SimpleGrantedAuthority(user.getRole().getCode());
-        authorities.add(authority);
-
-        return new UniUserPrinciple(
-                user.getId(),
-                user.getUsername(),
-                user.getPasswordHash(),
+    //Giam Dependency nen ko truyen thang User vao
+    public static UserPrinciple build(String id, String username, String passwordHash, String roleCode) {
+        List<GrantedAuthority> authorities = null;
+        if (roleCode != null) {
+            authorities = new ArrayList<>();
+            SimpleGrantedAuthority authority = new SimpleGrantedAuthority(roleCode);
+            authorities.add(authority);
+        }
+        return new UserPrinciple(
+                id,
+                username,
+                passwordHash,
                 authorities
         );
     }
 
-    public Integer getId() {
+    public String getId() {
         return id;
     }
 
@@ -58,7 +59,7 @@ public class UniUserPrinciple implements UserDetails {
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return roles;
+        return authorities;
     }
 
 
@@ -87,7 +88,7 @@ public class UniUserPrinciple implements UserDetails {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
 
-        UniUserPrinciple user = (UniUserPrinciple) o;
+        UserPrinciple user = (UserPrinciple) o;
         return Objects.equals(id, user.id);
     }
 
@@ -95,5 +96,14 @@ public class UniUserPrinciple implements UserDetails {
     public int hashCode() {
         return Objects.hash(id);
     }
-}
 
+    @Override
+    public String toString() {
+        return "UserPrinciple{" +
+                "id=" + id +
+                ", username='" + username + '\'' +
+                ", password='" + password + '\'' +
+                ", roles=" + authorities +
+                '}';
+    }
+}
