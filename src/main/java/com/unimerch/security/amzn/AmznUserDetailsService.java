@@ -2,7 +2,7 @@ package com.unimerch.security.amzn;
 
 import com.unimerch.repository.AmznUserRepository;
 import com.unimerch.repository.model.AmznUser;
-import com.unimerch.security.BeanNameConstant;
+import com.unimerch.security.NameConstant;
 import com.unimerch.security.UserPrinciple;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -10,7 +10,7 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
-@Service(BeanNameConstant.AMZN_USER_SECURITY_SERVICE_NAME)
+@Service(NameConstant.AMZN_USER_SECURITY_SERVICE_NAME)
 public class AmznUserDetailsService implements UserDetailsService {
 
     @Autowired

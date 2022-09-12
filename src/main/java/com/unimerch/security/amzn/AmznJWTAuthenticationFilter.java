@@ -1,6 +1,6 @@
 package com.unimerch.security.amzn;
 
-import com.unimerch.security.BeanNameConstant;
+import com.unimerch.security.NameConstant;
 import com.unimerch.service.UniUserService;
 import com.unimerch.service.impl.JwtService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,7 +18,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
-@Component(BeanNameConstant.AMZN_JWT_FILTER_NAME)
+@Component(NameConstant.AMZN_JWT_FILTER_NAME)
 public class AmznJWTAuthenticationFilter extends OncePerRequestFilter {
     @Autowired
     private JwtService jwtService;
@@ -56,7 +56,17 @@ public class AmznJWTAuthenticationFilter extends OncePerRequestFilter {
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
             throws ServletException, IOException {
+        System.out.println("AmznJWTAuthenticationFilter");
+        String authorizationType = getAuthorizationType(request);
+        if (authorizationType == null) {
+            filterChain.doFilter(request, response);
+            return;
+        }
         try {
+            if (!authorizationType.equals(NameConstant.AMZN_AUTHORIZATION_HEADER_VALUE)) {
+                filterChain.doFilter(request, response);
+                return;
+            }
             String bearerToken = getBearerTokenRequest(request);
             if (bearerToken != null) {
                 setAuthentication(request, bearerToken);
@@ -68,8 +78,12 @@ public class AmznJWTAuthenticationFilter extends OncePerRequestFilter {
         } catch (Exception e) {
             logger.error("Can NOT set uni authentication -> Message: {0}", e);
         }
-        System.out.println("AmznJWTAuthenticationFilter");
+
         filterChain.doFilter(request, response);
+    }
+
+    private String getAuthorizationType(HttpServletRequest request) {
+        return request.getHeader("Authorization-Type");
     }
 
     private void setAuthentication(HttpServletRequest request, String authorizationValue) {

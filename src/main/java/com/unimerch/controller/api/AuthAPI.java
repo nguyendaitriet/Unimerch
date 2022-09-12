@@ -4,7 +4,7 @@ import com.unimerch.dto.amznacc.AmznAccResult;
 import com.unimerch.dto.user.LoginParam;
 import com.unimerch.repository.model.JwtResponse;
 import com.unimerch.repository.model.User;
-import com.unimerch.security.BeanNameConstant;
+import com.unimerch.security.NameConstant;
 import com.unimerch.service.AmznUserService;
 import com.unimerch.service.UniUserService;
 import com.unimerch.service.impl.JwtService;
@@ -17,7 +17,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -27,10 +26,10 @@ import org.springframework.web.bind.annotation.RestController;
 public class AuthAPI {
 
     @Autowired
-    @Qualifier(BeanNameConstant.UNI_AUTHENTICATION_MANAGER_NAME)
+    @Qualifier(NameConstant.UNI_AUTHENTICATION_MANAGER_NAME)
     private AuthenticationManager uniAuthenticationManager;
     @Autowired
-    @Qualifier(BeanNameConstant.AMZN_AUTHENTICATION_MANAGER_NAME)
+    @Qualifier(NameConstant.AMZN_AUTHENTICATION_MANAGER_NAME)
     private AuthenticationManager amznAuthenticationManager;
     @Autowired
     private JwtService jwtService;
