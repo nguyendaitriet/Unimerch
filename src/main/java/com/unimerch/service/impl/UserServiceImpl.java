@@ -75,6 +75,11 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    public UserItemResult findUserItemResultByUsername(String username) {
+        return userMapper.toUserItemResult(getByUsername(username));
+    }
+
+    @Override
     public User getByUsername(String username) {
         return userRepository.getByUsername(username);
     }

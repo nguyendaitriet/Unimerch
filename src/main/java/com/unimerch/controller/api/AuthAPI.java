@@ -1,6 +1,7 @@
 package com.unimerch.controller.api;
 
 import com.unimerch.dto.user.LoginParam;
+import com.unimerch.dto.user.UserItemResult;
 import com.unimerch.repository.model.JwtResponse;
 import com.unimerch.repository.model.User;
 import com.unimerch.security.BeanNameConstant;
@@ -44,7 +45,7 @@ public class AuthAPI {
 
         SecurityContextHolder.getContext().setAuthentication(authentication);
 
-        User currentUser = userService.getByUsername(user.getUsername());
+        UserItemResult currentUser = userService.findUserItemResultByUsername(user.getUsername());
         if (currentUser.isDisabled()) {
             return new ResponseEntity<>(HttpStatus.FORBIDDEN);
         }

@@ -17,6 +17,8 @@ public interface UserService extends UserDetailsService {
 
     User findById(String id);
 
+    UserItemResult findUserItemResultByUsername(String username);
+
     UserItemResult findUserListItemById(String id);
 
     UserItemResult create(UserCreateParam userCreateParam);
