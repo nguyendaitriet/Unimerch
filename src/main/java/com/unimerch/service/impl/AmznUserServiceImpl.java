@@ -17,6 +17,7 @@ import com.unimerch.repository.datatable.AmznAccTableRepository;
 import com.unimerch.repository.model.AmznUser;
 import com.unimerch.service.AmznUserService;
 import com.unimerch.util.ValidationUtils;
+import io.jsonwebtoken.Jwts;
 import org.apache.poi.openxml4j.exceptions.NotOfficeXmlFileException;
 import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
@@ -25,6 +26,7 @@ import org.springframework.context.MessageSource;
 import org.springframework.data.jpa.datatables.mapping.Column;
 import org.springframework.data.jpa.datatables.mapping.DataTablesInput;
 import org.springframework.data.jpa.datatables.mapping.DataTablesOutput;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -80,20 +82,21 @@ public class AmznUserServiceImpl implements AmznUserService {
     }
 
     @Override
-    public void updateMetadata(String data, String jwt) {
+    public void updateMetadata(String data, Authentication authentication) {
+
         ObjectMapper mapper = new ObjectMapper();
         SimpleModule module = new SimpleModule();
         module.addDeserializer(Metadata.class, new MetadataMapper());
         mapper.registerModule(module);
         try {
             Metadata metadata = mapper.readValue(data, Metadata.class);
-            AmznUser user = amznAccountRepository.findByUsername("2");
+            String username = authentication.getName();
+            AmznUser user = amznAccountRepository.findByUsername(username);
             user = metadataMapper.updateAmznAccMetadata(user, metadata);
             amznAccountRepository.save(user);
         } catch (JsonProcessingException | ServerErrorException e) {
             throw new ServerErrorException(messageSource.getMessage("error.500", null, Locale.getDefault()));
         }
-
     }
 
     @Override
