@@ -2,12 +2,11 @@ package com.unimerch.util;
 
 import org.springframework.stereotype.Component;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.time.*;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
@@ -31,7 +30,9 @@ public class TimeUtils {
         LocalDate today = LocalDate.now();
         ZonedDateTime zdtToday = today.atStartOfDay(zoneIdVN);
         return zdtToday.toInstant();
-    };
+    }
+
+    ;
 
     public String getCardTimeToday() {
         LocalDate today = LocalDate.now();
@@ -51,7 +52,9 @@ public class TimeUtils {
         results.put("endTime", endTime);
 
         return results;
-    };
+    }
+
+    ;
 
     public String getCardTimeYesterday() {
         LocalDate localYesterday = LocalDate.now().minusDays(1);
@@ -63,7 +66,9 @@ public class TimeUtils {
         ZonedDateTime zdtLastWeek = lastSevenDay.atStartOfDay(zoneIdVN);
 
         return zdtLastWeek.toInstant();
-    };
+    }
+
+    ;
 
     public String getCardTimeLastSevenDays() {
         LocalDate lastSevenDay = LocalDate.now().minusDays(6);
@@ -75,7 +80,9 @@ public class TimeUtils {
         ZonedDateTime zdtThisMonth = firstDayOfThisMonth.atStartOfDay(zoneIdVN);
 
         return zdtThisMonth.toInstant();
-    };
+    }
+
+    ;
 
     public String getCardTimeThisMonth() {
         LocalDate firstDayOfThisMonth = LocalDate.now().withDayOfMonth(1);
@@ -96,7 +103,9 @@ public class TimeUtils {
         results.put("endTime", endTime);
 
         return results;
-    };
+    }
+
+    ;
 
     public String getCardTimePreviousMonth() {
         LocalDate firstDayOfLastMonth = YearMonth.now().minusMonths(1).atDay(1);
@@ -108,9 +117,30 @@ public class TimeUtils {
 
         LocalDate start = LocalDate.now().minusDays(6);
 
-        IntStream.range(0, 7).mapToObj(start::plusDays).collect(Collectors.toList())
-                .forEach(localDate -> cards.add(toDayMonthYear(localDate)));
+        IntStream.range(0, 7).mapToObj(start::plusDays).collect(Collectors.toList()).forEach(localDate -> cards.add(toDayMonthYear(localDate)));
 
         return cards;
     }
+
+    public static Date instantToDateNoTime(Instant instant) {
+        return instantToDate(instant, "E MMM dd yyyy");
+    }
+
+    public static Date instantToDate(Instant instant, String pattern) {
+        String dateString = Date.from(instant).toString();
+        String dateNoTimeString = dateString.substring(0, 10) + dateString.substring(23, 28);
+        SimpleDateFormat dateFormat = new SimpleDateFormat(pattern);
+        try {
+            return dateFormat.parse(dateNoTimeString);
+        } catch (ParseException e) {
+            throw new IllegalArgumentException(e);
+        }
+    }
+
+    public static String dateToString(Date date, String pattern) {
+        SimpleDateFormat dateFormat = new SimpleDateFormat(pattern);
+        return dateFormat.format(date);
+    }
+
+
 }

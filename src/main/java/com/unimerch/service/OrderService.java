@@ -3,11 +3,12 @@ package com.unimerch.service;
 import com.unimerch.dto.order.OrderCardItemResult;
 import com.unimerch.dto.order.OrderChartResult;
 import com.unimerch.dto.order.OrderData;
+import org.springframework.security.core.Authentication;
 
 import java.util.Map;
 
 public interface OrderService {
-    OrderData saveOrderData(String data, String jwt);
+    OrderData saveOrderData(String data, Authentication authentication);
 
     int getNumberSoldInDayByAmznId(Integer amznAccId);
 

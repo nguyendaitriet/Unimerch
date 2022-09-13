@@ -114,7 +114,7 @@ public class AmznUserServiceImpl implements AmznUserService {
 
     @Override
     public List<AmznAccResult> findAll() {
-        return amznAccountRepository.findAll().stream().map(account -> amznAccountMapper.toAmznAccResult(account)).collect(Collectors.toList());
+        return amznAccountRepository.findAll().stream().map(amznAccountMapper::toAmznAccResult).collect(Collectors.toList());
     }
 
     @Override

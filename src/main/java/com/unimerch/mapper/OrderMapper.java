@@ -10,8 +10,10 @@ import com.unimerch.dto.order.OrderChartColumn;
 import com.unimerch.dto.order.OrderChartResult;
 import com.unimerch.dto.order.OrderData;
 import com.unimerch.repository.model.Order;
+import com.unimerch.repository.model.Product;
 import com.unimerch.util.ChartUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Component;
 
 import java.io.IOException;
@@ -21,6 +23,7 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 @Component
 public class OrderMapper extends StdDeserializer<OrderData> {
@@ -61,6 +64,8 @@ public class OrderMapper extends StdDeserializer<OrderData> {
             orderList.add(new Order(asin, date, title, info, purchased, cancelled, returned, revenue, royalties, currency));
         }
 
+        List<Product> productList = asinList.stream().map(Product::new).collect(Collectors.toList());
+        orderData.setProductList(productList);
         orderData.setOrderList(orderList);
         orderData.setAsinList(asinList);
         return orderData;

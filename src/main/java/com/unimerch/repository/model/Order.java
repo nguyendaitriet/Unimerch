@@ -71,4 +71,5 @@ public class Order {
         this.royalties = royalties;
         this.currency = currency;
     }
+
 }

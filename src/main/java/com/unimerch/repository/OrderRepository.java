@@ -36,9 +36,9 @@ public interface OrderRepository extends JpaRepository<Order, Integer> {
 
     @Query("SELECT o " +
             "FROM Order o " +
-                "WHERE o.date >= :timeStart " +
-                "AND o.date < :timeEnd " +
-                "AND o.amznAccount.id = :amznAccId ")
+            "WHERE o.date >= :timeStart " +
+            "AND o.date < :timeEnd " +
+            "AND o.amznAccount.id = :amznAccId ")
     List<Order> findByAmznAccIdWithTimeRange(@Param("amznAccId") Integer amznAccId,
                                              @Param("timeStart") Instant timeStart,
                                              @Param("timeEnd") Instant timeEnd);
@@ -46,18 +46,18 @@ public interface OrderRepository extends JpaRepository<Order, Integer> {
     @Query("SELECT o " +
             "FROM Order o " +
             "WHERE o.amznAccount.id IN " +
-                "(SELECT br.amznAccount.id " +
-                "FROM BrgGroupAmznAccount br " +
-                "WHERE br.group.id = :groupId)")
+            "(SELECT br.amznAccount.id " +
+            "FROM BrgGroupAmznAccount br " +
+            "WHERE br.group.id = :groupId)")
     List<Order> findByGroupId(@Param("groupId") Integer groupId);
 
     @Query("SELECT o " +
             "FROM Order o " +
             "WHERE o.date >= :timeStart " +
             "AND o.amznAccount.id IN " +
-                "(SELECT br.amznAccount.id " +
-                "FROM BrgGroupAmznAccount br " +
-                "WHERE br.group.id = :groupId)")
+            "(SELECT br.amznAccount.id " +
+            "FROM BrgGroupAmznAccount br " +
+            "WHERE br.group.id = :groupId)")
     List<Order> findByGroupIdWithStartDate(@Param("groupId") Integer groupId,
                                            @Param("timeStart") Instant timeStart);
 
@@ -66,10 +66,12 @@ public interface OrderRepository extends JpaRepository<Order, Integer> {
             "WHERE o.date >= :timeStart " +
             "AND o.date < :timeEnd " +
             "AND o.amznAccount.id IN " +
-                "(SELECT br.amznAccount.id " +
-                "FROM BrgGroupAmznAccount br " +
-                "WHERE br.group.id = :groupId)")
+            "(SELECT br.amznAccount.id " +
+            "FROM BrgGroupAmznAccount br " +
+            "WHERE br.group.id = :groupId)")
     List<Order> findByGroupIdWithTimeRange(@Param("groupId") Integer groupId,
                                            @Param("timeStart") Instant timeStart,
                                            @Param("timeEnd") Instant timeEnd);
+
+
 }

@@ -1,6 +1,7 @@
 package com.unimerch.dto.order;
 
 import com.unimerch.repository.model.Order;
+import com.unimerch.repository.model.Product;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -16,4 +17,5 @@ import java.util.Set;
 public class OrderData {
     private List<Order> orderList;
     private Set<String> asinList;
+    private List<Product> productList;
 }

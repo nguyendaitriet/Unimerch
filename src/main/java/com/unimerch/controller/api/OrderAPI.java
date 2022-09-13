@@ -7,6 +7,7 @@ import com.unimerch.service.OrderService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Map;
@@ -18,8 +19,8 @@ public class OrderAPI {
     private OrderService orderService;
 
     @PostMapping
-    public ResponseEntity<?> saveOrder(@RequestBody String data) {
-        OrderData orderData = orderService.saveOrderData(data, "");
+    public ResponseEntity<?> saveOrder(Authentication authentication, @RequestBody String data) {
+        OrderData orderData = orderService.saveOrderData(data, authentication);
         return new ResponseEntity<>(orderData.getAsinList(), HttpStatus.OK);
     }
 
@@ -58,4 +59,5 @@ public class OrderAPI {
         Map<String, OrderCardItemResult> orderCards = orderService.getCardsGroup(id);
         return new ResponseEntity<>(orderCards, HttpStatus.OK);
     }
+
 }
