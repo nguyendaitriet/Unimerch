@@ -1,25 +1,32 @@
 package com.unimerch.security;
 
+import com.unimerch.repository.model.Role;
+import com.unimerch.repository.model.User;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 
 public class UserPrinciple implements UserDetails {
-    private final String id;
 
-    private final String username;
+    private User user;
 
-    private final String password;
+    private String id;
 
-    private final Collection<? extends GrantedAuthority> authorities;
+    private String username;
+
+    private String password;
+
+    private Collection<? extends GrantedAuthority> authorities;
+
+    public UserPrinciple (User user) {
+        this.user = user;
+    }
 
     public UserPrinciple(String id,
-                         String username, String password,
+                         String username,
+                         String password,
                          Collection<? extends GrantedAuthority> authorities) {
         this.id = id;
         this.username = username;
@@ -58,10 +65,12 @@ public class UserPrinciple implements UserDetails {
     }
 
     @Override
-    public Collection<? extends GrantedAuthority> getAuthorities() {
-        return authorities;
+    public Collection<? extends GrantedAuthority> getAuthorities() {return authorities;
     }
 
+    public boolean hasRole(String roleName) {
+        return this.user.hasRole(roleName);
+    }
 
     @Override
     public boolean isAccountNonExpired() {

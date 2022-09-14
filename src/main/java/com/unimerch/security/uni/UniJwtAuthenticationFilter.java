@@ -68,6 +68,7 @@ public class UniJwtAuthenticationFilter extends OncePerRequestFilter {
             filterChain.doFilter(request, response);
             return;
         }
+
         try {
             String bearerToken = getBearerTokenRequest(request);
             if (bearerToken != null) {

@@ -58,18 +58,7 @@
         })
             .done((resp) => {
                 CommonApp.IziToast.showSuccessAlert("Logging in...");
-
-                for (let role of resp.roles) {
-                    if (role.authority == "USER") {
-                        setTimeout(function () {
-                            window.location.href = "/users";
-                        }, 800);
-                        return;
-                    }
-                    setTimeout(function () {
-                        window.location.href = "/dashboard";
-                    }, 800);
-                }
+                window.location.href = "/";
             })
             .fail((jqXHR) => {
                 LGApp.handleFailedTasks(jqXHR);

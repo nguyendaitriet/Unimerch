@@ -2,6 +2,8 @@ package com.unimerch.security.uni;
 
 import com.unimerch.security.NameConstant;
 import com.unimerch.security.RestAuthenticationEntryPoint;
+import com.unimerch.security.handlers.UniAuthenticationSuccessHandler;
+import com.unimerch.security.handlers.UniLoginSuccessHandler;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
@@ -36,10 +38,13 @@ public class UniUserSecurityConfig extends WebSecurityConfigurerAdapter {
     @Autowired
     private AccessDeniedHandler accessDeniedHandler;
     @Autowired
-    private AuthenticationSuccessHandler authenticationSuccessHandler;
-    @Autowired
     @Qualifier(NameConstant.UNI_JWT_FILTER_NAME)
     private Filter jwtAuthenticationFilter;
+
+    @Bean
+    public AuthenticationSuccessHandler authenticationSuccessHandler(){
+        return new UniAuthenticationSuccessHandler();
+    }
 
     @Bean
     public DaoAuthenticationProvider authenticationProvider1() {

@@ -5,6 +5,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.experimental.Accessors;
+import org.hibernate.annotations.ColumnDefault;
 
 import javax.persistence.*;
 import java.time.Instant;
@@ -12,7 +13,7 @@ import java.time.Instant;
 @Entity
 @Getter
 @Setter
-@Table(name = "amzn_accounts")
+@Table(name = "amzn_users")
 @Accessors(chain = true)
 public class AmznUser {
     @Id
@@ -30,8 +31,12 @@ public class AmznUser {
     private Instant lastCheck;
 
     @Column(name = "account_status", length = 50)
-    private String accountStatus;
+    @Enumerated(EnumType.STRING)
+    private AzmnStatus status;
 
+    public static void main(String[] args) {
+
+    }
     @Column(name = "daily_product_count", nullable = false)
     private Integer dailyProductCount;
 

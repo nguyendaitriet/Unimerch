@@ -12,6 +12,7 @@ import com.unimerch.repository.BrgGroupAmznAccountRepository;
 import com.unimerch.repository.OrderRepository;
 import com.unimerch.repository.datatable.AmznAccTableRepository;
 import com.unimerch.repository.model.AmznUser;
+import com.unimerch.repository.model.AzmnStatus;
 import com.unimerch.repository.model.Group;
 import com.unimerch.service.AmznUserService;
 import com.unimerch.service.GroupService;
@@ -42,7 +43,7 @@ public class AmznUserServiceImpl implements AmznUserService {
     private AmznAccTableRepository amznAccTableRepository;
 
     @Autowired
-    private AmznUserMapper amznUserMapper;
+    private AmznUserMapper amznMapper;
 
     @Autowired
     private AmznUserRepository amznAccountRepository;
@@ -107,7 +108,7 @@ public class AmznUserServiceImpl implements AmznUserService {
             columnMap.remove(null);
             List<Column> columnList = new ArrayList<>(columnMap.values());
             input.setColumns(columnList);
-            return amznAccTableRepository.findAll(input, amznAccount -> amznUserMapper.toAmznAccResult(amznAccount));
+            return amznAccTableRepository.findAll(input, amznAccount -> amznMapper.toDTO(amznAccount));
         } catch (Exception e) {
             throw new ServerErrorException(messageSource.getMessage("error.500", null, Locale.getDefault()));
         }
@@ -115,28 +116,30 @@ public class AmznUserServiceImpl implements AmznUserService {
 
     @Override
     public List<AmznAccResult> findAll() {
-        return amznAccountRepository.findAll().stream().map(amznUserMapper::toAmznAccResult).collect(Collectors.toList());
+        return amznAccountRepository.findAll().stream().map(amznMapper::toDTO).collect(Collectors.toList());
     }
 
     @Override
     public List<AmznAccFilterItemResult> findAllFilter() {
         return amznAccountRepository.findAll()
-                .stream().map(account -> amznUserMapper.toAmznAccFilterItemResult(account))
+                .stream().map(account -> amznMapper.toAmznAccFilterItemResult(account))
                 .collect(Collectors.toList());
     }
 
     @Override
-    public AmznAccResult create(AmznAccParam amznAccCreateParam) {
-        String username = amznAccCreateParam.getUsername().trim().toLowerCase();
-        String password = amznAccCreateParam.getPassword();
+    public AmznAccResult create(AmznAccParam createParam) {
+        String username = createParam.getUsername().trim().toLowerCase();
+        String password = createParam.getPassword();
         if (amznAccountRepository.existsByUsername(username)) {
             throw new DuplicateDataException(messageSource.getMessage("validation.amznAccUsernameExists", null, Locale.getDefault()));
         }
         try {
-            amznAccCreateParam.setUsername(username);
-            amznAccCreateParam.setPassword(passwordEncoder.encode(password));
-            AmznUser newAccount = amznAccountRepository.save(amznUserMapper.toAmznAcc(amznAccCreateParam));
-            return amznUserMapper.toAmznAccResult(newAccount);
+            createParam.setUsername(username);
+            createParam.setPassword(passwordEncoder.encode(password));
+            AmznUser user = amznMapper.toAmznAcc(createParam);
+            user.setStatus(AzmnStatus.APPROVED);
+            user = amznAccountRepository.save(user);
+            return amznMapper.toDTO(user);
         } catch (Exception e) {
             throw new ServerErrorException(messageSource.getMessage("error.500", null, Locale.getDefault()));
         }
@@ -148,7 +151,7 @@ public class AmznUserServiceImpl implements AmznUserService {
         try {
             amznAccount.setPassword(passwordEncoder.encode(amznAccParam.getPassword()));
             amznAccount = amznAccountRepository.save(amznAccount);
-            return amznUserMapper.toAmznAccResult(amznAccount);
+            return amznMapper.toDTO(amznAccount);
         } catch (Exception e) {
             throw new ServerErrorException(messageSource.getMessage("error.500", null, Locale.getDefault()));
         }
@@ -281,7 +284,7 @@ public class AmznUserServiceImpl implements AmznUserService {
 
             amznPassword = passwordEncoder.encode(amznPassword);
             AmznAccParam newAmznAccParam = new AmznAccParam(amznUsername, amznPassword);
-            amznUserList.add(amznUserMapper.toAmznAcc(newAmznAccParam));
+            amznUserList.add(amznMapper.toAmznAcc(newAmznAccParam));
 
         }
         try {
@@ -289,7 +292,7 @@ public class AmznUserServiceImpl implements AmznUserService {
         } catch (Exception e) {
             throw new ServerErrorException(messageSource.getMessage("error.500", null, Locale.getDefault()));
         }
-        amznAccResultList = amznUserList.stream().map(amznUser -> amznUserMapper.toAmznAccResult(amznUser)).collect(Collectors.toList());
+        amznAccResultList = amznUserList.stream().map(amznUser -> amznMapper.toDTO(amznUser)).collect(Collectors.toList());
         return amznAccResultList;
     }
 
@@ -298,13 +301,13 @@ public class AmznUserServiceImpl implements AmznUserService {
         AmznUser user = amznAccountRepository.findByUsername(username);
         if (user == null)
             throw new UserNotFoundException("{exception.userNotFound}");
-        return amznUserMapper.toAmznAccResult(user);
+        return amznMapper.toDTO(user);
     }
 
     @Override
     public List<AmznAccAnalyticsItemResult> findAllAnalytics() {
         return amznAccountRepository.findAll().stream()
-                .map(amznUser -> amznUserMapper.toAmznAccAnalyticsItemResult(amznUser))
+                .map(amznUser -> amznMapper.toAmznAccAnalyticsItemResult(amznUser))
                 .collect(Collectors.toList());
     }
 
@@ -312,14 +315,14 @@ public class AmznUserServiceImpl implements AmznUserService {
     public List<AmznAccAnalyticsItemResult> findAnalyticsByGrpId(String groupId) {
         Group group = groupService.findById(groupId);
         return brgGroupAmznAccountRepository.getAmznAccInGroup(group.getId()).stream()
-                .map(amznAccResult -> amznUserMapper.toAmznAccAnalyticsItemResult(amznAccResult))
+                .map(amznAccResult -> amznMapper.toAmznAccAnalyticsItemResult(amznAccResult))
                 .collect(Collectors.toList());
     }
 
     @Override
     public List<AmznAccAnalyticsItemResult> findAnalyticsByAmznAccId(String amznAccId) {
         List<AmznAccAnalyticsItemResult> analyticsList = new ArrayList<>();
-        analyticsList.add(amznUserMapper.toAmznAccAnalyticsItemResult(findById(amznAccId)));
+        analyticsList.add(amznMapper.toAmznAccAnalyticsItemResult(findById(amznAccId)));
         return analyticsList;
     }
 }

@@ -49,4 +49,9 @@ public class User {
     @ManyToOne(optional = false)
     @JoinColumn(name = "role_id", nullable = false)
     private Role role;
+
+    public boolean hasRole(String roleName) {
+        return role.getCode().equals(roleName);
+    }
+
 }
