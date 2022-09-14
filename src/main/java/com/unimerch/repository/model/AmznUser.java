@@ -10,8 +10,6 @@ import javax.persistence.*;
 import java.time.Instant;
 
 @Entity
-@NoArgsConstructor
-@AllArgsConstructor
 @Getter
 @Setter
 @Table(name = "amzn_accounts")
@@ -63,5 +61,13 @@ public class AmznUser {
 
     @Column(name = "note", length = 50)
     private String note;
+
+    public AmznUser() {
+
+    }
+
+    public AmznUser(Integer id) {
+        this.id = id;
+    }
 
 }

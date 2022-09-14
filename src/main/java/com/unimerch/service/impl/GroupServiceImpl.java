@@ -8,7 +8,7 @@ import com.unimerch.dto.group.GroupUpdateParam;
 import com.unimerch.exception.DuplicateDataException;
 import com.unimerch.exception.InvalidIdException;
 import com.unimerch.exception.ServerErrorException;
-import com.unimerch.mapper.AmznAccountMapper;
+import com.unimerch.mapper.AmznUserMapper;
 import com.unimerch.mapper.GroupMapper;
 import com.unimerch.repository.AmznUserRepository;
 import com.unimerch.repository.BrgGroupAmznAccountRepository;
@@ -45,7 +45,7 @@ public class GroupServiceImpl implements GroupService {
     private BrgGroupAmznAccountRepository brgGroupAmznAccRepo;
 
     @Autowired
-    private AmznAccountMapper amznAccountMapper;
+    private AmznUserMapper amznUserMapper;
 
     @Autowired
     private GroupDataTableRepository groupDataTableRepository;
@@ -166,7 +166,7 @@ public class GroupServiceImpl implements GroupService {
                 brgGroupAmznAccount.setAmznAccount(amznAccount);
 
                 brgGroupAmznAccRepo.save(brgGroupAmznAccount);
-                amznAccResultList.add(amznAccountMapper.toAmznAccResult(brgGroupAmznAccount));
+                amznAccResultList.add(amznUserMapper.toAmznAccResult(brgGroupAmznAccount));
             }
         } catch (Exception e) {
             throw new ServerErrorException(messageSource.getMessage("error.500", null, Locale.getDefault()));
@@ -181,7 +181,7 @@ public class GroupServiceImpl implements GroupService {
             Group group = findById(id);
             List<AmznAccResult> amznAccResultList = new ArrayList<>();
             List<AmznUser> amznAccResult = brgGroupAmznAccRepo.getAmznAccInGroup(group.getId());
-            amznAccResult.forEach((result) -> amznAccResultList.add(amznAccountMapper.toAmznAccResult(result)));
+            amznAccResult.forEach((result) -> amznAccResultList.add(amznUserMapper.toAmznAccResult(result)));
             return amznAccResultList;
         } catch (Exception e) {
             throw new ServerErrorException(messageSource.getMessage("error.500", null, Locale.getDefault()));
@@ -194,7 +194,7 @@ public class GroupServiceImpl implements GroupService {
             Group group = findById(id);
             List<AmznAccResult> amznAccResultList = new ArrayList<>();
             List<AmznUser> amznAccResult = brgGroupAmznAccRepo.getAmznAccOutGroup(group.getId());
-            amznAccResult.forEach((result) -> amznAccResultList.add(amznAccountMapper.toAmznAccResult(result)));
+            amznAccResult.forEach((result) -> amznAccResultList.add(amznUserMapper.toAmznAccResult(result)));
             return amznAccResultList;
         } catch (Exception e) {
             throw new ServerErrorException(messageSource.getMessage("error.500", null, Locale.getDefault()));
@@ -213,7 +213,7 @@ public class GroupServiceImpl implements GroupService {
     @Override
     public List<AmznAccFilterItemResult> findAllAmznAccInGrpFilter(Integer groupId) {
         return brgGroupAmznAccRepo.getAmznAccInGroup(groupId)
-                .stream().map(amznAccount -> amznAccountMapper.toAmznAccFilterItemResult(amznAccount))
+                .stream().map(amznAccount -> amznUserMapper.toAmznAccFilterItemResult(amznAccount))
                 .collect(Collectors.toList());
     }
 }

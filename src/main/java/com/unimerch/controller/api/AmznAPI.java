@@ -11,6 +11,7 @@ import org.springframework.data.jpa.datatables.mapping.DataTablesOutput;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.Authentication;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -27,8 +28,8 @@ public class AmznAPI {
     private AmznUserService amznUserService;
 
     @PutMapping("/updateMetadata")
-    public ResponseEntity<?> updateMetadata(@RequestBody String data) {
-        amznUserService.updateMetadata(data, "");
+    public ResponseEntity<?> updateMetadata(Authentication authentication, @RequestBody String data) {
+        amznUserService.updateMetadata(data, authentication);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 

@@ -4,9 +4,11 @@ import com.unimerch.security.NameConstant;
 import com.unimerch.service.UniUserService;
 import com.unimerch.service.impl.JwtService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
@@ -24,7 +26,8 @@ public class UniJwtAuthenticationFilter extends OncePerRequestFilter {
     private JwtService jwtService;
 
     @Autowired
-    private UniUserService userService;
+    @Qualifier(NameConstant.UNI_USER_SECURITY_SERVICE_NAME)
+    private UserDetailsService userDetailsService;
 
     private String getBearerTokenRequest(HttpServletRequest request) {
         String authHeader = request.getHeader("Authorization");
@@ -58,8 +61,7 @@ public class UniJwtAuthenticationFilter extends OncePerRequestFilter {
     }
 
     @Override
-    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
-            throws ServletException, IOException {
+    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
         System.out.println("UniJwtAuthenticationFilter");
         String authorizationType = getAuthorizationType(request);
         if (authorizationType != null) {
@@ -86,10 +88,9 @@ public class UniJwtAuthenticationFilter extends OncePerRequestFilter {
         if (authorizationValue != null && jwtService.validateJwtToken(authorizationValue)) {
 
             String username = jwtService.getUserNameFromJwtToken(authorizationValue);
-            UserDetails userDetails = userService.loadUserByUsername(username);
+            UserDetails userDetails = userDetailsService.loadUserByUsername(username);
 
-            UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(
-                    userDetails, null, userDetails.getAuthorities());
+            UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
 
             authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
 

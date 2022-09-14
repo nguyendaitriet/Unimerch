@@ -16,6 +16,12 @@ public class ProductAPI {
     @Autowired
     private ProductService productService;
 
+    @PutMapping("/update")
+    private ResponseEntity<?> updateProduct(@RequestBody String data) {
+        productService.updateProduct(data);
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+
     @GetMapping("/findAllTodaySoldAllAmznAcc")
     public ResponseEntity<?> findAllTodaySoldAllAmznAcc() {
         List<ProductItemResult> productItemResultList = productService.findAllTodaySoldProduct(null, 3);

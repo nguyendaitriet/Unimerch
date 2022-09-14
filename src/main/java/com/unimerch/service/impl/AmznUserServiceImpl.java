@@ -5,7 +5,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.module.SimpleModule;
 import com.unimerch.dto.amznacc.*;
 import com.unimerch.exception.*;
-import com.unimerch.mapper.AmznAccountMapper;
+import com.unimerch.mapper.AmznUserMapper;
 import com.unimerch.mapper.MetadataMapper;
 import com.unimerch.repository.AmznUserRepository;
 import com.unimerch.repository.BrgGroupAmznAccountRepository;
@@ -24,6 +24,7 @@ import org.springframework.context.MessageSource;
 import org.springframework.data.jpa.datatables.mapping.Column;
 import org.springframework.data.jpa.datatables.mapping.DataTablesInput;
 import org.springframework.data.jpa.datatables.mapping.DataTablesOutput;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -41,7 +42,7 @@ public class AmznUserServiceImpl implements AmznUserService {
     private AmznAccTableRepository amznAccTableRepository;
 
     @Autowired
-    private AmznAccountMapper amznAccountMapper;
+    private AmznUserMapper amznUserMapper;
 
     @Autowired
     private AmznUserRepository amznAccountRepository;
@@ -82,20 +83,21 @@ public class AmznUserServiceImpl implements AmznUserService {
     }
 
     @Override
-    public void updateMetadata(String data, String jwt) {
+    public void updateMetadata(String data, Authentication authentication) {
+
         ObjectMapper mapper = new ObjectMapper();
         SimpleModule module = new SimpleModule();
         module.addDeserializer(Metadata.class, new MetadataMapper());
         mapper.registerModule(module);
         try {
             Metadata metadata = mapper.readValue(data, Metadata.class);
-            AmznUser user = amznAccountRepository.findByUsername("2");
+            String username = authentication.getName();
+            AmznUser user = amznAccountRepository.findByUsername(username);
             user = metadataMapper.updateAmznAccMetadata(user, metadata);
             amznAccountRepository.save(user);
         } catch (JsonProcessingException | ServerErrorException e) {
             throw new ServerErrorException(messageSource.getMessage("error.500", null, Locale.getDefault()));
         }
-
     }
 
     @Override
@@ -105,7 +107,7 @@ public class AmznUserServiceImpl implements AmznUserService {
             columnMap.remove(null);
             List<Column> columnList = new ArrayList<>(columnMap.values());
             input.setColumns(columnList);
-            return amznAccTableRepository.findAll(input, amznAccount -> amznAccountMapper.toAmznAccResult(amznAccount));
+            return amznAccTableRepository.findAll(input, amznAccount -> amznUserMapper.toAmznAccResult(amznAccount));
         } catch (Exception e) {
             throw new ServerErrorException(messageSource.getMessage("error.500", null, Locale.getDefault()));
         }
@@ -113,13 +115,13 @@ public class AmznUserServiceImpl implements AmznUserService {
 
     @Override
     public List<AmznAccResult> findAll() {
-        return amznAccountRepository.findAll().stream().map(account -> amznAccountMapper.toAmznAccResult(account)).collect(Collectors.toList());
+        return amznAccountRepository.findAll().stream().map(amznUserMapper::toAmznAccResult).collect(Collectors.toList());
     }
 
     @Override
     public List<AmznAccFilterItemResult> findAllFilter() {
         return amznAccountRepository.findAll()
-                .stream().map(account -> amznAccountMapper.toAmznAccFilterItemResult(account))
+                .stream().map(account -> amznUserMapper.toAmznAccFilterItemResult(account))
                 .collect(Collectors.toList());
     }
 
@@ -133,8 +135,8 @@ public class AmznUserServiceImpl implements AmznUserService {
         try {
             amznAccCreateParam.setUsername(username);
             amznAccCreateParam.setPassword(passwordEncoder.encode(password));
-            AmznUser newAccount = amznAccountRepository.save(amznAccountMapper.toAmznAcc(amznAccCreateParam));
-            return amznAccountMapper.toAmznAccResult(newAccount);
+            AmznUser newAccount = amznAccountRepository.save(amznUserMapper.toAmznAcc(amznAccCreateParam));
+            return amznUserMapper.toAmznAccResult(newAccount);
         } catch (Exception e) {
             throw new ServerErrorException(messageSource.getMessage("error.500", null, Locale.getDefault()));
         }
@@ -146,7 +148,7 @@ public class AmznUserServiceImpl implements AmznUserService {
         try {
             amznAccount.setPassword(passwordEncoder.encode(amznAccParam.getPassword()));
             amznAccount = amznAccountRepository.save(amznAccount);
-            return amznAccountMapper.toAmznAccResult(amznAccount);
+            return amznUserMapper.toAmznAccResult(amznAccount);
         } catch (Exception e) {
             throw new ServerErrorException(messageSource.getMessage("error.500", null, Locale.getDefault()));
         }
@@ -168,6 +170,7 @@ public class AmznUserServiceImpl implements AmznUserService {
     public List<AmznAccResult> importFile(MultipartFile amznAccFile) {
 
         List<AmznAccResult> amznAccResultList = new ArrayList<>();
+        List<AmznUser> amznUserList = new ArrayList<>();
         Workbook workbook;
         Sheet sheet;
         try {
@@ -272,16 +275,21 @@ public class AmznUserServiceImpl implements AmznUserService {
                 continue;
             }
 
-            try {
-                amznPassword = passwordEncoder.encode(amznPassword);
-                AmznAccParam newAmznAccParam = new AmznAccParam(amznUsername, amznPassword);
-                AmznUser newAmznAcc = amznAccountRepository.save(amznAccountMapper.toAmznAcc(newAmznAccParam));
-                amznAccResultList.add(amznAccountMapper.toAmznAccResult(newAmznAcc));
-            } catch (Exception e) {
-                throw new ServerErrorException(messageSource.getMessage("error.500", null, Locale.getDefault()));
+            if (amznPassword == null || amznUsername == null) {
+                continue;
             }
-        }
 
+            amznPassword = passwordEncoder.encode(amznPassword);
+            AmznAccParam newAmznAccParam = new AmznAccParam(amznUsername, amznPassword);
+            amznUserList.add(amznUserMapper.toAmznAcc(newAmznAccParam));
+
+        }
+        try {
+            amznUserList = amznAccountRepository.saveAll(amznUserList);
+        } catch (Exception e) {
+            throw new ServerErrorException(messageSource.getMessage("error.500", null, Locale.getDefault()));
+        }
+        amznAccResultList = amznUserList.stream().map(amznUser -> amznUserMapper.toAmznAccResult(amznUser)).collect(Collectors.toList());
         return amznAccResultList;
     }
 
@@ -290,7 +298,7 @@ public class AmznUserServiceImpl implements AmznUserService {
         AmznUser user = amznAccountRepository.findByUsername(username);
         if (user == null)
             throw new UserNotFoundException("{exception.userNotFound}");
-        return amznAccountMapper.toAmznAccResult(user);
+        return amznUserMapper.toAmznAccResult(user);
     }
 
     @Override

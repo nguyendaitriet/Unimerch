@@ -1,7 +1,15 @@
 package com.unimerch.service.impl;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.module.SimpleModule;
+import com.unimerch.dto.order.OrderData;
+import com.unimerch.dto.product.ProductData;
 import com.unimerch.dto.product.ProductItemResult;
 import com.unimerch.exception.InvalidIdException;
+import com.unimerch.exception.ServerErrorException;
+import com.unimerch.mapper.OrderMapper;
+import com.unimerch.mapper.ProductMapper;
 import com.unimerch.repository.BrgGroupAmznAccountRepository;
 import com.unimerch.repository.ProductRepository;
 import com.unimerch.service.ProductService;
@@ -47,6 +55,20 @@ public class ProductServiceImpl implements ProductService {
     public List<ProductItemResult> findAllLast30DaysSoldProduct(Integer id, int choice) {
         Instant startDate = timeUtils.getInstantLastSomeDays(30);
         return getProductItemResult(startDate, id, choice);
+    }
+
+    @Override
+    public void updateProduct(String data) {
+        ObjectMapper mapper = new ObjectMapper();
+        SimpleModule module = new SimpleModule();
+        module.addDeserializer(ProductData.class, new ProductMapper());
+        mapper.registerModule(module);
+        try {
+            ProductData productData = mapper.readValue(data, ProductData.class);
+            productRepository.saveAll(productData.getProductList());
+        } catch (JsonProcessingException | ServerErrorException e) {
+            throw new ServerErrorException(messageSource.getMessage("error.500", null, Locale.getDefault()));
+        }
     }
 
     private List<ProductItemResult> getProductItemResult(Instant instant, Integer id, int choice) {

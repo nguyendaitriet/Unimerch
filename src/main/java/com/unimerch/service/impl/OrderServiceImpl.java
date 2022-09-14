@@ -9,19 +9,23 @@ import com.unimerch.dto.order.OrderChartResult;
 import com.unimerch.dto.order.OrderData;
 import com.unimerch.exception.ServerErrorException;
 import com.unimerch.mapper.OrderMapper;
-import com.unimerch.repository.AmznUserRepository;
 import com.unimerch.repository.OrderRepository;
+import com.unimerch.repository.OrderRepositoryExtension;
+import com.unimerch.repository.ProductRepository;
 import com.unimerch.repository.model.AmznUser;
 import com.unimerch.repository.model.Order;
+import com.unimerch.security.UserPrinciple;
 import com.unimerch.service.OrderService;
 import com.unimerch.util.TimeUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
 import java.time.Instant;
 import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 @Transactional
@@ -30,7 +34,10 @@ public class OrderServiceImpl implements OrderService {
     private OrderRepository orderRepository;
 
     @Autowired
-    private AmznUserRepository amznUserRepository;
+    private ProductRepository productRepository;
+
+    @Autowired
+    OrderRepositoryExtension orderRepositoryExt;
 
     @Autowired
     private OrderMapper orderMapper;
@@ -41,19 +48,28 @@ public class OrderServiceImpl implements OrderService {
     @Autowired
     private TimeUtils timeUtils;
 
-    public OrderData saveOrderData(String data, String jwt) {
+
+    public OrderData saveOrderData(String data, Authentication authentication) {
+
         ObjectMapper mapper = new ObjectMapper();
         SimpleModule module = new SimpleModule();
         module.addDeserializer(OrderData.class, new OrderMapper());
         mapper.registerModule(module);
-
-        AmznUser amznUser = amznUserRepository.findByUsername("2");
-
+        UserPrinciple userPrinciple = (UserPrinciple) authentication.getPrincipal();
+        int id = Integer.parseInt(userPrinciple.getId());
         try {
             OrderData orderData = mapper.readValue(data, OrderData.class);
+            List<String> orderDates = orderData.getOrderList().stream()
+                    .map(order -> TimeUtils.instantToDateNoTime(order.getDate()))
+                    .map(date -> TimeUtils.dateToString(date, "yyyy-MM-dd"))
+                    .distinct()
+                    .collect(Collectors.toList());
 
+            orderRepositoryExt.deleteAllByDate(orderDates);
+            productRepository.deleteAllByIdInBatch(orderData.getAsinList());
+            productRepository.saveAll(orderData.getProductList());
             orderData.getOrderList().forEach(order -> {
-                order.setAmznAccount(amznUser);
+                order.setAmznAccount(new AmznUser(id));
                 orderRepository.save(order);
             });
 
