@@ -384,13 +384,7 @@
             })
             .done((data) => {
                 let tableAmznAcc = page.element.tableAmznAcc.DataTable();
-                data.forEach((amznAcc) => {
-                    tableAmznAcc.row.add({
-                        'id': amznAcc.id,
-                        'username': amznAcc.username
-                    })
-                    tableAmznAcc.order([0, 'asc']).draw();
-                });
+                tableAmznAcc.ajax.reload();
                 $('#fileUploadAmznAcc').val('');
                 CommonApp.SweetAlert.showSuccessAlert(SUCCESS_CREATED);
             })

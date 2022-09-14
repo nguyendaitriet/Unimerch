@@ -222,8 +222,8 @@ public class AmznUserServiceImpl implements AmznUserService {
 //
 //            try {
 //                AmznAccParam newAmznAccParam = new AmznAccParam(amznUsername, amznPassword);
-//                AmznAccount newAmznAcc = amznAccountRepository.save(amznAccountMapper.toAmznAcc(newAmznAccParam));
-//                amznAccResultList.add(amznAccountMapper.toAmznAccResult(newAmznAcc));
+//                AmznAccount newAmznAcc = amznAccountRepository.save(amznUserMapper.toAmznAcc(newAmznAccParam));
+//                amznAccResultList.add(amznUserMapper.toAmznAccResult(newAmznAcc));
 //            } catch (Exception e) {
 //                throw new ServerErrorException(messageSource.getMessage("error.500", null, Locale.getDefault()));
 //            }
@@ -304,7 +304,7 @@ public class AmznUserServiceImpl implements AmznUserService {
     @Override
     public List<AmznAccAnalyticsItemResult> findAllAnalytics() {
         return amznAccountRepository.findAll().stream()
-                .map(amznUser -> amznAccountMapper.toAmznAccAnalyticsItemResult(amznUser))
+                .map(amznUser -> amznUserMapper.toAmznAccAnalyticsItemResult(amznUser))
                 .collect(Collectors.toList());
     }
 
@@ -312,14 +312,14 @@ public class AmznUserServiceImpl implements AmznUserService {
     public List<AmznAccAnalyticsItemResult> findAnalyticsByGrpId(String groupId) {
         Group group = groupService.findById(groupId);
         return brgGroupAmznAccountRepository.getAmznAccInGroup(group.getId()).stream()
-                .map(amznAccResult -> amznAccountMapper.toAmznAccAnalyticsItemResult(amznAccResult))
+                .map(amznAccResult -> amznUserMapper.toAmznAccAnalyticsItemResult(amznAccResult))
                 .collect(Collectors.toList());
     }
 
     @Override
     public List<AmznAccAnalyticsItemResult> findAnalyticsByAmznAccId(String amznAccId) {
         List<AmznAccAnalyticsItemResult> analyticsList = new ArrayList<>();
-        analyticsList.add(amznAccountMapper.toAmznAccAnalyticsItemResult(findById(amznAccId)));
+        analyticsList.add(amznUserMapper.toAmznAccAnalyticsItemResult(findById(amznAccId)));
         return analyticsList;
     }
 }
