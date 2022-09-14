@@ -1,5 +1,6 @@
 package com.unimerch.service;
 
+import com.unimerch.dto.amznacc.AmznAccAnalyticsItemResult;
 import com.unimerch.dto.amznacc.AmznAccFilterItemResult;
 import com.unimerch.dto.amznacc.AmznAccParam;
 import com.unimerch.dto.amznacc.AmznAccResult;
@@ -31,4 +32,11 @@ public interface AmznUserService {
     List<AmznAccResult> importFile(MultipartFile amznAccFile);
 
     AmznAccResult findByUsername(String username);
+
+    List<AmznAccAnalyticsItemResult> findAllAnalytics();
+
+    List<AmznAccAnalyticsItemResult> findAnalyticsByGrpId(String groupId);
+
+    List<AmznAccAnalyticsItemResult> findAnalyticsByAmznAccId(String amznAccId);
+
 }

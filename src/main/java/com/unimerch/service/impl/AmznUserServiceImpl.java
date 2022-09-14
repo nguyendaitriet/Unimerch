@@ -3,10 +3,7 @@ package com.unimerch.service.impl;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.module.SimpleModule;
-import com.unimerch.dto.amznacc.AmznAccFilterItemResult;
-import com.unimerch.dto.amznacc.AmznAccParam;
-import com.unimerch.dto.amznacc.AmznAccResult;
-import com.unimerch.dto.amznacc.Metadata;
+import com.unimerch.dto.amznacc.*;
 import com.unimerch.exception.*;
 import com.unimerch.mapper.AmznAccountMapper;
 import com.unimerch.mapper.MetadataMapper;
@@ -15,7 +12,9 @@ import com.unimerch.repository.BrgGroupAmznAccountRepository;
 import com.unimerch.repository.OrderRepository;
 import com.unimerch.repository.datatable.AmznAccTableRepository;
 import com.unimerch.repository.model.AmznUser;
+import com.unimerch.repository.model.Group;
 import com.unimerch.service.AmznUserService;
+import com.unimerch.service.GroupService;
 import com.unimerch.util.ValidationUtils;
 import org.apache.poi.openxml4j.exceptions.NotOfficeXmlFileException;
 import org.apache.poi.ss.usermodel.*;
@@ -49,6 +48,9 @@ public class AmznUserServiceImpl implements AmznUserService {
 
     @Autowired
     private BrgGroupAmznAccountRepository brgGroupAmznAccountRepository;
+
+    @Autowired
+    private GroupService groupService;
 
     @Autowired
     private OrderRepository orderRepository;
@@ -291,4 +293,25 @@ public class AmznUserServiceImpl implements AmznUserService {
         return amznAccountMapper.toAmznAccResult(user);
     }
 
+    @Override
+    public List<AmznAccAnalyticsItemResult> findAllAnalytics() {
+        return amznAccountRepository.findAll().stream()
+                .map(amznUser -> amznAccountMapper.toAmznAccAnalyticsItemResult(amznUser))
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public List<AmznAccAnalyticsItemResult> findAnalyticsByGrpId(String groupId) {
+        Group group = groupService.findById(groupId);
+        return brgGroupAmznAccountRepository.getAmznAccInGroup(group.getId()).stream()
+                .map(amznAccResult -> amznAccountMapper.toAmznAccAnalyticsItemResult(amznAccResult))
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public List<AmznAccAnalyticsItemResult> findAnalyticsByAmznAccId(String amznAccId) {
+        List<AmznAccAnalyticsItemResult> analyticsList = new ArrayList<>();
+        analyticsList.add(amznAccountMapper.toAmznAccAnalyticsItemResult(findById(amznAccId)));
+        return analyticsList;
+    }
 }

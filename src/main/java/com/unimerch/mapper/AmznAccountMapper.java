@@ -62,7 +62,6 @@ public class AmznAccountMapper {
                 .setSlotTotal(amznUser.getDailyProductLimit())
                 .setReject(amznUser.getTotalRejected())
                 .setRemove(amznUser.getTotalRemoved())
-                .setSales(null)
                 .setNote(amznUser.getNote());
     }
 }

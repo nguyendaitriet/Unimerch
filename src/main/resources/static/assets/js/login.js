@@ -22,5 +22,5 @@ class User {
 }
 
 (() => {
-    CommonApp.handleSpinner();
+    CommonApp.loadingbar.handleLoadingBarLG();
 })()

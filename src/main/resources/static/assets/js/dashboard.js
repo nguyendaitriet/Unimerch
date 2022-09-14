@@ -196,5 +196,5 @@ class Group {
 
 (() => {
     DBApp.handleBtnFullScreen();
-    CommonApp.handleSpinner();
+    CommonApp.loadingbar.handleLoadingBarDB();
 })()

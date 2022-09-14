@@ -20,6 +20,5 @@ public class AmznAccAnalyticsItemResult {
     private Integer slotTotal;
     private Integer reject;
     private Integer remove;
-    private Long sales;
     private String note;
 }

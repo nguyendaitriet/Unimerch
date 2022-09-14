@@ -117,16 +117,110 @@ class CommonApp {
     }
 
     static handleSpinner() {
-        let str = `<div id="spinner"></div>`;
+        let str = `<div class="spinner d-flex justify-content-center align-items-center">
+                        <div class="d-flex flex-column align-items-center">
+                            <img src="/assets/img/loading.gif">
+                            <div class="spinner-caption text-primary font-weight-bold">
+                                ${spinnerUpload}
+                            </div>
+                        </div>
+                    </div>`
         $('body').append(str);
 
-        let spinner = $('#spinner');
+        let spinner = $('.spinner');
         $(document)
             .ajaxStart(function () {
                 spinner.show();
             })
             .ajaxStop(function () {
                 spinner.hide();
+                spinner.remove();
             });
+    }
+
+    static loadingbar = class {
+        static setToDBMode() {
+            topbar.config({
+                autoRun: true,
+                barThickness: 5,
+                barColors: {
+                    "0": "rgba(26,  188, 156, .9)",
+                    ".25": "rgba(52,  152, 219, .9)",
+                    ".50": "rgba(241, 196, 15,  .9)",
+                    ".75": "rgba(230, 126, 34,  .9)",
+                    "1.0": "rgba(211, 84,  0,   .9)",
+                },
+                shadowBlur: 10,
+                shadowColor: "rgba(0,   0,   0,   .6)",
+                className: null,
+            })
+        }
+
+        static setToLGMode() {
+            topbar.config({
+                autoRun: true,
+                barThickness: 5,
+                barColors: {
+                    "0": "#FFF4CF",
+                    ".3": "#FFCB42",
+                    ".7": "#FFB200",
+                    "1.0": "#820000",
+                },
+                shadowBlur: 10,
+                shadowColor: "rgba(0,   0,   0,   .6)",
+                className: null,
+            })
+        }
+
+        static setToUploadMode() {
+            topbar.config({
+                autoRun: false,
+                barThickness: 5,
+                barColors: {
+                    "0": "rgba(26,  188, 156, .9)",
+                    ".25": "rgba(52,  152, 219, .9)",
+                    ".50": "rgba(241, 196, 15,  .9)",
+                    ".75": "rgba(230, 126, 34,  .9)",
+                    "1.0": "rgba(211, 84,  0,   .9)",
+                },
+                shadowBlur: 10,
+                shadowColor: "rgba(0,   0,   0,   .6)",
+                className: null,
+            })
+        }
+
+        static setProgress(rate) {
+            topbar.progress(rate);
+        }
+
+        static start() {
+            topbar.show();
+        }
+
+        static stop() {
+            topbar.hide();
+        }
+
+        static handleLoadingBarDB() {
+            this.setToDBMode();
+            $(document)
+                .ajaxStart(function () {
+                    CommonApp.loadingbar.start();
+                })
+                .ajaxStop(function () {
+                    CommonApp.loadingbar.stop();
+                });
+        }
+
+        static handleLoadingBarLG() {
+            this.setToLGMode();
+            $(document)
+                .ajaxStart(function () {
+                    CommonApp.loadingbar.start();
+                })
+                .ajaxStop(function () {
+                    CommonApp.loadingbar.stop();
+                });
+        }
     }
 }

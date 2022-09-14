@@ -66,7 +66,7 @@
     line-height: 1.5 !important;
 }
 
-#spinner {
+.spinner {
     display: none;
     position: fixed;
     z-index: 1000;
@@ -74,10 +74,16 @@
     left: 0;
     height: 100%;
     width: 100%;
-    background: rgba(255, 255, 255, 0.25)
-                url('/assets/img/loading.gif')
-                50% 50%
-                no-repeat;
+    background-color: rgba(255, 255, 255, 0.25);
+    background-repeat: no-repeat;
+}
+
+.spinner-caption {
+    text-shadow: #ffffff 1px 1px 1px;
+}
+
+@keyframes pulsate {
+    50%{ stroke-width:5px }
 }
 
 body.loading {

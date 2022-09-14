@@ -374,12 +374,13 @@
             }
             formData.append('fileUploadAmznAcc', fileUpload);
             page.dialogs.element.mdImportAmznAcc.modal("hide");
+            CommonApp.handleSpinner();
             $.ajax({
                 url: page.urls.importAmznAcc,
                 type: 'POST',
                 data: formData,
                 contentType: false,
-                processData: false,
+                processData: false
             })
             .done((data) => {
                 let tableAmznAcc = page.element.tableAmznAcc.DataTable();

@@ -1,5 +1,6 @@
 package com.unimerch.controller.api;
 
+import com.unimerch.dto.amznacc.AmznAccAnalyticsItemResult;
 import com.unimerch.dto.amznacc.AmznAccFilterItemResult;
 import com.unimerch.dto.amznacc.AmznAccParam;
 import com.unimerch.dto.amznacc.AmznAccResult;
@@ -79,25 +80,24 @@ public class AmznAPI {
 
     @GetMapping("/analytics-all")
     public ResponseEntity<?> findAllAnalytics() {
-        return null;
-    }
-
-    @GetMapping("/analytics-acc/{id}")
-    public ResponseEntity<?> findAnalyticsByAmznAccId(@PathVariable Integer id) {
-        return null;
+        List<AmznAccAnalyticsItemResult> analyticsList = amznUserService.findAllAnalytics();
+        return new ResponseEntity<>(analyticsList, HttpStatus.OK);
     }
 
     @GetMapping("/analytics-grp/{id}")
-    public ResponseEntity<?> findAnalyticsByGroupId(@PathVariable Integer id) {
-        return null;
+    public ResponseEntity<?> findAnalyticsByGroupId(@PathVariable String id) {
+        List<AmznAccAnalyticsItemResult> analyticsList = amznUserService.findAnalyticsByGrpId(id);
+        return new ResponseEntity<>(analyticsList, HttpStatus.OK);
     }
 
-    @GetMapping("/die-all")
+    @GetMapping("/analytics-acc/{id}")
+    public ResponseEntity<?> findAnalyticsByAmznAccId(@PathVariable String id) {
+        List<AmznAccAnalyticsItemResult> analyticsList = amznUserService.findAnalyticsByAmznAccId(id);
+        return new ResponseEntity<>(analyticsList, HttpStatus.OK);
+    }
+
+    @GetMapping("/accountDie")
     public ResponseEntity<?> findAllAccountDie() {
         return null;
     }
-
-//    @GetMapping("/die-acc/{id}")
-//    @GetMapping("/die-grp/{id}")
-
 }
