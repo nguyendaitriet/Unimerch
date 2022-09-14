@@ -11,7 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
-public class AmznAccountMapper {
+public class AmznUserMapper {
     @Autowired
     OrderService orderService;
 
@@ -65,4 +65,6 @@ public class AmznAccountMapper {
                 .setSales(null)
                 .setNote(amznUser.getNote());
     }
+
+
 }

@@ -42,12 +42,12 @@ public class OrderMapper extends StdDeserializer<OrderData> {
     public OrderData deserialize(JsonParser jsonParser, DeserializationContext ctxt) throws IOException, JacksonException {
 
         JsonNode orderNode = jsonParser.getCodec().readTree(jsonParser);
-        JsonNode ordertList = orderNode.fields().next().getValue();
+        JsonNode orderNodeList = orderNode.fields().next().getValue();
         OrderData orderData = new OrderData();
         List<Order> orderList = new ArrayList<>();
         Set<String> asinList = new HashSet<>();
 
-        for (JsonNode node : ordertList) {
+        for (JsonNode node : orderNodeList) {
 
             String asin = node.get("asin").textValue();
             Instant date = Instant.parse(node.get("period").textValue());

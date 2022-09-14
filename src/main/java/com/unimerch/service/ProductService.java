@@ -13,4 +13,6 @@ public interface ProductService {
     List<ProductItemResult> findAllThisMonthSoldProduct(Integer id, int choice);
 
     List<ProductItemResult> findAllLast30DaysSoldProduct(Integer id, int choice);
+
+    void updateProduct(String productData);
 }

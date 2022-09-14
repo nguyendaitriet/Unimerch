@@ -70,7 +70,7 @@ public class UniUserSecurityConfig extends WebSecurityConfigurerAdapter {
         http.authorizeRequests()
                 .antMatchers("/api/login", "/login", "/api/amzn/login").permitAll()
 //                .antMatchers("/assets/**", "/messages/**").permitAll()
-                .antMatchers("/api/amzn/updateMetadata", "/api/orders").permitAll()
+                .antMatchers("/api/amzn/updateMetadata", "/api/orders", "/api/products/update").permitAll()
                 .antMatchers("/users/**").hasAnyAuthority("USER")
                 .antMatchers("/dashboard/**").hasAnyAuthority("MANAGER")
                 .antMatchers("/", "/api/products/**", "/api/orders/**", "/api/users/**", "/api/groups/**", "/api/amzn/**").hasAnyAuthority("MANAGER", "USER")
