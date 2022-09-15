@@ -50,8 +50,4 @@ public class User {
     @JoinColumn(name = "role_id", nullable = false)
     private Role role;
 
-    public boolean hasRole(String roleName) {
-        return role.getCode().equals(roleName);
-    }
-
 }

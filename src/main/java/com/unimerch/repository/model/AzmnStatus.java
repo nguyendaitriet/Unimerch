@@ -5,7 +5,7 @@ public enum AzmnStatus {
 
     private final String value;
 
-    private AzmnStatus(String value) {
+    AzmnStatus(String value) {
         this.value = value;
     }
 

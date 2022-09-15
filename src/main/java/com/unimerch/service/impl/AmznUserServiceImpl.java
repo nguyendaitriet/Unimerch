@@ -172,7 +172,7 @@ public class AmznUserServiceImpl implements AmznUserService {
     @Override
     public List<AmznAccResult> importFile(MultipartFile amznAccFile) {
 
-        List<AmznAccResult> amznAccResultList = new ArrayList<>();
+        List<AmznAccResult> amznAccResultList;
         List<AmznUser> amznUserList = new ArrayList<>();
         Workbook workbook;
         Sheet sheet;

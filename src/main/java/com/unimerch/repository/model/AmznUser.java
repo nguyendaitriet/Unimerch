@@ -34,9 +34,6 @@ public class AmznUser {
     @Enumerated(EnumType.STRING)
     private AzmnStatus status;
 
-    public static void main(String[] args) {
-
-    }
     @Column(name = "daily_product_count", nullable = false)
     private Integer dailyProductCount;
 

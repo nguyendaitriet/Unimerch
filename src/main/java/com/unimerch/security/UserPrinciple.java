@@ -10,19 +10,13 @@ import java.util.*;
 
 public class UserPrinciple implements UserDetails {
 
-    private User user;
+    private final String id;
 
-    private String id;
+    private final String username;
 
-    private String username;
+    private final String password;
 
-    private String password;
-
-    private Collection<? extends GrantedAuthority> authorities;
-
-    public UserPrinciple (User user) {
-        this.user = user;
-    }
+    private final Collection<? extends GrantedAuthority> authorities;
 
     public UserPrinciple(String id,
                          String username,
@@ -66,10 +60,6 @@ public class UserPrinciple implements UserDetails {
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {return authorities;
-    }
-
-    public boolean hasRole(String roleName) {
-        return this.user.hasRole(roleName);
     }
 
     @Override
