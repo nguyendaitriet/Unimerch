@@ -41,7 +41,6 @@ public class AuthAPI {
 
     @PostMapping("/api/login")
     public ResponseEntity<?> uniLogin(@RequestBody LoginParam loginParam) {
-        System.out.println("/api/login");
         Authentication authentication = uniAuthenticationManager.authenticate(new UsernamePasswordAuthenticationToken(loginParam.getUsername(), loginParam.getPassword()));
         UserItemResult user = uniUserService.findUserItemResultByUsername(loginParam.getUsername());
         if (user.isDisabled()) {
@@ -52,7 +51,6 @@ public class AuthAPI {
 
     @PostMapping("/api/amzn/login")
     public ResponseEntity<?> amznLogin(@RequestBody LoginParam loginParam) {
-        System.out.println("/api/amzn/login");
         Authentication authentication = amznAuthenticationManager.authenticate(new UsernamePasswordAuthenticationToken(loginParam.getUsername(), loginParam.getPassword()));
         AmznAccResult user = amznUserService.findByUsername(loginParam.getUsername());
         return setCookies(authentication, user.getId().toString());

@@ -5,6 +5,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.experimental.Accessors;
+import org.hibernate.annotations.ColumnDefault;
 
 import javax.persistence.*;
 import java.time.Instant;
@@ -30,7 +31,8 @@ public class AmznUser {
     private Instant lastCheck;
 
     @Column(name = "account_status", length = 50)
-    private String accountStatus;
+    @Enumerated(EnumType.STRING)
+    private AzmnStatus status;
 
     @Column(name = "daily_product_count", nullable = false)
     private Integer dailyProductCount;

@@ -5,6 +5,7 @@ import com.unimerch.dto.amznacc.AmznAccFilterItemResult;
 import com.unimerch.dto.amznacc.AmznAccParam;
 import com.unimerch.dto.amznacc.AmznAccResult;
 import com.unimerch.repository.model.AmznUser;
+import com.unimerch.repository.model.AzmnStatus;
 import com.unimerch.repository.model.BrgGroupAmznAccount;
 import com.unimerch.service.OrderService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,13 +16,13 @@ public class AmznUserMapper {
     @Autowired
     OrderService orderService;
 
-    public AmznAccResult toAmznAccResult(BrgGroupAmznAccount brgGroupAmznAccount) {
+    public AmznAccResult toDTO(BrgGroupAmznAccount brgGroupAmznAccount) {
         return new AmznAccResult()
                 .setId(brgGroupAmznAccount.getAmznAccount().getId())
                 .setUsername((brgGroupAmznAccount.getAmznAccount().getUsername()));
     }
 
-    public AmznAccResult toAmznAccResult(AmznUser amznUser) {
+    public AmznAccResult toDTO(AmznUser amznUser) {
         return new AmznAccResult()
                 .setId(amznUser.getId())
                 .setUsername(amznUser.getUsername());
@@ -37,6 +38,7 @@ public class AmznUserMapper {
                 .setOverallDesignLimit(0)
                 .setOverallProductCount(0)
                 .setOverallProductLimit(0)
+                .setStatus(AzmnStatus.APPROVED)
                 .setTier(0)
                 .setTotalRejected(0)
                 .setTotalRemoved(0);

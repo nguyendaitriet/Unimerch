@@ -12,6 +12,7 @@ import com.unimerch.mapper.OrderMapper;
 import com.unimerch.mapper.ProductMapper;
 import com.unimerch.repository.BrgGroupAmznAccountRepository;
 import com.unimerch.repository.ProductRepository;
+import com.unimerch.repository.model.Product;
 import com.unimerch.service.ProductService;
 import com.unimerch.util.TimeUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -58,11 +59,11 @@ public class ProductServiceImpl implements ProductService {
     public void updateProduct(String data) {
         ObjectMapper mapper = new ObjectMapper();
         SimpleModule module = new SimpleModule();
-        module.addDeserializer(ProductData.class, new ProductMapper());
+        module.addDeserializer(Product.class, new ProductMapper());
         mapper.registerModule(module);
         try {
-            ProductData productData = mapper.readValue(data, ProductData.class);
-            productRepository.saveAll(productData.getProductList());
+            Product productData = mapper.readValue(data, Product.class);
+            productRepository.save(productData);
         } catch (JsonProcessingException | ServerErrorException e) {
             throw new ServerErrorException(messageSource.getMessage("error.500", null, Locale.getDefault()));
         }

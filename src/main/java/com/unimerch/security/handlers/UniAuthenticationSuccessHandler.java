@@ -57,12 +57,12 @@ public class UniAuthenticationSuccessHandler implements AuthenticationSuccessHan
 
         Map<String, String> roleTargetUrlMap = new HashMap<>();
         roleTargetUrlMap.put("MANAGER", "/");
-        roleTargetUrlMap.put("USER", "/dashboard/group");
+        roleTargetUrlMap.put("USER", "/users");
 
         final Collection<? extends GrantedAuthority> authorities = authentication.getAuthorities();
+
         for (final GrantedAuthority grantedAuthority : authorities) {
             String authorityName = grantedAuthority.getAuthority();
-            System.out.println(authorityName);
             if (roleTargetUrlMap.containsKey(authorityName)) {
                 return roleTargetUrlMap.get(authorityName);
             }

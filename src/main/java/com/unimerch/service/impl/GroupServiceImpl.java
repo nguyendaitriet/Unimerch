@@ -29,7 +29,7 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
-@Transactional
+//@Transactional
 public class GroupServiceImpl implements GroupService {
 
     @Autowired
@@ -163,7 +163,7 @@ public class GroupServiceImpl implements GroupService {
                 brgGroupAmznAccount.setAmznAccount(amznAccount);
 
                 brgGroupAmznAccRepo.save(brgGroupAmznAccount);
-                amznAccResultList.add(amznUserMapper.toAmznAccResult(brgGroupAmznAccount));
+                amznAccResultList.add(amznUserMapper.toDTO(brgGroupAmznAccount));
             }
         } catch (Exception e) {
             throw new ServerErrorException(messageSource.getMessage("error.500", null, Locale.getDefault()));
@@ -178,7 +178,7 @@ public class GroupServiceImpl implements GroupService {
             Group group = findById(id);
             List<AmznAccResult> amznAccResultList = new ArrayList<>();
             List<AmznUser> amznAccResult = brgGroupAmznAccRepo.getAmznAccInGroup(group.getId());
-            amznAccResult.forEach((result) -> amznAccResultList.add(amznUserMapper.toAmznAccResult(result)));
+            amznAccResult.forEach((result) -> amznAccResultList.add(amznUserMapper.toDTO(result)));
             return amznAccResultList;
         } catch (Exception e) {
             throw new ServerErrorException(messageSource.getMessage("error.500", null, Locale.getDefault()));
@@ -191,7 +191,7 @@ public class GroupServiceImpl implements GroupService {
             Group group = findById(id);
             List<AmznAccResult> amznAccResultList = new ArrayList<>();
             List<AmznUser> amznAccResult = brgGroupAmznAccRepo.getAmznAccOutGroup(group.getId());
-            amznAccResult.forEach((result) -> amznAccResultList.add(amznUserMapper.toAmznAccResult(result)));
+            amznAccResult.forEach((result) -> amznAccResultList.add(amznUserMapper.toDTO(result)));
             return amznAccResultList;
         } catch (Exception e) {
             throw new ServerErrorException(messageSource.getMessage("error.500", null, Locale.getDefault()));

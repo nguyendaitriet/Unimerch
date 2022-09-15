@@ -60,7 +60,6 @@ public class AmznJWTAuthenticationFilter extends OncePerRequestFilter {
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
             throws ServletException, IOException {
-        System.out.println("AmznJWTAuthenticationFilter");
         String authorizationType = getAuthorizationType(request);
         if (authorizationType == null) {
             filterChain.doFilter(request, response);
