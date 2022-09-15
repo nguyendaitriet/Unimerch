@@ -63,7 +63,6 @@ public class UniAuthenticationSuccessHandler implements AuthenticationSuccessHan
 
         for (final GrantedAuthority grantedAuthority : authorities) {
             String authorityName = grantedAuthority.getAuthority();
-            System.out.println(authorityName);
             if (roleTargetUrlMap.containsKey(authorityName)) {
                 return roleTargetUrlMap.get(authorityName);
             }

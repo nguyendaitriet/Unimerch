@@ -18,7 +18,6 @@ public class AmznUserDetailsService implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        System.out.println("AmznUserDetailsService.loadUserByUsername");
         AmznUser user = amznUserRepository.findByUsername(username);
         if (user == null) {
             throw new UsernameNotFoundException("No amzn acc found with the given username.");
