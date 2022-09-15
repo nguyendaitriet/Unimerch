@@ -63,14 +63,11 @@ public class AmznUserServiceImpl implements AmznUserService {
     private MetadataMapper metadataMapper;
 
     @Autowired
-    private ValidationUtils validationUtils;
-
-    @Autowired
     private PasswordEncoder passwordEncoder;
 
     @Override
     public AmznUser findById(String id) {
-        if (!validationUtils.isIdValid(id)) {
+        if (!ValidationUtils.isIdValid(id)) {
             throw new InvalidIdException(messageSource.getMessage("validation.idNotExist", null, Locale.getDefault()));
         }
 

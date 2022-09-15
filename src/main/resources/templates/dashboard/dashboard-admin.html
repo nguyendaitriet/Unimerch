@@ -405,6 +405,7 @@
                                         <div class="tab-pane fade show active" id="today" role="tabpanel"
                                              aria-labelledby="today-tab">
                                             <table class="table table-striped table-bordered dt-responsive"
+                                                   style="width: 100%;"
                                                    id="tableTodaySold">
                                                 <thead>
                                                 <tr class="text-dark">
@@ -421,9 +422,10 @@
                                         <div class="tab-pane fade show" id="thirtyday" role="tabpanel"
                                              aria-labelledby="thirtyday-tab">
                                             <table class="table table-striped table-bordered dt-responsive"
+                                                   style="width: 100%;"
                                                    id="table30DaysSold">
-                                                <thead class="text-dark">
-                                                <tr>
+                                                <thead>
+                                                <tr class="text-dark">
                                                     <th>Sold</th>
                                                     <th>Product</th>
                                                     <th>Royalties</th>
@@ -456,18 +458,20 @@
                                 <!-- Card Body -- Analytics -->
                                 <div class="tab-pane fade" id="analytics" role="tabpanel"
                                      aria-labelledby="analytics-tab">
-                                    <table class="table table-striped table-bordered dt-responsive">
+                                    <table id="table-analytics"
+                                           style="width: 100%;"
+                                           class="table table-striped table-bordered dt-responsive nowrap">
                                         <thead>
                                         <tr>
-                                            <th>Username</th>
+                                            <th>User</th>
                                             <th>Published</th>
                                             <th>Tier</th>
                                             <th>Slot Remaining</th>
                                             <th>Slot Total</th>
                                             <th>Reject</th>
                                             <th>Remove</th>
-                                            <th>Sales</th>
                                             <th>Note</th>
+                                            <th></th>
                                         </tr>
                                         </thead>
                                     </table>
@@ -476,7 +480,9 @@
                                 <!-- Card Body -- Account Die -->
                                 <div class="tab-pane fade" id="accountDie" role="tabpanel"
                                      aria-labelledby="accountDie-tab">
-                                    <table class="table table-striped table-bordered dt-responsive">
+                                    <table id="table-account-die"
+                                           style="width: 100%;"
+                                           class="table table-striped table-bordered dt-responsive">
                                         <thead>
                                         <tr>
                                             <th>#</th>
@@ -514,6 +520,7 @@
     <i class="fas fa-angle-up"></i>
 </a>
 
+<th:block th:replace="layout/modals-dashboard :: add-note"/>
 
 <th:block th:replace="layout/script :: script-dashboard"/>
 
@@ -532,7 +539,8 @@
             findAnalyticsByGroupId: CommonApp.BASE_URL_AMZN_ACCOUNT + "/analytics-grp/",
             findAnalyticsByUserId: CommonApp.BASE_URL_AMZN_ACCOUNT + "/analytics-acc/",
 
-            findAccountDie: CommonApp.BASE_URL_AMZN_ACCOUNT + "/accountDie",
+            findAccountDieAll: CommonApp.BASE_URL_AMZN_ACCOUNT + "/die-all",
+            findAccountDieByGroupId: CommonApp.BASE_URL_AMZN_ACCOUNT + "/die-grp/",
 
             findCardsAll: CommonApp.BASE_URL_ORDER + "/card-all",
             findCardsByGroupId: CommonApp.BASE_URL_ORDER + "/card-grp/",
@@ -565,8 +573,8 @@
     page.element.tableTodaySold = $("#tableTodaySold");
     page.element.table30DaysSold = $("#table30DaysSold");
     page.element.tableThisMonthSold = $("#tableThisMonthSold");
-    page.element.tableAnalytics = $("#analytics");
-    page.element.tableAccountDie = $("#accountDie");
+    page.element.tableAnalytics = $("#table-analytics");
+    page.element.tableAccountDie = $("#table-account-die");
 
     page.element.todayLink = $("#todayLink");
     page.element.thirtyDaysLink = $("#thirtyDaysLink");
@@ -766,27 +774,35 @@
             },
             pagingType: 'simple_numbers',
             columns: [
-                {data: 'id'},
+                // {data: 'id'},
+                {data: 'username'},
                 {data: 'published'},
                 {data: 'tier'},
                 {data: 'slotRemaining'},
                 {data: 'slotTotal'},
                 {data: 'reject'},
                 {data: 'remove'},
-                {data: 'note'}
+                {data: 'note'},
+                {data: null}
             ],
             columnDefs: [
+                // {
+                //     targets: 0,
+                //     visible: false
+                // },
+                // {
+                //     targets: [1, 2, 3, 4, 5, 6, 7],
+                //     type: 'natural'
+                // },
                 {
-                    targets: 1,
+                    targets: -1,
+                    className: 'text-center',
+                    orderable: false,
                     render: (data, type, row) =>
-                        `<a href='https://www.amazon.com/dp/${row.asin}' title='${btnManage}' target='_blank'>
-                            ${row.productName}
-                        </a>`
-                },
-                {
-                    targets: 0,
-                    className: "text-dark"
-                },
+                        `<button title='${btnNote}' class="add-note btn btn-outline-primary">
+                            <i class="fas fa-pencil-alt"></i>
+                        </button>`
+                }
             ],
             language: {
                 search: `<i class="fas fa-search text-primary"></i> `,
@@ -802,10 +818,24 @@
                 },
                 emptyTable: `${noDataInTable}`
             },
-            dom: '<"row mb-2"<"col"l><"col"f>>rtp'
+            pageLength: 10,
+            lengthChange: false,
+            dom: '<"text-right mb-2"f>rtp'
         });
-        // thisMonthSoldTable.order([0, "desc"]).draw();
 
+        let currentAmznUser = new AmznUser();
+        let currentRowDOM;
+        let currentRow;
+
+        page.element.tableAnalytics.on('click', 'button.add-note', function () {
+            currentRowDOM = $(this).parents('tr');
+
+            if (currentRowDOM.hasClass('child'))
+                currentRowDOM = currentRowDOM.prev();
+
+            currentRow = table.row(currentRowDOM);
+            currentAmznUser = currentRow.data();
+        });
     }
 
     page.commands.initAccountDieTable = () => {
@@ -820,6 +850,7 @@
         page.commands.initTodaySoldTable();
         page.commands.init30DaysSoldTable();
         page.commands.initThisMonthSoldTable();
+        page.commands.initAnalyticsTable();
         page.commands.handleContentDashboard(currentGrpId);
     })
 
@@ -844,7 +875,7 @@
 
     }
 
-    //chart
+    /** chart */
     var chartData;
     var layoutStr;
 
@@ -1018,23 +1049,25 @@
             })
     }
 
+    /** handle content on page loaded */
     page.commands.handleContentDashboard = (groupId) => {
         let listUserUrl = page.urls.findAmznAccInGrpFilter + groupId;
         let chartDataUrl = page.urls.findChartByGroupId + groupId;
         let cardDataUrl = page.urls.findCardsByGroupId + groupId;
+        let tableTodayUrl = page.urls.findAllTodaySoldInGroup + groupId;
+        let table30DaysUrl = page.urls.findAllLast30DaysSoldInGroup + groupId;
+        let tableThisMonthUrl = page.urls.findAllThisMonthSoldInGroup + groupId;
+        let tableAnalyticsUrl = page.urls.findAnalyticsByGroupId + groupId;
 
-        if (isNaN(groupId) || groupId === '') {
+        /** when url does not point to a specific group */
+        if (isNaN(groupId) || groupId === '')
             listUserUrl = page.urls.findAllAmznAccountFilter;
             chartDataUrl = page.urls.findChartAll;
             cardDataUrl = page.urls.findCardsAll;
-            page.element.tableTodaySold.DataTable().ajax.url(page.urls.findAllTodaySoldAllAmznAcc).load();
-            page.element.table30DaysSold.DataTable().ajax.url(page.urls.findAllLast30DaysSoldAllAmznAcc).load();
-            page.element.tableThisMonthSold.DataTable().ajax.url(page.urls.findAllThisMonthSoldAllAmznAcc).load();
-        } else {
-            page.element.tableTodaySold.DataTable().ajax.url(page.urls.findAllTodaySoldInGroup + groupId).load();
-            page.element.table30DaysSold.DataTable().ajax.url(page.urls.findAllLast30DaysSoldInGroup + groupId).load();
-            page.element.tableThisMonthSold.DataTable().ajax.url(page.urls.findAllThisMonthSoldInGroup + groupId).load();
-        }
+            tableTodayUrl = page.urls.findAllTodaySoldAllAmznAcc;
+            table30DaysUrl = page.urls.findAllLast30DaysSoldAllAmznAcc;
+            tableThisMonthUrl = page.urls.findAllThisMonthSoldAllAmznAcc;
+            tableAnalyticsUrl = page.urls.findAnalyticsAll;
 
         $.ajax({
             "headers": {
@@ -1048,13 +1081,19 @@
                 page.commands.handleFilterDashboard(accounts);
                 page.commands.getChart(chartDataUrl);
                 page.commands.getCards(cardDataUrl);
+
+                page.element.tableTodaySold.DataTable().ajax.url(tableTodayUrl).load();
+                page.element.table30DaysSold.DataTable().ajax.url(table30DaysUrl).load();
+                page.element.tableThisMonthSold.DataTable().ajax.url(tableThisMonthUrl).load();
+
+                page.element.tableAnalytics.DataTable().ajax.url(tableAnalyticsUrl).load();
             })
             .fail((jqXHR) => {
                 DBApp.handleFailedTasks(jqXHR);
             })
     }
 
-    // onclick-user
+    /** handle content on-click amzn-user */
     $("#filter-dashboard").on('click', '.list-group-item', function () {
         $("#filter-dashboard .list-group-item").removeClass('active');
         $(this).addClass('active');
@@ -1062,10 +1101,12 @@
         let currentUserId = $(this).data('id');
         let cardDataUrl = page.urls.findCardsByAmznId + currentUserId;
         let chartDataUrl = page.urls.findChartByUserId + currentUserId;
+        let tableAnalyticsUrl = page.urls.findAnalyticsByUserId + currentUserId;
 
         page.commands.getCards(cardDataUrl);
         page.commands.getChart(chartDataUrl);
         getProductSoldDataForEachAmznAcc(currentUserId);
+        page.element.tableAnalytics.DataTable().ajax.url(tableAnalyticsUrl).load();
     })
 
     page.commands.handleFilterDashboard = (accounts) => {

@@ -31,9 +31,6 @@ public class ProductServiceImpl implements ProductService {
     private ProductRepository productRepository;
 
     @Autowired
-    private TimeUtils timeUtils;
-
-    @Autowired
     private MessageSource messageSource;
 
     @Autowired
@@ -41,19 +38,19 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public List<ProductItemResult> findAllTodaySoldProduct(Integer id, int choice) {
-        Instant today = timeUtils.getInstantToday();
+        Instant today = TimeUtils.getInstantToday();
         return getProductItemResult(today, id, choice);
     }
 
     @Override
     public List<ProductItemResult> findAllThisMonthSoldProduct(Integer id, int choice) {
-        Instant firstDayOfThisMonth = timeUtils.getInstantThisMonth();
+        Instant firstDayOfThisMonth = TimeUtils.getInstantThisMonth();
         return getProductItemResult(firstDayOfThisMonth, id, choice);
     }
 
     @Override
     public List<ProductItemResult> findAllLast30DaysSoldProduct(Integer id, int choice) {
-        Instant startDate = timeUtils.getInstantLastSomeDays(30);
+        Instant startDate = TimeUtils.getInstantLastSomeDays(30);
         return getProductItemResult(startDate, id, choice);
     }
 

@@ -117,6 +117,8 @@
     page.dialogs.element.btnAssignGrpUser = $('#btnAssignGrpUser');
 
     $(document).ready(function () {
+        DBApp.handleGroupsFilterSidebar();
+
         let mainTable = page.element.tbAsgnedGrps.DataTable({
             ajax: {
                 contentType: 'application/json',
@@ -157,7 +159,18 @@
             pageLength: 10,
             lengthChange: false,
             language: {
-                search: `<i class="fas fa-search text-primary"></i> `
+                search: `<i class="fas fa-search text-primary"></i> `,
+                paginate: {
+                    previous: `<i class="fas fa-angle-left"></i>`,
+                    next: `<i class="fas fa-angle-right"></i>`
+                },
+                aria: {
+                    paginate: {
+                        previous: 'Previous',
+                        next: 'Next'
+                    }
+                },
+                emptyTable: `${noDataInTable}`
             },
             dom: '<"row mb-2"<"col"B><"col"f>>rtp',
             buttons: {
@@ -233,6 +246,17 @@
             lengthChange: false,
             language: {
                 search: `<i class="fas fa-search text-primary"></i> `,
+                paginate: {
+                    previous: `<i class="fas fa-angle-left"></i>`,
+                    next: `<i class="fas fa-angle-right"></i>`
+                },
+                aria: {
+                    paginate: {
+                        previous: 'Previous',
+                        next: 'Next'
+                    }
+                },
+                emptyTable: `${noDataInTable}`
             },
             dom: '<"d-flex justify-content-around flex-column flex-sm-row mb-2"<"align-self-center align-self-sm-start table-quickselect"><"align-self-center align-self-sm-start"f>>tp'
         })

@@ -25,9 +25,6 @@ public class UserAPI {
     private PrincipalUtils principalUtils;
 
     @Autowired
-    private AppUtils appUtils;
-
-    @Autowired
     private UniUserService userService;
 
     //    @PreAuthorize("hasAnyAuthority('MANAGER')")
@@ -49,7 +46,7 @@ public class UserAPI {
     public ResponseEntity<?> createUser(@Validated @RequestBody UserCreateParam userCreateParam, BindingResult bindingResult) {
 
         if (bindingResult.hasErrors())
-            return appUtils.mapErrorToResponse(bindingResult);
+            return AppUtils.mapErrorToResponse(bindingResult);
 
         UserItemResult newUser = userService.create(userCreateParam);
         return new ResponseEntity<>(newUser, HttpStatus.CREATED);

@@ -29,9 +29,6 @@ public class GroupAPI {
     @Autowired
     private GroupService groupService;
 
-    @Autowired
-    private AppUtils appUtils;
-
     //    @PreAuthorize("hasAnyAuthority('MANAGER')")
     @PostMapping
     public DataTablesOutput<GroupItemResult> findAllGroupsPageable(@Valid @RequestBody DataTablesInput input) {
@@ -56,7 +53,7 @@ public class GroupAPI {
     public ResponseEntity<?> createGroup(@Validated @RequestBody GroupCreateParam groupCreateParam,
                                          BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
-            return appUtils.mapErrorToResponse(bindingResult);
+            return AppUtils.mapErrorToResponse(bindingResult);
         }
         GroupItemResult newGroup = groupService.createGroup(groupCreateParam);
         return new ResponseEntity<>(newGroup, HttpStatus.CREATED);

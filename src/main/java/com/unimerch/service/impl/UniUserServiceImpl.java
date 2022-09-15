@@ -1,6 +1,5 @@
 package com.unimerch.service.impl;
 
-
 import com.unimerch.dto.group.GroupItemResult;
 import com.unimerch.dto.user.UserCreateParam;
 import com.unimerch.dto.user.UserItemResult;
@@ -63,9 +62,6 @@ public class UniUserServiceImpl implements UniUserService {
     private PrincipalUtils principalUtils;
 
     @Autowired
-    private ValidationUtils validationUtils;
-
-    @Autowired
     private RoleServiceImpl roleService;
 
     @Override
@@ -93,7 +89,7 @@ public class UniUserServiceImpl implements UniUserService {
 
     @Override
     public User findById(String id) {
-        if (!validationUtils.isIdValid(id))
+        if (!ValidationUtils.isIdValid(id))
             throw new InvalidIdException(messageSource.getMessage("validation.idNotExist", null, Locale.getDefault()));
 
         int validId = Integer.parseInt(id);
@@ -135,7 +131,7 @@ public class UniUserServiceImpl implements UniUserService {
     public void changePassword(String id, String password) {
         User user = findById(id);
 
-        if (!validationUtils.isPasswordvalid(password))
+        if (!ValidationUtils.isPasswordvalid(password))
             throw new InvalidPasswordException(messageSource.getMessage("validation.validPassword", null, Locale.getDefault()));
 
         try {
@@ -150,7 +146,7 @@ public class UniUserServiceImpl implements UniUserService {
     public void changeMyPassword(String password) {
         User user = findById(String.valueOf(principalUtils.getPrincipalId()));
 
-        if (!validationUtils.isPasswordvalid(password))
+        if (!ValidationUtils.isPasswordvalid(password))
             throw new InvalidPasswordException(messageSource.getMessage("validation.validPassword", null, Locale.getDefault()));
 
         try {

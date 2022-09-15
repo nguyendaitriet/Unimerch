@@ -97,8 +97,13 @@ public class AmznAPI {
         return new ResponseEntity<>(analyticsList, HttpStatus.OK);
     }
 
-    @GetMapping("/accountDie")
+    @GetMapping("/die-all")
     public ResponseEntity<?> findAllAccountDie() {
+        return null;
+    }
+
+    @GetMapping("/die-grp/{id}")
+    public ResponseEntity<?> findAccountDieByGrpId(@PathVariable String id) {
         return null;
     }
 }

@@ -12,7 +12,7 @@ import java.time.Instant;
 @Entity
 @Getter
 @Setter
-@Table(name = "amzn_accounts")
+@Table(name = "amzn_users")
 @Accessors(chain = true)
 public class AmznUser {
     @Id

@@ -1,7 +1,5 @@
 package com.unimerch.util;
 
-import org.springframework.stereotype.Component;
-
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.*;
@@ -10,36 +8,33 @@ import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
-@Component
 public class TimeUtils {
-    final public ZoneId zoneIdVN = ZoneId.of("Asia/Ho_Chi_Minh");
+    static final public ZoneId zoneIdVN = ZoneId.of("Asia/Ho_Chi_Minh");
 
-    final private String dayMonthYearPattern = "dd/MM/yyyy";
+    static final private String dayMonthYearPattern = "dd/MM/yyyy";
 
-    final private String monthYearPattern = "MM/yyyy";
+    static final private String monthYearPattern = "MM/yyyy";
 
-    public String toDayMonthYear(LocalDate date) {
+    public static String toDayMonthYear(LocalDate date) {
         return date.format(DateTimeFormatter.ofPattern(dayMonthYearPattern));
     }
 
-    public String toMonthYear(LocalDate date) {
+    public static String toMonthYear(LocalDate date) {
         return date.format(DateTimeFormatter.ofPattern(monthYearPattern));
     }
 
-    public Instant getInstantToday() {
+    public static Instant getInstantToday() {
         LocalDate today = LocalDate.now();
         ZonedDateTime zdtToday = today.atStartOfDay(zoneIdVN);
         return zdtToday.toInstant();
     }
 
-    ;
-
-    public String getCardTimeToday() {
+    public static String getCardTimeToday() {
         LocalDate today = LocalDate.now();
         return toDayMonthYear(today);
     }
 
-    public Map<String, Instant> getInstantYesterday() {
+    public static Map<String, Instant> getInstantYesterday() {
         Map<String, Instant> results = new HashMap<>();
         LocalDate today = LocalDate.now();
         LocalDate localYesterday = today.minusDays(1);
@@ -54,42 +49,36 @@ public class TimeUtils {
         return results;
     }
 
-    ;
-
-    public String getCardTimeYesterday() {
+    public static String getCardTimeYesterday() {
         LocalDate localYesterday = LocalDate.now().minusDays(1);
         return toDayMonthYear(localYesterday);
     }
 
-    public Instant getInstantLastSomeDays(int days) {
+    public static Instant getInstantLastSomeDays(int days) {
         LocalDate lastSevenDay = LocalDate.now().minusDays(days - 1);
         ZonedDateTime zdtLastWeek = lastSevenDay.atStartOfDay(zoneIdVN);
 
         return zdtLastWeek.toInstant();
     }
 
-    ;
-
-    public String getCardTimeLastSevenDays() {
+    public static String getCardTimeLastSevenDays() {
         LocalDate lastSevenDay = LocalDate.now().minusDays(6);
         return toMonthYear(lastSevenDay);
     }
 
-    public Instant getInstantThisMonth() {
+    public static Instant getInstantThisMonth() {
         LocalDate firstDayOfThisMonth = LocalDate.now().withDayOfMonth(1);
         ZonedDateTime zdtThisMonth = firstDayOfThisMonth.atStartOfDay(zoneIdVN);
 
         return zdtThisMonth.toInstant();
     }
 
-    ;
-
-    public String getCardTimeThisMonth() {
+    public static String getCardTimeThisMonth() {
         LocalDate firstDayOfThisMonth = LocalDate.now().withDayOfMonth(1);
         return toMonthYear(firstDayOfThisMonth);
     }
 
-    public Map<String, Instant> getInstantPreviousMonth() {
+    public static Map<String, Instant> getInstantPreviousMonth() {
         Map<String, Instant> results = new HashMap<>();
 
         LocalDate firstDayOfLastMonth = YearMonth.now().minusMonths(1).atDay(1);
@@ -105,14 +94,12 @@ public class TimeUtils {
         return results;
     }
 
-    ;
-
-    public String getCardTimePreviousMonth() {
+    public static String getCardTimePreviousMonth() {
         LocalDate firstDayOfLastMonth = YearMonth.now().minusMonths(1).atDay(1);
         return toMonthYear(firstDayOfLastMonth);
     }
 
-    public List<String> getCardsLastSevenDays() {
+    public static List<String> getCardsLastSevenDays() {
         List<String> cards = new ArrayList<>();
 
         LocalDate start = LocalDate.now().minusDays(6);

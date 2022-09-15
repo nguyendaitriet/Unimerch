@@ -186,10 +186,16 @@ class User {
     }
 }
 
-class Group {
-    constructor(id, title) {
+class AmznUser {
+    constructor(id, published, tier, slotRemaining, slotTotal, reject, remove, note) {
         this.id = id;
-        this.title = title;
+        this.published = published;
+        this.tier = tier;
+        this.slotRemaining = slotRemaining;
+        this.slotTotal = slotTotal;
+        this.reject = reject;
+        this.remove = remove;
+        this.note = note;
     }
 }
 

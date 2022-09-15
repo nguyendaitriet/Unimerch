@@ -45,7 +45,9 @@
                             <!-- Card Body -->
                             <div class="card-body">
                                 <!-- Table Body -->
-                                <table id="table-user" class="table table-striped table-bordered dt-responsive nowrap" style="width: 100%;">
+                                <table id="table-user"
+                                       class="table table-striped table-bordered dt-responsive nowrap"
+                                       style="width: 100%;">
                                     <thead>
                                     <tr>
                                         <th style="visibility: hidden">#</th>
@@ -153,7 +155,6 @@
             columnDefs: [
                 {
                     targets: 0,
-                    className: 'text-center',
                     visible: false
                 },
                 {
@@ -196,7 +197,18 @@
             pageLength: 10,
             lengthChange: false,
             language: {
-                search: `<i class="fas fa-search text-primary"></i> `
+                search: `<i class="fas fa-search text-primary"></i> `,
+                paginate: {
+                    previous: `<i class="fas fa-angle-left"></i>`,
+                    next: `<i class="fas fa-angle-right"></i>`
+                },
+                aria: {
+                    paginate: {
+                        previous: 'Previous',
+                        next: 'Next'
+                    }
+                },
+                emptyTable: `${noDataInTable}`
             },
             dom: '<"row mb-2"<"col"B><"col"f>>rtp',
             buttons: {

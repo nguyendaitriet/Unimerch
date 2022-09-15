@@ -12,7 +12,7 @@ import javax.persistence.*;
 @AllArgsConstructor
 @Getter
 @Setter
-@Table(name = "brg_group_amzn_account")
+@Table(name = "brg_group_amzn_user")
 public class BrgGroupAmznAccount {
 
     @GeneratedValue(strategy = GenerationType.IDENTITY)

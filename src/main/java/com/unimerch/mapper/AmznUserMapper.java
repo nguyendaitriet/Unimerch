@@ -57,6 +57,7 @@ public class AmznUserMapper {
         return new AmznAccAnalyticsItemResult()
                 .setId(amznUser.getId())
                 .setUsername(amznUser.getUsername())
+                .setPublished(null)
                 .setTier(amznUser.getTier())
                 .setSlotRemaining(slotRemaining)
                 .setSlotTotal(amznUser.getDailyProductLimit())

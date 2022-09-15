@@ -27,8 +27,6 @@ import java.util.stream.Collectors;
 
 @Component
 public class OrderMapper extends StdDeserializer<OrderData> {
-    @Autowired
-    ChartUtils chartUtils;
 
     public OrderMapper() {
         this(null);
@@ -124,8 +122,8 @@ public class OrderMapper extends StdDeserializer<OrderData> {
         }
 
         return new OrderChartResult()
-                .setMaxRoyaltiesAxis(chartUtils.getMaxAxis(maxRoyalties))
-                .setMaxSoldAxis(chartUtils.getMaxAxis(BigDecimal.valueOf(maxSold)))
+                .setMaxRoyaltiesAxis(ChartUtils.getMaxAxis(maxRoyalties))
+                .setMaxSoldAxis(ChartUtils.getMaxAxis(BigDecimal.valueOf(maxSold)))
                 .setColumns(columnList);
     }
 }

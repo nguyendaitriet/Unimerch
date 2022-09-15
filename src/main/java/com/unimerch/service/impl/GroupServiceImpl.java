@@ -53,9 +53,6 @@ public class GroupServiceImpl implements GroupService {
     @Autowired
     private GroupMapper groupMapper;
 
-    @Autowired
-    private ValidationUtils validationUtils;
-
     @Override
     public List<GroupItemResult> findAll() {
         return groupRepository.findAll()
@@ -79,7 +76,7 @@ public class GroupServiceImpl implements GroupService {
 
     @Override
     public Group findById(String id) {
-        if (!validationUtils.isIdValid(id)) {
+        if (!ValidationUtils.isIdValid(id)) {
             throw new InvalidIdException(messageSource.getMessage("validation.idNotExist", null, Locale.getDefault()));
         }
 

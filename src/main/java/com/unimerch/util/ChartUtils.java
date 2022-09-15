@@ -1,13 +1,10 @@
 package com.unimerch.util;
 
-import org.springframework.stereotype.Component;
-
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 
-@Component
 public class ChartUtils {
-    public long getMaxAxis(BigDecimal num) {
+    public static long getMaxAxis(BigDecimal num) {
         int scale = -1;
 
         int numberDigits = getNumberDigits(num);
@@ -22,11 +19,11 @@ public class ChartUtils {
         return num.longValue();
     }
 
-    public int getNumberDigits(BigDecimal n) {
+    public static int getNumberDigits(BigDecimal n) {
         return n.signum() == 0 ? 1 : n.precision() - n.scale();
     }
 
-    public BigDecimal beautifyMaxAxis(BigDecimal num, int numberDigits) {
+    public static BigDecimal beautifyMaxAxis(BigDecimal num, int numberDigits) {
         if (num.compareTo(BigDecimal.ZERO) == 0) {
             num = num.add(BigDecimal.TEN);
             return num;
