@@ -40,13 +40,13 @@ public class AmznAPI {
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
-    //    @PreAuthorize("hasAnyAuthority('MANAGER')")
+    @PreAuthorize("hasAnyAuthority('MANAGER')")
     @PostMapping
     public DataTablesOutput<AmznAccResult> findAllAmznAccountsPageable(@Valid @RequestBody DataTablesInput input) {
         return amznUserService.findAll(input);
     }
 
-    @PreAuthorize("hasAnyAuthority('MANAGER', 'USER')")
+    @PreAuthorize("hasAnyAuthority('MANAGER')")
     @GetMapping("/findAllAmznAccs")
     public ResponseEntity<?> findAllAmznAccounts() {
         return new ResponseEntity<>(amznUserService.findAll(), HttpStatus.OK);

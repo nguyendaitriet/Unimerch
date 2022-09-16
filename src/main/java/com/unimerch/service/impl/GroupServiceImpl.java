@@ -29,7 +29,7 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
-//@Transactional
+@Transactional
 public class GroupServiceImpl implements GroupService {
 
     @Autowired

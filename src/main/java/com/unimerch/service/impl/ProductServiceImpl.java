@@ -88,6 +88,7 @@ public class ProductServiceImpl implements ProductService {
                 productItemResultList = productRepository.getProductItemResultList(instant);
                 break;
         }
+        productItemResultList.forEach(productItemResult -> System.out.println(productItemResult.getPrice()));
         return productItemResultList;
     }
 

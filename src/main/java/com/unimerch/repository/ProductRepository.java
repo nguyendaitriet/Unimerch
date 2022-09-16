@@ -24,9 +24,9 @@ public interface ProductRepository extends JpaRepository<Product, String> {
                 "o.asin " +
             ")" +
             "FROM Order AS o " +
-            "INNER JOIN Product AS p " +
+            "LEFT JOIN Product AS p " +
             "ON p.id = o.asin " +
-            "AND o.date >= :startDay " +
+            "WHERE o.date >= :startDay " +
             "GROUP BY o.asin")
     List<ProductItemResult> getProductItemResultList(@Param("startDay")Instant startDay);
 }

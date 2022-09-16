@@ -64,10 +64,9 @@ public class OrderServiceImpl implements OrderService {
             orderRepositoryExt.deleteAllByDate(orderDates);
             productRepository.deleteAllByIdInBatch(orderData.getAsinList());
             productRepository.saveAll(orderData.getProductList());
-            orderData.getOrderList().forEach(order -> {
-                order.setAmznAccount(new AmznUser(id));
-                orderRepository.save(order);
-            });
+
+            orderData.getOrderList().forEach(order -> order.setAmznAccount(new AmznUser(id)));
+            orderRepository.saveAll(orderData.getOrderList());
 
             return orderData;
         } catch (JsonProcessingException | ServerErrorException e) {
