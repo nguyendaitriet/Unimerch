@@ -16,6 +16,8 @@ public interface AmznUserService {
 
     void updateMetadata(String data, Authentication authentication);
 
+    void updateStatus(String status, Authentication authentication);
+
     DataTablesOutput<AmznAccResult> findAll(DataTablesInput input);
 
     List<AmznAccResult> findAll();

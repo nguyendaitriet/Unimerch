@@ -8,6 +8,7 @@ import com.unimerch.service.AmznUserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.jpa.datatables.mapping.DataTablesInput;
 import org.springframework.data.jpa.datatables.mapping.DataTablesOutput;
+import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -33,12 +34,19 @@ public class AmznAPI {
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
+    @PutMapping("/updateStatus")
+    public ResponseEntity<?> updateStatus(Authentication authentication, @RequestBody String status) {
+        amznUserService.updateStatus(status, authentication);
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+
     //    @PreAuthorize("hasAnyAuthority('MANAGER')")
     @PostMapping
     public DataTablesOutput<AmznAccResult> findAllAmznAccountsPageable(@Valid @RequestBody DataTablesInput input) {
         return amznUserService.findAll(input);
     }
 
+    @PreAuthorize("hasAnyAuthority('MANAGER', 'USER')")
     @GetMapping("/findAllAmznAccs")
     public ResponseEntity<?> findAllAmznAccounts() {
         return new ResponseEntity<>(amznUserService.findAll(), HttpStatus.OK);

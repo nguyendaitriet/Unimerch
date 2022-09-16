@@ -12,6 +12,7 @@ import org.springframework.core.annotation.Order;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
+import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.http.SessionCreationPolicy;
@@ -73,10 +74,15 @@ public class UniUserSecurityConfig extends WebSecurityConfigurerAdapter {
         http.authorizeRequests()
                 .antMatchers("/api/login", "/login", "/api/amzn/login").permitAll()
 //                .antMatchers("/assets/**", "/messages/**").permitAll()
-                .antMatchers("/api/amzn/updateMetadata", "/api/orders", "/api/products/update").permitAll()
+//                .antMatchers("/api/amzn/updateMetadata", "/api/amzn/updateStatus", "/api/orders", "/api/products/update").authenticated()
                 .antMatchers("/users/**").hasAnyAuthority("USER")
                 .antMatchers("/dashboard/**").hasAnyAuthority("MANAGER")
-                .antMatchers("/", "/api/products/**", "/api/orders/**", "/api/users/**", "/api/groups/**", "/api/amzn/**").hasAnyAuthority("MANAGER", "USER")
+                .antMatchers("/", "/api/products/**",
+                        "/api/users/**",
+//                        "/api/orders/**",
+//                        "/api/amzn/**",
+                        "/api/groups/**")
+                .hasAnyAuthority("MANAGER", "USER")
                 .antMatchers(
                         "/v2/api-docs",
                         "/swagger-resources/configuration/ui",

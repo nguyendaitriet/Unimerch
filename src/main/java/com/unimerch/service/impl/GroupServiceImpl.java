@@ -142,6 +142,7 @@ public class GroupServiceImpl implements GroupService {
             throw new ServerErrorException(messageSource.getMessage("error.500", null, Locale.getDefault()));
         }
 
+        
     }
 
     @Override
