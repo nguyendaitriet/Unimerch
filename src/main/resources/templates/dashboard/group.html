@@ -260,7 +260,7 @@
                         'id': amznAcc.id,
                         'username': amznAcc.username
                     })
-                    tableAmznAccIn.order([0, 'desc']).draw();
+                    tableAmznAccIn.draw();
                 });
                 page.dialogs.element.mdAddAmznAccToGroup.modal("hide");
                 CommonApp.SweetAlert.showSuccessAlert(SUCCESS_CREATED);
@@ -456,7 +456,6 @@
                 tableAmznAccIn.ajax.url(page.urls.findAllAmznAccInGroup + currentGroup.id).load();
             }
         });
-
         page.element.tableGroup.on('click', 'button.update-group', function () {
             currentRowGroup = tableGroup.row($(this).parents('tr'));
             currentGroup = currentRowGroup.data();

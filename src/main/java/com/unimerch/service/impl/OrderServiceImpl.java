@@ -23,6 +23,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
+import java.math.BigDecimal;
 import java.time.Instant;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -51,21 +52,33 @@ public class OrderServiceImpl implements OrderService {
         SimpleModule module = new SimpleModule();
         module.addDeserializer(OrderData.class, new OrderMapper());
         mapper.registerModule(module);
-        UserPrinciple userPrinciple = (UserPrinciple) authentication.getPrincipal();
-        int id = Integer.parseInt(userPrinciple.getId());
+        //UserPrinciple userPrinciple = (UserPrinciple) authentication.getPrincipal();
+        //int id = Integer.parseInt(userPrinciple.getId());
         try {
             OrderData orderData = mapper.readValue(data, OrderData.class);
-            List<String> orderDates = orderData.getOrderList().stream()
-                    .map(order -> TimeUtils.instantToDateNoTime(order.getDate()))
-                    .map(date -> TimeUtils.dateToString(date, "yyyy-MM-dd"))
-                    .distinct()
-                    .collect(Collectors.toList());
+            List<String> orderDates = orderData.getOrderList().stream().map(order -> TimeUtils.instantToDateNoTime(order.getDate())).map(date -> TimeUtils.dateToString(date, "yyyy-MM-dd")).distinct().collect(Collectors.toList());
+
+            orderData.getProductList().forEach(product -> {
+                Optional<Order> foundOrder = orderData.getOrderList()
+                        .stream()
+                        .filter(order -> order.getAsin().equals(product.getId()))
+                        .sorted((o1, o2) -> o2.getDate().compareTo(o1.getDate()))
+                        .findFirst();
+                foundOrder.ifPresent(order -> {
+                            product.setPrice(order.getRevenue()
+                                    .divide(BigDecimal.valueOf(order.getPurchased())
+                                    ));
+                        }
+                );
+
+            });
+
 
             orderRepositoryExt.deleteAllByDate(orderDates);
             productRepository.deleteAllByIdInBatch(orderData.getAsinList());
             productRepository.saveAll(orderData.getProductList());
 
-            orderData.getOrderList().forEach(order -> order.setAmznAccount(new AmznUser(id)));
+            orderData.getOrderList().forEach(order -> order.setAmznAccount(new AmznUser(1)));
             orderRepository.saveAll(orderData.getOrderList());
 
             return orderData;

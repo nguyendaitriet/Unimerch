@@ -640,7 +640,7 @@
                 {
                     targets: 1,
                     render: (data, type, row) =>
-                        `<a href='https://www.amazon.com/dp/${row.asin}' title='${btnManage}'target='_blank'>
+                        `<a href='https://www.amazon.com/dp/${row.asin}' target='_blank'>
                             ${row.productName}
                         </a>`
                 },
@@ -687,7 +687,7 @@
                 {
                     targets: 1,
                     render: (data, type, row) =>
-                        `<a href='https://www.amazon.com/dp/${row.asin}' title='${btnManage}' target='_blank'>
+                        `<a href='https://www.amazon.com/dp/${row.asin}' title='${row.asin}' target='_blank'>
                             ${row.productName}
                         </a>`
                 },
@@ -735,7 +735,7 @@
                 {
                     targets: 1,
                     render: (data, type, row) =>
-                        `<a href='https://www.amazon.com/dp/${row.asin}' title='${btnManage}' target='_blank'>
+                        `<a href='https://www.amazon.com/dp/${row.asin}' title='${row.asin}' target='_blank'>
                             ${row.productName}
                         </a>`
                 },
