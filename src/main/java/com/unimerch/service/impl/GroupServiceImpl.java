@@ -16,6 +16,7 @@ import com.unimerch.repository.datatable.GroupDataTableRepository;
 import com.unimerch.repository.GroupRepository;
 import com.unimerch.repository.model.*;
 import com.unimerch.service.GroupService;
+import com.unimerch.util.NaturalSortString;
 import com.unimerch.util.ValidationUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
@@ -57,6 +58,7 @@ public class GroupServiceImpl implements GroupService {
     public List<GroupItemResult> findAll() {
         return groupRepository.findAll()
                 .stream().map(group -> groupMapper.toGroupItemResult(group))
+                .sorted((o1, o2) -> NaturalSortString.compareString(o1.getTitle(), o2.getTitle()))
                 .collect(Collectors.toList());
     }
 
