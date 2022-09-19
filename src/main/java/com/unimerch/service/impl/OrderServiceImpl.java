@@ -65,7 +65,7 @@ public class OrderServiceImpl implements OrderService {
             orderData.getProductList().forEach(product -> {
                 Optional<Order> foundOrder = orderData.getOrderList()
                         .stream()
-                        .filter(order -> order.getAsin().equals(product.getId()))
+                        .filter(order -> order.getAsin().equals(product.getId()) && order.getPurchased() != 0)
                         .sorted((o1, o2) -> o2.getDate().compareTo(o1.getDate()))
                         .findFirst();
                 foundOrder.ifPresent(order ->
@@ -79,7 +79,7 @@ public class OrderServiceImpl implements OrderService {
             productRepository.deleteAllByIdInBatch(orderData.getAsinList());
             productRepository.saveAll(orderData.getProductList());
 
-            orderData.getOrderList().forEach(order -> order.setAmznAccount(new AmznUser(1)));
+            orderData.getOrderList().forEach(order -> order.setAmznAccount(new AmznUser(id)));
             orderRepository.saveAll(orderData.getOrderList());
 
             return orderData;
