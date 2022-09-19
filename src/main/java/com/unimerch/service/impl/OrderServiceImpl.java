@@ -23,6 +23,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
+import java.math.BigDecimal;
 import java.time.Instant;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -61,13 +62,25 @@ public class OrderServiceImpl implements OrderService {
                     .distinct()
                     .collect(Collectors.toList());
 
+            orderData.getProductList().forEach(product -> {
+                Optional<Order> foundOrder = orderData.getOrderList()
+                        .stream()
+                        .filter(order -> order.getAsin().equals(product.getId()) && order.getPurchased() != 0)
+                        .sorted((o1, o2) -> o2.getDate().compareTo(o1.getDate()))
+                        .findFirst();
+                foundOrder.ifPresent(order ->
+                        product.setPrice(order.getRevenue()
+                                .divide(BigDecimal.valueOf(order.getPurchased())
+                                ))
+                );
+            });
+
             orderRepositoryExt.deleteAllByDate(orderDates);
             productRepository.deleteAllByIdInBatch(orderData.getAsinList());
             productRepository.saveAll(orderData.getProductList());
-            orderData.getOrderList().forEach(order -> {
-                order.setAmznAccount(new AmznUser(id));
-                orderRepository.save(order);
-            });
+
+            orderData.getOrderList().forEach(order -> order.setAmznAccount(new AmznUser(id)));
+            orderRepository.saveAll(orderData.getOrderList());
 
             return orderData;
         } catch (JsonProcessingException | ServerErrorException e) {

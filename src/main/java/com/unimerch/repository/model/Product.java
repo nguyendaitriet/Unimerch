@@ -28,7 +28,7 @@ import java.util.Objects;
                     "o.amzn_account_id AS amznAccUsername, " +
                     "o.ASIN AS asin " +
                 "FROM orders AS o " +
-                "INNER JOIN products AS p " +
+                "LEFT JOIN products AS p " +
                 "ON p.ASIN = o.ASIN " +
                 "WHERE o.amzn_account_id IN (:amznAccId) " +
                 "AND o.date >= :startDay " +

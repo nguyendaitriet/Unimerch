@@ -18,7 +18,7 @@ public class OrderRepositoryExtension {
         int size = dateStrings.size();
         for (int i = 0; i < size; i++) {
             String dateString = dateStrings.get(i);
-            String format = String.format("CAST(date AS DATE) = %s", dateString);
+            String format = String.format("CAST(date AS DATE) = '%s'", dateString);
             query.append(String.format(format, dateString))
                     .append(i < size - 1 ? " OR " : "");
         }
