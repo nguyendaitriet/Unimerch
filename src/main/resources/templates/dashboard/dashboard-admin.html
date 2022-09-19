@@ -802,8 +802,8 @@
                     orderable: false,
                     render: (data, type, row) => {
                         if (data === null)
-                            return data;
-                        return (data.length > 7) ? (data.substr(0, 7) + "...") : data
+                            return `<i class="fas fa-pen-fancy"></i>`;
+                        return (data.length > 6) ? (data.substr(0, 6) + "...") : data
                     }
                 }
             ],
