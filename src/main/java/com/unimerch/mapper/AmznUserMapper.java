@@ -1,5 +1,10 @@
 package com.unimerch.mapper;
 
+import com.fasterxml.jackson.core.JsonParser;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.DeserializationContext;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.deser.std.StdDeserializer;
 import com.unimerch.dto.amznacc.*;
 import com.unimerch.repository.model.AmznUser;
 import com.unimerch.repository.model.AzmnStatus;
@@ -10,13 +15,30 @@ import com.unimerch.util.TimeUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.io.IOException;
+import java.time.Instant;
+
 import java.util.ArrayList;
 import java.util.List;
 
 @Component
-public class AmznUserMapper {
+public class AmznUserMapper extends StdDeserializer<AmznStatus> {
     @Autowired
     OrderService orderService;
+    public AmznUserMapper() {
+        this(null);
+    }
+
+    public AmznUserMapper(Class<?> vc) {
+        super(vc);
+    }
+
+    @Override
+    public AmznStatus deserialize(JsonParser jsonParser, DeserializationContext ctxt) throws IOException, JsonProcessingException {
+        JsonNode productNode = jsonParser.getCodec().readTree(jsonParser);
+        String status = productNode.get("status").textValue();
+        return new AmznStatus(status);
+    }
 
     @Autowired
     AmznUserService amznUserService;
@@ -37,6 +59,7 @@ public class AmznUserMapper {
         return new AmznUser()
                 .setUsername(amznAccCreateParam.getUsername())
                 .setPassword(amznAccCreateParam.getPassword())
+                .setLastCheck(Instant.now())
                 .setDailyProductCount(0)
                 .setDailyProductLimit(0)
                 .setOverallDesignCount(0)

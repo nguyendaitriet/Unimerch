@@ -32,6 +32,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import javax.transaction.Transactional;
 import java.io.IOException;
+import java.time.Instant;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -82,7 +83,6 @@ public class AmznUserServiceImpl implements AmznUserService {
 
     @Override
     public void updateMetadata(String data, Authentication authentication) {
-
         ObjectMapper mapper = new ObjectMapper();
         SimpleModule module = new SimpleModule();
         module.addDeserializer(Metadata.class, new MetadataMapper());
@@ -92,6 +92,24 @@ public class AmznUserServiceImpl implements AmznUserService {
             String username = authentication.getName();
             AmznUser user = amznAccountRepository.findByUsername(username);
             user = metadataMapper.updateAmznAccMetadata(user, metadata);
+            amznAccountRepository.save(user);
+        } catch (JsonProcessingException | ServerErrorException e) {
+            throw new ServerErrorException(messageSource.getMessage("error.500", null, Locale.getDefault()));
+        }
+    }
+
+    @Override
+    public void updateStatus(String status, Authentication authentication) {
+        ObjectMapper mapper = new ObjectMapper();
+        SimpleModule module = new SimpleModule();
+        module.addDeserializer(AmznStatus.class, new AmznUserMapper());
+        mapper.registerModule(module);
+        try {
+            AmznStatus amznStatus = mapper.readValue(status, AmznStatus.class);
+            String username = authentication.getName();
+            AmznUser user = amznAccountRepository.findByUsername(username);
+            user.setStatus(AzmnStatus.parseAzmnStatus(amznStatus.getStatus()));
+            user.setLastCheck(Instant.now());
             amznAccountRepository.save(user);
         } catch (JsonProcessingException | ServerErrorException e) {
             throw new ServerErrorException(messageSource.getMessage("error.500", null, Locale.getDefault()));
@@ -178,57 +196,6 @@ public class AmznUserServiceImpl implements AmznUserService {
         } catch (IOException | NotOfficeXmlFileException e) {
             throw new InvalidFileFormat(messageSource.getMessage("validation.invalidFileFormat", null, Locale.getDefault()));
         }
-
-//        for (Row row : sheet) {
-//            String amznUsername = null;
-//            String amznPassword = null;
-//
-//            boolean isUsernameExisted = false;
-//            for (Cell cell : row) {
-//                if (cell.getRowIndex() == 0) {
-//                    break;
-//                }
-//                if (cell.getColumnIndex() == 0) {
-//                    switch (cell.getCellType()) {
-//                        case STRING:
-//                            amznUsername = cell.getRichStringCellValue().getString().trim().toLowerCase();
-//                            break;
-//                        case NUMERIC:
-//                            amznUsername = String.valueOf((int) cell.getNumericCellValue());
-//                            break;
-//                    }
-//                }
-//
-//                if (amznAccountRepository.existsByUsername(amznUsername)) {
-//                    isUsernameExisted = true;
-//                    break;
-//                }
-//
-//                if (cell.getColumnIndex() == 1) {
-//                    switch (cell.getCellType()) {
-//                        case STRING:
-//                            amznPassword = cell.getRichStringCellValue().getString().trim().toLowerCase();
-//                            break;
-//                        case NUMERIC:
-//                            amznPassword = String.valueOf((int) cell.getNumericCellValue());
-//                            break;
-//                    }
-//                }
-//            }
-//
-//            if (row.getRowNum() == 0 || isUsernameExisted) {
-//                continue;
-//            }
-//
-//            try {
-//                AmznAccParam newAmznAccParam = new AmznAccParam(amznUsername, amznPassword);
-//                AmznAccount newAmznAcc = amznAccountRepository.save(amznUserMapper.toAmznAcc(newAmznAccParam));
-//                amznAccResultList.add(amznUserMapper.toAmznAccResult(newAmznAcc));
-//            } catch (Exception e) {
-//                throw new ServerErrorException(messageSource.getMessage("error.500", null, Locale.getDefault()));
-//            }
-//        }
-
         sheet = workbook.getSheetAt(0);
         int usernameColumnIndex = 0;
         int usernameRowIndex = 0;
