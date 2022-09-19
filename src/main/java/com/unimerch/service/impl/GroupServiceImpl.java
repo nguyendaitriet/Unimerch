@@ -1,9 +1,9 @@
 package com.unimerch.service.impl;
 
-import com.unimerch.dto.amznacc.AmznAccFilterItemResult;
+import com.unimerch.dto.amznacc.AmznAccFilterResult;
 import com.unimerch.dto.amznacc.AmznAccResult;
 import com.unimerch.dto.group.GroupCreateParam;
-import com.unimerch.dto.group.GroupItemResult;
+import com.unimerch.dto.group.GroupResult;
 import com.unimerch.dto.group.GroupUpdateParam;
 import com.unimerch.exception.DuplicateDataException;
 import com.unimerch.exception.InvalidIdException;
@@ -23,13 +23,13 @@ import org.springframework.data.jpa.datatables.mapping.Column;
 import org.springframework.data.jpa.datatables.mapping.DataTablesInput;
 import org.springframework.data.jpa.datatables.mapping.DataTablesOutput;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
-import javax.transaction.Transactional;
 import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
-//@Transactional
+@Transactional
 public class GroupServiceImpl implements GroupService {
 
     @Autowired
@@ -54,21 +54,21 @@ public class GroupServiceImpl implements GroupService {
     private GroupMapper groupMapper;
 
     @Override
-    public List<GroupItemResult> findAll() {
+    public List<GroupResult> findAll() {
         return groupRepository.findAll()
-                .stream().map(group -> groupMapper.toGroupItemResult(group))
+                .stream().map(group -> groupMapper.toGroupResult(group))
                 .collect(Collectors.toList());
     }
 
     @Override
-    public DataTablesOutput<GroupItemResult> findAll(DataTablesInput input) {
+    public DataTablesOutput<GroupResult> findAll(DataTablesInput input) {
         try {
             Map<String, Column> columnMap = input.getColumnsAsMap();
             columnMap.remove(null);
             List<Column> columnList = new ArrayList<>(columnMap.values());
             input.setColumns(columnList);
 
-            return groupDataTableRepository.findAll(input, group -> groupMapper.toGroupItemResult(group));
+            return groupDataTableRepository.findAll(input, group -> groupMapper.toGroupResult(group));
         } catch (Exception e) {
             throw new ServerErrorException(messageSource.getMessage("error.500", null, Locale.getDefault()));
         }
@@ -89,12 +89,12 @@ public class GroupServiceImpl implements GroupService {
     }
 
     @Override
-    public GroupItemResult findGroupItemResultById(String id) {
-        return groupMapper.toGroupItemResult(findById(id));
+    public GroupResult findGroupItemResultById(String id) {
+        return groupMapper.toGroupResult(findById(id));
     }
 
     @Override
-    public GroupItemResult createGroup(GroupCreateParam groupCreateParam) {
+    public GroupResult createGroup(GroupCreateParam groupCreateParam) {
         String groupTitle = groupCreateParam.getTitle().trim();
 
         if (groupRepository.existsByTitle(groupTitle)) {
@@ -104,13 +104,13 @@ public class GroupServiceImpl implements GroupService {
         try {
             Group newGroup = new Group(groupTitle);
             newGroup = groupRepository.save(newGroup);
-            return groupMapper.toGroupItemResult(newGroup);
+            return groupMapper.toGroupResult(newGroup);
         } catch (Exception e) {
             throw new ServerErrorException(messageSource.getMessage("error.500", null, Locale.getDefault()));
         }
     }
 
-    public GroupItemResult updateGroup(String id, GroupUpdateParam groupUpdateParam) {
+    public GroupResult updateGroup(String id, GroupUpdateParam groupUpdateParam) {
         Group group = findById(id);
 
         String newGroupTitle = groupUpdateParam.getTitle().trim();
@@ -123,7 +123,7 @@ public class GroupServiceImpl implements GroupService {
         try {
             group.setTitle(newGroupTitle);
             group = groupRepository.save(group);
-            return groupMapper.toGroupItemResult(group);
+            return groupMapper.toGroupResult(group);
         } catch (Exception e) {
             throw new ServerErrorException(messageSource.getMessage("error.500", null, Locale.getDefault()));
         }
@@ -208,9 +208,9 @@ public class GroupServiceImpl implements GroupService {
     }
 
     @Override
-    public List<AmznAccFilterItemResult> findAllAmznAccInGrpFilter(Integer groupId) {
+    public List<AmznAccFilterResult> findAllAmznAccInGrpFilter(Integer groupId) {
         return brgGroupAmznAccRepo.getAmznAccInGroup(groupId)
-                .stream().map(amznAccount -> amznUserMapper.toAmznAccFilterItemResult(amznAccount))
+                .stream().map(amznAccount -> amznUserMapper.toAmznAccFilterResult(amznAccount))
                 .collect(Collectors.toList());
     }
 }

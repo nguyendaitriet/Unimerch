@@ -13,7 +13,7 @@ import java.math.BigDecimal;
 @NoArgsConstructor
 @AllArgsConstructor
 @Accessors(chain = true)
-public class OrderCardItemResult {
+public class OrderCardResult {
     private String date;
 
     private Integer sold;

@@ -1,6 +1,6 @@
 package com.unimerch.repository.model;
 
-import com.unimerch.dto.product.ProductItemResult;
+import com.unimerch.dto.product.ProductResult;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -38,7 +38,7 @@ import java.util.Objects;
 @SqlResultSetMapping(
         name = "product_item_result",
         classes = @ConstructorResult(
-                targetClass = ProductItemResult.class,
+                targetClass = ProductResult.class,
                 columns = {
                         @ColumnResult(name = "quantitySold", type = Integer.class),
                         @ColumnResult(name = "productName", type = String.class),

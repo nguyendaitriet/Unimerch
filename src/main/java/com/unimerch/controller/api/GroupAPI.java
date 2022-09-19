@@ -1,9 +1,9 @@
 package com.unimerch.controller.api;
 
-import com.unimerch.dto.amznacc.AmznAccFilterItemResult;
+import com.unimerch.dto.amznacc.AmznAccFilterResult;
 import com.unimerch.dto.amznacc.AmznAccResult;
 import com.unimerch.dto.group.GroupCreateParam;
-import com.unimerch.dto.group.GroupItemResult;
+import com.unimerch.dto.group.GroupResult;
 import com.unimerch.dto.group.GroupUpdateParam;
 import com.unimerch.repository.model.Group;
 import com.unimerch.service.GroupService;
@@ -31,7 +31,7 @@ public class GroupAPI {
 
     //    @PreAuthorize("hasAnyAuthority('MANAGER')")
     @PostMapping
-    public DataTablesOutput<GroupItemResult> findAllGroupsPageable(@Valid @RequestBody DataTablesInput input) {
+    public DataTablesOutput<GroupResult> findAllGroupsPageable(@Valid @RequestBody DataTablesInput input) {
         return groupService.findAll(input);
     }
 
@@ -55,14 +55,14 @@ public class GroupAPI {
         if (bindingResult.hasErrors()) {
             return AppUtils.mapErrorToResponse(bindingResult);
         }
-        GroupItemResult newGroup = groupService.createGroup(groupCreateParam);
+        GroupResult newGroup = groupService.createGroup(groupCreateParam);
         return new ResponseEntity<>(newGroup, HttpStatus.CREATED);
     }
 
     //    @PreAuthorize("hasAnyAuthority('MANAGER')")
     @PutMapping("/update/{id}")
     public ResponseEntity<?> updateGroup(@PathVariable String id, @RequestBody GroupUpdateParam groupUpdateParam) {
-        GroupItemResult group = groupService.updateGroup(id, groupUpdateParam);
+        GroupResult group = groupService.updateGroup(id, groupUpdateParam);
         return new ResponseEntity<>(group, HttpStatus.OK);
     }
 
@@ -105,7 +105,7 @@ public class GroupAPI {
 
     @GetMapping("/findInGrpFilter/{id}")
     public ResponseEntity<?> findAllAmznAccountsInGroup(@PathVariable Integer id) {
-        List<AmznAccFilterItemResult> amznAccResultList = groupService.findAllAmznAccInGrpFilter(id);
+        List<AmznAccFilterResult> amznAccResultList = groupService.findAllAmznAccInGrpFilter(id);
         return new ResponseEntity<>(amznAccResultList, HttpStatus.OK);
     }
 

@@ -26,12 +26,6 @@
 
             <!-- Begin Page Content -->
             <div class="container-fluid">
-
-                <!-- Page Heading -->
-                <div class="d-sm-flex align-items-center justify-content-between mb-4">
-                    <h1 class="h3 mb-0 text-gray-800" th:text="|#{user_asgn.pageHeading} ${username}|"></h1>
-                </div>
-
                 <div class="row justify-content-lg-center">
 
                     <!-- Users -->
@@ -39,16 +33,21 @@
                         <div class="card shadow mb-4">
                             <!-- Card Header - Dropdown -->
                             <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
-                                <h4 class="m-0 font-weight-bold text-primary" th:text="#{user_asgn.tabHeader}">Assign Groups</h4>
+                                <a class="m-0 h4 font-weight-bold text-primary text-decoration-none"
+                                   th:href="@{'/dashboard/user/group/' + ${user.id}}"
+                                   th:text="|#{user_asgn.tabHeader} ${user.fullName}|">
+                                    Assign Groups
+                                </a>
                             </div>
 
                             <!-- Card Body -->
                             <div class="card-body">
                                 <!-- Table Body -->
-                                <table id="table-assigned-groups" class="table table-striped table-bordered dt-responsive nowrap"
+                                <table id="table-assigned-groups"
+                                       class="table table-striped table-bordered dt-responsive nowrap"
                                        style="width: 100%;">
                                     <thead>
-                                    <tr>
+                                    <tr class="text-dark">
                                         <th style="visibility: hidden">#</th>
                                         <th th:text="#{user_asgn.table.th.fullName}">Group's title</th>
                                         <th th:text="#{user_asgn.table.th.action}">Action</th>
@@ -221,9 +220,9 @@
             ],
             columnDefs: [
                 {
-                  targets: 0,
-                  className: 'text-center',
-                  visible: false
+                    targets: 0,
+                    className: 'text-center',
+                    visible: false
                 },
                 {
                     targets: 1,

@@ -1,6 +1,7 @@
 package com.unimerch.controller;
 
-import com.unimerch.dto.group.GroupItemResult;
+import com.unimerch.dto.group.GroupResult;
+import com.unimerch.dto.user.UserResult;
 import com.unimerch.service.GroupService;
 import com.unimerch.service.UniUserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,7 +30,7 @@ public class DashboardController {
     public ModelAndView showDashboardPage() {
         ModelAndView mav = new ModelAndView("/dashboard/dashboard-admin");
 
-        GroupItemResult group = new GroupItemResult();
+        GroupResult group = new GroupResult();
         group.setTitle(messageSource.getMessage("dashboard.allAccounts", null, Locale.getDefault()));
         mav.addObject("group", group);
 
@@ -40,7 +41,7 @@ public class DashboardController {
     public ModelAndView showRevenues(@PathVariable String id) {
         ModelAndView mav = new ModelAndView("/dashboard/dashboard-admin");
 
-        GroupItemResult group = groupService.findGroupItemResultById(id);
+        GroupResult group = groupService.findGroupItemResultById(id);
         mav.addObject("group", group);
 
         return mav;
@@ -55,9 +56,9 @@ public class DashboardController {
     public ModelAndView showAssignGroupToUserPage(@PathVariable String id) {
         ModelAndView mav = new ModelAndView("/dashboard/user-assign-group");
 
-        String username = userService.findUserListItemById(id).getUsername();
+        UserResult user = userService.findUserListById(id);
 
-        mav.addObject("username", username);
+        mav.addObject("user", user);
         return mav;
     }
 

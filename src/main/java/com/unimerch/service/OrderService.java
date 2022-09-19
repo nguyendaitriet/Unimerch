@@ -1,6 +1,6 @@
 package com.unimerch.service;
 
-import com.unimerch.dto.order.OrderCardItemResult;
+import com.unimerch.dto.order.OrderCardResult;
 import com.unimerch.dto.order.OrderChartResult;
 import com.unimerch.dto.order.OrderData;
 import org.springframework.security.core.Authentication;
@@ -18,45 +18,45 @@ public interface OrderService {
 
     OrderChartResult getChartGroup(Integer id);
 
-    Map<String, OrderCardItemResult> getCardsUser(Integer amznAccId);
+    Map<String, OrderCardResult> getCardsUser(Integer amznAccId);
 
-    OrderCardItemResult getCardUserAllTime(Integer amznAccId);
+    OrderCardResult getCardUserAllTime(Integer amznAccId);
 
-    OrderCardItemResult getCardUserToday(Integer amznAccId);
+    OrderCardResult getCardUserToday(Integer amznAccId);
 
-    OrderCardItemResult getCardUserYesterday(Integer amznAccId);
+    OrderCardResult getCardUserYesterday(Integer amznAccId);
 
-    OrderCardItemResult getCardUserLastSevenDays(Integer amznAccId);
+    OrderCardResult getCardUserLastSevenDays(Integer amznAccId);
 
-    OrderCardItemResult getCardUserThisMonth(Integer amznAccId);
+    OrderCardResult getCardUserThisMonth(Integer amznAccId);
 
-    OrderCardItemResult getCardUserPreviousMonth(Integer amznAccId);
+    OrderCardResult getCardUserPreviousMonth(Integer amznAccId);
 
-    Map<String, OrderCardItemResult> getCardsGroup(Integer groupId);
+    Map<String, OrderCardResult> getCardsGroup(Integer groupId);
 
-    OrderCardItemResult getCardGroupAllTime(Integer groupId);
+    OrderCardResult getCardGroupAllTime(Integer groupId);
 
-    OrderCardItemResult getCardGroupToday(Integer groupIdd);
+    OrderCardResult getCardGroupToday(Integer groupIdd);
 
-    OrderCardItemResult getCardGroupYesterday(Integer groupId);
+    OrderCardResult getCardGroupYesterday(Integer groupId);
 
-    OrderCardItemResult getCardGroupLastSevenDays(Integer groupId);
+    OrderCardResult getCardGroupLastSevenDays(Integer groupId);
 
-    OrderCardItemResult getCardGroupThisMonth(Integer groupId);
+    OrderCardResult getCardGroupThisMonth(Integer groupId);
 
-    OrderCardItemResult getCardGroupPreviousMonth(Integer groupId);
+    OrderCardResult getCardGroupPreviousMonth(Integer groupId);
 
-    Map<String, OrderCardItemResult> getCardAllAcc();
+    Map<String, OrderCardResult> getCardAllAcc();
 
-    OrderCardItemResult getCardAllAccAllTime();
+    OrderCardResult getCardAllAccAllTime();
 
-    OrderCardItemResult getCardAllAccToday();
+    OrderCardResult getCardAllAccToday();
 
-    OrderCardItemResult getCardAllAccYesterday();
+    OrderCardResult getCardAllAccYesterday();
 
-    OrderCardItemResult getCardAllAccLastSevenDays();
+    OrderCardResult getCardAllAccLastSevenDays();
 
-    OrderCardItemResult getCardAllAccThisMonth();
+    OrderCardResult getCardAllAccThisMonth();
 
-    OrderCardItemResult getCardAllAccPreviousMonth();
+    OrderCardResult getCardAllAccPreviousMonth();
 }

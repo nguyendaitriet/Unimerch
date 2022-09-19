@@ -1,6 +1,6 @@
 package com.unimerch.controller;
 
-import com.unimerch.dto.group.GroupItemResult;
+import com.unimerch.dto.group.GroupResult;
 import com.unimerch.service.GroupService;
 import com.unimerch.util.PrincipalUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,7 +24,7 @@ public class UserDashboardController {
     public ModelAndView showDashboardPage() {
         ModelAndView mav = new ModelAndView("/dashboard/dashboard-user");
         int userId = principalUtils.getPrincipalId();
-        GroupItemResult group = new GroupItemResult();
+        GroupResult group = new GroupResult();
         mav.addObject("userId", userId);
         mav.addObject("group", group);
         return mav;
@@ -34,7 +34,7 @@ public class UserDashboardController {
     public ModelAndView showRevenues(@PathVariable String id) {
         ModelAndView mav = new ModelAndView("/dashboard/dashboard-user");
         int userId = principalUtils.getPrincipalId();
-        GroupItemResult group = groupService.findGroupItemResultById(id);
+        GroupResult group = groupService.findGroupItemResultById(id);
         mav.addObject("group", group);
         mav.addObject("userId", userId);
         return mav;

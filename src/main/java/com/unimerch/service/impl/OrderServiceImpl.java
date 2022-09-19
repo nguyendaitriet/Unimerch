@@ -3,7 +3,7 @@ package com.unimerch.service.impl;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.module.SimpleModule;
-import com.unimerch.dto.order.OrderCardItemResult;
+import com.unimerch.dto.order.OrderCardResult;
 import com.unimerch.dto.order.OrderChartColumn;
 import com.unimerch.dto.order.OrderChartResult;
 import com.unimerch.dto.order.OrderData;
@@ -143,47 +143,47 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
-    public Map<String, OrderCardItemResult> getCardsUser(Integer amznAccId) {
-        Map<String, OrderCardItemResult> ordersList = new HashMap<>();
+    public Map<String, OrderCardResult> getCardsUser(Integer amznAccId) {
+        Map<String, OrderCardResult> ordersList = new HashMap<>();
 
-        OrderCardItemResult today = getCardUserToday(amznAccId);
+        OrderCardResult today = getCardUserToday(amznAccId);
         ordersList.put("today", today);
 
-        OrderCardItemResult allTime = getCardUserAllTime(amznAccId);
+        OrderCardResult allTime = getCardUserAllTime(amznAccId);
         ordersList.put("allTime", allTime);
 
-        OrderCardItemResult yesterday = getCardUserYesterday(amznAccId);
+        OrderCardResult yesterday = getCardUserYesterday(amznAccId);
         ordersList.put("yesterday", yesterday);
 
-        OrderCardItemResult lastSevenDays = getCardUserLastSevenDays(amznAccId);
+        OrderCardResult lastSevenDays = getCardUserLastSevenDays(amznAccId);
         ordersList.put("lastSevenDays", lastSevenDays);
 
-        OrderCardItemResult thisMonth = getCardUserThisMonth(amznAccId);
+        OrderCardResult thisMonth = getCardUserThisMonth(amznAccId);
         ordersList.put("thisMonth", thisMonth);
 
-        OrderCardItemResult previousMonth = getCardUserPreviousMonth(amznAccId);
+        OrderCardResult previousMonth = getCardUserPreviousMonth(amznAccId);
         ordersList.put("previousMonth", previousMonth);
 
         return ordersList;
     }
 
     @Override
-    public OrderCardItemResult getCardUserAllTime(Integer amznAccId) {
+    public OrderCardResult getCardUserAllTime(Integer amznAccId) {
         List<Order> ordersAllTime = orderRepository.findByAmznAccountId(amznAccId);
-        return orderMapper.toOrderCardItem(ordersAllTime, null);
+        return orderMapper.toOrderCardResult(ordersAllTime, null);
     }
 
     @Override
-    public OrderCardItemResult getCardUserToday(Integer amznAccId) {
+    public OrderCardResult getCardUserToday(Integer amznAccId) {
         Instant startTime = TimeUtils.getInstantToday();
         List<Order> ordersToday = orderRepository.findByAmznAccIdWithStartDate(amznAccId, startTime);
 
         String cardTime = TimeUtils.getCardTimeToday();
-        return orderMapper.toOrderCardItem(ordersToday, cardTime);
+        return orderMapper.toOrderCardResult(ordersToday, cardTime);
     }
 
     @Override
-    public OrderCardItemResult getCardUserYesterday(Integer amznAccId) {
+    public OrderCardResult getCardUserYesterday(Integer amznAccId) {
         Map<String, Instant> timeRange = TimeUtils.getInstantYesterday();
         Instant startTime = timeRange.get("startTime");
         Instant endTime = timeRange.get("endTime");
@@ -191,31 +191,31 @@ public class OrderServiceImpl implements OrderService {
         List<Order> ordersYesterday = orderRepository.findByAmznAccIdWithTimeRange(amznAccId, startTime, endTime);
 
         String cardTime = TimeUtils.getCardTimeYesterday();
-        return orderMapper.toOrderCardItem(ordersYesterday, cardTime);
+        return orderMapper.toOrderCardResult(ordersYesterday, cardTime);
     }
 
     @Override
-    public OrderCardItemResult getCardUserLastSevenDays(Integer amznAccId) {
+    public OrderCardResult getCardUserLastSevenDays(Integer amznAccId) {
         Instant startTime = TimeUtils.getInstantLastSomeDays(7);
 
         List<Order> ordersLastWeek = orderRepository.findByAmznAccIdWithStartDate(amznAccId, startTime);
 
         String cardTime = TimeUtils.getCardTimeLastSevenDays();
-        return orderMapper.toOrderCardItem(ordersLastWeek, cardTime);
+        return orderMapper.toOrderCardResult(ordersLastWeek, cardTime);
     }
 
     @Override
-    public OrderCardItemResult getCardUserThisMonth(Integer amznAccId) {
+    public OrderCardResult getCardUserThisMonth(Integer amznAccId) {
         Instant startTime = TimeUtils.getInstantThisMonth();
 
         List<Order> ordersThisMonth = orderRepository.findByAmznAccIdWithStartDate(amznAccId, startTime);
 
         String cardTime = TimeUtils.getCardTimeThisMonth();
-        return orderMapper.toOrderCardItem(ordersThisMonth, cardTime);
+        return orderMapper.toOrderCardResult(ordersThisMonth, cardTime);
     }
 
     @Override
-    public OrderCardItemResult getCardUserPreviousMonth(Integer amznAccId) {
+    public OrderCardResult getCardUserPreviousMonth(Integer amznAccId) {
         Map<String, Instant> timeRange = TimeUtils.getInstantPreviousMonth();
         Instant startTime = timeRange.get("startTime");
         Instant endTIme = timeRange.get("endTime");
@@ -223,52 +223,52 @@ public class OrderServiceImpl implements OrderService {
         List<Order> ordersPreviousMonth = orderRepository.findByAmznAccIdWithTimeRange(amznAccId, startTime, endTIme);
 
         String cardTime = TimeUtils.getCardTimePreviousMonth();
-        return orderMapper.toOrderCardItem(ordersPreviousMonth, cardTime);
+        return orderMapper.toOrderCardResult(ordersPreviousMonth, cardTime);
     }
 
     @Override
-    public Map<String, OrderCardItemResult> getCardsGroup(Integer groupId) {
-        Map<String, OrderCardItemResult> ordersList = new HashMap<>();
+    public Map<String, OrderCardResult> getCardsGroup(Integer groupId) {
+        Map<String, OrderCardResult> ordersList = new HashMap<>();
 
-        OrderCardItemResult today = getCardGroupToday(groupId);
+        OrderCardResult today = getCardGroupToday(groupId);
         ordersList.put("today", today);
 
-        OrderCardItemResult allTime = getCardGroupAllTime(groupId);
+        OrderCardResult allTime = getCardGroupAllTime(groupId);
         ordersList.put("allTime", allTime);
 
-        OrderCardItemResult yesterday = getCardGroupYesterday(groupId);
+        OrderCardResult yesterday = getCardGroupYesterday(groupId);
         ordersList.put("yesterday", yesterday);
 
-        OrderCardItemResult lastSevenDays = getCardGroupLastSevenDays(groupId);
+        OrderCardResult lastSevenDays = getCardGroupLastSevenDays(groupId);
         ordersList.put("lastSevenDays", lastSevenDays);
 
-        OrderCardItemResult thisMonth = getCardGroupThisMonth(groupId);
+        OrderCardResult thisMonth = getCardGroupThisMonth(groupId);
         ordersList.put("thisMonth", thisMonth);
 
-        OrderCardItemResult previousMonth = getCardGroupPreviousMonth(groupId);
+        OrderCardResult previousMonth = getCardGroupPreviousMonth(groupId);
         ordersList.put("previousMonth", previousMonth);
 
         return ordersList;
     }
 
     @Override
-    public OrderCardItemResult getCardGroupAllTime(Integer groupId) {
+    public OrderCardResult getCardGroupAllTime(Integer groupId) {
         List<Order> orderList = orderRepository.findByGroupId(groupId);
-        return orderMapper.toOrderCardItem(orderList, null);
+        return orderMapper.toOrderCardResult(orderList, null);
     }
 
     @Override
-    public OrderCardItemResult getCardGroupToday(Integer groupIdd) {
+    public OrderCardResult getCardGroupToday(Integer groupIdd) {
         Instant startTime = TimeUtils.getInstantToday();
 
         List<Order> ordersToday = orderRepository.findByGroupIdWithStartDate(groupIdd, startTime);
 
         String cardTime = TimeUtils.getCardTimeToday();
-        return orderMapper.toOrderCardItem(ordersToday, cardTime);
+        return orderMapper.toOrderCardResult(ordersToday, cardTime);
     }
 
     @Override
-    public OrderCardItemResult getCardGroupYesterday(Integer groupId) {
+    public OrderCardResult getCardGroupYesterday(Integer groupId) {
         Map<String, Instant> timeRange = TimeUtils.getInstantYesterday();
         Instant startTime = timeRange.get("startTime");
         Instant endTime = timeRange.get("endTime");
@@ -276,31 +276,31 @@ public class OrderServiceImpl implements OrderService {
         List<Order> ordersYesterday = orderRepository.findByGroupIdWithTimeRange(groupId, startTime, endTime);
 
         String cardTime = TimeUtils.getCardTimeYesterday();
-        return orderMapper.toOrderCardItem(ordersYesterday, cardTime);
+        return orderMapper.toOrderCardResult(ordersYesterday, cardTime);
     }
 
     @Override
-    public OrderCardItemResult getCardGroupLastSevenDays(Integer groupId) {
+    public OrderCardResult getCardGroupLastSevenDays(Integer groupId) {
         Instant startTime = TimeUtils.getInstantLastSomeDays(7);
 
         List<Order> ordersLastWeek = orderRepository.findByGroupIdWithStartDate(groupId, startTime);
 
         String cardTime = TimeUtils.getCardTimeLastSevenDays();
-        return orderMapper.toOrderCardItem(ordersLastWeek, cardTime);
+        return orderMapper.toOrderCardResult(ordersLastWeek, cardTime);
     }
 
     @Override
-    public OrderCardItemResult getCardGroupThisMonth(Integer groupId) {
+    public OrderCardResult getCardGroupThisMonth(Integer groupId) {
         Instant startTime = TimeUtils.getInstantThisMonth();
 
         List<Order> ordersThisMonth = orderRepository.findByGroupIdWithStartDate(groupId, startTime);
 
         String cardTime = TimeUtils.getCardTimeThisMonth();
-        return orderMapper.toOrderCardItem(ordersThisMonth, cardTime);
+        return orderMapper.toOrderCardResult(ordersThisMonth, cardTime);
     }
 
     @Override
-    public OrderCardItemResult getCardGroupPreviousMonth(Integer groupId) {
+    public OrderCardResult getCardGroupPreviousMonth(Integer groupId) {
         Map<String, Instant> timeRange = TimeUtils.getInstantPreviousMonth();
         Instant startTime = timeRange.get("startTime");
         Instant endTIme = timeRange.get("endTime");
@@ -308,52 +308,52 @@ public class OrderServiceImpl implements OrderService {
         List<Order> ordersPreviousMonth = orderRepository.findByGroupIdWithTimeRange(groupId, startTime, endTIme);
 
         String cardTime = TimeUtils.getCardTimePreviousMonth();
-        return orderMapper.toOrderCardItem(ordersPreviousMonth, cardTime);
+        return orderMapper.toOrderCardResult(ordersPreviousMonth, cardTime);
     }
 
     @Override
-    public Map<String, OrderCardItemResult> getCardAllAcc() {
-        Map<String, OrderCardItemResult> ordersList = new HashMap<>();
+    public Map<String, OrderCardResult> getCardAllAcc() {
+        Map<String, OrderCardResult> ordersList = new HashMap<>();
 
-        OrderCardItemResult today = getCardAllAccToday();
+        OrderCardResult today = getCardAllAccToday();
         ordersList.put("today", today);
 
-        OrderCardItemResult allTime = getCardAllAccAllTime();
+        OrderCardResult allTime = getCardAllAccAllTime();
         ordersList.put("allTime", allTime);
 
-        OrderCardItemResult yesterday = getCardAllAccYesterday();
+        OrderCardResult yesterday = getCardAllAccYesterday();
         ordersList.put("yesterday", yesterday);
 
-        OrderCardItemResult lastSevenDays = getCardAllAccLastSevenDays();
+        OrderCardResult lastSevenDays = getCardAllAccLastSevenDays();
         ordersList.put("lastSevenDays", lastSevenDays);
 
-        OrderCardItemResult thisMonth = getCardAllAccThisMonth();
+        OrderCardResult thisMonth = getCardAllAccThisMonth();
         ordersList.put("thisMonth", thisMonth);
 
-        OrderCardItemResult previousMonth = getCardAllAccPreviousMonth();
+        OrderCardResult previousMonth = getCardAllAccPreviousMonth();
         ordersList.put("previousMonth", previousMonth);
 
         return ordersList;
     }
 
     @Override
-    public OrderCardItemResult getCardAllAccAllTime() {
+    public OrderCardResult getCardAllAccAllTime() {
         List<Order> ordersList = orderRepository.findAll();
-        return orderMapper.toOrderCardItem(ordersList, null);
+        return orderMapper.toOrderCardResult(ordersList, null);
     }
 
     @Override
-    public OrderCardItemResult getCardAllAccToday() {
+    public OrderCardResult getCardAllAccToday() {
         Instant startTime = TimeUtils.getInstantToday();
 
         List<Order> ordersToday = orderRepository.findAllWithStartDate(startTime);
 
         String cardTime = TimeUtils.getCardTimeToday();
-        return orderMapper.toOrderCardItem(ordersToday, cardTime);
+        return orderMapper.toOrderCardResult(ordersToday, cardTime);
     }
 
     @Override
-    public OrderCardItemResult getCardAllAccYesterday() {
+    public OrderCardResult getCardAllAccYesterday() {
         Map<String, Instant> timeRange = TimeUtils.getInstantYesterday();
         Instant startTime = timeRange.get("startTime");
         Instant endTime = timeRange.get("endTime");
@@ -361,31 +361,31 @@ public class OrderServiceImpl implements OrderService {
         List<Order> ordersYesterday = orderRepository.findAllWithTimeRange(startTime, endTime);
 
         String cardTime = TimeUtils.getCardTimeYesterday();
-        return orderMapper.toOrderCardItem(ordersYesterday, cardTime);
+        return orderMapper.toOrderCardResult(ordersYesterday, cardTime);
     }
 
     @Override
-    public OrderCardItemResult getCardAllAccLastSevenDays() {
+    public OrderCardResult getCardAllAccLastSevenDays() {
         Instant startTime = TimeUtils.getInstantLastSomeDays(7);
 
         List<Order> ordersLastWeek = orderRepository.findAllWithStartDate(startTime);
 
         String cardTime = TimeUtils.getCardTimeLastSevenDays();
-        return orderMapper.toOrderCardItem(ordersLastWeek, cardTime);
+        return orderMapper.toOrderCardResult(ordersLastWeek, cardTime);
     }
 
     @Override
-    public OrderCardItemResult getCardAllAccThisMonth() {
+    public OrderCardResult getCardAllAccThisMonth() {
         Instant startTime = TimeUtils.getInstantThisMonth();
 
         List<Order> ordersThisMonth = orderRepository.findAllWithStartDate(startTime);
 
         String cardTime = TimeUtils.getCardTimeThisMonth();
-        return orderMapper.toOrderCardItem(ordersThisMonth, cardTime);
+        return orderMapper.toOrderCardResult(ordersThisMonth, cardTime);
     }
 
     @Override
-    public OrderCardItemResult getCardAllAccPreviousMonth() {
+    public OrderCardResult getCardAllAccPreviousMonth() {
         Map<String, Instant> timeRange = TimeUtils.getInstantPreviousMonth();
         Instant startTime = timeRange.get("startTime");
         Instant endTIme = timeRange.get("endTime");
@@ -393,6 +393,6 @@ public class OrderServiceImpl implements OrderService {
         List<Order> ordersPreviousMonth = orderRepository.findAllWithTimeRange(startTime, endTIme);
 
         String cardTime = TimeUtils.getCardTimePreviousMonth();
-        return orderMapper.toOrderCardItem(ordersPreviousMonth, cardTime);
+        return orderMapper.toOrderCardResult(ordersPreviousMonth, cardTime);
     }
 }

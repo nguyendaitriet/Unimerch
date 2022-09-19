@@ -1,20 +1,25 @@
 package com.unimerch.mapper;
 
-import com.unimerch.dto.amznacc.AmznAccAnalyticsItemResult;
-import com.unimerch.dto.amznacc.AmznAccFilterItemResult;
-import com.unimerch.dto.amznacc.AmznAccParam;
-import com.unimerch.dto.amznacc.AmznAccResult;
+import com.unimerch.dto.amznacc.*;
 import com.unimerch.repository.model.AmznUser;
 import com.unimerch.repository.model.AzmnStatus;
 import com.unimerch.repository.model.BrgGroupAmznAccount;
+import com.unimerch.service.AmznUserService;
 import com.unimerch.service.OrderService;
+import com.unimerch.util.TimeUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Component
 public class AmznUserMapper {
     @Autowired
     OrderService orderService;
+
+    @Autowired
+    AmznUserService amznUserService;
 
     public AmznAccResult toDTO(BrgGroupAmznAccount brgGroupAmznAccount) {
         return new AmznAccResult()
@@ -44,22 +49,22 @@ public class AmznUserMapper {
                 .setTotalRemoved(0);
     }
 
-    public AmznAccFilterItemResult toAmznAccFilterItemResult(AmznUser amznUser) {
+    public AmznAccFilterResult toAmznAccFilterResult(AmznUser amznUser) {
         int soldToday = orderService.getNumberSoldInDayByAmznId(amznUser.getId());
 
-        return new AmznAccFilterItemResult()
+        return new AmznAccFilterResult()
                 .setId(amznUser.getId())
                 .setUsername(amznUser.getUsername())
                 .setSoldToday(soldToday);
     }
 
-    public AmznAccAnalyticsItemResult toAmznAccAnalyticsItemResult(AmznUser amznUser) {
+    public AmznAccAnalyticsResult toAmznAccAnalyticsResult(AmznUser amznUser) {
         int slotRemaining = amznUser.getDailyProductLimit() - amznUser.getDailyProductCount();
 
-        return new AmznAccAnalyticsItemResult()
+        return new AmznAccAnalyticsResult()
                 .setId(amznUser.getId())
                 .setUsername(amznUser.getUsername())
-                .setPublished(null)
+                .setPublished(amznUser.getOverallDesignCount())
                 .setTier(amznUser.getTier())
                 .setSlotRemaining(slotRemaining)
                 .setSlotTotal(amznUser.getDailyProductLimit())
@@ -68,5 +73,21 @@ public class AmznUserMapper {
                 .setNote(amznUser.getNote());
     }
 
+    public List<AmznAccDieResult> toAmznAccDieResults(List<AmznUser> amznUsers) {
+        List<AmznAccDieResult> accDieList = new ArrayList<>();
+        int no = 1;
 
+        for (AmznUser user : amznUsers) {
+            String lastCheck = TimeUtils.toDayMonthYear(TimeUtils.instantToLocalDate(user.getLastCheck()));
+
+            accDieList.add(new AmznAccDieResult()
+                    .setNo(no++)
+                    .setId(user.getId())
+                    .setUsername(user.getUsername())
+                    .setLastUpdate(lastCheck)
+                    .setAccountStatus(user.getStatus().getValue()));
+        }
+
+        return accDieList;
+    }
 }

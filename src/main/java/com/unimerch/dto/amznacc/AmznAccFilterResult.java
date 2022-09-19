@@ -1,4 +1,4 @@
-package com.unimerch.dto.user;
+package com.unimerch.dto.amznacc;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -6,14 +6,13 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.experimental.Accessors;
 
-@Getter
-@Setter
 @NoArgsConstructor
 @AllArgsConstructor
+@Getter
+@Setter
 @Accessors(chain = true)
-public class UserItemResult {
+public class AmznAccFilterResult {
     private Integer id;
     private String username;
-    private String fullName;
-    private boolean disabled;
+    private int soldToday;
 }

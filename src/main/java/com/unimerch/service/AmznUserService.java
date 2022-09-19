@@ -1,9 +1,6 @@
 package com.unimerch.service;
 
-import com.unimerch.dto.amznacc.AmznAccAnalyticsItemResult;
-import com.unimerch.dto.amznacc.AmznAccFilterItemResult;
-import com.unimerch.dto.amznacc.AmznAccParam;
-import com.unimerch.dto.amznacc.AmznAccResult;
+import com.unimerch.dto.amznacc.*;
 import com.unimerch.repository.model.AmznUser;
 import org.springframework.data.jpa.datatables.mapping.DataTablesInput;
 import org.springframework.data.jpa.datatables.mapping.DataTablesOutput;
@@ -20,7 +17,7 @@ public interface AmznUserService {
 
     List<AmznAccResult> findAll();
 
-    List<AmznAccFilterItemResult> findAllFilter();
+    List<AmznAccFilterResult> findAllFilter();
 
     AmznUser findById(String id);
 
@@ -34,10 +31,15 @@ public interface AmznUserService {
 
     AmznAccResult findByUsername(String username);
 
-    List<AmznAccAnalyticsItemResult> findAllAnalytics();
+    List<AmznAccAnalyticsResult> findAllAnalytics();
 
-    List<AmznAccAnalyticsItemResult> findAnalyticsByGrpId(String groupId);
+    List<AmznAccAnalyticsResult> findAnalyticsByGrpId(String groupId);
 
-    List<AmznAccAnalyticsItemResult> findAnalyticsByAmznAccId(String amznAccId);
+    List<AmznAccAnalyticsResult> findAnalyticsByAmznAccId(String amznAccId);
 
+    void addNoteToAmznAcc(String id, String note);
+
+    List<AmznAccDieResult> findAllAccDie();
+
+    List<AmznAccDieResult> findAccDieByGrpId(String groupId);
 }

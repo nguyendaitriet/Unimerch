@@ -11,7 +11,7 @@ import lombok.experimental.Accessors;
 @Getter
 @Setter
 @Accessors(chain = true)
-public class AmznAccAnalyticsItemResult {
+public class AmznAccAnalyticsResult {
     private Integer id;
     private String username;
     private Integer published;

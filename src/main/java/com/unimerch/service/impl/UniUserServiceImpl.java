@@ -1,8 +1,8 @@
 package com.unimerch.service.impl;
 
-import com.unimerch.dto.group.GroupItemResult;
+import com.unimerch.dto.group.GroupResult;
 import com.unimerch.dto.user.UserCreateParam;
-import com.unimerch.dto.user.UserItemResult;
+import com.unimerch.dto.user.UserResult;
 import com.unimerch.exception.*;
 import com.unimerch.mapper.GroupMapper;
 import com.unimerch.mapper.UserMapper;
@@ -65,17 +65,17 @@ public class UniUserServiceImpl implements UniUserService {
     private RoleServiceImpl roleService;
 
     @Override
-    public DataTablesOutput<UserItemResult> findAllUserDTOExclSelf(DataTablesInput input, String principalUsername) {
+    public DataTablesOutput<UserResult> findAllUserDTOExclSelf(DataTablesInput input, String principalUsername) {
         List<Column> columnList = input.getColumns();
         columnList.remove(columnList.size() - 1);
         input.setColumns(columnList);
 
-        return userDataTableRepository.findAll(input, user -> userMapper.toUserItemResult(user));
+        return userDataTableRepository.findAll(input, user -> userMapper.toUserResult(user));
     }
 
     @Override
-    public UserItemResult findUserItemResultByUsername(String username) {
-        return userMapper.toUserItemResult(getByUsername(username));
+    public UserResult findUserItemResultByUsername(String username) {
+        return userMapper.toUserResult(getByUsername(username));
     }
 
     @Override
@@ -102,12 +102,12 @@ public class UniUserServiceImpl implements UniUserService {
     }
 
     @Override
-    public UserItemResult findUserListItemById(String id) {
-        return userMapper.toUserItemResult(findById(id));
+    public UserResult findUserListById(String id) {
+        return userMapper.toUserResult(findById(id));
     }
 
     @Override
-    public UserItemResult create(UserCreateParam userCreateParam) {
+    public UserResult create(UserCreateParam userCreateParam) {
         User newUser = userMapper.toUser(userCreateParam);
 
         newUser.setSalt("abc");
@@ -123,7 +123,7 @@ public class UniUserServiceImpl implements UniUserService {
             throw new DataInputException(messageSource.getMessage("validation.invalidAccountInformation", null, Locale.getDefault()));
         }
 
-        return userMapper.toUserItemResult(newUser);
+        return userMapper.toUserResult(newUser);
     }
 
 
@@ -158,7 +158,7 @@ public class UniUserServiceImpl implements UniUserService {
     }
 
     @Override
-    public UserItemResult changeStatus(String id) {
+    public UserResult changeStatus(String id) {
         User user = findById(id);
 
         if (roleService.isUserAdmin(id))
@@ -168,7 +168,7 @@ public class UniUserServiceImpl implements UniUserService {
 
         try {
             user = userRepository.save(user);
-            return userMapper.toUserItemResult(user);
+            return userMapper.toUserResult(user);
         } catch (Exception e) {
             throw new ServerErrorException(messageSource.getMessage("error.500", null, Locale.getDefault()));
         }
@@ -187,36 +187,36 @@ public class UniUserServiceImpl implements UniUserService {
     }
 
     @Override
-    public List<GroupItemResult> findAssignedGroups(String userId) {
+    public List<GroupResult> findAssignedGroups(String userId) {
         User user = findById(userId);
 
-        List<GroupItemResult> groupListResult = new ArrayList<>();
+        List<GroupResult> groupListResult = new ArrayList<>();
 
         brgGroupUserRepository.findAssignedGroupsByUserId(user.getId())
-                .forEach(group -> groupListResult.add(groupMapper.toGroupItemResult(group)));
+                .forEach(group -> groupListResult.add(groupMapper.toGroupResult(group)));
 
         return groupListResult;
     }
 
     @Override
-    public List<GroupItemResult> findUnassignedGroups(String userId) {
+    public List<GroupResult> findUnassignedGroups(String userId) {
         User user = findById(userId);
 
-        List<GroupItemResult> groupListResult = new ArrayList<>();
+        List<GroupResult> groupListResult = new ArrayList<>();
 
         brgGroupUserRepository.findUnassignedGroupsByUserId(user.getId())
-                .forEach(group -> groupListResult.add(groupMapper.toGroupItemResult(group)));
+                .forEach(group -> groupListResult.add(groupMapper.toGroupResult(group)));
 
         return groupListResult;
     }
 
     @Override
-    public List<GroupItemResult> assignGroupToUser(String userId, List<String> listGroupId) {
+    public List<GroupResult> assignGroupToUser(String userId, List<String> listGroupId) {
         if (listGroupId.isEmpty())
             throw new DataInputException(messageSource.getMessage("validation.inputEmpty", null, Locale.getDefault()));
 
         User user = findById(userId);
-        List<GroupItemResult> groupListResult = new ArrayList<>();
+        List<GroupResult> groupListResult = new ArrayList<>();
 
         for (String groupId : listGroupId) {
             Group group = groupService.findById(groupId);
@@ -225,7 +225,7 @@ public class UniUserServiceImpl implements UniUserService {
             BrgGroupUser newBridge = new BrgGroupUser(bridgeId, group, user);
 
             brgGroupUserRepository.save(newBridge);
-            groupListResult.add(groupMapper.toGroupItemResult(group));
+            groupListResult.add(groupMapper.toGroupResult(group));
         }
 
         return groupListResult;

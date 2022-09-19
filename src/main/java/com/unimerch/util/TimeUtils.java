@@ -1,5 +1,7 @@
 package com.unimerch.util;
 
+import com.unimerch.exception.ServerErrorException;
+
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.*;
@@ -122,6 +124,10 @@ public class TimeUtils {
         } catch (ParseException e) {
             throw new IllegalArgumentException(e);
         }
+    }
+
+    public static LocalDate instantToLocalDate(Instant instant) {
+        return LocalDate.ofInstant(instant, zoneIdVN);
     }
 
     public static String dateToString(Date date, String pattern) {

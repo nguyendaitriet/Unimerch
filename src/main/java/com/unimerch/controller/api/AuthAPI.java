@@ -2,9 +2,8 @@ package com.unimerch.controller.api;
 
 import com.unimerch.dto.amznacc.AmznAccResult;
 import com.unimerch.dto.user.LoginParam;
-import com.unimerch.dto.user.UserItemResult;
+import com.unimerch.dto.user.UserResult;
 import com.unimerch.repository.model.JwtResponse;
-import com.unimerch.repository.model.User;
 import com.unimerch.security.NameConstant;
 import com.unimerch.service.AmznUserService;
 import com.unimerch.service.UniUserService;
@@ -42,7 +41,7 @@ public class AuthAPI {
     @PostMapping("/api/login")
     public ResponseEntity<?> uniLogin(@RequestBody LoginParam loginParam) {
         Authentication authentication = uniAuthenticationManager.authenticate(new UsernamePasswordAuthenticationToken(loginParam.getUsername(), loginParam.getPassword()));
-        UserItemResult user = uniUserService.findUserItemResultByUsername(loginParam.getUsername());
+        UserResult user = uniUserService.findUserItemResultByUsername(loginParam.getUsername());
         if (user.isDisabled()) {
             return new ResponseEntity<>(HttpStatus.FORBIDDEN);
         }

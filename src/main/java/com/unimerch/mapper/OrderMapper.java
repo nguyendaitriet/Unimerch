@@ -5,15 +5,13 @@ import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.databind.DeserializationContext;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.deser.std.StdDeserializer;
-import com.unimerch.dto.order.OrderCardItemResult;
+import com.unimerch.dto.order.OrderCardResult;
 import com.unimerch.dto.order.OrderChartColumn;
 import com.unimerch.dto.order.OrderChartResult;
 import com.unimerch.dto.order.OrderData;
 import com.unimerch.repository.model.Order;
 import com.unimerch.repository.model.Product;
 import com.unimerch.util.ChartUtils;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Component;
 
 import java.io.IOException;
@@ -69,8 +67,8 @@ public class OrderMapper extends StdDeserializer<OrderData> {
         return orderData;
     }
 
-    public OrderCardItemResult toOrderCardItem(List<Order> ordersList, String date) {
-        OrderCardItemResult cardItem = new OrderCardItemResult();
+    public OrderCardResult toOrderCardResult(List<Order> ordersList, String date) {
+        OrderCardResult cardItem = new OrderCardResult();
 
         Integer numberSold = 0;
         Integer cancelled = 0;

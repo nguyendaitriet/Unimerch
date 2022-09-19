@@ -25,12 +25,6 @@
 
             <!-- Begin Page Content -->
             <div class="container-fluid">
-
-                <!-- Page Heading -->
-                <div class="d-sm-flex align-items-center justify-content-between mb-4">
-                    <h1 class="h3 mb-0 text-gray-800" th:text="#{user.pageHeading}">Users List</h1>
-                </div>
-
                 <div class="row">
 
                     <!-- Users -->
@@ -38,8 +32,11 @@
                         <div class="card shadow mb-4">
                             <!-- Card Header - Dropdown -->
                             <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
-                                <h4 class="m-0 font-weight-bold text-primary" th:text="#{user.tabHeader}">Users
-                                    Overview</h4>
+                                <a class="m-0 h4 font-weight-bold text-primary text-decoration-none"
+                                   th:href="@{'/dashboard/user'}"
+                                    th:text="#{user.tabHeader}">
+                                    User Overview
+                                </a>
                             </div>
 
                             <!-- Card Body -->
@@ -49,7 +46,7 @@
                                        class="table table-striped table-bordered dt-responsive nowrap"
                                        style="width: 100%;">
                                     <thead>
-                                    <tr>
+                                    <tr class="text-dark">
                                         <th style="visibility: hidden">#</th>
                                         <th th:text="#{user.table.th.username}">Username</th>
                                         <th th:text="#{user.table.th.fullName}">Full name</th>
@@ -363,7 +360,7 @@
         })
     });
 
-    page.commands.doCreateUser = function () {
+    page.commands.doCreateUser = () => {
         let user = new User();
 
         user.fullName = page.dialogs.element.fullNameCreate.val();
@@ -413,7 +410,7 @@
             "url": page.urls.changePassword + currentUser.id,
             "data": newPassword
         })
-            .done((data) => {
+            .done(() => {
                 page.dialogs.element.frmCPUser[0].reset();
                 page.dialogs.element.mdCPUser.modal("hide");
 

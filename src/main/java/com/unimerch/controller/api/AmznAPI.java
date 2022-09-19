@@ -1,9 +1,6 @@
 package com.unimerch.controller.api;
 
-import com.unimerch.dto.amznacc.AmznAccAnalyticsItemResult;
-import com.unimerch.dto.amznacc.AmznAccFilterItemResult;
-import com.unimerch.dto.amznacc.AmznAccParam;
-import com.unimerch.dto.amznacc.AmznAccResult;
+import com.unimerch.dto.amznacc.*;
 import com.unimerch.service.AmznUserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.jpa.datatables.mapping.DataTablesInput;
@@ -75,35 +72,43 @@ public class AmznAPI {
     //    @PreAuthorize("hasAnyAuthority('MANAGER')")
     @GetMapping("/findAllFilter")
     public ResponseEntity<?> findAllAmznAccFilter() {
-        List<AmznAccFilterItemResult> amznAccResults = amznUserService.findAllFilter();
+        List<AmznAccFilterResult> amznAccResults = amznUserService.findAllFilter();
         return new ResponseEntity<>(amznAccResults, HttpStatus.OK);
     }
 
     @GetMapping("/analytics-all")
     public ResponseEntity<?> findAllAnalytics() {
-        List<AmznAccAnalyticsItemResult> analyticsList = amznUserService.findAllAnalytics();
+        List<AmznAccAnalyticsResult> analyticsList = amznUserService.findAllAnalytics();
         return new ResponseEntity<>(analyticsList, HttpStatus.OK);
     }
 
     @GetMapping("/analytics-grp/{id}")
     public ResponseEntity<?> findAnalyticsByGroupId(@PathVariable String id) {
-        List<AmznAccAnalyticsItemResult> analyticsList = amznUserService.findAnalyticsByGrpId(id);
+        List<AmznAccAnalyticsResult> analyticsList = amznUserService.findAnalyticsByGrpId(id);
         return new ResponseEntity<>(analyticsList, HttpStatus.OK);
     }
 
     @GetMapping("/analytics-acc/{id}")
     public ResponseEntity<?> findAnalyticsByAmznAccId(@PathVariable String id) {
-        List<AmznAccAnalyticsItemResult> analyticsList = amznUserService.findAnalyticsByAmznAccId(id);
+        List<AmznAccAnalyticsResult> analyticsList = amznUserService.findAnalyticsByAmznAccId(id);
         return new ResponseEntity<>(analyticsList, HttpStatus.OK);
+    }
+
+    @PostMapping("/analytics-note/{id}")
+    public ResponseEntity<?> addNoteToAmznAcc(@PathVariable String id, @RequestBody(required = false) String note) {
+        amznUserService.addNoteToAmznAcc(id, note);
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 
     @GetMapping("/die-all")
     public ResponseEntity<?> findAllAccountDie() {
-        return null;
+        List<AmznAccDieResult> accDieList = amznUserService.findAllAccDie();
+        return new ResponseEntity<>(accDieList, HttpStatus.OK);
     }
 
     @GetMapping("/die-grp/{id}")
     public ResponseEntity<?> findAccountDieByGrpId(@PathVariable String id) {
-        return null;
+        List<AmznAccDieResult> accDieList = amznUserService.findAccDieByGrpId(id);
+        return new ResponseEntity<>(accDieList, HttpStatus.OK);
     }
 }

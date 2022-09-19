@@ -1,9 +1,9 @@
 package com.unimerch.service;
 
-import com.unimerch.dto.amznacc.AmznAccFilterItemResult;
+import com.unimerch.dto.amznacc.AmznAccFilterResult;
 import com.unimerch.dto.amznacc.AmznAccResult;
 import com.unimerch.dto.group.GroupCreateParam;
-import com.unimerch.dto.group.GroupItemResult;
+import com.unimerch.dto.group.GroupResult;
 import com.unimerch.dto.group.GroupUpdateParam;
 import com.unimerch.repository.model.Group;
 import org.springframework.data.jpa.datatables.mapping.DataTablesInput;
@@ -14,17 +14,17 @@ import java.util.List;
 
 public interface GroupService {
 
-    List<GroupItemResult> findAll();
+    List<GroupResult> findAll();
 
-    DataTablesOutput<GroupItemResult> findAll(DataTablesInput input);
+    DataTablesOutput<GroupResult> findAll(DataTablesInput input);
 
     Group findById(String id);
 
-    GroupItemResult findGroupItemResultById(String id);
+    GroupResult findGroupItemResultById(String id);
 
-    GroupItemResult createGroup(GroupCreateParam groupCreateParam);
+    GroupResult createGroup(GroupCreateParam groupCreateParam);
 
-    GroupItemResult updateGroup(String id, GroupUpdateParam groupUpdateParam);
+    GroupResult updateGroup(String id, GroupUpdateParam groupUpdateParam);
 
     void deleteGroup(String id);
 
@@ -36,5 +36,5 @@ public interface GroupService {
 
     void deleteAmznAccFromGroup(int amznAccId, int groupId);
 
-    List<AmznAccFilterItemResult> findAllAmznAccInGrpFilter(Integer groupId);
+    List<AmznAccFilterResult> findAllAmznAccInGrpFilter(Integer groupId);
 }

@@ -1,6 +1,6 @@
 package com.unimerch.controller.api;
 
-import com.unimerch.dto.order.OrderCardItemResult;
+import com.unimerch.dto.order.OrderCardResult;
 import com.unimerch.dto.order.OrderChartResult;
 import com.unimerch.dto.order.OrderData;
 import com.unimerch.service.OrderService;
@@ -44,19 +44,19 @@ public class OrderAPI {
 
     @GetMapping("/card-all")
     public ResponseEntity<?> getSaleCardsAll() {
-        Map<String, OrderCardItemResult> orderCards = orderService.getCardAllAcc();
+        Map<String, OrderCardResult> orderCards = orderService.getCardAllAcc();
         return new ResponseEntity<>(orderCards, HttpStatus.OK);
     }
 
     @GetMapping("/card-acc/{id}")
     public ResponseEntity<?> getSaleCardsUser(@PathVariable Integer id) {
-        Map<String, OrderCardItemResult> orderCards = orderService.getCardsUser(id);
+        Map<String, OrderCardResult> orderCards = orderService.getCardsUser(id);
         return new ResponseEntity<>(orderCards, HttpStatus.OK);
     }
 
     @GetMapping("/card-grp/{id}")
     public ResponseEntity<?> getSaleCardsGroup(@PathVariable Integer id) {
-        Map<String, OrderCardItemResult> orderCards = orderService.getCardsGroup(id);
+        Map<String, OrderCardResult> orderCards = orderService.getCardsGroup(id);
         return new ResponseEntity<>(orderCards, HttpStatus.OK);
     }
 

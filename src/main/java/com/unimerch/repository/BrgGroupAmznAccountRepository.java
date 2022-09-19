@@ -41,4 +41,12 @@ public interface BrgGroupAmznAccountRepository extends JpaRepository<BrgGroupAmz
     void deleteAmznAccFromGroup(@Param("amznAccId") Integer amznAccId, @Param("groupId") Integer groupId);
 
     void deleteByAmznAccount_Id(Integer amznAccId);
+
+    @Query("SELECT a " +
+            "FROM BrgGroupAmznAccount AS br " +
+            "INNER JOIN AmznUser AS a " +
+            "ON br.amznAccount.id = a.id " +
+            "WHERE br.group.id = :id " +
+            "AND a.status = 'TERMINATED'")
+    List<AmznUser> getAmznAccDieInGroup(@Param("id") Integer id);
 }

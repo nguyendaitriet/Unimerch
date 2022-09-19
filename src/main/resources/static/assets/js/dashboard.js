@@ -109,7 +109,9 @@ class DBApp {
                     DBApp.autoScrollFilterSidebar();
                 });
 
-                this.handleFilter('filter-sidebar', 'sidebar-grp-search', 'collapse-item');
+                this.handleFilter('filter-sidebar',
+                    'sidebar-grp-search',
+                    'collapse-item');
 
             })
             .fail((jqXHR) => {

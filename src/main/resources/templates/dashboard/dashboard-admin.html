@@ -26,15 +26,6 @@
 
             <!-- Begin Page Content -->
             <div class="container-fluid">
-
-                <!-- Page Heading -->
-                <div class="d-sm-flex align-items-center justify-content-between mb-4">
-                    <a class="h3 mb-0 text-gray-800 text-decoration-none" th:text="${group.title}"
-                       th:href="@{'/dashboard/' + ${(group.id != 0) ? group.id : ''}}">
-                        Dashboard
-                    </a>
-                </div>
-
                 <div class="row">
                     <!-- User Filter-->
                     <div id="sticky-filter" class="col-3 col-md-2">
@@ -42,8 +33,9 @@
                             <!-- Card Header -->
                             <div id="sticky-filter-header"
                                  class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
-                                <h6 class="m-0 font-weight-bold text-primary custom-card-title"
-                                    th:text="#{dashboard.filterTitle}">Accounts</h6>
+                                <a class="custom-card-title m-0 font-weight-bold text-primary text-decoration-none"
+                                    th:href="@{'/dashboard/' + ${(group.id != 0) ? group.id : ''}}"
+                                    th:text="${group.title}">Accounts</a>
                             </div>
                             <div class="input-group input-group-sm mt-2 filter-group">
                                 <div class="input-group-prepend">
@@ -462,7 +454,8 @@
                                            style="width: 100%;"
                                            class="table table-striped table-bordered dt-responsive nowrap">
                                         <thead>
-                                        <tr>
+                                        <tr class="text-dark">
+                                            <th style="visibility: hidden">Id</th>
                                             <th>User</th>
                                             <th>Published</th>
                                             <th>Tier</th>
@@ -471,7 +464,6 @@
                                             <th>Reject</th>
                                             <th>Remove</th>
                                             <th>Note</th>
-                                            <th></th>
                                         </tr>
                                         </thead>
                                     </table>
@@ -484,7 +476,8 @@
                                            style="width: 100%;"
                                            class="table table-striped table-bordered dt-responsive">
                                         <thead>
-                                        <tr>
+                                        <tr class="text-dark">
+                                            <th style="visibility: hidden">Id</th>
                                             <th>#</th>
                                             <th>Username</th>
                                             <th>Last Update</th>
@@ -538,6 +531,7 @@
             findAnalyticsAll: CommonApp.BASE_URL_AMZN_ACCOUNT + "/analytics-all",
             findAnalyticsByGroupId: CommonApp.BASE_URL_AMZN_ACCOUNT + "/analytics-grp/",
             findAnalyticsByUserId: CommonApp.BASE_URL_AMZN_ACCOUNT + "/analytics-acc/",
+            addNote: CommonApp.BASE_URL_AMZN_ACCOUNT + "/analytics-note/",
 
             findAccountDieAll: CommonApp.BASE_URL_AMZN_ACCOUNT + "/die-all",
             findAccountDieByGroupId: CommonApp.BASE_URL_AMZN_ACCOUNT + "/die-grp/",
@@ -621,6 +615,11 @@
     page.dialogs.element.previousMonthReturned = $("#previousMonthReturned");
     page.dialogs.element.previousMonthRoyalties = $("#previousMonthRoyalties");
 
+    page.dialogs.element.mdAddNote = $('#mdAddNote');
+    page.dialogs.element.frmAddNote = $('#frmAddNote');
+    page.dialogs.element.noteArea = $('#addNoteArea');
+    page.dialogs.element.btnSaveNote = $('#btnSaveNote');
+
     page.commands.initTodaySoldTable = () => {
         let todaySoldTable = page.element.tableTodaySold.DataTable({
             ajax: {
@@ -668,6 +667,7 @@
 
         todaySoldTable.order([0, "desc"]).draw();
     }
+
     page.commands.init30DaysSoldTable = () => {
         let thirtyDaysSoldTable = page.element.table30DaysSold.DataTable({
             ajax: {
@@ -714,8 +714,8 @@
         });
 
         thirtyDaysSoldTable.order([0, "desc"]).draw();
-
     }
+
     page.commands.initThisMonthSoldTable = () => {
         let thisMonthSoldTable = page.element.tableThisMonthSold.DataTable({
             ajax: {
@@ -762,7 +762,6 @@
         });
 
         thisMonthSoldTable.order([0, "desc"]).draw();
-
     }
 
     page.commands.initAnalyticsTable = () => {
@@ -774,7 +773,7 @@
             },
             pagingType: 'simple_numbers',
             columns: [
-                // {data: 'id'},
+                {data: 'id'},
                 {data: 'username'},
                 {data: 'published'},
                 {data: 'tier'},
@@ -782,26 +781,30 @@
                 {data: 'slotTotal'},
                 {data: 'reject'},
                 {data: 'remove'},
-                {data: 'note'},
-                {data: null}
+                {data: 'note'}
             ],
             columnDefs: [
-                // {
-                //     targets: 0,
-                //     visible: false
-                // },
-                // {
-                //     targets: [1, 2, 3, 4, 5, 6, 7],
-                //     type: 'natural'
-                // },
+                {
+                    targets: 0,
+                    visible: false
+                },
+                {
+                    targets: [1, 2, 3, 4, 5, 6],
+                    type: 'natural'
+                },
+                {
+                    targets: [2, 3, 4, 5, 6, 7],
+                    className: 'text-right'
+                },
                 {
                     targets: -1,
-                    className: 'text-center',
+                    className: 'text-center add-note',
                     orderable: false,
-                    render: (data, type, row) =>
-                        `<button title='${btnNote}' class="add-note btn btn-outline-primary">
-                            <i class="fas fa-pencil-alt"></i>
-                        </button>`
+                    render: (data, type, row) => {
+                        if (data === null)
+                            return data;
+                        return (data.length > 7) ? (data.substr(0, 7) + "...") : data
+                    }
                 }
             ],
             language: {
@@ -827,31 +830,141 @@
         let currentRowDOM;
         let currentRow;
 
-        page.element.tableAnalytics.on('click', 'button.add-note', function () {
+        page.element.tableAnalytics.on('click', '.add-note', function () {
             currentRowDOM = $(this).parents('tr');
 
             if (currentRowDOM.hasClass('child'))
                 currentRowDOM = currentRowDOM.prev();
 
-            currentRow = table.row(currentRowDOM);
+            currentRow = analyticsTable.row(currentRowDOM);
             currentAmznUser = currentRow.data();
+
+            page.dialogs.element.noteArea.val(currentAmznUser.note);
+
+            page.dialogs.element.mdAddNote.modal('show');
         });
+
+        page.dialogs.element.btnSaveNote.on('click', function () {
+            page.dialogs.element.frmAddNote.submit();
+        })
+
+        page.dialogs.element.frmAddNote.validate({
+            rules: {
+                note: {
+                    maxlength: 50
+                }
+            },
+            messages: {
+                note: {
+                    maxlength: validNote
+                }
+            },
+            submitHandler: function () {
+                page.commands.doAddNote(currentAmznUser, currentRow);
+            }
+        })
+    }
+
+    page.commands.doAddNote = (currentAmznUser, currentRow) => {
+        let note = page.dialogs.element.noteArea.val();
+        $.ajax({
+            "headers": {
+                "accept": "application/json",
+                "content-type": "application/json"
+            },
+            "type": "POST",
+            "url": page.urls.addNote + currentAmznUser.id,
+            "data": note
+        })
+            .done(() => {
+                let tableAnalytics = page.element.tableAnalytics.DataTable();
+
+                tableAnalytics.row(currentRow).data({
+                    'id': currentAmznUser.id,
+                    'username': currentAmznUser.username,
+                    'published': currentAmznUser.published,
+                    'tier': currentAmznUser.tier,
+                    'slotRemaining': currentAmznUser.slotRemaining,
+                    'slotTotal': currentAmznUser.slotTotal,
+                    'reject': currentAmznUser.reject,
+                    'remove': currentAmznUser.remove,
+                    'note': note
+                })
+                    .draw('full-hold');
+
+                page.dialogs.element.frmAddNote[0].reset();
+                page.dialogs.element.mdAddNote.modal("hide");
+
+                CommonApp.SweetAlert.showSuccessAlert(SUCCESS_UPDATED);
+            })
+            .fail((jqXHR) => {
+                DBApp.handleFailedTasks(jqXHR);
+            })
     }
 
     page.commands.initAccountDieTable = () => {
         let accountDieTable = page.element.tableAccountDie.DataTable({
-
+            ajax: {
+                contentType: 'application/json',
+                url: '/assets/json/data.json',
+                dataSrc: ''
+            },
+            pagingType: 'simple_numbers',
+            columns: [
+                {data: 'id'},
+                {data: 'no'},
+                {data: 'username'},
+                {data: 'lastUpdate'},
+                {data: 'accountStatus'}
+            ],
+            columnDefs: [
+                {
+                    targets: 0,
+                    visible: false
+                },
+                {
+                    targets: 1,
+                    className: 'text-center'
+                },
+                {
+                    targets: [1, 2],
+                    type: 'natural'
+                },
+                {
+                    targets: -1,
+                    className: 'text-center',
+                    orderable: false
+                }
+            ],
+            language: {
+                search: `<i class="fas fa-search text-primary"></i> `,
+                paginate: {
+                    previous: `<i class="fas fa-angle-left"></i>`,
+                    next: `<i class="fas fa-angle-right"></i>`
+                },
+                aria: {
+                    paginate: {
+                        previous: 'Previous',
+                        next: 'Next'
+                    }
+                },
+                emptyTable: `${noDataInTable}`
+            },
+            pageLength: 10,
+            lengthChange: false,
+            dom: '<"text-right mb-2"f>rtp'
         });
     }
 
     $(document).ready(function () {
         DBApp.handleGroupsFilterSidebar();
 
+        page.commands.handleContentDashboard(currentGrpId);
         page.commands.initTodaySoldTable();
         page.commands.init30DaysSoldTable();
         page.commands.initThisMonthSoldTable();
         page.commands.initAnalyticsTable();
-        page.commands.handleContentDashboard(currentGrpId);
+        page.commands.initAccountDieTable();
     })
 
     //sticky Filter
@@ -1058,9 +1171,10 @@
         let table30DaysUrl = page.urls.findAllLast30DaysSoldInGroup + groupId;
         let tableThisMonthUrl = page.urls.findAllThisMonthSoldInGroup + groupId;
         let tableAnalyticsUrl = page.urls.findAnalyticsByGroupId + groupId;
+        let tableAccDieUrl = page.urls.findAccountDieByGroupId + groupId;
 
         /** when url does not point to a specific group */
-        if (isNaN(groupId) || groupId === '')
+        if (isNaN(groupId) || groupId === '') {
             listUserUrl = page.urls.findAllAmznAccountFilter;
             chartDataUrl = page.urls.findChartAll;
             cardDataUrl = page.urls.findCardsAll;
@@ -1068,6 +1182,8 @@
             table30DaysUrl = page.urls.findAllLast30DaysSoldAllAmznAcc;
             tableThisMonthUrl = page.urls.findAllThisMonthSoldAllAmznAcc;
             tableAnalyticsUrl = page.urls.findAnalyticsAll;
+            tableAccDieUrl = page.urls.findAccountDieAll;
+        }
 
         $.ajax({
             "headers": {
@@ -1087,6 +1203,7 @@
                 page.element.tableThisMonthSold.DataTable().ajax.url(tableThisMonthUrl).load();
 
                 page.element.tableAnalytics.DataTable().ajax.url(tableAnalyticsUrl).load();
+                page.element.tableAccountDie.DataTable().ajax.url(tableAccDieUrl).load();
             })
             .fail((jqXHR) => {
                 DBApp.handleFailedTasks(jqXHR);

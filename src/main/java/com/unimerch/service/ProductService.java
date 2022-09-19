@@ -1,18 +1,16 @@
 package com.unimerch.service;
 
-import com.unimerch.dto.product.ProductItemResult;
-import org.springframework.data.jpa.datatables.mapping.DataTablesInput;
-import org.springframework.data.jpa.datatables.mapping.DataTablesOutput;
+import com.unimerch.dto.product.ProductResult;
 
 import java.util.List;
 
 public interface ProductService {
 
-    List<ProductItemResult> findAllTodaySoldProduct(Integer id, int choice);
+    List<ProductResult> findAllTodaySoldProduct(Integer id, int choice);
 
-    List<ProductItemResult> findAllThisMonthSoldProduct(Integer id, int choice);
+    List<ProductResult> findAllThisMonthSoldProduct(Integer id, int choice);
 
-    List<ProductItemResult> findAllLast30DaysSoldProduct(Integer id, int choice);
+    List<ProductResult> findAllLast30DaysSoldProduct(Integer id, int choice);
 
     void updateProduct(String productData);
 }

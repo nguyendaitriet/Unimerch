@@ -1,8 +1,8 @@
 package com.unimerch.controller.api;
 
-import com.unimerch.dto.group.GroupItemResult;
+import com.unimerch.dto.group.GroupResult;
 import com.unimerch.dto.user.UserCreateParam;
-import com.unimerch.dto.user.UserItemResult;
+import com.unimerch.dto.user.UserResult;
 import com.unimerch.service.UniUserService;
 import com.unimerch.util.AppUtils;
 import com.unimerch.util.PrincipalUtils;
@@ -29,7 +29,7 @@ public class UserAPI {
 
     //    @PreAuthorize("hasAnyAuthority('MANAGER')")
     @PostMapping
-    public DataTablesOutput<UserItemResult> findAllUsersPageableExclSelf(@Valid @RequestBody(required = false) DataTablesInput input) {
+    public DataTablesOutput<UserResult> findAllUsersPageableExclSelf(@Valid @RequestBody(required = false) DataTablesInput input) {
         String principalUsername = principalUtils.getPrincipalUsername();
         return userService.findAllUserDTOExclSelf(input, principalUsername);
     }
@@ -37,8 +37,8 @@ public class UserAPI {
     //    @PreAuthorize("hasAnyAuthority('MANAGER')")
     @GetMapping("/{id}")
     public ResponseEntity<?> findUserById(@PathVariable String id) {
-        UserItemResult userItemResult = userService.findUserListItemById(id);
-        return new ResponseEntity<>(userItemResult, HttpStatus.OK);
+        UserResult userResult = userService.findUserListById(id);
+        return new ResponseEntity<>(userResult, HttpStatus.OK);
     }
 
     //    @PreAuthorize("hasAnyAuthority('MANAGER')")
@@ -48,7 +48,7 @@ public class UserAPI {
         if (bindingResult.hasErrors())
             return AppUtils.mapErrorToResponse(bindingResult);
 
-        UserItemResult newUser = userService.create(userCreateParam);
+        UserResult newUser = userService.create(userCreateParam);
         return new ResponseEntity<>(newUser, HttpStatus.CREATED);
     }
 
@@ -69,27 +69,27 @@ public class UserAPI {
     //    @PreAuthorize("hasAnyAuthority('MANAGER')")
     @PutMapping("/changeStatus/{id}")
     public ResponseEntity<?> changeUserStatus(@PathVariable String id) {
-       UserItemResult userItemResult = userService.changeStatus(id);
-        return new ResponseEntity<>(userItemResult, HttpStatus.OK);
+       UserResult userResult = userService.changeStatus(id);
+        return new ResponseEntity<>(userResult, HttpStatus.OK);
     }
 
     @GetMapping("/asgnGrp/{id}")
     public ResponseEntity<?> findAssignedGroups(@PathVariable String id) {
-        List<GroupItemResult> groupList = userService.findAssignedGroups(id);
+        List<GroupResult> groupList = userService.findAssignedGroups(id);
         return new ResponseEntity<>(groupList, HttpStatus.OK);
     }
 
     //    @PreAuthorize("hasAnyAuthority('MANAGER')")
     @GetMapping("/asgnGrpNot/{id}")
     public ResponseEntity<?> findUnassignedGroups(@PathVariable String id) {
-        List<GroupItemResult> groupList = userService.findUnassignedGroups(id);
+        List<GroupResult> groupList = userService.findUnassignedGroups(id);
         return new ResponseEntity<>(groupList, HttpStatus.OK);
     }
 
 
     @PostMapping("/asgnGrp/{userId}/add")
     public ResponseEntity<?> assignNewGroups(@PathVariable String userId, @RequestBody List<String> listGroupId) {
-        List<GroupItemResult> groupList = userService.assignGroupToUser(userId, listGroupId);
+        List<GroupResult> groupList = userService.assignGroupToUser(userId, listGroupId);
         return new ResponseEntity<>(groupList, HttpStatus.OK);
     }
 

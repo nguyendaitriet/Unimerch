@@ -117,9 +117,9 @@ public class AmznUserServiceImpl implements AmznUserService {
     }
 
     @Override
-    public List<AmznAccFilterItemResult> findAllFilter() {
+    public List<AmznAccFilterResult> findAllFilter() {
         return amznAccountRepository.findAll()
-                .stream().map(account -> amznMapper.toAmznAccFilterItemResult(account))
+                .stream().map(account -> amznMapper.toAmznAccFilterResult(account))
                 .collect(Collectors.toList());
     }
 
@@ -302,24 +302,49 @@ public class AmznUserServiceImpl implements AmznUserService {
     }
 
     @Override
-    public List<AmznAccAnalyticsItemResult> findAllAnalytics() {
+    public List<AmznAccAnalyticsResult> findAllAnalytics() {
         return amznAccountRepository.findAll().stream()
-                .map(amznUser -> amznMapper.toAmznAccAnalyticsItemResult(amznUser))
+                .map(amznUser -> amznMapper.toAmznAccAnalyticsResult(amznUser))
                 .collect(Collectors.toList());
     }
 
     @Override
-    public List<AmznAccAnalyticsItemResult> findAnalyticsByGrpId(String groupId) {
+    public List<AmznAccAnalyticsResult> findAnalyticsByGrpId(String groupId) {
         Group group = groupService.findById(groupId);
         return brgGroupAmznAccountRepository.getAmznAccInGroup(group.getId()).stream()
-                .map(amznAccResult -> amznMapper.toAmznAccAnalyticsItemResult(amznAccResult))
+                .map(amznAccResult -> amznMapper.toAmznAccAnalyticsResult(amznAccResult))
                 .collect(Collectors.toList());
     }
 
     @Override
-    public List<AmznAccAnalyticsItemResult> findAnalyticsByAmznAccId(String amznAccId) {
-        List<AmznAccAnalyticsItemResult> analyticsList = new ArrayList<>();
-        analyticsList.add(amznMapper.toAmznAccAnalyticsItemResult(findById(amznAccId)));
+    public List<AmznAccAnalyticsResult> findAnalyticsByAmznAccId(String amznAccId) {
+        List<AmznAccAnalyticsResult> analyticsList = new ArrayList<>();
+        analyticsList.add(amznMapper.toAmznAccAnalyticsResult(findById(amznAccId)));
         return analyticsList;
+    }
+
+    @Override
+    public void addNoteToAmznAcc(String id, String note) {
+        AmznUser user = findById(id);
+
+        try {
+            user.setNote(note);
+            amznAccountRepository.save(user);
+        } catch (Exception e) {
+            throw new ServerErrorException(messageSource.getMessage("error.500", null, Locale.getDefault()));
+        }
+    }
+
+    @Override
+    public List<AmznAccDieResult> findAllAccDie() {
+        List<AmznUser> userList = amznAccountRepository.findByStatus(AzmnStatus.TERMINATED);
+        return amznMapper.toAmznAccDieResults(userList);
+    }
+
+    @Override
+    public List<AmznAccDieResult> findAccDieByGrpId(String groupId) {
+        Group group = groupService.findById(groupId);
+        List<AmznUser> userList = brgGroupAmznAccountRepository.getAmznAccDieInGroup(group.getId());
+        return amznMapper.toAmznAccDieResults(userList);
     }
 }
