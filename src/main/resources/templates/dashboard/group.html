@@ -63,6 +63,7 @@
                                     <thead>
                                     <tr>
                                         <th>#</th>
+                                        <th style="visibility: hidden"></th>
                                         <th th:text="#{group.tableAmznAccUsername}">Username</th>
                                         <th th:text="#{group.action}">Action</th>
                                     </tr>
@@ -112,6 +113,7 @@
             updateGroup: CommonApp.BASE_URL_GROUP + "/update/",
             deleteGroup: CommonApp.BASE_URL_GROUP + "/delete/",
             deleteAmznAccFromGroup: CommonApp.BASE_URL_GROUP + "/deleteAmznAccFromGroup/",
+            deleteMultiAmznAccFromGroup: CommonApp.BASE_URL_GROUP + "/deleteAmznAccFromGroup",
             addAmznAccountToGroup: CommonApp.BASE_URL_GROUP + "/addAmznAccountToGroup/"
         },
         element: {},
@@ -281,6 +283,38 @@
             })
     }
 
+    page.commands.doDeletedMultiAmznAccInGroup = (currentGroup, tableAmznAccIn) => {
+        let amznAccSelected = [];
+
+        let rows_selected = tableAmznAccIn.rows({selected: true}).data()
+        $.each(rows_selected, function (index, value) {
+            amznAccSelected.push(value.id);
+        });
+
+        if (amznAccSelected.length === 0) {
+            CommonApp.IziToast.showErrorAlert(`${noDataSelected}`);
+            return;
+        }
+
+        $.ajax({
+            headers: {
+                "accept": "application/json",
+                "content-type": "application/json"
+            },
+            type: "DELETE",
+            url: page.urls.deleteMultiAmznAccFromGroup + "/" + currentGroup.id,
+            data: JSON.stringify({amznAccSelected})
+        })
+            .done((data) => {
+                tableAmznAccIn.rows({selected: true}).remove().draw();
+                CommonApp.SweetAlert.showSuccessAlert(SUCCESS_REMOVED);
+            })
+            .fail(function (jqXHR) {
+                DBApp.handleFailedTasks(jqXHR);
+            })
+    }
+
+
     page.dialogs.close.mdCreateGroup = () => {
         page.dialogs.element.frmCreateGroup.find("input.error").removeClass("error");
         page.dialogs.element.frmCreateGroup[0].reset();
@@ -391,6 +425,7 @@
                     info: false,
                     pagingType: 'simple_numbers',
                     columns: [
+                        {data: null},
                         {data: 'id'},
                         {data: 'username'},
                         {data: null}
@@ -398,10 +433,16 @@
                     columnDefs: [
                         {
                             targets: 0,
-                            className: "text-center"
+                            orderable: false,
+                            className: 'select-checkbox',
+                            render: () => '',
                         },
                         {
                             targets: 1,
+                            visible: false
+                        },
+                        {
+                            targets: 2,
                             className: "text-center",
                             type: 'natural',
                         },
@@ -415,6 +456,9 @@
                                 + `</button>`
                         },
                     ],
+                    select: {
+                        style: 'multi+shift'
+                    },
                     language: {
                         search: `<i class="fas fa-search text-primary"></i> `,
                         paginate: {
@@ -431,12 +475,12 @@
                     },
                     pageLength: 7,
                     lengthChange: false,
-                    dom: '<"row mb-2"<"col"B><"col"f>>rtp',
+                    dom: '<"row mb-2"<"col-7"B><"col-5"f>>rtp',
                     buttons: {
                         dom: {
                             button: {
                                 tag: 'button',
-                                className: ''
+                                className: 'btn-text-sm'
                             }
                         },
                         buttons: [
@@ -448,10 +492,24 @@
                                         page.dialogs.element.mdAddAmznAccToGroup.modal("show");
                                     })
                                 }
+                            },
+                            {
+                                text: `<i class="fas fa-trash"></i> ${btnDelete}`,
+                                className: 'btn btn-danger',
+                                init: function (api, node, config) {
+                                    $(node).on('click', () => CommonApp.SweetAlert.showDeleteDialog()
+                                        .then((result) => {
+                                            if (result.isConfirmed) {
+                                                page.commands.doDeletedMultiAmznAccInGroup(currentGroup, tableAmznAccIn);
+                                            }
+                                        })
+                                    );
+                                }
                             }
                         ]
                     },
                 });
+                tableAmznAccIn.order([2, "asc"]).draw();
             } else {
                 tableAmznAccIn.ajax.url(page.urls.findAllAmznAccInGroup + currentGroup.id).load();
             }

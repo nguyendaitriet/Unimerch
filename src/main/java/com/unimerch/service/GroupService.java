@@ -37,4 +37,6 @@ public interface GroupService {
     void deleteAmznAccFromGroup(int amznAccId, int groupId);
 
     List<AmznAccFilterResult> findAllAmznAccInGrpFilter(Integer groupId);
+
+    void deleteMultiAmznAccFromGroup(List<Integer> amznAccSelected, Integer id);
 }

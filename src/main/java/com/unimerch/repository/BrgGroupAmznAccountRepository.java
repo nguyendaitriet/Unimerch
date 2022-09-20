@@ -44,6 +44,8 @@ public interface BrgGroupAmznAccountRepository extends JpaRepository<BrgGroupAmz
 
     void deleteAllByAmznAccountIdIn(List<Integer> ids);
 
+    void deleteAllByGroupIdAndAmznAccountIdIn(Integer groupId, List<Integer> amznAccIds);
+
     @Query("SELECT a " +
             "FROM BrgGroupAmznAccount AS br " +
             "INNER JOIN AmznUser AS a " +

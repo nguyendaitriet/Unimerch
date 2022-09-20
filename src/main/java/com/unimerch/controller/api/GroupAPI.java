@@ -103,6 +103,13 @@ public class GroupAPI {
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
+    //    @PreAuthorize("hasAnyAuthority('MANAGER')")
+    @DeleteMapping("/deleteAmznAccFromGroup/{id}")
+    public ResponseEntity<?> deleteMultiAmznAccFromGroup(@RequestBody Map<String, List<Integer>> amznAccIdList, @PathVariable Integer id) {
+        groupService.deleteMultiAmznAccFromGroup(amznAccIdList.get("amznAccSelected"), id);
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+
     @GetMapping("/findInGrpFilter/{id}")
     public ResponseEntity<?> findAllAmznAccountsInGroup(@PathVariable Integer id) {
         List<AmznAccFilterResult> amznAccResultList = groupService.findAllAmznAccInGrpFilter(id);

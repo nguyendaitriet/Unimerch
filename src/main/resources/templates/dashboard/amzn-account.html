@@ -214,7 +214,7 @@
         })
             .done((data) => {
                 tableAmznAcc.rows({selected: true}).remove().draw();
-                CommonApp.SweetAlert.showSuccessAlert(SUCCESS_CREATED);
+                CommonApp.SweetAlert.showSuccessAlert(SUCCESS_REMOVED);
             })
             .fail(function (jqXHR) {
                 DBApp.handleFailedTasks(jqXHR);

@@ -16,7 +16,7 @@ import com.unimerch.repository.model.AzmnStatus;
 import com.unimerch.repository.model.Group;
 import com.unimerch.service.AmznUserService;
 import com.unimerch.service.GroupService;
-import com.unimerch.util.NaturalSortString;
+import com.unimerch.util.NaturalSortUtils;
 import com.unimerch.util.ValidationUtils;
 import org.apache.poi.openxml4j.exceptions.NotOfficeXmlFileException;
 import org.apache.poi.ss.usermodel.*;
@@ -133,7 +133,7 @@ public class AmznUserServiceImpl implements AmznUserService {
     @Override
     public List<AmznAccResult> findAll() {
         return amznAccountRepository.findAll().stream()
-                .sorted((s1, s2) -> NaturalSortString.compareString(s1.getUsername(), s2.getUsername()))
+                .sorted((s1, s2) -> NaturalSortUtils.compareString(s1.getUsername(), s2.getUsername()))
                 .map(amznMapper::toDTO).collect(Collectors.toList());
     }
 
@@ -141,7 +141,7 @@ public class AmznUserServiceImpl implements AmznUserService {
     public List<AmznAccFilterResult> findAllFilter() {
         return amznAccountRepository.findAll()
                 .stream()
-                .sorted((s1, s2) -> NaturalSortString.compareString(s1.getUsername(), s2.getUsername()))
+                .sorted((s1, s2) -> NaturalSortUtils.compareString(s1.getUsername(), s2.getUsername()))
                 .map(account -> amznMapper.toAmznAccFilterResult(account))
                 .collect(Collectors.toList());
     }

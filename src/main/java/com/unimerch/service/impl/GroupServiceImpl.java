@@ -16,10 +16,9 @@ import com.unimerch.repository.datatable.GroupDataTableRepository;
 import com.unimerch.repository.GroupRepository;
 import com.unimerch.repository.model.*;
 import com.unimerch.service.GroupService;
-import com.unimerch.util.NaturalSortString;
+import com.unimerch.util.NaturalSortUtils;
 import com.unimerch.util.ValidationUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.MessageSource;
 import org.springframework.data.jpa.datatables.mapping.Column;
 import org.springframework.data.jpa.datatables.mapping.DataTablesInput;
@@ -58,7 +57,7 @@ public class GroupServiceImpl implements GroupService {
     public List<GroupResult> findAll() {
         List<GroupResult> groupResultList = groupRepository.findAll()
                 .stream().map(group -> groupMapper.toGroupResult(group))
-                .sorted((o1, o2) -> NaturalSortString.compareString(o1.getTitle(), o2.getTitle()))
+                .sorted((o1, o2) -> NaturalSortUtils.compareString(o1.getTitle(), o2.getTitle()))
                 .collect(Collectors.toList());
         return groupResultList;
     }
@@ -181,7 +180,7 @@ public class GroupServiceImpl implements GroupService {
             Group group = findById(id);
             List<AmznUser> amznAccResult = brgGroupAmznAccRepo.getAmznAccInGroup(group.getId());
             return amznAccResult.stream()
-                    .sorted((s1, s2) -> NaturalSortString.compareString(s1.getUsername(), s2.getUsername()))
+                    .sorted((s1, s2) -> NaturalSortUtils.compareString(s1.getUsername(), s2.getUsername()))
                     .map(item -> amznUserMapper.toDTO(item)).collect(Collectors.toList());
         } catch (Exception e) {
             throw new ServerErrorException(messageSource.getMessage("error.500", null, Locale.getDefault()));
@@ -194,7 +193,7 @@ public class GroupServiceImpl implements GroupService {
             Group group = findById(id);
             List<AmznUser> amznAccResult = brgGroupAmznAccRepo.getAmznAccOutGroup(group.getId());
             return amznAccResult.stream()
-                    .sorted((s1, s2) -> NaturalSortString.compareString(s1.getUsername(), s2.getUsername()))
+                    .sorted((s1, s2) -> NaturalSortUtils.compareString(s1.getUsername(), s2.getUsername()))
                     .map(item -> amznUserMapper.toDTO(item)).collect(Collectors.toList());
         } catch (Exception e) {
             throw new ServerErrorException(messageSource.getMessage("error.500", null, Locale.getDefault()));
@@ -213,7 +212,18 @@ public class GroupServiceImpl implements GroupService {
     @Override
     public List<AmznAccFilterResult> findAllAmznAccInGrpFilter(Integer groupId) {
         return brgGroupAmznAccRepo.getAmznAccInGroup(groupId)
-                .stream().map(amznAccount -> amznUserMapper.toAmznAccFilterResult(amznAccount))
+                .stream()
+                .sorted((s1, s2) -> NaturalSortUtils.compareString(s1.getUsername(), s2.getUsername()))
+                .map(amznAccount -> amznUserMapper.toAmznAccFilterResult(amznAccount))
                 .collect(Collectors.toList());
+    }
+
+    @Override
+    public void deleteMultiAmznAccFromGroup(List<Integer> amznAccSelected, Integer id) {
+        try {
+            brgGroupAmznAccRepo.deleteAllByGroupIdAndAmznAccountIdIn(id, amznAccSelected);
+        } catch (Exception e) {
+            throw new ServerErrorException(messageSource.getMessage("error.500", null, Locale.getDefault()));
+        }
     }
 }

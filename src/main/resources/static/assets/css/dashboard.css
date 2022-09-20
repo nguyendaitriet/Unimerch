@@ -12761,3 +12761,10 @@ body.sidebar-toggled footer.sticky-footer {
     font-size: 13px;
 }
 
+#table-amzn-acc-in_filter input {
+    width: 85%;
+}
+
+#table-amzn-acc-in td, #table-amzn-acc-in th, #table-group td, #table-group th, #table-amzn-acc td, #table-amzn-acc th{
+    padding: 0.5rem;
+}
