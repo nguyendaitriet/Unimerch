@@ -73,5 +73,6 @@ public interface OrderRepository extends JpaRepository<Order, Integer> {
                                            @Param("timeStart") Instant timeStart,
                                            @Param("timeEnd") Instant timeEnd);
 
+    void deleteAllByAmznAccountIdIn(List<Integer> ids);
 
 }

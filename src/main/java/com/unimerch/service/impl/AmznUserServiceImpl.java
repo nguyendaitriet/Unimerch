@@ -133,7 +133,7 @@ public class AmznUserServiceImpl implements AmznUserService {
     @Override
     public List<AmznAccResult> findAll() {
         return amznAccountRepository.findAll().stream()
-                .sorted((s1,s2) -> NaturalSortString.compareString(s1.getUsername(), s2.getUsername()))
+                .sorted((s1, s2) -> NaturalSortString.compareString(s1.getUsername(), s2.getUsername()))
                 .map(amznMapper::toDTO).collect(Collectors.toList());
     }
 
@@ -141,7 +141,7 @@ public class AmznUserServiceImpl implements AmznUserService {
     public List<AmznAccFilterResult> findAllFilter() {
         return amznAccountRepository.findAll()
                 .stream()
-                .sorted((s1,s2) -> NaturalSortString.compareString(s1.getUsername(), s2.getUsername()))
+                .sorted((s1, s2) -> NaturalSortString.compareString(s1.getUsername(), s2.getUsername()))
                 .map(account -> amznMapper.toAmznAccFilterResult(account))
                 .collect(Collectors.toList());
     }
@@ -184,6 +184,17 @@ public class AmznUserServiceImpl implements AmznUserService {
             orderRepository.deleteByAmznAccount_Id(amznAccount.getId());
             brgGroupAmznAccountRepository.deleteByAmznAccount_Id(amznAccount.getId());
             amznAccountRepository.delete(amznAccount);
+        } catch (Exception e) {
+            throw new ServerErrorException(messageSource.getMessage("error.500", null, Locale.getDefault()));
+        }
+    }
+
+    @Override
+    public void deleteAllByListId(List<Integer> idList) {
+        try {
+            orderRepository.deleteAllByAmznAccountIdIn(idList);
+            brgGroupAmznAccountRepository.deleteAllByAmznAccountIdIn(idList);
+            amznAccountRepository.deleteAllByIdIn(idList);
         } catch (Exception e) {
             throw new ServerErrorException(messageSource.getMessage("error.500", null, Locale.getDefault()));
         }

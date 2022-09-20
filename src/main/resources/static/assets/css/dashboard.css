@@ -7756,7 +7756,7 @@ button.bg-dark:hover {
 }
 
 .flex-wrap {
-    flex-wrap: wrap !important;
+    flex-wrap: unset !important;
 }
 
 .flex-nowrap {
@@ -12756,3 +12756,8 @@ footer.sticky-footer .copyright {
 body.sidebar-toggled footer.sticky-footer {
     width: 100%;
 }
+
+.btn-text-sm {
+    font-size: 13px;
+}
+

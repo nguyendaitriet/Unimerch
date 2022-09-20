@@ -21,7 +21,19 @@ public interface AmznUserService {
 
     List<AmznAccFilterResult> findAllFilter();
 
+    List<AmznAccAnalyticsResult> findAllAnalytics();
+
+    List<AmznAccDieResult> findAllAccDie();
+
     AmznUser findById(String id);
+
+    AmznAccResult findByUsername(String username);
+
+    List<AmznAccAnalyticsResult> findAnalyticsByGrpId(String groupId);
+
+    List<AmznAccAnalyticsResult> findAnalyticsByAmznAccId(String amznAccId);
+
+    List<AmznAccDieResult> findAccDieByGrpId(String groupId);
 
     AmznAccResult create(AmznAccParam amznAccCreateParam);
 
@@ -29,19 +41,10 @@ public interface AmznUserService {
 
     void delete(String id);
 
+    void deleteAllByListId(List<Integer> idList);
+
     List<AmznAccResult> importFile(MultipartFile amznAccFile);
-
-    AmznAccResult findByUsername(String username);
-
-    List<AmznAccAnalyticsResult> findAllAnalytics();
-
-    List<AmznAccAnalyticsResult> findAnalyticsByGrpId(String groupId);
-
-    List<AmznAccAnalyticsResult> findAnalyticsByAmznAccId(String amznAccId);
 
     void addNoteToAmznAcc(String id, String note);
 
-    List<AmznAccDieResult> findAllAccDie();
-
-    List<AmznAccDieResult> findAccDieByGrpId(String groupId);
 }

@@ -44,6 +44,7 @@
                                 <table id="table-amzn-acc" class="table stripe nowrap" style="width: 100%;">
                                     <thead>
                                     <tr>
+                                        <th>#</th>
                                         <th style="visibility: hidden">#</th>
                                         <th th:text="#{amznAcc.amznAccTitle}">Amzn Acc Title</th>
                                         <th th:text="#{amznAcc.action}">Action</th>
@@ -91,6 +92,7 @@
             importAmznAcc: CommonApp.BASE_URL_AMZN_ACCOUNT + "/import",
             updateAmznAcc: CommonApp.BASE_URL_AMZN_ACCOUNT + "/update/",
             deleteAmznAcc: CommonApp.BASE_URL_AMZN_ACCOUNT + "/delete/",
+            deleteMultiAmznAcc: CommonApp.BASE_URL_AMZN_ACCOUNT + "/delete",
         },
         element: {},
         commands: {},
@@ -188,6 +190,37 @@
             })
     }
 
+    page.commands.doDeletedMultiAmznAcc = (tableAmznAcc) => {
+        let amznAccSelected = [];
+
+        let rows_selected = tableAmznAcc.rows({selected: true}).data()
+        $.each(rows_selected, function (index, value) {
+            amznAccSelected.push(value.id);
+        });
+
+        if (amznAccSelected.length === 0) {
+            CommonApp.IziToast.showErrorAlert(`${noDataSelected}`);
+            return;
+        }
+
+        $.ajax({
+            headers: {
+                "accept": "application/json",
+                "content-type": "application/json"
+            },
+            type: "DELETE",
+            url: page.urls.deleteMultiAmznAcc,
+            data: JSON.stringify({amznAccSelected})
+        })
+            .done((data) => {
+                tableAmznAcc.rows({selected: true}).remove().draw();
+                CommonApp.SweetAlert.showSuccessAlert(SUCCESS_CREATED);
+            })
+            .fail(function (jqXHR) {
+                DBApp.handleFailedTasks(jqXHR);
+            })
+    }
+
     page.dialogs.close.mdCreateAmznAcc = () => {
         page.dialogs.element.frmCreateAmznAcc.find("input.error").removeClass("error");
         page.dialogs.element.frmCreateAmznAcc[0].reset();
@@ -212,17 +245,24 @@
             info: false,
             pagingType: 'simple_numbers',
             columns: [
+                {data: null},
                 {data: 'id'},
                 {data: 'username'},
                 {data: null}
             ],
             columnDefs: [
                 {
-                  targets: 0,
+                    targets: 0,
+                    orderable: false,
+                    className: 'select-checkbox',
+                    render: () => '',
+                },
+                {
+                  targets: 1,
                   visible: false
                 },
                 {
-                    targets: 1,
+                    targets: 2,
                     type: 'natural',
                 },
                 {
@@ -238,6 +278,9 @@
                         </button>`,
                 },
             ],
+            select: {
+                style: 'multi+shift'
+            },
             language: {
                 search: `<i class="fas fa-search text-primary"></i> `,
                 paginate: {
@@ -254,33 +297,46 @@
             },
             pageLength: 8,
             lengthChange: false,
-            dom: '<"row mb-2"<"col"B><"col"f>>rtp',
+            dom: '<"row mb-2"<"col-6"B><"col-6"f>>rtp',
             buttons: {
                 dom: {
                     button: {
                         tag: 'button',
-                        className: ''
+                        className: 'btn-text-sm'
                     }
                 },
                 buttons: [
                     {
                         text: `<i class="fas fa-plus"></i> ${btnCreate}`,
-                        className: 'showCrGrpMd btn btn-primary',
+                        className: 'btn btn-primary',
                         init: function (api, node, config) {
                             $(node).on('click', () => page.dialogs.element.mdCreateAmznAcc.modal("show"));
                         }
                     },
                     {
                         text: `<i class="fas fa-file-import"></i> ${btnImport}`,
-                        className: 'showImportGrpMd btn btn-secondary',
+                        className: 'btn btn-secondary',
                         init: function (api, node, config) {
                             $(node).on('click', () => page.dialogs.element.mdImportAmznAcc.modal("show"));
+                        }
+                    },
+                    {
+                        text: `<i class="fas fa-trash"></i> ${btnDelete}`,
+                        className: 'btn btn-danger',
+                        init: function (api, node, config) {
+                            $(node).on('click', () => CommonApp.SweetAlert.showDeleteDialog()
+                                .then((result) => {
+                                    if (result.isConfirmed) {
+                                        page.commands.doDeletedMultiAmznAcc(tableAmznAcc);
+                                    }
+                                })
+                            );
                         }
                     }
                 ]
             },
         });
-        tableAmznAcc.order([1, "asc"]).draw();
+        tableAmznAcc.order([2, "asc"]).draw();
 
         let currentRowAmznAcc;
         let currentAmznAcc;
