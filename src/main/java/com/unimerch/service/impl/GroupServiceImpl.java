@@ -19,6 +19,7 @@ import com.unimerch.service.GroupService;
 import com.unimerch.util.NaturalSortString;
 import com.unimerch.util.ValidationUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.MessageSource;
 import org.springframework.data.jpa.datatables.mapping.Column;
 import org.springframework.data.jpa.datatables.mapping.DataTablesInput;
@@ -55,10 +56,11 @@ public class GroupServiceImpl implements GroupService {
 
     @Override
     public List<GroupResult> findAll() {
-        return groupRepository.findAll()
+        List<GroupResult> groupResultList = groupRepository.findAll()
                 .stream().map(group -> groupMapper.toGroupResult(group))
                 .sorted((o1, o2) -> NaturalSortString.compareString(o1.getTitle(), o2.getTitle()))
                 .collect(Collectors.toList());
+        return groupResultList;
     }
 
     @Override
@@ -177,10 +179,10 @@ public class GroupServiceImpl implements GroupService {
     public List<AmznAccResult> getAmznAccInsideGroup(String id) {
         try {
             Group group = findById(id);
-            List<AmznAccResult> amznAccResultList = new ArrayList<>();
             List<AmznUser> amznAccResult = brgGroupAmznAccRepo.getAmznAccInGroup(group.getId());
-            amznAccResult.forEach((result) -> amznAccResultList.add(amznUserMapper.toDTO(result)));
-            return amznAccResultList;
+            return amznAccResult.stream()
+                    .sorted((s1, s2) -> NaturalSortString.compareString(s1.getUsername(), s2.getUsername()))
+                    .map(item -> amznUserMapper.toDTO(item)).collect(Collectors.toList());
         } catch (Exception e) {
             throw new ServerErrorException(messageSource.getMessage("error.500", null, Locale.getDefault()));
         }
@@ -190,10 +192,10 @@ public class GroupServiceImpl implements GroupService {
     public List<AmznAccResult> getAmznAccOutsideGroup(String id) {
         try {
             Group group = findById(id);
-            List<AmznAccResult> amznAccResultList = new ArrayList<>();
             List<AmznUser> amznAccResult = brgGroupAmznAccRepo.getAmznAccOutGroup(group.getId());
-            amznAccResult.forEach((result) -> amznAccResultList.add(amznUserMapper.toDTO(result)));
-            return amznAccResultList;
+            return amznAccResult.stream()
+                    .sorted((s1, s2) -> NaturalSortString.compareString(s1.getUsername(), s2.getUsername()))
+                    .map(item -> amznUserMapper.toDTO(item)).collect(Collectors.toList());
         } catch (Exception e) {
             throw new ServerErrorException(messageSource.getMessage("error.500", null, Locale.getDefault()));
         }

@@ -258,8 +258,8 @@
                         'id': amznAcc.id,
                         'username': amznAcc.username
                     })
-                    tableAmznAccIn.order([0, 'desc']).draw();
                 });
+                tableAmznAccIn.order([1, 'asc']).draw();
                 page.dialogs.element.mdAddAmznAccToGroup.modal("hide");
                 CommonApp.SweetAlert.showSuccessAlert(SUCCESS_CREATED);
             })
@@ -369,6 +369,8 @@
                 ]
             },
         });
+        tableGroup.order([1, "asc"]).draw();
+
         let tableAmznAccIn;
         let tableAmznAccOut;
         let currentRowGroup;
@@ -587,6 +589,7 @@
                     lengthChange: false,
                     dom: '<"d-flex justify-content-around flex-column flex-sm-row mb-2"<"align-self-center align-self-sm-start table-quickselect"><"align-self-center align-self-sm-start"f>>tp'
                 });
+                tableAmznAccOut.order([1, "asc"]).draw();
 
                 $('div.table-quickselect').html(`<p class="font-italic font-weight-light text-center text-sm-left" style="margin-bottom: 0;">${tableQuickSelectP1}</p>
                 <p class="font-italic font-weight-light text-center text-sm-left">${tableQuickSelectP2}</p>`);

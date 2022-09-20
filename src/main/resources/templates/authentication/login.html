@@ -13,10 +13,8 @@
         <input type="checkbox" class="show-password">
         <span th:text="#{form.showPassword}"></span>
     </div>
-    <button type="button" id="btnLogin">Login</button>
+    <button type="button" id="btnLogin" th:text="#{form.btn.login}">Login</button>
 </form>
-
-<a href="https://codegym.vn/">Codegym.vn</a>
 
 <th:block th:replace="layout/texts :: texts-login"/>
 
