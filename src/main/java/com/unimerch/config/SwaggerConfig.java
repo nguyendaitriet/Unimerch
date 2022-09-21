@@ -13,7 +13,6 @@ import springfox.documentation.swagger2.annotations.EnableSwagger2;
 import java.util.Collections;
 import java.util.List;
 
-
 @Configuration
 @EnableSwagger2
 public class SwaggerConfig {
@@ -32,7 +31,7 @@ public class SwaggerConfig {
                 .securitySchemes(Collections.singletonList(apiKey()))
                 .select()
 //                .apis(RequestHandlerSelectors.any())
-                .apis(RequestHandlerSelectors.basePackage("com.cg"))
+                .apis(RequestHandlerSelectors.basePackage("com.unimerch"))
 //                .paths(PathSelectors.any())
                 .paths(PathSelectors.ant("/api/**"))
                 .build();
