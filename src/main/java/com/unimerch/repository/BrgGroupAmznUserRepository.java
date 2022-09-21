@@ -11,7 +11,7 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 
 @Repository
-public interface BrgGroupAmznAccountRepository extends JpaRepository<BrgGroupAmznUser, Integer> {
+public interface BrgGroupAmznUserRepository extends JpaRepository<BrgGroupAmznUser, Integer> {
 
     @Query("SELECT a " +
             "FROM AmznUser AS a " +

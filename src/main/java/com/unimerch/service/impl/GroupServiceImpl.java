@@ -11,7 +11,7 @@ import com.unimerch.exception.ServerErrorException;
 import com.unimerch.mapper.AmznUserMapper;
 import com.unimerch.mapper.GroupMapper;
 import com.unimerch.repository.AmznUserRepository;
-import com.unimerch.repository.BrgGroupAmznAccountRepository;
+import com.unimerch.repository.BrgGroupAmznUserRepository;
 import com.unimerch.repository.datatable.GroupDataTableRepository;
 import com.unimerch.repository.GroupRepository;
 import com.unimerch.repository.model.*;
@@ -42,7 +42,7 @@ public class GroupServiceImpl implements GroupService {
     private MessageSource messageSource;
 
     @Autowired
-    private BrgGroupAmznAccountRepository brgGroupAmznAccRepo;
+    private BrgGroupAmznUserRepository brgGroupAmznAccRepo;
 
     @Autowired
     private AmznUserMapper amznUserMapper;

@@ -6,7 +6,7 @@ import com.fasterxml.jackson.databind.module.SimpleModule;
 import com.unimerch.dto.product.ProductResult;
 import com.unimerch.exception.ServerErrorException;
 import com.unimerch.mapper.ProductMapper;
-import com.unimerch.repository.BrgGroupAmznAccountRepository;
+import com.unimerch.repository.BrgGroupAmznUserRepository;
 import com.unimerch.repository.ProductRepository;
 import com.unimerch.repository.model.Product;
 import com.unimerch.service.ProductService;
@@ -31,7 +31,7 @@ public class ProductServiceImpl implements ProductService {
     private MessageSource messageSource;
 
     @Autowired
-    private BrgGroupAmznAccountRepository brgGroupAmznAccountRepository;
+    private BrgGroupAmznUserRepository brgGroupAmznUserRepository;
 
     @Override
     public List<ProductResult> findAllTodaySoldProduct(Integer id, int choice) {
@@ -76,7 +76,7 @@ public class ProductServiceImpl implements ProductService {
                 break;
             //With group id
             case 2:
-                amznAccIdList.addAll(brgGroupAmznAccountRepository.getAmznAccIdInGroup(id));
+                amznAccIdList.addAll(brgGroupAmznUserRepository.getAmznAccIdInGroup(id));
                 productResultList = productRepository.getProductItemResultList(instant, amznAccIdList);
                 break;
             //All amazon account
