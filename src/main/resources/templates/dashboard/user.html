@@ -34,7 +34,7 @@
                             <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
                                 <a class="m-0 h4 font-weight-bold text-primary text-decoration-none"
                                    th:href="@{'/dashboard/user'}"
-                                    th:text="#{user.tabHeader}">
+                                   th:text="#{user.tabHeader}">
                                     User Overview
                                 </a>
                             </div>
@@ -169,7 +169,8 @@
                     className: 'text-center col-2',
                     orderable: false,
                     render: (data, type, row) => {
-                        return `
+                        if (!data.disabled)
+                            return `
                             <button type='button'
                                     class='assign-group btn btn-outline-primary mr-3'
                                     title='${btnTitleAssignGroup}'>
@@ -181,11 +182,18 @@
                                 <i class='fas fa-key'></i>
                             </button>
                             <button type='button'
-                                    class="change-status ${data.disabled ? 'btn btn-outline-success' : 'btn btn-outline-danger'}"
-                                    title="${data.disabled ? btnTitleStatusActive : btnTitleStatusDisable}">
-                                <i class="${data.disabled ? 'fas fa-unlock' : 'fas fa-lock'}"></i>
+                                    class="change-status btn btn-outline-danger"
+                                    title="${btnTitleStatusDisable}">
+                                <i class="fas fa-lock"></i>
                             </button>
-                        `
+                        `;
+                        return `
+                            <button type='button'
+                                    class="change-status btn btn-outline-success"
+                                    title="${btnTitleStatusActive}">
+                                <i class="fas fa-unlock"></i>
+                            </button>
+                        `;
                     }
                 },
             ],

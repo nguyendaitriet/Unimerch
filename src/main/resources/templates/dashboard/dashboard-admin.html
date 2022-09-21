@@ -32,10 +32,10 @@
                         <div class="card shadow mb-4">
                             <!-- Card Header -->
                             <div id="sticky-filter-header"
-                                 class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+                                 class="card-header py-2 nav-link d-flex flex-row align-items-center justify-content-between">
                                 <a class="custom-card-title m-0 font-weight-bold text-primary text-decoration-none"
-                                    th:href="@{'/dashboard/' + ${(group.id != 0) ? group.id : ''}}"
-                                    th:text="${group.title}">Accounts</a>
+                                   th:href="@{'/dashboard/' + ${(group.id != 0) ? group.id : ''}}"
+                                   th:text="${group.title}">Accounts</a>
                             </div>
                             <div class="input-group input-group-sm mt-2 filter-group">
                                 <div class="input-group-prepend">
@@ -86,7 +86,11 @@
                                     <div class="row flex-md-row-reverse">
                                         <!-- Chart -->
                                         <div class="col-lg-8 col-md-12 mb-4">
-                                            <div class="row" id="chartHolder" style="height:380px; width:100%;"></div>
+                                            <div class="row" id="chartHolder" style="height:300px; width:100%;">
+                                                <!-- Chart Content -->
+
+                                            </div>
+                                            <!-- Legends -->
                                             <div class="row mt-4 text-center justify-content-center small">
                                                     <span class="mr-4">
                                                         <i class="fas fa-square" style="color: #41b2e6"></i>
@@ -801,8 +805,8 @@
                     className: 'text-center add-note',
                     orderable: false,
                     render: (data, type, row) => {
-                        if (data === null)
-                            return `<i class="fas fa-pen-fancy"></i>`;
+                        if (data === null || data === '')
+                            return `<i class="fas fa-edit text-primary"></i>`;
                         return (data.length > 6) ? (data.substr(0, 6) + "...") : data
                     }
                 }
@@ -1018,15 +1022,13 @@
                 layoutStr =
                     `<KoolChart backgroundColor="#FFFFFF"  borderStyle="none">'
                     +'<Options>'
-                        +'<Caption text="${chartCaption}" fontSize="20"/>'
-                        +'<SubCaption text="Royalties $" textAlign="left" height="0" fontSize="15"/>'
-                        +'<SubCaption text="Sold" textAlign="right" fontSize="15"/>'
+                        +'<Caption text="${chartCaption}" fontSize="12"/>'
+                        +'<SubCaption text="Royalties $" textAlign="left" height="0" fontSize="10"/>'
+                        +'<SubCaption text="Sold" textAlign="right" fontSize="10"/>'
                         +'<SubCaption/>'
                     +'</Options>'
 
-                    +'<NumberFormatter id="numfmt" useThousandsSeparator="true"/>'
-
-                    +'<Combination2DChart showDataTips="true">'
+                    +'<Combination2DChart showDataTips="true" touchMoveEnable="false">'
                         +'<horizontalAxis>'
                             +'<CategoryAxis categoryField="date"/>'
                         +'</horizontalAxis>'
