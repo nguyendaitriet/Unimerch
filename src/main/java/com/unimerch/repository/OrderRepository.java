@@ -11,7 +11,7 @@ import java.util.List;
 
 @Repository
 public interface OrderRepository extends JpaRepository<Order, Integer> {
-    void deleteByAmznAccount_Id(Integer amznAccount_id);
+    void deleteByAmznUserId(Integer amznAccount_id);
 
     @Query("SELECT o " +
             "FROM Order o " +
@@ -25,12 +25,12 @@ public interface OrderRepository extends JpaRepository<Order, Integer> {
     List<Order> findAllWithTimeRange(@Param("timeStart") Instant timeStart,
                                      @Param("timeEnd") Instant timeEnd);
 
-    List<Order> findByAmznAccountId(Integer amznAccId);
+    List<Order> findByAmznUserId(Integer amznAccId);
 
     @Query("SELECT o " +
             "FROM Order o " +
             "WHERE o.date >= :timeStart " +
-            "AND o.amznAccount.id = :amznAccId ")
+            "AND o.amznUser.id = :amznAccId ")
     List<Order> findByAmznAccIdWithStartDate(@Param("amznAccId") Integer amznAccId,
                                              @Param("timeStart") Instant timeStart);
 
@@ -38,25 +38,25 @@ public interface OrderRepository extends JpaRepository<Order, Integer> {
             "FROM Order o " +
             "WHERE o.date >= :timeStart " +
             "AND o.date < :timeEnd " +
-            "AND o.amznAccount.id = :amznAccId ")
+            "AND o.amznUser.id = :amznAccId ")
     List<Order> findByAmznAccIdWithTimeRange(@Param("amznAccId") Integer amznAccId,
                                              @Param("timeStart") Instant timeStart,
                                              @Param("timeEnd") Instant timeEnd);
 
     @Query("SELECT o " +
             "FROM Order o " +
-            "WHERE o.amznAccount.id IN " +
-            "(SELECT br.amznAccount.id " +
-            "FROM BrgGroupAmznAccount br " +
+            "WHERE o.amznUser.id IN " +
+            "(SELECT br.amznUser.id " +
+            "FROM BrgGroupAmznUser br " +
             "WHERE br.group.id = :groupId)")
     List<Order> findByGroupId(@Param("groupId") Integer groupId);
 
     @Query("SELECT o " +
             "FROM Order o " +
             "WHERE o.date >= :timeStart " +
-            "AND o.amznAccount.id IN " +
-            "(SELECT br.amznAccount.id " +
-            "FROM BrgGroupAmznAccount br " +
+            "AND o.amznUser.id IN " +
+            "(SELECT br.amznUser.id " +
+            "FROM BrgGroupAmznUser br " +
             "WHERE br.group.id = :groupId)")
     List<Order> findByGroupIdWithStartDate(@Param("groupId") Integer groupId,
                                            @Param("timeStart") Instant timeStart);
@@ -65,14 +65,14 @@ public interface OrderRepository extends JpaRepository<Order, Integer> {
             "FROM Order o " +
             "WHERE o.date >= :timeStart " +
             "AND o.date < :timeEnd " +
-            "AND o.amznAccount.id IN " +
-            "(SELECT br.amznAccount.id " +
-            "FROM BrgGroupAmznAccount br " +
+            "AND o.amznUser.id IN " +
+            "(SELECT br.amznUser.id " +
+            "FROM BrgGroupAmznUser br " +
             "WHERE br.group.id = :groupId)")
     List<Order> findByGroupIdWithTimeRange(@Param("groupId") Integer groupId,
                                            @Param("timeStart") Instant timeStart,
                                            @Param("timeEnd") Instant timeEnd);
 
-    void deleteAllByAmznAccountIdIn(List<Integer> ids);
+    void deleteAllByAmznUserIdIn(List<Integer> ids);
 
 }

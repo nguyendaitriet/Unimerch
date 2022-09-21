@@ -1,7 +1,7 @@
 package com.unimerch.repository;
 
 import com.unimerch.repository.model.AmznUser;
-import com.unimerch.repository.model.BrgGroupAmznAccount;
+import com.unimerch.repository.model.BrgGroupAmznUser;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -11,45 +11,45 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 
 @Repository
-public interface BrgGroupAmznAccountRepository extends JpaRepository<BrgGroupAmznAccount, Integer> {
+public interface BrgGroupAmznAccountRepository extends JpaRepository<BrgGroupAmznUser, Integer> {
 
     @Query("SELECT a " +
             "FROM AmznUser AS a " +
             "WHERE a.id NOT IN ( " +
-                "SELECT br.amznAccount.id " +
-                "FROM BrgGroupAmznAccount AS br " +
+                "SELECT br.amznUser.id " +
+                "FROM BrgGroupAmznUser AS br " +
                 "INNER JOIN AmznUser AS a " +
-                "ON br.amznAccount.id = a.id " +
+                "ON br.amznUser.id = a.id " +
                 "WHERE br.group.id = :id) ")
     List<AmznUser> getAmznAccOutGroup(@Param("id") Integer id);
 
     @Query("SELECT a " +
-            "FROM BrgGroupAmznAccount AS br " +
+            "FROM BrgGroupAmznUser AS br " +
             "INNER JOIN AmznUser AS a " +
-            "ON br.amznAccount.id = a.id " +
+            "ON br.amznUser.id = a.id " +
             "WHERE br.group.id = :id ")
     List<AmznUser> getAmznAccInGroup(@Param("id") Integer id);
 
-    @Query("SELECT br.amznAccount.id " +
-            "FROM BrgGroupAmznAccount AS br " +
+    @Query("SELECT br.amznUser.id " +
+            "FROM BrgGroupAmznUser AS br " +
             "WHERE br.group.id = :id ")
     List<Integer> getAmznAccIdInGroup(@Param("id") Integer id);
 
-    @Query("DELETE FROM BrgGroupAmznAccount AS br " +
-            "WHERE (br.group.id = :groupId AND br.amznAccount.id = :amznAccId) ")
+    @Query("DELETE FROM BrgGroupAmznUser AS br " +
+            "WHERE (br.group.id = :groupId AND br.amznUser.id = :amznAccId) ")
     @Modifying
     void deleteAmznAccFromGroup(@Param("amznAccId") Integer amznAccId, @Param("groupId") Integer groupId);
 
-    void deleteByAmznAccount_Id(Integer amznAccId);
+    void deleteByAmznUserId(Integer amznAccId);
 
-    void deleteAllByAmznAccountIdIn(List<Integer> ids);
+    void deleteAllByAmznUserIdIn(List<Integer> ids);
 
-    void deleteAllByGroupIdAndAmznAccountIdIn(Integer groupId, List<Integer> amznAccIds);
+    void deleteAllByGroupIdAndAmznUserIdIn(Integer groupId, List<Integer> amznAccIds);
 
     @Query("SELECT a " +
-            "FROM BrgGroupAmznAccount AS br " +
+            "FROM BrgGroupAmznUser AS br " +
             "INNER JOIN AmznUser AS a " +
-            "ON br.amznAccount.id = a.id " +
+            "ON br.amznUser.id = a.id " +
             "WHERE br.group.id = :id " +
             "AND a.status = 'TERMINATED'")
     List<AmznUser> getAmznAccDieInGroup(@Param("id") Integer id);

@@ -181,8 +181,8 @@ public class AmznUserServiceImpl implements AmznUserService {
     public void delete(String id) {
         AmznUser amznAccount = findById(id);
         try {
-            orderRepository.deleteByAmznAccount_Id(amznAccount.getId());
-            brgGroupAmznAccountRepository.deleteByAmznAccount_Id(amznAccount.getId());
+            orderRepository.deleteByAmznUserId(amznAccount.getId());
+            brgGroupAmznAccountRepository.deleteByAmznUserId(amznAccount.getId());
             amznAccountRepository.delete(amznAccount);
         } catch (Exception e) {
             throw new ServerErrorException(messageSource.getMessage("error.500", null, Locale.getDefault()));
@@ -192,8 +192,8 @@ public class AmznUserServiceImpl implements AmznUserService {
     @Override
     public void deleteAllByListId(List<Integer> idList) {
         try {
-            orderRepository.deleteAllByAmznAccountIdIn(idList);
-            brgGroupAmznAccountRepository.deleteAllByAmznAccountIdIn(idList);
+            orderRepository.deleteAllByAmznUserIdIn(idList);
+            brgGroupAmznAccountRepository.deleteAllByAmznUserIdIn(idList);
             amznAccountRepository.deleteAllByIdIn(idList);
         } catch (Exception e) {
             throw new ServerErrorException(messageSource.getMessage("error.500", null, Locale.getDefault()));

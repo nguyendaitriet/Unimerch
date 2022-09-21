@@ -157,15 +157,15 @@ public class GroupServiceImpl implements GroupService {
             for (String amznAccIdString : amznAccIdList) {
                 int amznAccId = Integer.parseInt(amznAccIdString);
                 AmznUser amznAccount = amznAccountRepository.findById(amznAccId).get();
-                BrgGroupAmznAccountId brgGroupAmznAccountId = new BrgGroupAmznAccountId(groupId, amznAccId);
-                BrgGroupAmznAccount brgGroupAmznAccount = new BrgGroupAmznAccount();
+                BrgGroupAmznUserId brgGroupAmznUserId = new BrgGroupAmznUserId(groupId, amznAccId);
+                BrgGroupAmznUser brgGroupAmznUser = new BrgGroupAmznUser();
 
-                brgGroupAmznAccount.setId(brgGroupAmznAccountId);
-                brgGroupAmznAccount.setGroup(group);
-                brgGroupAmznAccount.setAmznAccount(amznAccount);
+                brgGroupAmznUser.setId(brgGroupAmznUserId);
+                brgGroupAmznUser.setGroup(group);
+                brgGroupAmznUser.setAmznUser(amznAccount);
 
-                brgGroupAmznAccRepo.save(brgGroupAmznAccount);
-                amznAccResultList.add(amznUserMapper.toDTO(brgGroupAmznAccount));
+                brgGroupAmznAccRepo.save(brgGroupAmznUser);
+                amznAccResultList.add(amznUserMapper.toDTO(brgGroupAmznUser));
             }
         } catch (Exception e) {
             throw new ServerErrorException(messageSource.getMessage("error.500", null, Locale.getDefault()));
@@ -221,7 +221,7 @@ public class GroupServiceImpl implements GroupService {
     @Override
     public void deleteMultiAmznAccFromGroup(List<Integer> amznAccSelected, Integer id) {
         try {
-            brgGroupAmznAccRepo.deleteAllByGroupIdAndAmznAccountIdIn(id, amznAccSelected);
+            brgGroupAmznAccRepo.deleteAllByGroupIdAndAmznUserIdIn(id, amznAccSelected);
         } catch (Exception e) {
             throw new ServerErrorException(messageSource.getMessage("error.500", null, Locale.getDefault()));
         }

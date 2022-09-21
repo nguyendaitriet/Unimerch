@@ -20,7 +20,7 @@ public interface ProductRepository extends JpaRepository<Product, String> {
                 "o.title, " +
                 "SUM(o.royalties), " +
                 "p.price, " +
-                "o.amznAccount.username, " +
+                "o.amznUser.username, " +
                 "o.asin " +
             ")" +
             "FROM Order AS o " +

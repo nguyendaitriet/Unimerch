@@ -9,7 +9,6 @@ import org.hibernate.Hibernate;
 
 import javax.persistence.Column;
 import javax.persistence.Embeddable;
-import javax.persistence.Entity;
 import java.io.Serializable;
 import java.util.Objects;
 
@@ -19,27 +18,27 @@ import java.util.Objects;
 @Getter
 @Setter
 @Accessors(chain = true)
-public class BrgGroupAmznAccountId implements Serializable {
+public class BrgGroupAmznUserId implements Serializable {
 
     private static final long serialVersionUID = 1461032386399547886L;
     @Column(name = "group_id", nullable = false)
     private Integer groupId;
 
-    @Column(name = "amzn_account_id", nullable = false)
-    private Integer amznAccountId;
+    @Column(name = "amzn_user_id", nullable = false)
+    private Integer amznUserId;
 
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || Hibernate.getClass(this) != Hibernate.getClass(o)) return false;
-        BrgGroupAmznAccountId entity = (BrgGroupAmznAccountId) o;
+        BrgGroupAmznUserId entity = (BrgGroupAmznUserId) o;
         return Objects.equals(this.groupId, entity.groupId) &&
-                Objects.equals(this.amznAccountId, entity.amznAccountId);
+                Objects.equals(this.amznUserId, entity.amznUserId);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(groupId, amznAccountId);
+        return Objects.hash(groupId, amznUserId);
     }
 
 }
