@@ -14,7 +14,7 @@ public interface GroupRepository extends JpaRepository<Group, Integer> {
 
     boolean existsByTitleAndIdIsNot(String title, int id);
 
-    @Query("DELETE FROM BrgGroupAmznAccount AS br " +
+    @Query("DELETE FROM BrgGroupAmznUser AS br " +
             "WHERE (br.group.id = :groupId) ")
     @Modifying
     void deleteGroupAssociateAmznAcc(@Param("groupId") Integer groupId);

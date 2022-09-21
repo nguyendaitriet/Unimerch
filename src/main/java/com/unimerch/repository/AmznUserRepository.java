@@ -16,4 +16,6 @@ public interface AmznUserRepository extends JpaRepository<AmznUser, Integer> {
     AmznUser findByUsername(String username);
 
     List<AmznUser> findByStatus(AzmnStatus status);
+
+    void deleteAllByIdIn(List<Integer> ids);
 }

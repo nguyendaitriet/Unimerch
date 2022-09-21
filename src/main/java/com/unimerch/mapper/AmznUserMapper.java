@@ -8,7 +8,7 @@ import com.fasterxml.jackson.databind.deser.std.StdDeserializer;
 import com.unimerch.dto.amznacc.*;
 import com.unimerch.repository.model.AmznUser;
 import com.unimerch.repository.model.AzmnStatus;
-import com.unimerch.repository.model.BrgGroupAmznAccount;
+import com.unimerch.repository.model.BrgGroupAmznUser;
 import com.unimerch.service.AmznUserService;
 import com.unimerch.service.OrderService;
 import com.unimerch.util.TimeUtils;
@@ -43,10 +43,10 @@ public class AmznUserMapper extends StdDeserializer<AmznStatus> {
     @Autowired
     AmznUserService amznUserService;
 
-    public AmznAccResult toDTO(BrgGroupAmznAccount brgGroupAmznAccount) {
+    public AmznAccResult toDTO(BrgGroupAmznUser brgGroupAmznUser) {
         return new AmznAccResult()
-                .setId(brgGroupAmznAccount.getAmznAccount().getId())
-                .setUsername((brgGroupAmznAccount.getAmznAccount().getUsername()));
+                .setId(brgGroupAmznUser.getAmznUser().getId())
+                .setUsername((brgGroupAmznUser.getAmznUser().getUsername()));
     }
 
     public AmznAccResult toDTO(AmznUser amznUser) {

@@ -7755,7 +7755,7 @@ button.bg-dark:hover {
 }
 
 .flex-wrap {
-    flex-wrap: wrap !important;
+    flex-wrap: unset !important;
 }
 
 .flex-nowrap {
@@ -12754,4 +12754,16 @@ footer.sticky-footer .copyright {
 
 body.sidebar-toggled footer.sticky-footer {
     width: 100%;
+}
+
+.btn-text-sm {
+    font-size: 13px;
+}
+
+#table-amzn-acc-in_filter input {
+    width: 85%;
+}
+
+#table-amzn-acc-in td, #table-amzn-acc-in th, #table-group td, #table-group th, #table-amzn-acc td, #table-amzn-acc th{
+    padding: 0.5rem;
 }

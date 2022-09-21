@@ -16,6 +16,7 @@ import com.unimerch.repository.model.AzmnStatus;
 import com.unimerch.repository.model.Group;
 import com.unimerch.service.AmznUserService;
 import com.unimerch.service.GroupService;
+import com.unimerch.util.NaturalSortUtils;
 import com.unimerch.util.ValidationUtils;
 import org.apache.poi.openxml4j.exceptions.NotOfficeXmlFileException;
 import org.apache.poi.ss.usermodel.*;
@@ -131,13 +132,17 @@ public class AmznUserServiceImpl implements AmznUserService {
 
     @Override
     public List<AmznAccResult> findAll() {
-        return amznAccountRepository.findAll().stream().map(amznMapper::toDTO).collect(Collectors.toList());
+        return amznAccountRepository.findAll().stream()
+                .sorted((s1, s2) -> NaturalSortUtils.compareString(s1.getUsername(), s2.getUsername()))
+                .map(amznMapper::toDTO).collect(Collectors.toList());
     }
 
     @Override
     public List<AmznAccFilterResult> findAllFilter() {
         return amznAccountRepository.findAll()
-                .stream().map(account -> amznMapper.toAmznAccFilterResult(account))
+                .stream()
+                .sorted((s1, s2) -> NaturalSortUtils.compareString(s1.getUsername(), s2.getUsername()))
+                .map(account -> amznMapper.toAmznAccFilterResult(account))
                 .collect(Collectors.toList());
     }
 
@@ -146,7 +151,7 @@ public class AmznUserServiceImpl implements AmznUserService {
         String username = createParam.getUsername().trim().toLowerCase();
         String password = createParam.getPassword();
         if (amznAccountRepository.existsByUsername(username)) {
-            throw new DuplicateDataException(messageSource.getMessage("validation.amznAccUsernameExists", null, Locale.getDefault()));
+            throw new DuplicateDataException(messageSource.getMessage("validation.usernameExists", null, Locale.getDefault()));
         }
         try {
             createParam.setUsername(username);
@@ -176,9 +181,20 @@ public class AmznUserServiceImpl implements AmznUserService {
     public void delete(String id) {
         AmznUser amznAccount = findById(id);
         try {
-            orderRepository.deleteByAmznAccount_Id(amznAccount.getId());
-            brgGroupAmznAccountRepository.deleteByAmznAccount_Id(amznAccount.getId());
+            orderRepository.deleteByAmznUserId(amznAccount.getId());
+            brgGroupAmznAccountRepository.deleteByAmznUserId(amznAccount.getId());
             amznAccountRepository.delete(amznAccount);
+        } catch (Exception e) {
+            throw new ServerErrorException(messageSource.getMessage("error.500", null, Locale.getDefault()));
+        }
+    }
+
+    @Override
+    public void deleteAllByListId(List<Integer> idList) {
+        try {
+            orderRepository.deleteAllByAmznUserIdIn(idList);
+            brgGroupAmznAccountRepository.deleteAllByAmznUserIdIn(idList);
+            amznAccountRepository.deleteAllByIdIn(idList);
         } catch (Exception e) {
             throw new ServerErrorException(messageSource.getMessage("error.500", null, Locale.getDefault()));
         }
