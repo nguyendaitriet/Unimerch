@@ -1,10 +1,5 @@
 package com.unimerch.mapper;
 
-import com.fasterxml.jackson.core.JsonParser;
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.DeserializationContext;
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.deser.std.StdDeserializer;
 import com.unimerch.dto.amznacc.*;
 import com.unimerch.repository.model.AmznUser;
 import com.unimerch.repository.model.AzmnStatus;
@@ -15,9 +10,7 @@ import com.unimerch.util.TimeUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import java.io.IOException;
 import java.time.Instant;
-
 import java.util.ArrayList;
 import java.util.List;
 

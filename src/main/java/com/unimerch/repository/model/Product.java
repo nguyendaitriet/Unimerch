@@ -78,9 +78,4 @@ public class Product {
     public int hashCode() {
         return Objects.hash(id);
     }
-
-    public Product(String id, String priceHtml) {
-        this.id = id;
-        this.priceHtml = priceHtml;
-    }
 }
