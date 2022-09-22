@@ -79,7 +79,7 @@ public class OrderServiceImpl implements OrderService {
             productRepository.deleteAllByIdInBatch(orderData.getAsinList());
             productRepository.saveAll(orderData.getProductList());
 
-            orderData.getOrderList().forEach(order -> order.setAmznAccount(new AmznUser(id)));
+            orderData.getOrderList().forEach(order -> order.setAmznUser(new AmznUser(id)));
             orderRepository.saveAll(orderData.getOrderList());
 
             return orderData;
@@ -182,7 +182,7 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     public OrderCardResult getCardUserAllTime(Integer amznAccId) {
-        List<Order> ordersAllTime = orderRepository.findByAmznAccountId(amznAccId);
+        List<Order> ordersAllTime = orderRepository.findByAmznUserId(amznAccId);
         return orderMapper.toOrderCardResult(ordersAllTime, null);
     }
 

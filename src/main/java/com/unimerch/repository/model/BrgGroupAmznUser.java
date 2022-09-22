@@ -13,21 +13,21 @@ import javax.persistence.*;
 @Getter
 @Setter
 @Table(name = "brg_group_amzn_user")
-public class BrgGroupAmznAccount {
+public class BrgGroupAmznUser {
 
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @EmbeddedId
-    private BrgGroupAmznAccountId id;
+    private BrgGroupAmznUserId id;
 
     @MapsId("groupId")
     @ManyToOne(optional = false)
     @JoinColumn(name = "group_id")
     private Group group;
 
-    @MapsId("amznAccountId")
+    @MapsId("amznUserId")
     @ManyToOne(optional = false)
-    @JoinColumn(name = "amzn_account_id")
-    private AmznUser amznAccount;
+    @JoinColumn(name = "amzn_user_id")
+    private AmznUser amznUser;
 
 
 }

@@ -6,6 +6,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.*;
 import java.time.format.DateTimeFormatter;
+import java.time.temporal.ChronoUnit;
 import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
@@ -16,6 +17,10 @@ public class TimeUtils {
     static final private String dayMonthYearPattern = "dd/MM/yyyy";
 
     static final private String monthYearPattern = "MM/yyyy";
+
+    static final private String hoursFormat = "%d hour(s) ago";
+
+    static final private String daysAndHoursFormat = "%d day(s) ago";
 
     public static String toDayMonthYear(LocalDate date) {
         return date.format(DateTimeFormatter.ofPattern(dayMonthYearPattern));
@@ -135,5 +140,19 @@ public class TimeUtils {
         return dateFormat.format(date);
     }
 
+    public static Instant getInstantSomeHourBefore(int hours) {
+        return Instant.now().minus(hours, ChronoUnit.HOURS);
+    }
 
+    public static String getDurationBetween(Instant start, Instant end) {
+        Duration duration = Duration.between(start, end);
+        int durationInHour = (int) Math.abs(duration.toHours());
+
+        if (durationInHour <= 24)
+            return String.format(hoursFormat, durationInHour);
+
+        int days = durationInHour / 24;
+
+        return String.format(daysAndHoursFormat, days);
+    }
 }

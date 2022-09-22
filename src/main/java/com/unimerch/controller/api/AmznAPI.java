@@ -5,7 +5,6 @@ import com.unimerch.service.AmznUserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.jpa.datatables.mapping.DataTablesInput;
 import org.springframework.data.jpa.datatables.mapping.DataTablesOutput;
-import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -16,7 +15,9 @@ import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.Valid;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/api/amzn")
@@ -71,9 +72,16 @@ public class AmznAPI {
     }
 
     //    @PreAuthorize("hasAnyAuthority('MANAGER')")
-    @DeleteMapping("delete/{id}")
+    @DeleteMapping("/delete/{id}")
     public ResponseEntity<?> deleteAmznAcc(@PathVariable String id){
         amznUserService.delete(id);
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+    //    @PreAuthorize("hasAnyAuthority('MANAGER')")
+    @DeleteMapping("/delete")
+    public ResponseEntity<?> deleteMultiAmznAcc(@RequestBody Map<String, ArrayList<Integer>> amznAccIdList){
+        amznUserService.deleteAllByListId(amznAccIdList.get("amznAccSelected"));
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
@@ -118,5 +126,17 @@ public class AmznAPI {
     public ResponseEntity<?> findAccountDieByGrpId(@PathVariable String id) {
         List<AmznAccDieResult> accDieList = amznUserService.findAccDieByGrpId(id);
         return new ResponseEntity<>(accDieList, HttpStatus.OK);
+    }
+
+    @GetMapping("/last-check-all")
+    public ResponseEntity<?> findAccountLastCheck12Hours() {
+        List<AmznAccLastCheckResult> amznUserList = amznUserService.findAllLastCheck12Hours();
+        return new ResponseEntity<>(amznUserList, HttpStatus.OK);
+    }
+
+    @GetMapping("/last-check-grp/{id}")
+    public ResponseEntity<?> findAccountLastCheck12HoursByGrpId(@PathVariable String id) {
+        List<AmznAccLastCheckResult> amznUserList = amznUserService.findAllLastCheck12HoursByGrpId(id);
+        return new ResponseEntity<>(amznUserList, HttpStatus.OK);
     }
 }

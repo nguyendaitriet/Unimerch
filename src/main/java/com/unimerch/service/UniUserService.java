@@ -36,4 +36,6 @@ public interface UniUserService extends UserDetailsService {
     List<GroupResult> assignGroupToUser(String userId, List<String> groupId);
 
     void removeGroupFromUser(String userId, String groupId);
+
+
 }

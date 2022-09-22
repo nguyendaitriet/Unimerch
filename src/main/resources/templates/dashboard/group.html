@@ -63,6 +63,7 @@
                                     <thead>
                                     <tr>
                                         <th>#</th>
+                                        <th style="visibility: hidden"></th>
                                         <th th:text="#{group.tableAmznAccUsername}">Username</th>
                                         <th th:text="#{group.action}">Action</th>
                                     </tr>
@@ -112,6 +113,7 @@
             updateGroup: CommonApp.BASE_URL_GROUP + "/update/",
             deleteGroup: CommonApp.BASE_URL_GROUP + "/delete/",
             deleteAmznAccFromGroup: CommonApp.BASE_URL_GROUP + "/deleteAmznAccFromGroup/",
+            deleteMultiAmznAccFromGroup: CommonApp.BASE_URL_GROUP + "/deleteAmznAccFromGroup",
             addAmznAccountToGroup: CommonApp.BASE_URL_GROUP + "/addAmznAccountToGroup/"
         },
         element: {},
@@ -258,8 +260,8 @@
                         'id': amznAcc.id,
                         'username': amznAcc.username
                     })
-                    tableAmznAccIn.order([0, 'desc']).draw();
                 });
+                tableAmznAccIn.order([1, 'asc']).draw();
                 page.dialogs.element.mdAddAmznAccToGroup.modal("hide");
                 CommonApp.SweetAlert.showSuccessAlert(SUCCESS_CREATED);
             })
@@ -280,6 +282,38 @@
                 DBApp.handleFailedTasks(jqXHR);
             })
     }
+
+    page.commands.doDeletedMultiAmznAccInGroup = (currentGroup, tableAmznAccIn) => {
+        let amznAccSelected = [];
+
+        let rows_selected = tableAmznAccIn.rows({selected: true}).data()
+        $.each(rows_selected, function (index, value) {
+            amznAccSelected.push(value.id);
+        });
+
+        if (amznAccSelected.length === 0) {
+            CommonApp.IziToast.showErrorAlert(`${noDataSelected}`);
+            return;
+        }
+
+        $.ajax({
+            headers: {
+                "accept": "application/json",
+                "content-type": "application/json"
+            },
+            type: "DELETE",
+            url: page.urls.deleteMultiAmznAccFromGroup + "/" + currentGroup.id,
+            data: JSON.stringify({amznAccSelected})
+        })
+            .done((data) => {
+                tableAmznAccIn.rows({selected: true}).remove().draw();
+                CommonApp.SweetAlert.showSuccessAlert(SUCCESS_REMOVED);
+            })
+            .fail(function (jqXHR) {
+                DBApp.handleFailedTasks(jqXHR);
+            })
+    }
+
 
     page.dialogs.close.mdCreateGroup = () => {
         page.dialogs.element.frmCreateGroup.find("input.error").removeClass("error");
@@ -369,6 +403,8 @@
                 ]
             },
         });
+        tableGroup.order([1, "asc"]).draw();
+
         let tableAmznAccIn;
         let tableAmznAccOut;
         let currentRowGroup;
@@ -389,6 +425,7 @@
                     info: false,
                     pagingType: 'simple_numbers',
                     columns: [
+                        {data: null},
                         {data: 'id'},
                         {data: 'username'},
                         {data: null}
@@ -396,10 +433,16 @@
                     columnDefs: [
                         {
                             targets: 0,
-                            className: "text-center"
+                            orderable: false,
+                            className: 'select-checkbox',
+                            render: () => '',
                         },
                         {
                             targets: 1,
+                            visible: false
+                        },
+                        {
+                            targets: 2,
                             className: "text-center",
                             type: 'natural',
                         },
@@ -413,6 +456,9 @@
                                 + `</button>`
                         },
                     ],
+                    select: {
+                        style: 'multi+shift'
+                    },
                     language: {
                         search: `<i class="fas fa-search text-primary"></i> `,
                         paginate: {
@@ -429,12 +475,12 @@
                     },
                     pageLength: 7,
                     lengthChange: false,
-                    dom: '<"row mb-2"<"col"B><"col"f>>rtp',
+                    dom: '<"row mb-2"<"col-7"B><"col-5"f>>rtp',
                     buttons: {
                         dom: {
                             button: {
                                 tag: 'button',
-                                className: ''
+                                className: 'btn-text-sm'
                             }
                         },
                         buttons: [
@@ -446,10 +492,24 @@
                                         page.dialogs.element.mdAddAmznAccToGroup.modal("show");
                                     })
                                 }
+                            },
+                            {
+                                text: `<i class="fas fa-trash"></i> ${btnDelete}`,
+                                className: 'btn btn-danger',
+                                init: function (api, node, config) {
+                                    $(node).on('click', () => CommonApp.SweetAlert.showDeleteDialog()
+                                        .then((result) => {
+                                            if (result.isConfirmed) {
+                                                page.commands.doDeletedMultiAmznAccInGroup(currentGroup, tableAmznAccIn);
+                                            }
+                                        })
+                                    );
+                                }
                             }
                         ]
                     },
                 });
+                tableAmznAccIn.order([2, "asc"]).draw();
             } else {
                 tableAmznAccIn.ajax.url(page.urls.findAllAmznAccInGroup + currentGroup.id).load();
             }
@@ -587,6 +647,7 @@
                     lengthChange: false,
                     dom: '<"d-flex justify-content-around flex-column flex-sm-row mb-2"<"align-self-center align-self-sm-start table-quickselect"><"align-self-center align-self-sm-start"f>>tp'
                 });
+                tableAmznAccOut.order([1, "asc"]).draw();
 
                 $('div.table-quickselect').html(`<p class="font-italic font-weight-light text-center text-sm-left" style="margin-bottom: 0;">${tableQuickSelectP1}</p>
                 <p class="font-italic font-weight-light text-center text-sm-left">${tableQuickSelectP2}</p>`);

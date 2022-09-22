@@ -5,8 +5,8 @@ import com.unimerch.repository.model.AzmnStatus;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
+import java.time.Instant;
 import java.util.List;
-import java.util.Optional;
 
 @Repository
 public interface AmznUserRepository extends JpaRepository<AmznUser, Integer> {
@@ -16,4 +16,8 @@ public interface AmznUserRepository extends JpaRepository<AmznUser, Integer> {
     AmznUser findByUsername(String username);
 
     List<AmznUser> findByStatus(AzmnStatus status);
+
+    void deleteAllByIdIn(List<Integer> ids);
+
+    List<AmznUser> findAllByLastCheckBefore(Instant lastCheck);
 }

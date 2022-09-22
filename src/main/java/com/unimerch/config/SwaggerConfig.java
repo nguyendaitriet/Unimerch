@@ -31,7 +31,7 @@ public class SwaggerConfig {
                 .securitySchemes(Collections.singletonList(apiKey()))
                 .select()
 //                .apis(RequestHandlerSelectors.any())
-                .apis(RequestHandlerSelectors.basePackage("com.unimerch"))
+                .apis(RequestHandlerSelectors.basePackage("com.unimerch.controller.api"))
 //                .paths(PathSelectors.any())
                 .paths(PathSelectors.ant("/api/**"))
                 .build();

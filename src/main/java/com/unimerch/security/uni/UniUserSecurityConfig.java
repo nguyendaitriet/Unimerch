@@ -73,16 +73,6 @@ public class UniUserSecurityConfig extends WebSecurityConfigurerAdapter {
         http.authenticationProvider(authenticationProvider1());
         http.authorizeRequests()
                 .antMatchers("/api/login", "/login", "/api/amzn/login").permitAll()
-//                .antMatchers("/assets/**", "/messages/**").permitAll()
-//                .antMatchers("/api/amzn/updateMetadata", "/api/amzn/updateStatus", "/api/orders", "/api/products/update").authenticated()
-                .antMatchers("/users/**").hasAnyAuthority("USER")
-                .antMatchers("/dashboard/**").hasAnyAuthority("MANAGER")
-                .antMatchers("/", "/api/products/**",
-                        "/api/users/**",
-//                        "/api/orders/**",
-//                        "/api/amzn/**",
-                        "/api/groups/**")
-                .hasAnyAuthority("MANAGER", "USER")
                 .antMatchers(
                         "/v2/api-docs",
                         "/swagger-resources/configuration/ui",
@@ -93,6 +83,16 @@ public class UniUserSecurityConfig extends WebSecurityConfigurerAdapter {
                         "/swagger-ui.html",
                         "/webjars/**"
                 ).permitAll()
+//                .antMatchers("/assets/**", "/messages/**").permitAll()
+//                .antMatchers("/api/amzn/updateMetadata", "/api/amzn/updateStatus", "/api/orders", "/api/products/update").authenticated()
+                .antMatchers("/users/**").hasAnyAuthority("USER")
+                .antMatchers("/dashboard/**").hasAnyAuthority("MANAGER")
+                .antMatchers("/", "/api/products/**",
+                        "/api/users/**",
+//                        "/api/orders/**",
+//                        "/api/amzn/**",
+                        "/api/groups/**")
+                .hasAnyAuthority("MANAGER", "USER")
                 .and()
                 .formLogin()
                 .loginPage("/login")

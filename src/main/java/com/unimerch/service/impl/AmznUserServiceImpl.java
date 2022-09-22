@@ -8,7 +8,7 @@ import com.unimerch.exception.*;
 import com.unimerch.mapper.AmznUserMapper;
 import com.unimerch.mapper.MetadataMapper;
 import com.unimerch.repository.AmznUserRepository;
-import com.unimerch.repository.BrgGroupAmznAccountRepository;
+import com.unimerch.repository.BrgGroupAmznUserRepository;
 import com.unimerch.repository.OrderRepository;
 import com.unimerch.repository.datatable.AmznAccTableRepository;
 import com.unimerch.repository.model.AmznUser;
@@ -16,6 +16,8 @@ import com.unimerch.repository.model.AzmnStatus;
 import com.unimerch.repository.model.Group;
 import com.unimerch.service.AmznUserService;
 import com.unimerch.service.GroupService;
+import com.unimerch.util.NaturalSortUtils;
+import com.unimerch.util.TimeUtils;
 import com.unimerch.util.ValidationUtils;
 import org.apache.poi.openxml4j.exceptions.NotOfficeXmlFileException;
 import org.apache.poi.ss.usermodel.*;
@@ -50,7 +52,7 @@ public class AmznUserServiceImpl implements AmznUserService {
     private AmznUserRepository amznAccountRepository;
 
     @Autowired
-    private BrgGroupAmznAccountRepository brgGroupAmznAccountRepository;
+    private BrgGroupAmznUserRepository brgGroupAmznUserRepository;
 
     @Autowired
     private GroupService groupService;
@@ -131,13 +133,17 @@ public class AmznUserServiceImpl implements AmznUserService {
 
     @Override
     public List<AmznAccResult> findAll() {
-        return amznAccountRepository.findAll().stream().map(amznMapper::toDTO).collect(Collectors.toList());
+        return amznAccountRepository.findAll().stream()
+                .sorted((s1, s2) -> NaturalSortUtils.compareString(s1.getUsername(), s2.getUsername()))
+                .map(amznMapper::toDTO).collect(Collectors.toList());
     }
 
     @Override
     public List<AmznAccFilterResult> findAllFilter() {
         return amznAccountRepository.findAll()
-                .stream().map(account -> amznMapper.toAmznAccFilterResult(account))
+                .stream()
+                .sorted((s1, s2) -> NaturalSortUtils.compareString(s1.getUsername(), s2.getUsername()))
+                .map(account -> amznMapper.toAmznAccFilterResult(account))
                 .collect(Collectors.toList());
     }
 
@@ -146,7 +152,7 @@ public class AmznUserServiceImpl implements AmznUserService {
         String username = createParam.getUsername().trim().toLowerCase();
         String password = createParam.getPassword();
         if (amznAccountRepository.existsByUsername(username)) {
-            throw new DuplicateDataException(messageSource.getMessage("validation.amznAccUsernameExists", null, Locale.getDefault()));
+            throw new DuplicateDataException(messageSource.getMessage("validation.usernameExists", null, Locale.getDefault()));
         }
         try {
             createParam.setUsername(username);
@@ -176,9 +182,20 @@ public class AmznUserServiceImpl implements AmznUserService {
     public void delete(String id) {
         AmznUser amznAccount = findById(id);
         try {
-            orderRepository.deleteByAmznAccount_Id(amznAccount.getId());
-            brgGroupAmznAccountRepository.deleteByAmznAccount_Id(amznAccount.getId());
+            orderRepository.deleteByAmznUserId(amznAccount.getId());
+            brgGroupAmznUserRepository.deleteByAmznUserId(amznAccount.getId());
             amznAccountRepository.delete(amznAccount);
+        } catch (Exception e) {
+            throw new ServerErrorException(messageSource.getMessage("error.500", null, Locale.getDefault()));
+        }
+    }
+
+    @Override
+    public void deleteAllByListId(List<Integer> idList) {
+        try {
+            orderRepository.deleteAllByAmznUserIdIn(idList);
+            brgGroupAmznUserRepository.deleteAllByAmznUserIdIn(idList);
+            amznAccountRepository.deleteAllByIdIn(idList);
         } catch (Exception e) {
             throw new ServerErrorException(messageSource.getMessage("error.500", null, Locale.getDefault()));
         }
@@ -278,7 +295,7 @@ public class AmznUserServiceImpl implements AmznUserService {
     @Override
     public List<AmznAccAnalyticsResult> findAnalyticsByGrpId(String groupId) {
         Group group = groupService.findById(groupId);
-        return brgGroupAmznAccountRepository.getAmznAccInGroup(group.getId()).stream()
+        return brgGroupAmznUserRepository.getAmznAccInGroup(group.getId()).stream()
                 .map(amznAccResult -> amznMapper.toAmznAccAnalyticsResult(amznAccResult))
                 .collect(Collectors.toList());
     }
@@ -311,7 +328,22 @@ public class AmznUserServiceImpl implements AmznUserService {
     @Override
     public List<AmznAccDieResult> findAccDieByGrpId(String groupId) {
         Group group = groupService.findById(groupId);
-        List<AmznUser> userList = brgGroupAmznAccountRepository.getAmznAccDieInGroup(group.getId());
+        List<AmznUser> userList = brgGroupAmznUserRepository.getAmznAccDieInGroup(group.getId());
         return amznMapper.toAmznAccDieResults(userList);
+    }
+
+    @Override
+    public List<AmznAccLastCheckResult> findAllLastCheck12Hours() {
+        Instant twelveHoursBefore = TimeUtils.getInstantSomeHourBefore(12);
+        List<AmznUser> userList = amznAccountRepository.findAllByLastCheckBefore(twelveHoursBefore);
+        return amznMapper.toAmznLastCheckResult(userList);
+    }
+
+    @Override
+    public List<AmznAccLastCheckResult> findAllLastCheck12HoursByGrpId(String groupId) {
+        Group group = groupService.findById(groupId);
+        Instant twelveHoursBefore = TimeUtils.getInstantSomeHourBefore(12);
+        List<AmznUser> userList = brgGroupAmznUserRepository.findAllByLastCheckBeforeAndGroupId(twelveHoursBefore, group.getId());
+        return amznMapper.toAmznLastCheckResult(userList);
     }
 }

@@ -25,12 +25,12 @@ import java.util.Objects;
                     "o.title AS productName, " +
                     "SUM(o.royalties) AS royalties, " +
                     "p.price, " +
-                    "o.amzn_account_id AS amznAccUsername, " +
+                    "o.amzn_user_id AS amznAccUsername, " +
                     "o.ASIN AS asin " +
                 "FROM orders AS o " +
                 "LEFT JOIN products AS p " +
                 "ON p.ASIN = o.ASIN " +
-                "WHERE o.amzn_account_id IN (:amznAccId) " +
+                "WHERE o.amzn_user_id IN (:amznAccId) " +
                 "AND o.date >= :startDay " +
                 "GROUP BY o.ASIN ",
         resultSetMapping = "product_item_result"

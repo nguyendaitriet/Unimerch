@@ -25,14 +25,13 @@
             <!-- End of Topbar -->
 
             <!-- Begin Page Content -->
-            <div class="container-fluid">
+            <div class="container-fluid no-padding-container">
                 <div class="row">
                     <!-- User Filter-->
-                    <div id="sticky-filter" class="col-3 col-md-2">
+                    <div id="user-filter" class="col-auto no-padding">
                         <div class="card shadow mb-4">
                             <!-- Card Header -->
-                            <div id="sticky-filter-header"
-                                 class="card-header py-2 nav-link d-flex flex-row align-items-center justify-content-between">
+                            <div class="card-header py-2 nav-link d-flex flex-row align-items-center justify-content-between">
                                 <a class="custom-card-title m-0 font-weight-bold text-primary text-decoration-none"
                                    th:href="@{'/dashboard/' + ${(group.id != 0) ? group.id : ''}}"
                                    th:text="${group.title}">Accounts</a>
@@ -57,7 +56,7 @@
                     </div>
 
                     <!-- Main Content -->
-                    <div class="col-9 col-md-10">
+                    <div class="col-9 col-md-10 no-padding">
                         <div class="card shadow mb-4">
                             <!-- Card Header -->
                             <ul class="card-header nav nav-tabs custom-nav" role="tablist">
@@ -88,15 +87,15 @@
                                 <div class="tab-pane fade show active" id="dashboard" role="tabpanel"
                                      aria-labelledby="dashboard-tab">
 
-                                    <div class="row flex-md-row-reverse">
+                                    <div class="row flex-md-row-reverse mb-3">
                                         <!-- Chart -->
-                                        <div class="col-lg-8 col-md-12 mb-4">
+                                        <div class="col-12 col-md-8">
                                             <div class="row" id="chartHolder" style="height:300px; width:100%;">
                                                 <!-- Chart Content -->
-
                                             </div>
+
                                             <!-- Legends -->
-                                            <div class="row mt-4 text-center justify-content-center small">
+                                            <div class="row mt-1 text-center justify-content-center small">
                                                     <span class="mr-4">
                                                         <i class="fas fa-square" style="color: #41b2e6"></i>
                                                         <br th:text="#{dashboard.chart.legend.royalties}">
@@ -109,7 +108,7 @@
                                         </div>
 
                                         <!-- Today's sale -->
-                                        <div class="col-lg-4 col-md-12 my-4 mt-md-5">
+                                        <div class="col-12 col-md-4 mt-md-5">
                                             <div class="card border-left-primary shadow">
                                                 <div class="card-body">
                                                     <div class="row no-gutters align-items-center mb-2">
@@ -158,55 +157,16 @@
                                         </div>
                                     </div>
 
-                                    <div class="row justify-content-center">
-                                        <!-- 1st card sale -->
-                                        <div class="col-sm-12 col-md-6 col-lg-4 mb-4">
+                                    <div class="row" style="justify-content: space-evenly;">
+                                        <!-- Yesterday -->
+                                        <div class="col-6 col-md-2 mb-4 no-padding">
                                             <div class="card border-left-primary shadow">
-                                                <div class="card-body">
-                                                    <div class="row no-gutters align-items-center mb-2 custom-card-header">
+                                                <div class="card-body custom-card-body">
+                                                    <div
+                                                            class="row no-gutters align-items-center mb-2 custom-card-header">
                                                         <div class="col mr-2">
-                                                            <div class="h6 text-center font-weight-bold text-primary text-uppercase">
-                                                                All Times
-                                                            </div>
-                                                        </div>
-                                                    </div>
-
-                                                    <hr class="sidebar-divider my-2">
-
-                                                    <div class="row">
-                                                        <div class="col-6 d-flex flex-row justify-content-center align-items-center">
-                                                            <div id="allTimePurchased"
-                                                                 class="h3 mb-0 text-gray-800 font-weight-bold">
-                                                                0
-                                                            </div>
-                                                        </div>
-
-                                                        <div class="col-6">
-                                                            <div id="allTimeRoyalties"
-                                                                 class="row mt-1 no-gutters d-flex justify-content-end">
-                                                                0
-                                                            </div>
-                                                            <div class="row mt-1 no-gutters d-flex justify-content-end">
-                                                                <span id="allTimeSold">0</span> - <span
-                                                                    id="allTimeCancelled">0</span>
-                                                            </div>
-                                                            <div id="allTimeReturned"
-                                                                 class="row mt-1 no-gutters d-flex justify-content-end">
-                                                                0
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-
-                                        <!-- 2nd card sale -->
-                                        <div class="col-sm-12 col-md-6 col-lg-4 mb-4">
-                                            <div class="card border-left-primary shadow">
-                                                <div class="card-body">
-                                                    <div class="row no-gutters align-items-center mb-2 custom-card-header">
-                                                        <div class="col mr-2">
-                                                            <div class="h6 text-center font-weight-bold text-primary text-uppercase">
+                                                            <div
+                                                                    class="custom-card-header text-center font-weight-bold text-primary text-uppercase">
                                                                 Yesterday
                                                                 <br>
                                                                 <span id="yesterdayDate"></span>
@@ -217,19 +177,20 @@
                                                     <hr class="sidebar-divider my-2">
 
                                                     <div class="row">
-                                                        <div class="col-6 d-flex flex-row justify-content-center align-items-center">
+                                                        <div class="col-5 d-flex flex-row justify-content-center align-items-center">
                                                             <div id="yesterdayPurchased"
-                                                                 class="h3 mb-0 text-gray-800 font-weight-bold">
+                                                                 class="h6 mb-0 text-gray-800 font-weight-bold">
                                                                 0
                                                             </div>
                                                         </div>
 
-                                                        <div class="col-6">
+                                                        <div class="col-7">
                                                             <div id="yesterdayRoyalties"
                                                                  class="row mt-1 no-gutters d-flex justify-content-end">
                                                                 0
                                                             </div>
-                                                            <div class="row mt-1 no-gutters d-flex justify-content-end">
+                                                            <div
+                                                                    class="row mt-1 no-gutters d-flex justify-content-end">
                                                                 <span id="yesterdaySold">0</span> - <span
                                                                     id="yesterdayCancelled">0</span>
                                                             </div>
@@ -243,13 +204,15 @@
                                             </div>
                                         </div>
 
-                                        <!-- 3rd card sale -->
-                                        <div class="col-sm-12 col-md-6 col-lg-4 mb-4">
+                                        <!-- Last 7 Days -->
+                                        <div class="col-6 col-md-2 mb-4 no-padding">
                                             <div class="card border-left-primary shadow">
-                                                <div class="card-body">
-                                                    <div class="row no-gutters align-items-center mb-2 custom-card-header">
+                                                <div class="card-body custom-card-body">
+                                                    <div
+                                                            class="row no-gutters align-items-center mb-2 custom-card-header">
                                                         <div class="col mr-2">
-                                                            <div class="h6 text-center font-weight-bold text-primary text-uppercase">
+                                                            <div
+                                                                    class="custom-card-header text-center font-weight-bold text-primary text-uppercase">
                                                                 Last 7 Days
                                                                 <br>
                                                                 <span id="lastSevenDaysDate"></span>
@@ -260,19 +223,20 @@
                                                     <hr class="sidebar-divider my-2">
 
                                                     <div class="row">
-                                                        <div class="col-6 d-flex flex-row justify-content-center align-items-center">
+                                                        <div class="col-5 d-flex flex-row justify-content-center align-items-center">
                                                             <div id="lastSevenDaysPurchased"
-                                                                 class="h3 mb-0 text-gray-800 font-weight-bold">
+                                                                 class="h6 mb-0 text-gray-800 font-weight-bold">
                                                                 0
                                                             </div>
                                                         </div>
 
-                                                        <div class="col-6">
+                                                        <div class="col-7">
                                                             <div id="lastSevenDaysRoyalties"
                                                                  class="row mt-1 no-gutters d-flex justify-content-end">
                                                                 0
                                                             </div>
-                                                            <div class="row mt-1 no-gutters d-flex justify-content-end">
+                                                            <div
+                                                                    class="row mt-1 no-gutters d-flex justify-content-end">
                                                                 <span id="lastSevenDaysSold">0</span> - <span
                                                                     id="lastSevenDaysCancelled">0</span>
                                                             </div>
@@ -286,13 +250,15 @@
                                             </div>
                                         </div>
 
-                                        <!-- 4th card sale -->
-                                        <div class="col-sm-12 col-md-6 col-lg-4 mb-4">
+                                        <!-- This Month -->
+                                        <div class="col-6 col-md-2 mb-4 no-padding">
                                             <div class="card border-left-primary shadow">
-                                                <div class="card-body">
-                                                    <div class="row no-gutters align-items-center mb-2 custom-card-header">
+                                                <div class="card-body custom-card-body">
+                                                    <div
+                                                            class="row no-gutters align-items-center mb-2 custom-card-header">
                                                         <div class="col mr-2">
-                                                            <div class="h6 text-center font-weight-bold text-primary text-uppercase">
+                                                            <div
+                                                                    class="custom-card-header text-center font-weight-bold text-primary text-uppercase">
                                                                 This Month
                                                                 <br>
                                                                 <span id="thisMonthDate"></span>
@@ -303,14 +269,14 @@
                                                     <hr class="sidebar-divider my-2">
 
                                                     <div class="row">
-                                                        <div class="col-6 d-flex flex-row justify-content-center align-items-center">
+                                                        <div class="col-5 d-flex flex-row justify-content-center align-items-center">
                                                             <div id="thisMonthPurchased"
-                                                                 class="h3 mb-0 text-gray-800 font-weight-bold">
+                                                                 class="h6 mb-0 text-gray-800 font-weight-bold">
                                                                 0
                                                             </div>
                                                         </div>
 
-                                                        <div class="col-6">
+                                                        <div class="col-7">
                                                             <div id="thisMonthRoyalties"
                                                                  class="row mt-1 no-gutters d-flex justify-content-end">
                                                                 0
@@ -329,13 +295,13 @@
                                             </div>
                                         </div>
 
-                                        <!-- 5th card sale -->
-                                        <div class="col-sm-12 col-md-6 col-lg-4 mb-4">
+                                        <!-- Previous Month -->
+                                        <div class="col-6 col-md-2 mb-4 no-padding">
                                             <div class="card border-left-primary shadow">
-                                                <div class="card-body">
+                                                <div class="card-body custom-card-body">
                                                     <div class="row no-gutters align-items-center mb-2 custom-card-header">
                                                         <div class="col mr-2">
-                                                            <div class="h6 text-center font-weight-bold text-primary text-uppercase">
+                                                            <div class="custom-card-header text-center font-weight-bold text-primary text-uppercase">
                                                                 Previous Month
                                                                 <br>
                                                                 <span id="previousMonthDate"></span>
@@ -346,14 +312,14 @@
                                                     <hr class="sidebar-divider my-2">
 
                                                     <div class="row">
-                                                        <div class="col-6 d-flex flex-row justify-content-center align-items-center">
+                                                        <div class="col-5 d-flex flex-row justify-content-center align-items-center">
                                                             <div id="previousMonthPurchased"
-                                                                 class="h3 mb-0 text-gray-800 font-weight-bold">
+                                                                 class="h6 mb-0 text-gray-800 font-weight-bold">
                                                                 0
                                                             </div>
                                                         </div>
 
-                                                        <div class="col-6">
+                                                        <div class="col-7">
                                                             <div id="previousMonthRoyalties"
                                                                  class="row mt-1 no-gutters d-flex justify-content-end">
                                                                 0
@@ -363,6 +329,47 @@
                                                                     id="previousMonthCancelled">0</span>
                                                             </div>
                                                             <div id="previousMonthReturned"
+                                                                 class="row mt-1 no-gutters d-flex justify-content-end">
+                                                                0
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <!-- All Times -->
+                                        <div class="col-6 col-md-2 mb-4 no-padding">
+                                            <div class="card border-left-primary shadow">
+                                                <div class="card-body custom-card-body">
+                                                    <div class="row no-gutters align-items-center mb-2 custom-card-header">
+                                                        <div class="col mr-2">
+                                                            <div class="custom-card-header text-center font-weight-bold text-primary text-uppercase">
+                                                                All Times
+                                                            </div>
+                                                        </div>
+                                                    </div>
+
+                                                    <hr class="sidebar-divider my-2">
+
+                                                    <div class="row">
+                                                        <div class="col-5 d-flex flex-row justify-content-center align-items-center">
+                                                            <div id="allTimePurchased"
+                                                                 class="h6 mb-0 text-gray-800 font-weight-bold">
+                                                                0
+                                                            </div>
+                                                        </div>
+
+                                                        <div class="col-7">
+                                                            <div id="allTimeRoyalties"
+                                                                 class="row mt-1 no-gutters d-flex justify-content-end">
+                                                                0
+                                                            </div>
+                                                            <div class="row mt-1 no-gutters d-flex justify-content-end">
+                                                                <span id="allTimeSold">0</span> - <span
+                                                                    id="allTimeCancelled">0</span>
+                                                            </div>
+                                                            <div id="allTimeReturned"
                                                                  class="row mt-1 no-gutters d-flex justify-content-end">
                                                                 0
                                                             </div>
@@ -401,7 +408,7 @@
                                         </li>
                                     </ul>
 
-                                    <div class="card-body tab-content">
+                                    <div id="tables-main-page" class="card-body tab-content">
                                         <!-- Table - Today -->
                                         <div class="tab-pane fade show active" id="today" role="tabpanel"
                                              aria-labelledby="today-tab">
@@ -507,7 +514,7 @@
                                             <th style="visibility: hidden">Id</th>
                                             <th>#</th>
                                             <th>Username</th>
-                                            <th>Last Checked</th>
+                                            <th>Last Check</th>
                                         </tr>
                                         </thead>
                                     </table>
@@ -580,6 +587,9 @@
             findAllTodaySoldEveryAmznAcc: CommonApp.BASE_URL_PRODUCT + "/findAllTodaySoldEveryAmznAcc/",
             findAllLast30DaysSoldEveryAmznAcc: CommonApp.BASE_URL_PRODUCT + "/findAllLast30DaysSoldEveryAmznAcc/",
             findAllThisMonthSoldEveryAmznAcc: CommonApp.BASE_URL_PRODUCT + "/findAllThisMonthSoldEveryAmznAcc/",
+
+            findLastCheckAll: CommonApp.BASE_URL_AMZN_ACCOUNT + "/last-check-all",
+            findLastCheckByGroupId: CommonApp.BASE_URL_AMZN_ACCOUNT + "/last-check-grp/"
         },
         element: {},
         commands: {},
@@ -595,6 +605,7 @@
     page.element.tableThisMonthSold = $("#tableThisMonthSold");
     page.element.tableAnalytics = $("#table-analytics");
     page.element.tableAccountDie = $("#table-account-die");
+    page.element.tableLastCheck = $("#table-last-check");
 
     page.element.todayLink = $("#todayLink");
     page.element.thirtyDaysLink = $("#thirtyDaysLink");
@@ -671,7 +682,7 @@
                 },
                 {
                     targets: 0,
-                    className: "text-dark",
+                    className: "text-dark font-weight-bold"
                 },
             ],
             language: {
@@ -719,7 +730,7 @@
                 },
                 {
                     targets: 0,
-                    className: "text-dark"
+                    className: "text-dark font-weight-bold"
                 },
             ],
             language: {
@@ -767,7 +778,7 @@
                 },
                 {
                     targets: 0,
-                    className: "text-dark"
+                    className: "text-dark font-weight-bold"
                 },
             ],
             language: {
@@ -982,6 +993,51 @@
         });
     }
 
+    page.commands.initLastCheckTable = () => {
+        let lastCheckTable = page.element.tableLastCheck.DataTable({
+            ajax: {
+                contentType: 'application/json',
+                url: '/assets/json/data.json',
+                dataSrc: ''
+            },
+            pagingType: 'simple_numbers',
+            columns: [
+                {data: 'id'},
+                {data: 'no'},
+                {data: 'username'},
+                {data: 'lastCheck'}
+            ],
+            columnDefs: [
+                {
+                    targets: 0,
+                    visible: false
+                },
+                {
+                    targets: [1, -1],
+                    className: 'text-center'
+                }
+            ],
+            ordering: false,
+            language: {
+                search: `<i class="fas fa-search text-primary"></i> `,
+                paginate: {
+                    previous: `<i class="fas fa-angle-left"></i>`,
+                    next: `<i class="fas fa-angle-right"></i>`
+                },
+                aria: {
+                    paginate: {
+                        previous: 'Previous',
+                        next: 'Next'
+                    }
+                },
+                emptyTable: `${noDataInTable}`
+            },
+            pageLength: 10,
+            lengthChange: false,
+            dom: '<"text-right mb-2"f>rtp'
+        })
+    }
+
     $(document).ready(function () {
         DBApp.handleGroupsFilterSidebar();
 
@@ -991,27 +1047,13 @@
         page.commands.initThisMonthSoldTable();
         page.commands.initAnalyticsTable();
         page.commands.initAccountDieTable();
+        page.commands.initLastCheckTable();
     })
-
-    //sticky Filter
-    var stickyFilter = $("#sticky-filter");
-
-    var stickyFilterHeader = $("#sticky-filter-header").height();
-
-    $(window).scroll(function () {
-        // console.log('window scrolltop: ' + $(this).scrollTop());
-        if ($(this).scrollTop() > stickyFilterHeader + 125) {
-            stickyFilter.addClass("navScrolled");
-        } else {
-            stickyFilter.removeClass("navScrolled");
-        }
-    });
 
     function getProductSoldDataForEachAmznAcc(amznAccId) {
         page.element.tableTodaySold.DataTable().ajax.url(page.urls.findAllTodaySoldEveryAmznAcc + amznAccId).load();
         page.element.table30DaysSold.DataTable().ajax.url(page.urls.findAllLast30DaysSoldEveryAmznAcc + amznAccId).load();
         page.element.tableThisMonthSold.DataTable().ajax.url(page.urls.findAllThisMonthSoldEveryAmznAcc + amznAccId).load();
-
     }
 
     /** chart */
@@ -1028,6 +1070,11 @@
     function formatAxis(id, value) {
         return DBApp.fmtNumWMetricSuffix(value);
     }
+
+    /** reset-chart on tab change */
+    $('a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
+        window.dispatchEvent(new Event('resize'));
+    })
 
     page.commands.getChart = (url) => {
         $.ajax({
@@ -1196,6 +1243,7 @@
         let tableThisMonthUrl = page.urls.findAllThisMonthSoldInGroup + groupId;
         let tableAnalyticsUrl = page.urls.findAnalyticsByGroupId + groupId;
         let tableAccDieUrl = page.urls.findAccountDieByGroupId + groupId;
+        let tableLastCheckUrl = page.urls.findLastCheckByGroupId + groupId;
 
         /** when url does not point to a specific group */
         if (isNaN(groupId) || groupId === '') {
@@ -1207,6 +1255,7 @@
             tableThisMonthUrl = page.urls.findAllThisMonthSoldAllAmznAcc;
             tableAnalyticsUrl = page.urls.findAnalyticsAll;
             tableAccDieUrl = page.urls.findAccountDieAll;
+            tableLastCheckUrl = page.urls.findLastCheckAll;
         }
 
         $.ajax({
@@ -1228,6 +1277,7 @@
 
                 page.element.tableAnalytics.DataTable().ajax.url(tableAnalyticsUrl).load();
                 page.element.tableAccountDie.DataTable().ajax.url(tableAccDieUrl).load();
+                page.element.tableLastCheck.DataTable().ajax.url(tableLastCheckUrl).load();
             })
             .fail((jqXHR) => {
                 DBApp.handleFailedTasks(jqXHR);
@@ -1264,6 +1314,9 @@
         DBApp.handleFilter('filter-dashboard', 'dashboard-user-search', 'list-group-item');
     }
 
+    /** custom appearance for global content */
+    $('.topbar').removeClass('mb-4').addClass('mb-0');
+    $('.shadow').removeClass('shadow');
 </script>
 </body>
 
