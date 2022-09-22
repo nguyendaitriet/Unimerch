@@ -9,6 +9,7 @@ import com.unimerch.dto.order.OrderChartResult;
 import com.unimerch.dto.order.OrderData;
 import com.unimerch.exception.ServerErrorException;
 import com.unimerch.mapper.OrderMapper;
+import com.unimerch.repository.AmznUserRepository;
 import com.unimerch.repository.OrderRepository;
 import com.unimerch.repository.OrderRepositoryExtension;
 import com.unimerch.repository.ProductRepository;
@@ -42,6 +43,9 @@ public class OrderServiceImpl implements OrderService {
 
     @Autowired
     private OrderMapper orderMapper;
+
+    @Autowired
+    private AmznUserRepository amznUserRepository;
 
     @Autowired
     private MessageSource messageSource;
@@ -82,6 +86,7 @@ public class OrderServiceImpl implements OrderService {
             orderData.getOrderList().forEach(order -> order.setAmznUser(new AmznUser(id)));
             orderRepository.saveAll(orderData.getOrderList());
 
+            amznUserRepository.updateLastCheck(id, Instant.now());
             return orderData;
         } catch (JsonProcessingException | ServerErrorException e) {
             throw new ServerErrorException(messageSource.getMessage("error.500", null, Locale.getDefault()));

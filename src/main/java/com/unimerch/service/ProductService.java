@@ -1,5 +1,6 @@
 package com.unimerch.service;
 
+import com.unimerch.dto.product.ProductPriceParam;
 import com.unimerch.dto.product.ProductResult;
 
 import java.util.List;
@@ -12,5 +13,5 @@ public interface ProductService {
 
     List<ProductResult> findAllLast30DaysSoldProduct(Integer id, int choice);
 
-    void updateProduct(String productData);
+    void updateProduct(ProductPriceParam productData);
 }
