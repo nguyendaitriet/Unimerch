@@ -1,13 +1,16 @@
 package com.unimerch.controller.api;
 
+import com.unimerch.dto.product.ProductPriceParam;
 import com.unimerch.dto.product.ProductResult;
 import com.unimerch.service.ProductService;
+import com.unimerch.service.impl.ConfigurationServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
+import java.lang.module.Configuration;
 import java.util.List;
 
 @Controller
@@ -16,9 +19,9 @@ public class ProductAPI {
     @Autowired
     private ProductService productService;
 
-    @PutMapping("/update")
-    private ResponseEntity<?> updateProduct(@RequestBody String data) {
-        productService.updateProduct(data);
+    @PutMapping("/updatePrice")
+    public ResponseEntity<?> updateProductPrice(@RequestBody ProductPriceParam productPriceParam) {
+        productService.updateProduct(productPriceParam);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 

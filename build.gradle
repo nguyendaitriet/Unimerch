@@ -7,7 +7,6 @@ plugins {
 
 group = 'com.unimerch'
 version = '0.0.1-SNAPSHOT'
-sourceCompatibility = "1.9"
 
 configurations {
     compileOnly {
@@ -33,10 +32,7 @@ dependencies {
     annotationProcessor 'org.projectlombok:lombok'
     providedRuntime 'org.springframework.boot:spring-boot-starter-tomcat'
 
-    implementation 'io.swagger.core.v3:swagger-annotations:2.2.0'
-    implementation 'io.swagger.core.v3:swagger-core:2.2.0'
-    implementation 'io.springfox:springfox-swagger2:3.0.0'
-    implementation 'io.springfox:springfox-swagger-ui:3.0.0'
+    implementation group: 'io.springfox', name: 'springfox-boot-starter', version: '3.0.0'
 
     implementation 'io.jsonwebtoken:jjwt-api:0.11.2'
     runtimeOnly 'io.jsonwebtoken:jjwt-impl:0.11.2'
@@ -47,9 +43,11 @@ dependencies {
     implementation 'org.apache.poi:poi:5.2.2'
     implementation 'org.apache.poi:poi-ooxml:5.2.2'
     implementation 'commons-fileupload:commons-fileupload:1.4'
+
+    implementation 'com.googlecode.json-simple:json-simple:1.1.1'
+
 }
 
 tasks.named('test') {
     useJUnitPlatform()
 }
-targetCompatibility = JavaVersion.VERSION_1_9

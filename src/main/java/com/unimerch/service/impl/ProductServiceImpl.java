@@ -3,6 +3,7 @@ package com.unimerch.service.impl;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.module.SimpleModule;
+import com.unimerch.dto.product.ProductPriceParam;
 import com.unimerch.dto.product.ProductResult;
 import com.unimerch.exception.ServerErrorException;
 import com.unimerch.mapper.ProductMapper;
@@ -16,10 +17,13 @@ import org.springframework.context.MessageSource;
 import org.springframework.stereotype.Service;
 
 
+import java.math.BigDecimal;
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 @Service
 public class ProductServiceImpl implements ProductService {
@@ -32,6 +36,12 @@ public class ProductServiceImpl implements ProductService {
 
     @Autowired
     private BrgGroupAmznUserRepository brgGroupAmznUserRepository;
+
+    @Autowired
+    private ConfigurationServiceImpl configurationService;
+
+    @Autowired
+    private ProductMapper productMapper;
 
     @Override
     public List<ProductResult> findAllTodaySoldProduct(Integer id, int choice) {
@@ -52,17 +62,25 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public void updateProduct(String data) {
-        ObjectMapper mapper = new ObjectMapper();
-        SimpleModule module = new SimpleModule();
-        module.addDeserializer(Product.class, new ProductMapper());
-        mapper.registerModule(module);
+    public void updateProduct(ProductPriceParam productData) {
         try {
-            Product productData = mapper.readValue(data, Product.class);
-            productRepository.save(productData);
-        } catch (JsonProcessingException | ServerErrorException e) {
+            BigDecimal price = convertToProductPrice(productData.getPriceHtml());
+            Product product = productMapper.toProduct(productData);
+            product.setPrice(price);
+            productRepository.save(product);
+        } catch (ServerErrorException e) {
             throw new ServerErrorException(messageSource.getMessage("error.500", null, Locale.getDefault()));
         }
+    }
+
+    private BigDecimal convertToProductPrice(String priceHtml) {
+        String priceRegex = configurationService.getBackendPricePattern();
+        Pattern TAG_REGEX = Pattern.compile(priceRegex);
+        Matcher matcher = TAG_REGEX.matcher(priceHtml);
+        if (matcher.find()) {
+            return new BigDecimal(matcher.group(0));
+        }
+        return null;
     }
 
     private List<ProductResult> getProductItemResult(Instant instant, Integer id, int choice) {

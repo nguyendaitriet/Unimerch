@@ -74,20 +74,22 @@ public class UniUserSecurityConfig extends WebSecurityConfigurerAdapter {
         http.authorizeRequests()
                 .antMatchers("/api/login", "/login", "/api/amzn/login").permitAll()
                 .antMatchers(
-                        "/v2/api-docs",
+                        "/v3/api-docs",
                         "/swagger-resources/configuration/ui",
                         "/configuration/ui",
                         "/swagger-resources",
                         "/swagger-resources/configuration/security",
                         "/configuration/security",
                         "/swagger-ui.html",
+                        "/swagger-ui/**",
                         "/webjars/**"
                 ).permitAll()
 //                .antMatchers("/assets/**", "/messages/**").permitAll()
-//                .antMatchers("/api/amzn/updateMetadata", "/api/amzn/updateStatus", "/api/orders", "/api/products/update").authenticated()
+                .antMatchers("/api/amzn/updateMetadata", "/api/amzn/updateStatus", "/api/orders", "/api/products/updatePrice").permitAll()
                 .antMatchers("/users/**").hasAnyAuthority("USER")
                 .antMatchers("/dashboard/**").hasAnyAuthority("MANAGER")
-                .antMatchers("/", "/api/products/**",
+                .antMatchers("/",
+//                        "/api/products/**",
                         "/api/users/**",
 //                        "/api/orders/**",
 //                        "/api/amzn/**",

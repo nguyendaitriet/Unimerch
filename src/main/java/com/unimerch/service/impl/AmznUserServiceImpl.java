@@ -83,36 +83,26 @@ public class AmznUserServiceImpl implements AmznUserService {
     }
 
     @Override
-    public void updateMetadata(String data, Authentication authentication) {
-        ObjectMapper mapper = new ObjectMapper();
-        SimpleModule module = new SimpleModule();
-        module.addDeserializer(Metadata.class, new MetadataMapper());
-        mapper.registerModule(module);
+    public void updateMetadata(Metadata metadata, Authentication authentication) {
         try {
-            Metadata metadata = mapper.readValue(data, Metadata.class);
             String username = authentication.getName();
             AmznUser user = amznAccountRepository.findByUsername(username);
             user = metadataMapper.updateAmznAccMetadata(user, metadata);
             amznAccountRepository.save(user);
-        } catch (JsonProcessingException | ServerErrorException e) {
+        } catch (ServerErrorException e) {
             throw new ServerErrorException(messageSource.getMessage("error.500", null, Locale.getDefault()));
         }
     }
 
     @Override
-    public void updateStatus(String status, Authentication authentication) {
-        ObjectMapper mapper = new ObjectMapper();
-        SimpleModule module = new SimpleModule();
-        module.addDeserializer(AmznStatus.class, new AmznUserMapper());
-        mapper.registerModule(module);
+    public void updateStatus(AmznStatus amznStatus, Authentication authentication) {
         try {
-            AmznStatus amznStatus = mapper.readValue(status, AmznStatus.class);
             String username = authentication.getName();
             AmznUser user = amznAccountRepository.findByUsername(username);
             user.setStatus(AzmnStatus.parseAzmnStatus(amznStatus.getStatus()));
             user.setLastCheck(Instant.now());
             amznAccountRepository.save(user);
-        } catch (JsonProcessingException | ServerErrorException e) {
+        } catch (ServerErrorException e) {
             throw new ServerErrorException(messageSource.getMessage("error.500", null, Locale.getDefault()));
         }
     }

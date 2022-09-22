@@ -12,34 +12,7 @@ import org.springframework.stereotype.Component;
 import java.io.IOException;
 
 @Component
-public class MetadataMapper extends StdDeserializer<Metadata> {
-
-    public MetadataMapper() {
-        this(null);
-    }
-
-    public MetadataMapper(Class<?> vc) {
-        super(vc);
-    }
-
-    @Override
-    public Metadata deserialize(JsonParser jsonParser, DeserializationContext ctxt) throws IOException, JsonProcessingException {
-        JsonNode orderNode = jsonParser.getCodec().readTree(jsonParser);
-
-        int dailyProductCount = orderNode.get("dailyProductCount").asInt();
-        int dailyProductLimit = orderNode.get("dailyProductLimit").asInt();
-        int overallProductCount = orderNode.get("overallProductCount").asInt();
-        int overallProductLimit = orderNode.get("overallProductLimit").asInt();
-        int overallDesignCount = orderNode.get("overallDesignCount").asInt();
-        int overallDesignLimit = orderNode.get("overallDesignLimit").asInt();
-        int tier = orderNode.get("tier").asInt();
-        int totalRejected = orderNode.get("totalRejected").asInt();
-        int totalRemoved = orderNode.get("totalRemoved").asInt();
-
-        return new Metadata(dailyProductCount, dailyProductLimit, overallProductCount, overallProductLimit,
-                overallDesignCount, overallDesignLimit, tier, totalRejected, totalRemoved);
-    }
-
+public class MetadataMapper{
     public AmznUser updateAmznAccMetadata (AmznUser amznAccount, Metadata metadata) {
         amznAccount.setDailyProductCount(metadata.getDailyProductCount());
         amznAccount.setDailyProductLimit(metadata.getDailyProductLimit());

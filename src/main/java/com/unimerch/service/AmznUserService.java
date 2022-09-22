@@ -11,9 +11,9 @@ import java.util.List;
 
 public interface AmznUserService {
 
-    void updateMetadata(String data, Authentication authentication);
+    void updateMetadata(Metadata data, Authentication authentication);
 
-    void updateStatus(String status, Authentication authentication);
+    void updateStatus(AmznStatus status, Authentication authentication);
 
     DataTablesOutput<AmznAccResult> findAll(DataTablesInput input);
 

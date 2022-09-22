@@ -22,23 +22,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Component
-public class AmznUserMapper extends StdDeserializer<AmznStatus> {
+public class AmznUserMapper{
     @Autowired
     OrderService orderService;
-    public AmznUserMapper() {
-        this(null);
-    }
-
-    public AmznUserMapper(Class<?> vc) {
-        super(vc);
-    }
-
-    @Override
-    public AmznStatus deserialize(JsonParser jsonParser, DeserializationContext ctxt) throws IOException, JsonProcessingException {
-        JsonNode productNode = jsonParser.getCodec().readTree(jsonParser);
-        String status = productNode.get("status").textValue();
-        return new AmznStatus(status);
-    }
 
     @Autowired
     AmznUserService amznUserService;

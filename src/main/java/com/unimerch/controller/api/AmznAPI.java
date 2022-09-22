@@ -2,6 +2,7 @@ package com.unimerch.controller.api;
 
 import com.unimerch.dto.amznacc.*;
 import com.unimerch.service.AmznUserService;
+import com.unimerch.service.impl.ConfigurationServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.jpa.datatables.mapping.DataTablesInput;
 import org.springframework.data.jpa.datatables.mapping.DataTablesOutput;
@@ -28,13 +29,13 @@ public class AmznAPI {
     private AmznUserService amznUserService;
 
     @PutMapping("/updateMetadata")
-    public ResponseEntity<?> updateMetadata(Authentication authentication, @RequestBody String data) {
+    public ResponseEntity<?> updateMetadata(Authentication authentication, @RequestBody Metadata data) {
         amznUserService.updateMetadata(data, authentication);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
     @PutMapping("/updateStatus")
-    public ResponseEntity<?> updateStatus(Authentication authentication, @RequestBody String status) {
+    public ResponseEntity<?> updateStatus(Authentication authentication, @RequestBody AmznStatus status) {
         amznUserService.updateStatus(status, authentication);
         return new ResponseEntity<>(HttpStatus.OK);
     }

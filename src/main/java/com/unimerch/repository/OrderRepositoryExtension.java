@@ -1,9 +1,12 @@
 package com.unimerch.repository;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.stereotype.Component;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.List;
 
 @Component
@@ -24,4 +27,6 @@ public class OrderRepositoryExtension {
         }
         entityManager.createNativeQuery(query.toString()).executeUpdate();
     }
+
+
 }
