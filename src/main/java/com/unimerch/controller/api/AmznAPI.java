@@ -27,12 +27,14 @@ public class AmznAPI {
     @Autowired
     private AmznUserService amznUserService;
 
+    @PreAuthorize("isAuthenticated()")
     @PutMapping("/updateMetadata")
     public ResponseEntity<?> updateMetadata(Authentication authentication, @RequestBody Metadata data) {
         amznUserService.updateMetadata(data, authentication);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
+    @PreAuthorize("isAuthenticated()")
     @PutMapping("/updateStatus")
     public ResponseEntity<?> updateStatus(Authentication authentication, @RequestBody AmznStatus status) {
         amznUserService.updateStatus(status, authentication);
@@ -51,18 +53,18 @@ public class AmznAPI {
         return new ResponseEntity<>(amznUserService.findAll(), HttpStatus.OK);
     }
 
-    //    @PreAuthorize("hasAnyAuthority('MANAGER')")
+    @PreAuthorize("hasAnyAuthority('MANAGER')")
     @PostMapping("/create")
     public ResponseEntity<?> createAmznAcc(@Validated @RequestBody AmznAccParam amznAccCreateParam) {
         AmznAccResult newAmznAcc = amznUserService.create(amznAccCreateParam);
         return new ResponseEntity<>(newAmznAcc, HttpStatus.CREATED);
     }
 
-    //    @PreAuthorize("hasAnyAuthority('MANAGER')")
+    @PreAuthorize("hasAnyAuthority('MANAGER')")
     @PostMapping("/import")
     public ResponseEntity<?> importNewAmznAcc(@RequestParam MultipartFile fileUploadAmznAcc) throws IOException {
         List<AmznAccResult> amznAccResultList = amznUserService.importFile(fileUploadAmznAcc);
-        return new ResponseEntity<> (amznAccResultList, HttpStatus.OK);
+        return new ResponseEntity<>(amznAccResultList, HttpStatus.OK);
     }
 
     @PreAuthorize("hasAnyAuthority('MANAGER')")
@@ -72,69 +74,77 @@ public class AmznAPI {
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
-    //    @PreAuthorize("hasAnyAuthority('MANAGER')")
+    @PreAuthorize("hasAnyAuthority('MANAGER')")
     @DeleteMapping("/delete/{id}")
-    public ResponseEntity<?> deleteAmznAcc(@PathVariable String id){
+    public ResponseEntity<?> deleteAmznAcc(@PathVariable String id) {
         amznUserService.delete(id);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
-    //    @PreAuthorize("hasAnyAuthority('MANAGER')")
+    @PreAuthorize("hasAnyAuthority('MANAGER')")
     @DeleteMapping("/delete")
-    public ResponseEntity<?> deleteMultiAmznAcc(@RequestBody Map<String, ArrayList<Integer>> amznAccIdList){
+    public ResponseEntity<?> deleteMultiAmznAcc(@RequestBody Map<String, ArrayList<Integer>> amznAccIdList) {
         amznUserService.deleteAllByListId(amznAccIdList.get("amznAccSelected"));
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
-    //    @PreAuthorize("hasAnyAuthority('MANAGER')")
+    @PreAuthorize("hasAnyAuthority('MANAGER')")
     @GetMapping("/findAllFilter")
     public ResponseEntity<?> findAllAmznAccFilter() {
         List<AmznAccFilterResult> amznAccResults = amznUserService.findAllFilter();
         return new ResponseEntity<>(amznAccResults, HttpStatus.OK);
     }
 
+    @PreAuthorize("hasAnyAuthority('MANAGER','USER')")
     @GetMapping("/analytics-all")
     public ResponseEntity<?> findAllAnalytics() {
         List<AmznAccAnalyticsResult> analyticsList = amznUserService.findAllAnalytics();
         return new ResponseEntity<>(analyticsList, HttpStatus.OK);
     }
 
+    @PreAuthorize("hasAnyAuthority('MANAGER','USER')")
     @GetMapping("/analytics-grp/{id}")
     public ResponseEntity<?> findAnalyticsByGroupId(@PathVariable String id) {
         List<AmznAccAnalyticsResult> analyticsList = amznUserService.findAnalyticsByGrpId(id);
         return new ResponseEntity<>(analyticsList, HttpStatus.OK);
     }
 
+    @PreAuthorize("hasAnyAuthority('MANAGER','USER')")
     @GetMapping("/analytics-acc/{id}")
     public ResponseEntity<?> findAnalyticsByAmznAccId(@PathVariable String id) {
         List<AmznAccAnalyticsResult> analyticsList = amznUserService.findAnalyticsByAmznAccId(id);
         return new ResponseEntity<>(analyticsList, HttpStatus.OK);
     }
 
+    @PreAuthorize("hasAnyAuthority('MANAGER','USER')")
     @PostMapping("/analytics-note/{id}")
     public ResponseEntity<?> addNoteToAmznAcc(@PathVariable String id, @RequestBody(required = false) String note) {
         amznUserService.addNoteToAmznAcc(id, note);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
+    @PreAuthorize("hasAnyAuthority('MANAGER','USER')")
     @GetMapping("/die-all")
     public ResponseEntity<?> findAllAccountDie() {
         List<AmznAccDieResult> accDieList = amznUserService.findAllAccDie();
         return new ResponseEntity<>(accDieList, HttpStatus.OK);
     }
 
+    @PreAuthorize("hasAnyAuthority('MANAGER','USER')")
     @GetMapping("/die-grp/{id}")
     public ResponseEntity<?> findAccountDieByGrpId(@PathVariable String id) {
         List<AmznAccDieResult> accDieList = amznUserService.findAccDieByGrpId(id);
         return new ResponseEntity<>(accDieList, HttpStatus.OK);
     }
 
+    @PreAuthorize("hasAnyAuthority('MANAGER','USER')")
     @GetMapping("/last-check-all")
     public ResponseEntity<?> findAccountLastCheck12Hours() {
         List<AmznAccLastCheckResult> amznUserList = amznUserService.findAllLastCheck12Hours();
         return new ResponseEntity<>(amznUserList, HttpStatus.OK);
     }
 
+    @PreAuthorize("hasAnyAuthority('MANAGER','USER')")
     @GetMapping("/last-check-grp/{id}")
     public ResponseEntity<?> findAccountLastCheck12HoursByGrpId(@PathVariable String id) {
         List<AmznAccLastCheckResult> amznUserList = amznUserService.findAllLastCheck12HoursByGrpId(id);

@@ -1,11 +1,8 @@
 package com.unimerch.controller;
 
-import com.unimerch.service.RoleService;
-import com.unimerch.service.UniUserService;
-import com.unimerch.service.impl.JwtService;
+import com.unimerch.repository.model.Role;
 import com.unimerch.util.PrincipalUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.servlet.ModelAndView;
@@ -17,7 +14,7 @@ public class HomeController {
 
     @GetMapping("/")
     public String redirectToDashBoard() {
-        if (principalUtils.getPrincipalRoleCode().equals(RoleService.CODE_ADMIN)) {
+        if (principalUtils.getPrincipalRoleCode().equals(Role.CODE_ADMIN)) {
             return "redirect:/dashboard";
         }
         return "redirect:/users";

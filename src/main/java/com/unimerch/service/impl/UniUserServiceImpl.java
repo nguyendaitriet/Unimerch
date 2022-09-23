@@ -10,6 +10,7 @@ import com.unimerch.repository.BrgGroupUserRepository;
 import com.unimerch.repository.UserRepository;
 import com.unimerch.repository.datatable.UserDataTableRepository;
 import com.unimerch.repository.model.*;
+import com.unimerch.repository.model.metamodel.User_;
 import com.unimerch.security.UserPrinciple;
 import com.unimerch.service.UniUserService;
 import com.unimerch.util.PrincipalUtils;
@@ -20,11 +21,16 @@ import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.jpa.datatables.mapping.Column;
 import org.springframework.data.jpa.datatables.mapping.DataTablesInput;
 import org.springframework.data.jpa.datatables.mapping.DataTablesOutput;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Predicate;
+import javax.persistence.criteria.Root;
 import javax.transaction.Transactional;
 import java.util.ArrayList;
 import java.util.List;
@@ -64,13 +70,20 @@ public class UniUserServiceImpl implements UniUserService {
     @Autowired
     private RoleServiceImpl roleService;
 
+    private Specification<User> notAdmin(){
+        return (root, query, criteriaBuilder) -> criteriaBuilder.notEqual(root.get(User_.ROLE), 1);
+    }
+
     @Override
     public DataTablesOutput<UserResult> findAllUserDTOExclSelf(DataTablesInput input, String principalUsername) {
         List<Column> columnList = input.getColumns();
         columnList.remove(columnList.size() - 1);
         input.setColumns(columnList);
-
-        return userDataTableRepository.findAll(input, user -> userMapper.toUserResult(user));
+        return userDataTableRepository.findAll(
+                input,
+                null,
+                notAdmin(),
+                user -> userMapper.toUserResult(user));
     }
 
     @Override

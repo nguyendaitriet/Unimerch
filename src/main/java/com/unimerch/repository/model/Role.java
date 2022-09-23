@@ -15,6 +15,9 @@ import javax.persistence.*;
 @Table(name = "roles")
 public class Role {
 
+    public static final String CODE_ADMIN = "MANAGER";
+    public static final String CODE_USER = "USER";
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", nullable = false)
