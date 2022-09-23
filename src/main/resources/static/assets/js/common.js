@@ -223,4 +223,10 @@ class CommonApp {
                 });
         }
     }
+
+    static clipText(data, lengthShown) {
+        if (data === null || data === '')
+            return `<i class="fas fa-edit text-primary"></i>`;
+        return (data.length > lengthShown) ? (data.substr(0, lengthShown) + "...") : data
+    }
 }

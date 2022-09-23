@@ -20,15 +20,11 @@
         <!-- Main Content -->
         <div id="content">
 
-            <!-- Topbar -->
-            <th:block th:replace="layout/topbar"/>
-            <!-- End of Topbar -->
-
             <!-- Begin Page Content -->
-            <div class="container-fluid no-padding-container">
+            <div class="container-fluid no-padding-container mt-1">
                 <div class="row">
                     <!-- User Filter-->
-                    <div id="user-filter" class="col-auto no-padding">
+                    <div id="user-filter" class="col-3 col-lg-12-mod no-padding">
                         <div class="card shadow mb-4">
                             <!-- Card Header -->
                             <div class="card-header py-2 nav-link d-flex flex-row align-items-center justify-content-between">
@@ -56,7 +52,7 @@
                     </div>
 
                     <!-- Main Content -->
-                    <div class="col-9 col-md-10 no-padding">
+                    <div class="col-9 col-lg-88-mod no-padding">
                         <div class="card shadow mb-4">
                             <!-- Card Header -->
                             <ul class="card-header nav nav-tabs custom-nav" role="tablist">
@@ -157,46 +153,224 @@
                                         </div>
                                     </div>
 
-                                    <div class="row" style="justify-content: space-evenly;">
-                                        <!-- Yesterday -->
-                                        <div class="col-6 col-md-2 mb-4 no-padding">
-                                            <div class="card border-left-primary shadow">
-                                                <div class="card-body custom-card-body">
-                                                    <div
-                                                            class="row no-gutters align-items-center mb-2 custom-card-header">
-                                                        <div class="col mr-2">
-                                                            <div
-                                                                    class="custom-card-header text-center font-weight-bold text-primary text-uppercase">
-                                                                Yesterday
-                                                                <br>
-                                                                <span id="yesterdayDate"></span>
+                                    <div class="row flex-md-row-reverse">
+                                        <!-- Cards -->
+                                        <div class="col-12 col-lg-5 d-flex flex-wrap justify-content-center no-padding">
+                                            <!-- Yesterday -->
+                                            <div class="col-6 mb-1 no-padding">
+                                                <div class="card border-left-primary shadow">
+                                                    <div class="card-body custom-card-body">
+                                                        <div
+                                                                class="row no-gutters align-items-center mb-2 custom-card-header">
+                                                            <div class="col mr-2">
+                                                                <div
+                                                                        class="custom-card-header text-center font-weight-bold text-primary text-uppercase">
+                                                                    Yesterday
+                                                                    <br>
+                                                                    <span id="yesterdayDate"></span>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+
+                                                        <hr class="sidebar-divider my-3">
+
+                                                        <div class="row">
+                                                            <div class="col-5 d-flex flex-row justify-content-center align-items-center">
+                                                                <div id="yesterdayPurchased"
+                                                                     class="h4 mb-0 text-gray-800 font-weight-bold">
+                                                                    0
+                                                                </div>
+                                                            </div>
+
+                                                            <div class="col-7">
+                                                                <div id="yesterdayRoyalties"
+                                                                     class="row mt-1 no-gutters d-flex justify-content-end">
+                                                                    0
+                                                                </div>
+                                                                <div
+                                                                        class="row mt-1 no-gutters d-flex justify-content-end">
+                                                                    <span id="yesterdaySold">0</span> - <span
+                                                                        id="yesterdayCancelled">0</span>
+                                                                </div>
+                                                                <div id="yesterdayReturned"
+                                                                     class="row mt-1 no-gutters d-flex justify-content-end">
+                                                                    0
+                                                                </div>
                                                             </div>
                                                         </div>
                                                     </div>
+                                                </div>
+                                            </div>
 
-                                                    <hr class="sidebar-divider my-2">
-
-                                                    <div class="row">
-                                                        <div class="col-5 d-flex flex-row justify-content-center align-items-center">
-                                                            <div id="yesterdayPurchased"
-                                                                 class="h6 mb-0 text-gray-800 font-weight-bold">
-                                                                0
+                                            <!-- Last 7 Days -->
+                                            <div class="col-6 mb-1 no-padding">
+                                                <div class="card border-left-primary shadow">
+                                                    <div class="card-body custom-card-body">
+                                                        <div
+                                                                class="row no-gutters align-items-center mb-2 custom-card-header">
+                                                            <div class="col mr-2">
+                                                                <div
+                                                                        class="custom-card-header text-center font-weight-bold text-primary text-uppercase">
+                                                                    Last 7 Days
+                                                                    <br>
+                                                                    <span id="lastSevenDaysDate"></span>
+                                                                </div>
                                                             </div>
                                                         </div>
 
-                                                        <div class="col-7">
-                                                            <div id="yesterdayRoyalties"
-                                                                 class="row mt-1 no-gutters d-flex justify-content-end">
-                                                                0
+                                                        <hr class="sidebar-divider my-3">
+
+                                                        <div class="row">
+                                                            <div class="col-5 d-flex flex-row justify-content-center align-items-center">
+                                                                <div id="lastSevenDaysPurchased"
+                                                                     class="h4 mb-0 text-gray-800 font-weight-bold">
+                                                                    0
+                                                                </div>
                                                             </div>
-                                                            <div
-                                                                    class="row mt-1 no-gutters d-flex justify-content-end">
-                                                                <span id="yesterdaySold">0</span> - <span
-                                                                    id="yesterdayCancelled">0</span>
+
+                                                            <div class="col-7">
+                                                                <div id="lastSevenDaysRoyalties"
+                                                                     class="row mt-1 no-gutters d-flex justify-content-end">
+                                                                    0
+                                                                </div>
+                                                                <div
+                                                                        class="row mt-1 no-gutters d-flex justify-content-end">
+                                                                    <span id="lastSevenDaysSold">0</span> - <span
+                                                                        id="lastSevenDaysCancelled">0</span>
+                                                                </div>
+                                                                <div id="lastSevenDaysReturned"
+                                                                     class="row mt-1 no-gutters d-flex justify-content-end">
+                                                                    0
+                                                                </div>
                                                             </div>
-                                                            <div id="yesterdayReturned"
-                                                                 class="row mt-1 no-gutters d-flex justify-content-end">
-                                                                0
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <!-- This Month -->
+                                            <div class="col-6 mb-1 no-padding">
+                                                <div class="card border-left-primary shadow">
+                                                    <div class="card-body custom-card-body">
+                                                        <div
+                                                                class="row no-gutters align-items-center mb-2 custom-card-header">
+                                                            <div class="col mr-2">
+                                                                <div
+                                                                        class="custom-card-header text-center font-weight-bold text-primary text-uppercase">
+                                                                    This Month
+                                                                    <br>
+                                                                    <span id="thisMonthDate"></span>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+
+                                                        <hr class="sidebar-divider my-3">
+
+                                                        <div class="row">
+                                                            <div class="col-5 d-flex flex-row justify-content-center align-items-center">
+                                                                <div id="thisMonthPurchased"
+                                                                     class="h4 mb-0 text-gray-800 font-weight-bold">
+                                                                    0
+                                                                </div>
+                                                            </div>
+
+                                                            <div class="col-7">
+                                                                <div id="thisMonthRoyalties"
+                                                                     class="row mt-1 no-gutters d-flex justify-content-end">
+                                                                    0
+                                                                </div>
+                                                                <div class="row mt-1 no-gutters d-flex justify-content-end">
+                                                                    <span id="thisMonthSold">0</span> - <span
+                                                                        id="thisMonthCancelled">0</span>
+                                                                </div>
+                                                                <div id="thisMonthReturned"
+                                                                     class="row mt-1 no-gutters d-flex justify-content-end">
+                                                                    0
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <!-- Previous Month -->
+                                            <div class="col-6 mb-1 no-padding">
+                                                <div class="card border-left-primary shadow">
+                                                    <div class="card-body custom-card-body">
+                                                        <div class="row no-gutters align-items-center mb-2 custom-card-header">
+                                                            <div class="col mr-2">
+                                                                <div class="custom-card-header text-center font-weight-bold text-primary text-uppercase">
+                                                                    Previous Month
+                                                                    <br>
+                                                                    <span id="previousMonthDate"></span>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+
+                                                        <hr class="sidebar-divider my-3">
+
+                                                        <div class="row">
+                                                            <div class="col-5 d-flex flex-row justify-content-center align-items-center">
+                                                                <div id="previousMonthPurchased"
+                                                                     class="h4 mb-0 text-gray-800 font-weight-bold">
+                                                                    0
+                                                                </div>
+                                                            </div>
+
+                                                            <div class="col-7">
+                                                                <div id="previousMonthRoyalties"
+                                                                     class="row mt-1 no-gutters d-flex justify-content-end">
+                                                                    0
+                                                                </div>
+                                                                <div class="row mt-1 no-gutters d-flex justify-content-end">
+                                                                    <span id="previousMonthSold">0</span> - <span
+                                                                        id="previousMonthCancelled">0</span>
+                                                                </div>
+                                                                <div id="previousMonthReturned"
+                                                                     class="row mt-1 no-gutters d-flex justify-content-end">
+                                                                    0
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <!-- All Times -->
+                                            <div class="col-6 mb-1 no-padding">
+                                                <div class="card border-left-primary shadow">
+                                                    <div class="card-body custom-card-body">
+                                                        <div class="row no-gutters align-items-center mb-2 custom-card-header">
+                                                            <div class="col mr-2">
+                                                                <div class="custom-card-header text-center font-weight-bold text-primary text-uppercase">
+                                                                    All Times
+                                                                </div>
+                                                            </div>
+                                                        </div>
+
+                                                        <hr class="sidebar-divider my-3">
+
+                                                        <div class="row">
+                                                            <div class="col-5 d-flex flex-row justify-content-center align-items-center">
+                                                                <div id="allTimePurchased"
+                                                                     class="h4 mb-0 text-gray-800 font-weight-bold">
+                                                                    0
+                                                                </div>
+                                                            </div>
+
+                                                            <div class="col-7">
+                                                                <div id="allTimeRoyalties"
+                                                                     class="row mt-1 no-gutters d-flex justify-content-end">
+                                                                    0
+                                                                </div>
+                                                                <div class="row mt-1 no-gutters d-flex justify-content-end">
+                                                                    <span id="allTimeSold">0</span> - <span
+                                                                        id="allTimeCancelled">0</span>
+                                                                </div>
+                                                                <div id="allTimeReturned"
+                                                                     class="row mt-1 no-gutters d-flex justify-content-end">
+                                                                    0
+                                                                </div>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -204,263 +378,91 @@
                                             </div>
                                         </div>
 
-                                        <!-- Last 7 Days -->
-                                        <div class="col-6 col-md-2 mb-4 no-padding">
-                                            <div class="card border-left-primary shadow">
-                                                <div class="card-body custom-card-body">
-                                                    <div
-                                                            class="row no-gutters align-items-center mb-2 custom-card-header">
-                                                        <div class="col mr-2">
-                                                            <div
-                                                                    class="custom-card-header text-center font-weight-bold text-primary text-uppercase">
-                                                                Last 7 Days
-                                                                <br>
-                                                                <span id="lastSevenDaysDate"></span>
-                                                            </div>
-                                                        </div>
-                                                    </div>
+                                        <!-- Tables Order -->
+                                        <div class="col-12 col-lg-7 no-padding">
+                                            <ul class="card-header nav nav-tabs custom-nav" role="tablist">
+                                                <li class="nav-item">
+                                                    <a class="m-0 font-weight-bold text-primary nav-link active custom-card-title"
+                                                       data-toggle="tab" href="#today" role="tab" aria-controls="today"
+                                                       aria-selected="true" th:text="#{dashboard.tab.today}" id="todayLink">
+                                                        Today
+                                                    </a>
+                                                </li>
+                                                <li class="nav-item">
+                                                    <a class="m-0 font-weight-bold text-primary nav-link custom-card-title"
+                                                       data-toggle="tab" href="#thirtyday" role="tab" aria-controls="thirtyday"
+                                                       aria-selected="false" th:text="#{dashboard.tab.thirtyDays}"
+                                                       id="thirtyDaysLink">
+                                                        30 Days
+                                                    </a>
+                                                </li>
+                                                <li class="nav-item">
+                                                    <a class="m-0 font-weight-bold text-primary nav-link custom-card-title"
+                                                       data-toggle="tab" href="#thismonth" role="tab" aria-controls="thismonth"
+                                                       aria-selected="false" th:text="#{dashboard.tab.thisMonth}"
+                                                       id="thisMonthLink">
+                                                        This month
+                                                    </a>
+                                                </li>
+                                            </ul>
 
-                                                    <hr class="sidebar-divider my-2">
-
-                                                    <div class="row">
-                                                        <div class="col-5 d-flex flex-row justify-content-center align-items-center">
-                                                            <div id="lastSevenDaysPurchased"
-                                                                 class="h6 mb-0 text-gray-800 font-weight-bold">
-                                                                0
-                                                            </div>
-                                                        </div>
-
-                                                        <div class="col-7">
-                                                            <div id="lastSevenDaysRoyalties"
-                                                                 class="row mt-1 no-gutters d-flex justify-content-end">
-                                                                0
-                                                            </div>
-                                                            <div
-                                                                    class="row mt-1 no-gutters d-flex justify-content-end">
-                                                                <span id="lastSevenDaysSold">0</span> - <span
-                                                                    id="lastSevenDaysCancelled">0</span>
-                                                            </div>
-                                                            <div id="lastSevenDaysReturned"
-                                                                 class="row mt-1 no-gutters d-flex justify-content-end">
-                                                                0
-                                                            </div>
-                                                        </div>
-                                                    </div>
+                                            <div id="tables-main-page" class="card-body tab-content">
+                                                <!-- Table - Today -->
+                                                <div class="tab-pane fade show active" id="today" role="tabpanel"
+                                                     aria-labelledby="today-tab">
+                                                    <table class="table table-striped table-bordered dt-responsive"
+                                                           style="width: 100%;"
+                                                           id="tableTodaySold">
+                                                        <thead>
+                                                        <tr class="text-dark">
+                                                            <th>Sold</th>
+                                                            <th>Product</th>
+                                                            <th>Royalties</th>
+                                                            <th>Price</th>
+                                                            <th>Username</th>
+                                                        </tr>
+                                                        </thead>
+                                                    </table>
                                                 </div>
-                                            </div>
-                                        </div>
-
-                                        <!-- This Month -->
-                                        <div class="col-6 col-md-2 mb-4 no-padding">
-                                            <div class="card border-left-primary shadow">
-                                                <div class="card-body custom-card-body">
-                                                    <div
-                                                            class="row no-gutters align-items-center mb-2 custom-card-header">
-                                                        <div class="col mr-2">
-                                                            <div
-                                                                    class="custom-card-header text-center font-weight-bold text-primary text-uppercase">
-                                                                This Month
-                                                                <br>
-                                                                <span id="thisMonthDate"></span>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-
-                                                    <hr class="sidebar-divider my-2">
-
-                                                    <div class="row">
-                                                        <div class="col-5 d-flex flex-row justify-content-center align-items-center">
-                                                            <div id="thisMonthPurchased"
-                                                                 class="h6 mb-0 text-gray-800 font-weight-bold">
-                                                                0
-                                                            </div>
-                                                        </div>
-
-                                                        <div class="col-7">
-                                                            <div id="thisMonthRoyalties"
-                                                                 class="row mt-1 no-gutters d-flex justify-content-end">
-                                                                0
-                                                            </div>
-                                                            <div class="row mt-1 no-gutters d-flex justify-content-end">
-                                                                <span id="thisMonthSold">0</span> - <span
-                                                                    id="thisMonthCancelled">0</span>
-                                                            </div>
-                                                            <div id="thisMonthReturned"
-                                                                 class="row mt-1 no-gutters d-flex justify-content-end">
-                                                                0
-                                                            </div>
-                                                        </div>
-                                                    </div>
+                                                <!-- Table - 30 Days -->
+                                                <div class="tab-pane fade show" id="thirtyday" role="tabpanel"
+                                                     aria-labelledby="thirtyday-tab">
+                                                    <table class="table table-striped table-bordered dt-responsive"
+                                                           style="width: 100%;"
+                                                           id="table30DaysSold">
+                                                        <thead>
+                                                        <tr class="text-dark">
+                                                            <th>Sold</th>
+                                                            <th>Product</th>
+                                                            <th>Royalties</th>
+                                                            <th>Price</th>
+                                                            <th>Username</th>
+                                                        </tr>
+                                                        </thead>
+                                                    </table>
                                                 </div>
-                                            </div>
-                                        </div>
-
-                                        <!-- Previous Month -->
-                                        <div class="col-6 col-md-2 mb-4 no-padding">
-                                            <div class="card border-left-primary shadow">
-                                                <div class="card-body custom-card-body">
-                                                    <div class="row no-gutters align-items-center mb-2 custom-card-header">
-                                                        <div class="col mr-2">
-                                                            <div class="custom-card-header text-center font-weight-bold text-primary text-uppercase">
-                                                                Previous Month
-                                                                <br>
-                                                                <span id="previousMonthDate"></span>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-
-                                                    <hr class="sidebar-divider my-2">
-
-                                                    <div class="row">
-                                                        <div class="col-5 d-flex flex-row justify-content-center align-items-center">
-                                                            <div id="previousMonthPurchased"
-                                                                 class="h6 mb-0 text-gray-800 font-weight-bold">
-                                                                0
-                                                            </div>
-                                                        </div>
-
-                                                        <div class="col-7">
-                                                            <div id="previousMonthRoyalties"
-                                                                 class="row mt-1 no-gutters d-flex justify-content-end">
-                                                                0
-                                                            </div>
-                                                            <div class="row mt-1 no-gutters d-flex justify-content-end">
-                                                                <span id="previousMonthSold">0</span> - <span
-                                                                    id="previousMonthCancelled">0</span>
-                                                            </div>
-                                                            <div id="previousMonthReturned"
-                                                                 class="row mt-1 no-gutters d-flex justify-content-end">
-                                                                0
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-
-                                        <!-- All Times -->
-                                        <div class="col-6 col-md-2 mb-4 no-padding">
-                                            <div class="card border-left-primary shadow">
-                                                <div class="card-body custom-card-body">
-                                                    <div class="row no-gutters align-items-center mb-2 custom-card-header">
-                                                        <div class="col mr-2">
-                                                            <div class="custom-card-header text-center font-weight-bold text-primary text-uppercase">
-                                                                All Times
-                                                            </div>
-                                                        </div>
-                                                    </div>
-
-                                                    <hr class="sidebar-divider my-2">
-
-                                                    <div class="row">
-                                                        <div class="col-5 d-flex flex-row justify-content-center align-items-center">
-                                                            <div id="allTimePurchased"
-                                                                 class="h6 mb-0 text-gray-800 font-weight-bold">
-                                                                0
-                                                            </div>
-                                                        </div>
-
-                                                        <div class="col-7">
-                                                            <div id="allTimeRoyalties"
-                                                                 class="row mt-1 no-gutters d-flex justify-content-end">
-                                                                0
-                                                            </div>
-                                                            <div class="row mt-1 no-gutters d-flex justify-content-end">
-                                                                <span id="allTimeSold">0</span> - <span
-                                                                    id="allTimeCancelled">0</span>
-                                                            </div>
-                                                            <div id="allTimeReturned"
-                                                                 class="row mt-1 no-gutters d-flex justify-content-end">
-                                                                0
-                                                            </div>
-                                                        </div>
-                                                    </div>
+                                                <!-- Table - This month -->
+                                                <div class="tab-pane fade show" id="thismonth" role="tabpanel"
+                                                     aria-labelledby="thismonth-tab">
+                                                    <table id="tableThisMonthSold"
+                                                           class="table table-striped table-bordered dt-responsive"
+                                                           style="width: 100%;">
+                                                        <thead>
+                                                        <tr class="text-dark">
+                                                            <th>Sold</th>
+                                                            <th>Product</th>
+                                                            <th>Royalties</th>
+                                                            <th>Price</th>
+                                                            <th>Username</th>
+                                                        </tr>
+                                                        </thead>
+                                                    </table>
                                                 </div>
                                             </div>
                                         </div>
 
                                     </div>
 
-                                    <!-- Table Orders -->
-                                    <ul class="card-header nav nav-tabs custom-nav" role="tablist">
-                                        <li class="nav-item">
-                                            <a class="m-0 font-weight-bold text-primary nav-link active custom-card-title"
-                                               data-toggle="tab" href="#today" role="tab" aria-controls="today"
-                                               aria-selected="true" th:text="#{dashboard.tab.today}" id="todayLink">
-                                                Today
-                                            </a>
-                                        </li>
-                                        <li class="nav-item">
-                                            <a class="m-0 font-weight-bold text-primary nav-link custom-card-title"
-                                               data-toggle="tab" href="#thirtyday" role="tab" aria-controls="thirtyday"
-                                               aria-selected="false" th:text="#{dashboard.tab.thirtyDays}"
-                                               id="thirtyDaysLink">
-                                                30 Days
-                                            </a>
-                                        </li>
-                                        <li class="nav-item">
-                                            <a class="m-0 font-weight-bold text-primary nav-link custom-card-title"
-                                               data-toggle="tab" href="#thismonth" role="tab" aria-controls="thismonth"
-                                               aria-selected="false" th:text="#{dashboard.tab.thisMonth}"
-                                               id="thisMonthLink">
-                                                This month
-                                            </a>
-                                        </li>
-                                    </ul>
-
-                                    <div id="tables-main-page" class="card-body tab-content">
-                                        <!-- Table - Today -->
-                                        <div class="tab-pane fade show active" id="today" role="tabpanel"
-                                             aria-labelledby="today-tab">
-                                            <table class="table table-striped table-bordered dt-responsive"
-                                                   style="width: 100%;"
-                                                   id="tableTodaySold">
-                                                <thead>
-                                                <tr class="text-dark">
-                                                    <th>Sold</th>
-                                                    <th>Product</th>
-                                                    <th>Royalties</th>
-                                                    <th>Price</th>
-                                                    <th>Username</th>
-                                                </tr>
-                                                </thead>
-                                            </table>
-                                        </div>
-                                        <!-- Table - 30 Days -->
-                                        <div class="tab-pane fade show" id="thirtyday" role="tabpanel"
-                                             aria-labelledby="thirtyday-tab">
-                                            <table class="table table-striped table-bordered dt-responsive"
-                                                   style="width: 100%;"
-                                                   id="table30DaysSold">
-                                                <thead>
-                                                <tr class="text-dark">
-                                                    <th>Sold</th>
-                                                    <th>Product</th>
-                                                    <th>Royalties</th>
-                                                    <th>Price</th>
-                                                    <th>Username</th>
-                                                </tr>
-                                                </thead>
-                                            </table>
-                                        </div>
-                                        <!-- Table - This month -->
-                                        <div class="tab-pane fade show" id="thismonth" role="tabpanel"
-                                             aria-labelledby="thismonth-tab">
-                                            <table id="tableThisMonthSold"
-                                                   class="table table-striped table-bordered dt-responsive"
-                                                   style="width: 100%;">
-                                                <thead>
-                                                <tr class="text-dark">
-                                                    <th>Sold</th>
-                                                    <th>Product</th>
-                                                    <th>Royalties</th>
-                                                    <th>Price</th>
-                                                    <th>Username</th>
-                                                </tr>
-                                                </thead>
-                                            </table>
-                                        </div>
-                                    </div>
                                 </div>
 
                                 <!-- Card Body -- Analytics -->
@@ -677,7 +679,7 @@
                     targets: 1,
                     render: (data, type, row) =>
                         `<a href='https://www.amazon.com/dp/${row.asin}' target='_blank'>
-                            ${row.productName}
+                            ${CommonApp.clipText(row.productName, 20)}
                         </a>`
                 },
                 {
@@ -725,7 +727,7 @@
                     targets: 1,
                     render: (data, type, row) =>
                         `<a href='https://www.amazon.com/dp/${row.asin}' title='${row.asin}' target='_blank'>
-                            ${row.productName}
+                            ${CommonApp.clipText(row.productName, 20)}
                         </a>`
                 },
                 {
@@ -773,7 +775,7 @@
                     targets: 1,
                     render: (data, type, row) =>
                         `<a href='https://www.amazon.com/dp/${row.asin}' title='${row.asin}' target='_blank'>
-                            ${row.productName}
+                            ${CommonApp.clipText(row.productName, 20)}
                         </a>`
                 },
                 {
@@ -837,11 +839,7 @@
                     targets: -1,
                     className: 'text-center add-note',
                     orderable: false,
-                    render: (data, type, row) => {
-                        if (data === null || data === '')
-                            return `<i class="fas fa-edit text-primary"></i>`;
-                        return (data.length > 6) ? (data.substr(0, 6) + "...") : data
-                    }
+                    render: (data, type, row) => CommonApp.clipText(data, 6)
                 }
             ],
             language: {
@@ -1041,13 +1039,14 @@
     $(document).ready(function () {
         DBApp.handleGroupsFilterSidebar();
 
-        page.commands.handleContentDashboard(currentGrpId);
         page.commands.initTodaySoldTable();
         page.commands.init30DaysSoldTable();
         page.commands.initThisMonthSoldTable();
         page.commands.initAnalyticsTable();
         page.commands.initAccountDieTable();
         page.commands.initLastCheckTable();
+
+        page.commands.handleContentDashboard(currentGrpId);
     })
 
     function getProductSoldDataForEachAmznAcc(amznAccId) {
@@ -1315,7 +1314,6 @@
     }
 
     /** custom appearance for global content */
-    $('.topbar').removeClass('mb-4').addClass('mb-0');
     $('.shadow').removeClass('shadow');
 </script>
 </body>

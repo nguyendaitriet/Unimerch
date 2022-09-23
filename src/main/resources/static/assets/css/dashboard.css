@@ -53,7 +53,7 @@
     }
 
     .custom-card-header {
-        font-size: 10px;
+        font-size: 12px;
         height: 20px;
     }
 }
@@ -74,7 +74,7 @@
 
 .custom-card-body {
     padding: 0.7rem !important;
-    font-size: 70%;
+    font-size: 85%;
 }
 
 #tables-main-page {
@@ -148,6 +148,32 @@ body.loading .modal {
 
 .add-note {
     cursor: pointer;
+}
+
+@media (min-width: 768px) {
+    .col-lg-12-mod {
+        flex: 0 0 12% !important;
+        max-width: 12% !important;
+    }
+
+    .col-lg-88-mod {
+        flex: 0 0 88% !important;
+        max-width: 88% !important;
+    }
+}
+
+.btn-text-sm {
+    font-size: 13px;
+}
+
+#table-amzn-acc-in_filter input {
+    width: 85%;
+}
+
+#table-amzn-acc-in td, #table-amzn-acc-in th,
+#table-group td, #table-group th,
+#table-amzn-acc td, #table-amzn-acc th{
+    padding: 0.5rem;
 }
 
 /*template-css*/
@@ -11947,7 +11973,7 @@ a:focus {
 
 @media (min-width: 768px) {
     .sidebar {
-        width: 14rem !important;
+        width: 12rem !important;
     }
 
     .sidebar .nav-item .collapse {
@@ -11979,7 +12005,7 @@ a:focus {
         width: 100%;
         text-align: left;
         padding: 1rem;
-        width: 14rem;
+        width: 12rem;
     }
 
     .sidebar .nav-item .nav-link i {

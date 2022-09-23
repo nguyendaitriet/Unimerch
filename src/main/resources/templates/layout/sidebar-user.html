@@ -36,6 +36,28 @@
         </li>
 
         <!-- Divider -->
+        <hr class="sidebar-divider">
+
+        <!-- Heading -->
+        <div class="sidebar-heading">
+            Others
+        </div>
+
+        <li class="nav-item">
+            <a class="nav-link" data-toggle="modal" data-target="#mdContact" style="cursor: pointer">
+                <i class="fas fa-mobile-alt"></i>
+                <span th:text="#{sidebar.navItem.contact}">Contact</span>
+            </a>
+        </li>
+
+        <li class="nav-item">
+            <a class="nav-link" href="/logout">
+                <i class="fas fa-sign-out-alt"></i>
+                <span th:text="#{sidebar.navItem.logout}">Logout</span>
+            </a>
+        </li>
+
+        <!-- Divider -->
         <hr class="sidebar-divider d-none d-md-block">
 
         <!-- Sidebar Toggler (Sidebar) -->
@@ -44,4 +66,59 @@
         </div>
 
     </ul>
+
+    <div id="mdContact" class="modal fade" tabindex="-1" role="dialog">
+        <div class="modal-dialog modal-dialog-centered" data-backdrop="static" data-keyboard="false">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h3 class="modal-title font-weight-bold">Contact</h3>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <div class="row mb-3">
+                            <div class="col-3 font-weight-bold text-left">
+                                HCM
+                            </div>
+                        </div>
+
+                        <div class="row mb-5">
+                            <div class="col-3 font-weight-bold text-left">
+                                Vietnam
+                            </div>
+                        </div>
+
+                        <div class="row mb-3">
+                            <div class="col-3 font-weight-bold">
+                                Support
+                            </div>
+                            <div class="col-9 text-center">
+                                <a href="mailto:kenwin9293@gmail.com" class="text-decoration-none">
+                                    kenwin9293@gmail.com
+                                </a>
+                            </div>
+                        </div>
+
+                        <div class="row mb-3">
+                            <div class="col-3 font-weight-bold">
+                                Marketing
+                            </div>
+                            <div class="col-9 text-center">
+                                <a href="mailto:kenwin9293@gmail.com" class="text-decoration-none">
+                                    kenwin9293@gmail.com
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal" th:text="#{btn.close}">Close
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
 </th:block>

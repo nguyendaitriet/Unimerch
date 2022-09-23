@@ -20,31 +20,17 @@
         <!-- Main Content -->
         <div id="content">
 
-            <!-- Topbar -->
-            <th:block th:replace="layout/topbar"/>
-            <!-- End of Topbar -->
-
             <!-- Begin Page Content -->
-            <div class="container-fluid">
-
-                <!-- Page Heading -->
-                <div class="d-sm-flex align-items-center justify-content-between mb-4">
-                    <a id="groupHeader" class="h3 mb-0 text-gray-800 text-decoration-none" th:text="${group.title}"
-                       th:href="@{'/users/' + ${(group.id != 0) ? group.id : ''}}">
-                        Dashboard
-                    </a>
-                    <a href="#" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm"><i
-                            class="fas fa-download fa-sm text-white-50"></i> Generate Report</a>
-                </div>
-
+            <div class="container-fluid no-padding-container mt-1">
                 <div class="row">
                     <!-- User Filter-->
-                    <div class="col-3 col-md-2">
+                    <div id="user-filter" class="col-3 col-lg-12-mod no-padding">
                         <div class="card shadow mb-4">
                             <!-- Card Header -->
-                            <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
-                                <h6 class="m-0 font-weight-bold text-primary custom-card-title"
-                                    th:text="#{dashboard.filterTitle}">Accounts</h6>
+                            <div class="card-header py-2 nav-link d-flex flex-row align-items-center justify-content-between">
+                                <a class="custom-card-title m-0 font-weight-bold text-primary text-decoration-none"
+                                   th:href="@{'/dashboard/' + ${(group.id != 0) ? group.id : ''}}"
+                                   th:text="${group.title}">Accounts</a>
                             </div>
                             <div class="input-group input-group-sm mt-2 filter-group">
                                 <div class="input-group-prepend">
@@ -66,7 +52,7 @@
                     </div>
 
                     <!-- Main Content -->
-                    <div class="col-9 col-md-10">
+                    <div class="col-9 col-lg-88-mod no-padding">
                         <div class="card shadow mb-4">
                             <!-- Card Header -->
                             <ul class="card-header nav nav-tabs custom-nav" role="tablist">
@@ -82,8 +68,13 @@
                                 </li>
                                 <li class="nav-item">
                                     <a class="m-0 font-weight-bold text-primary nav-link custom-card-title"
-                                       data-toggle="tab" href="#accountdie" role="tab" aria-controls="accountdie"
+                                       data-toggle="tab" href="#accountDie" role="tab" aria-controls="accountDie"
                                        aria-selected="false" th:text="#{dashboard.tab.accountDie}">Account Die</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="m-0 font-weight-bold text-primary nav-link custom-card-title"
+                                       data-toggle="tab" href="#lastCheck" role="tab" aria-controls="lastCheck"
+                                       aria-selected="false" th:text="#{dashboard.tab.lastCheck}">Last Check 12h</a>
                                 </li>
                             </ul>
 
@@ -92,24 +83,28 @@
                                 <div class="tab-pane fade show active" id="dashboard" role="tabpanel"
                                      aria-labelledby="dashboard-tab">
 
-                                    <div class="row flex-md-row-reverse">
+                                    <div class="row flex-md-row-reverse mb-3">
                                         <!-- Chart -->
-                                        <div class="col-lg-8 col-md-12 mb-4">
-                                            <div class="row" id="chartHolder" style="height:380px; width:100%;"></div>
-                                            <div class="row mt-4 text-center justify-content-center small">
+                                        <div class="col-12 col-md-8">
+                                            <div class="row" id="chartHolder" style="height:300px; width:100%;">
+                                                <!-- Chart Content -->
+                                            </div>
+
+                                            <!-- Legends -->
+                                            <div class="row mt-1 text-center justify-content-center small">
                                                     <span class="mr-4">
-                                                        <i class="fas fa-square text-primary"></i>
+                                                        <i class="fas fa-square" style="color: #41b2e6"></i>
                                                         <br th:text="#{dashboard.chart.legend.royalties}">
                                                     </span>
                                                 <span class="mr-4">
-                                                        <i class="fas fa-square text-success"></i>
+                                                        <i class="fas fa-square" style="color: #f9bd03"></i>
                                                     <br th:text="#{dashboard.chart.legend.numberSold}">
                                                     </span>
                                             </div>
                                         </div>
 
                                         <!-- Today's sale -->
-                                        <div class="col-lg-4 col-md-12 my-4 mt-md-5">
+                                        <div class="col-12 col-md-4 mt-md-5">
                                             <div class="card border-left-primary shadow">
                                                 <div class="card-body">
                                                     <div class="row no-gutters align-items-center mb-2">
@@ -129,6 +124,14 @@
                                                         </div>
                                                     </div>
                                                     <div class="row mt-1 no-gutters d-flex justify-content-between">
+                                                        <div id="todayRoyalties">
+                                                            0
+                                                        </div>
+                                                        <div>
+                                                            Royalties
+                                                        </div>
+                                                    </div>
+                                                    <div class="row mt-1 no-gutters d-flex justify-content-between">
                                                         <div>
                                                             <span id="todaySold">0</span> - <span
                                                                 id="todayCancelled">0</span>
@@ -145,54 +148,229 @@
                                                             Returned
                                                         </div>
                                                     </div>
-                                                    <div class="row mt-1 no-gutters d-flex justify-content-between">
-                                                        <div id="todayRoyalties">
-                                                            0
-                                                        </div>
-                                                        <div>
-                                                            Royalties
-                                                        </div>
-                                                    </div>
                                                 </div>
                                             </div>
                                         </div>
                                     </div>
 
-                                    <div class="row justify-content-center">
-                                        <!-- 1st card sale -->
-                                        <div class="col-lg-4 col-md-6 col-sm-12 mb-4">
-                                            <div class="card border-left-primary shadow">
-                                                <div class="card-body">
-                                                    <div class="row no-gutters align-items-center mb-2 custom-card-header">
-                                                        <div class="col mr-2">
-                                                            <div class="h6 text-center font-weight-bold text-primary text-uppercase">
-                                                                All Times
+                                    <div class="row flex-md-row-reverse">
+                                        <!-- Cards -->
+                                        <div class="col-12 col-lg-5 d-flex flex-wrap justify-content-center no-padding">
+                                            <!-- Yesterday -->
+                                            <div class="col-6 mb-1 no-padding">
+                                                <div class="card border-left-primary shadow">
+                                                    <div class="card-body custom-card-body">
+                                                        <div
+                                                                class="row no-gutters align-items-center mb-2 custom-card-header">
+                                                            <div class="col mr-2">
+                                                                <div
+                                                                        class="custom-card-header text-center font-weight-bold text-primary text-uppercase">
+                                                                    Yesterday
+                                                                    <br>
+                                                                    <span id="yesterdayDate"></span>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+
+                                                        <hr class="sidebar-divider my-3">
+
+                                                        <div class="row">
+                                                            <div class="col-5 d-flex flex-row justify-content-center align-items-center">
+                                                                <div id="yesterdayPurchased"
+                                                                     class="h4 mb-0 text-gray-800 font-weight-bold">
+                                                                    0
+                                                                </div>
+                                                            </div>
+
+                                                            <div class="col-7">
+                                                                <div id="yesterdayRoyalties"
+                                                                     class="row mt-1 no-gutters d-flex justify-content-end">
+                                                                    0
+                                                                </div>
+                                                                <div
+                                                                        class="row mt-1 no-gutters d-flex justify-content-end">
+                                                                    <span id="yesterdaySold">0</span> - <span
+                                                                        id="yesterdayCancelled">0</span>
+                                                                </div>
+                                                                <div id="yesterdayReturned"
+                                                                     class="row mt-1 no-gutters d-flex justify-content-end">
+                                                                    0
+                                                                </div>
                                                             </div>
                                                         </div>
                                                     </div>
+                                                </div>
+                                            </div>
 
-                                                    <hr class="sidebar-divider my-2">
-
-                                                    <div class="row">
-                                                        <div class="col-6 d-flex flex-row justify-content-center align-items-center">
-                                                            <div id="allTimePurchased"
-                                                                 class="h3 mb-0 text-gray-800 font-weight-bold">
-                                                                0
+                                            <!-- Last 7 Days -->
+                                            <div class="col-6 mb-1 no-padding">
+                                                <div class="card border-left-primary shadow">
+                                                    <div class="card-body custom-card-body">
+                                                        <div
+                                                                class="row no-gutters align-items-center mb-2 custom-card-header">
+                                                            <div class="col mr-2">
+                                                                <div
+                                                                        class="custom-card-header text-center font-weight-bold text-primary text-uppercase">
+                                                                    Last 7 Days
+                                                                    <br>
+                                                                    <span id="lastSevenDaysDate"></span>
+                                                                </div>
                                                             </div>
                                                         </div>
 
-                                                        <div class="col">
-                                                            <div class="row mt-1 no-gutters d-flex justify-content-end">
-                                                                <span id="allTimeSold">0</span> - <span
-                                                                    id="allTimeCancelled">0</span>
+                                                        <hr class="sidebar-divider my-3">
+
+                                                        <div class="row">
+                                                            <div class="col-5 d-flex flex-row justify-content-center align-items-center">
+                                                                <div id="lastSevenDaysPurchased"
+                                                                     class="h4 mb-0 text-gray-800 font-weight-bold">
+                                                                    0
+                                                                </div>
                                                             </div>
-                                                            <div id="allTimeReturned"
-                                                                 class="row mt-1 no-gutters d-flex justify-content-end">
-                                                                0
+
+                                                            <div class="col-7">
+                                                                <div id="lastSevenDaysRoyalties"
+                                                                     class="row mt-1 no-gutters d-flex justify-content-end">
+                                                                    0
+                                                                </div>
+                                                                <div
+                                                                        class="row mt-1 no-gutters d-flex justify-content-end">
+                                                                    <span id="lastSevenDaysSold">0</span> - <span
+                                                                        id="lastSevenDaysCancelled">0</span>
+                                                                </div>
+                                                                <div id="lastSevenDaysReturned"
+                                                                     class="row mt-1 no-gutters d-flex justify-content-end">
+                                                                    0
+                                                                </div>
                                                             </div>
-                                                            <div id="allTimeRoyalties"
-                                                                 class="row mt-1 no-gutters d-flex justify-content-end">
-                                                                0
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <!-- This Month -->
+                                            <div class="col-6 mb-1 no-padding">
+                                                <div class="card border-left-primary shadow">
+                                                    <div class="card-body custom-card-body">
+                                                        <div
+                                                                class="row no-gutters align-items-center mb-2 custom-card-header">
+                                                            <div class="col mr-2">
+                                                                <div
+                                                                        class="custom-card-header text-center font-weight-bold text-primary text-uppercase">
+                                                                    This Month
+                                                                    <br>
+                                                                    <span id="thisMonthDate"></span>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+
+                                                        <hr class="sidebar-divider my-3">
+
+                                                        <div class="row">
+                                                            <div class="col-5 d-flex flex-row justify-content-center align-items-center">
+                                                                <div id="thisMonthPurchased"
+                                                                     class="h4 mb-0 text-gray-800 font-weight-bold">
+                                                                    0
+                                                                </div>
+                                                            </div>
+
+                                                            <div class="col-7">
+                                                                <div id="thisMonthRoyalties"
+                                                                     class="row mt-1 no-gutters d-flex justify-content-end">
+                                                                    0
+                                                                </div>
+                                                                <div class="row mt-1 no-gutters d-flex justify-content-end">
+                                                                    <span id="thisMonthSold">0</span> - <span
+                                                                        id="thisMonthCancelled">0</span>
+                                                                </div>
+                                                                <div id="thisMonthReturned"
+                                                                     class="row mt-1 no-gutters d-flex justify-content-end">
+                                                                    0
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <!-- Previous Month -->
+                                            <div class="col-6 mb-1 no-padding">
+                                                <div class="card border-left-primary shadow">
+                                                    <div class="card-body custom-card-body">
+                                                        <div class="row no-gutters align-items-center mb-2 custom-card-header">
+                                                            <div class="col mr-2">
+                                                                <div class="custom-card-header text-center font-weight-bold text-primary text-uppercase">
+                                                                    Previous Month
+                                                                    <br>
+                                                                    <span id="previousMonthDate"></span>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+
+                                                        <hr class="sidebar-divider my-3">
+
+                                                        <div class="row">
+                                                            <div class="col-5 d-flex flex-row justify-content-center align-items-center">
+                                                                <div id="previousMonthPurchased"
+                                                                     class="h4 mb-0 text-gray-800 font-weight-bold">
+                                                                    0
+                                                                </div>
+                                                            </div>
+
+                                                            <div class="col-7">
+                                                                <div id="previousMonthRoyalties"
+                                                                     class="row mt-1 no-gutters d-flex justify-content-end">
+                                                                    0
+                                                                </div>
+                                                                <div class="row mt-1 no-gutters d-flex justify-content-end">
+                                                                    <span id="previousMonthSold">0</span> - <span
+                                                                        id="previousMonthCancelled">0</span>
+                                                                </div>
+                                                                <div id="previousMonthReturned"
+                                                                     class="row mt-1 no-gutters d-flex justify-content-end">
+                                                                    0
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <!-- All Times -->
+                                            <div class="col-6 mb-1 no-padding">
+                                                <div class="card border-left-primary shadow">
+                                                    <div class="card-body custom-card-body">
+                                                        <div class="row no-gutters align-items-center mb-2 custom-card-header">
+                                                            <div class="col mr-2">
+                                                                <div class="custom-card-header text-center font-weight-bold text-primary text-uppercase">
+                                                                    All Times
+                                                                </div>
+                                                            </div>
+                                                        </div>
+
+                                                        <hr class="sidebar-divider my-3">
+
+                                                        <div class="row">
+                                                            <div class="col-5 d-flex flex-row justify-content-center align-items-center">
+                                                                <div id="allTimePurchased"
+                                                                     class="h4 mb-0 text-gray-800 font-weight-bold">
+                                                                    0
+                                                                </div>
+                                                            </div>
+
+                                                            <div class="col-7">
+                                                                <div id="allTimeRoyalties"
+                                                                     class="row mt-1 no-gutters d-flex justify-content-end">
+                                                                    0
+                                                                </div>
+                                                                <div class="row mt-1 no-gutters d-flex justify-content-end">
+                                                                    <span id="allTimeSold">0</span> - <span
+                                                                        id="allTimeCancelled">0</span>
+                                                                </div>
+                                                                <div id="allTimeReturned"
+                                                                     class="row mt-1 no-gutters d-flex justify-content-end">
+                                                                    0
+                                                                </div>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -200,262 +378,105 @@
                                             </div>
                                         </div>
 
-                                        <!-- 2nd card sale -->
-                                        <div class="col-lg-4 col-md-6 col-sm-12 mb-4">
-                                            <div class="card border-left-primary shadow">
-                                                <div class="card-body">
-                                                    <div class="row no-gutters align-items-center mb-2 custom-card-header">
-                                                        <div class="col mr-2">
-                                                            <div class="h6 text-center font-weight-bold text-primary text-uppercase">
-                                                                Yesterday
-                                                                <br>
-                                                                <span id="yesterdayDate"></span>
-                                                            </div>
-                                                        </div>
-                                                    </div>
+                                        <!-- Tables Order -->
+                                        <div class="col-12 col-lg-7 no-padding">
+                                            <ul class="card-header nav nav-tabs custom-nav" role="tablist">
+                                                <li class="nav-item">
+                                                    <a class="m-0 font-weight-bold text-primary nav-link active custom-card-title"
+                                                       data-toggle="tab" href="#today" role="tab" aria-controls="today"
+                                                       aria-selected="true" th:text="#{dashboard.tab.today}"
+                                                       id="todayLink">
+                                                        Today
+                                                    </a>
+                                                </li>
+                                                <li class="nav-item">
+                                                    <a class="m-0 font-weight-bold text-primary nav-link custom-card-title"
+                                                       data-toggle="tab" href="#thirtyday" role="tab"
+                                                       aria-controls="thirtyday"
+                                                       aria-selected="false" th:text="#{dashboard.tab.thirtyDays}"
+                                                       id="thirtyDaysLink">
+                                                        30 Days
+                                                    </a>
+                                                </li>
+                                                <li class="nav-item">
+                                                    <a class="m-0 font-weight-bold text-primary nav-link custom-card-title"
+                                                       data-toggle="tab" href="#thismonth" role="tab"
+                                                       aria-controls="thismonth"
+                                                       aria-selected="false" th:text="#{dashboard.tab.thisMonth}"
+                                                       id="thisMonthLink">
+                                                        This month
+                                                    </a>
+                                                </li>
+                                            </ul>
 
-                                                    <hr class="sidebar-divider my-2">
-
-                                                    <div class="row">
-                                                        <div class="col-6 d-flex flex-row justify-content-center align-items-center">
-                                                            <div id="yesterdayPurchased"
-                                                                 class="h3 mb-0 text-gray-800 font-weight-bold">
-                                                                0
-                                                            </div>
-                                                        </div>
-
-                                                        <div class="col">
-                                                            <div class="row mt-1 no-gutters d-flex justify-content-end">
-                                                                <span id="yesterdaySold">0</span> - <span
-                                                                    id="yesterdayCancelled">0</span>
-                                                            </div>
-                                                            <div id="yesterdayReturned"
-                                                                 class="row mt-1 no-gutters d-flex justify-content-end">
-                                                                0
-                                                            </div>
-                                                            <div id="yesterdayRoyalties"
-                                                                 class="row mt-1 no-gutters d-flex justify-content-end">
-                                                                0
-                                                            </div>
-                                                        </div>
-                                                    </div>
+                                            <div id="tables-main-page" class="card-body tab-content">
+                                                <!-- Table - Today -->
+                                                <div class="tab-pane fade show active" id="today" role="tabpanel"
+                                                     aria-labelledby="today-tab">
+                                                    <table class="table table-striped table-bordered dt-responsive"
+                                                           style="width: 100%;"
+                                                           id="tableTodaySold">
+                                                        <thead>
+                                                        <tr class="text-dark">
+                                                            <th>Sold</th>
+                                                            <th>Product</th>
+                                                            <th>Royalties</th>
+                                                            <th>Price</th>
+                                                            <th>Username</th>
+                                                        </tr>
+                                                        </thead>
+                                                    </table>
                                                 </div>
-                                            </div>
-                                        </div>
-
-                                        <!-- 3rd card sale -->
-                                        <div class="col-lg-4 col-md-6 col-sm-12 mb-4">
-                                            <div class="card border-left-primary shadow">
-                                                <div class="card-body">
-                                                    <div class="row no-gutters align-items-center mb-2 custom-card-header">
-                                                        <div class="col mr-2">
-                                                            <div class="h6 text-center font-weight-bold text-primary text-uppercase">
-                                                                Last 7 Days
-                                                                <br>
-                                                                <span id="lastSevenDaysDate"></span>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-
-                                                    <hr class="sidebar-divider my-2">
-
-                                                    <div class="row">
-                                                        <div class="col-6 d-flex flex-row justify-content-center align-items-center">
-                                                            <div id="lastSevenDaysPurchased"
-                                                                 class="h3 mb-0 text-gray-800 font-weight-bold">
-                                                                0
-                                                            </div>
-                                                        </div>
-
-                                                        <div class="col">
-                                                            <div class="row mt-1 no-gutters d-flex justify-content-end">
-                                                                <span id="lastSevenDaysSold">0</span> - <span
-                                                                    id="lastSevenDaysCancelled">0</span>
-                                                            </div>
-                                                            <div id="lastSevenDaysReturned"
-                                                                 class="row mt-1 no-gutters d-flex justify-content-end">
-                                                                0
-                                                            </div>
-                                                            <div id="lastSevenDaysRoyalties"
-                                                                 class="row mt-1 no-gutters d-flex justify-content-end">
-                                                                0
-                                                            </div>
-                                                        </div>
-                                                    </div>
+                                                <!-- Table - 30 Days -->
+                                                <div class="tab-pane fade show" id="thirtyday" role="tabpanel"
+                                                     aria-labelledby="thirtyday-tab">
+                                                    <table class="table table-striped table-bordered dt-responsive"
+                                                           style="width: 100%;"
+                                                           id="table30DaysSold">
+                                                        <thead>
+                                                        <tr class="text-dark">
+                                                            <th>Sold</th>
+                                                            <th>Product</th>
+                                                            <th>Royalties</th>
+                                                            <th>Price</th>
+                                                            <th>Username</th>
+                                                        </tr>
+                                                        </thead>
+                                                    </table>
                                                 </div>
-                                            </div>
-                                        </div>
-
-                                        <!-- 4th card sale -->
-                                        <div class="col-lg-4 col-md-6 col-sm-12 mb-4">
-                                            <div class="card border-left-primary shadow">
-                                                <div class="card-body">
-                                                    <div class="row no-gutters align-items-center mb-2 custom-card-header">
-                                                        <div class="col mr-2">
-                                                            <div class="h6 text-center font-weight-bold text-primary text-uppercase">
-                                                                This Month
-                                                                <br>
-                                                                <span id="thisMonthDate"></span>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-
-                                                    <hr class="sidebar-divider my-2">
-
-                                                    <div class="row">
-                                                        <div class="col-6 d-flex flex-row justify-content-center align-items-center">
-                                                            <div id="thisMonthPurchased"
-                                                                 class="h3 mb-0 text-gray-800 font-weight-bold">
-                                                                0
-                                                            </div>
-                                                        </div>
-
-                                                        <div class="col">
-                                                            <div class="row mt-1 no-gutters d-flex justify-content-end">
-                                                                <span id="thisMonthSold">0</span> - <span
-                                                                    id="thisMonthCancelled">0</span>
-                                                            </div>
-                                                            <div id="thisMonthReturned"
-                                                                 class="row mt-1 no-gutters d-flex justify-content-end">
-                                                                0
-                                                            </div>
-                                                            <div id="thisMonthRoyalties"
-                                                                 class="row mt-1 no-gutters d-flex justify-content-end">
-                                                                0
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-
-                                        <!-- 5th card sale -->
-                                        <div class="col-lg-4 col-md-6 col-sm-12 mb-4">
-                                            <div class="card border-left-primary shadow">
-                                                <div class="card-body">
-                                                    <div class="row no-gutters align-items-center mb-2 custom-card-header">
-                                                        <div class="col mr-2">
-                                                            <div class="h6 text-center font-weight-bold text-primary text-uppercase">
-                                                                Previous Month
-                                                                <br>
-                                                                <span id="previousMonthDate"></span>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-
-                                                    <hr class="sidebar-divider my-2">
-
-                                                    <div class="row">
-                                                        <div class="col-6 d-flex flex-row justify-content-center align-items-center">
-                                                            <div id="previousMonthPurchased"
-                                                                 class="h3 mb-0 text-gray-800 font-weight-bold">
-                                                                0
-                                                            </div>
-                                                        </div>
-
-                                                        <div class="col">
-                                                            <div class="row mt-1 no-gutters d-flex justify-content-end">
-                                                                <span id="previousMonthSold">0</span> - <span
-                                                                    id="previousMonthCancelled">0</span>
-                                                            </div>
-                                                            <div id="previousMonthReturned"
-                                                                 class="row mt-1 no-gutters d-flex justify-content-end">
-                                                                0
-                                                            </div>
-                                                            <div id="previousMonthRoyalties"
-                                                                 class="row mt-1 no-gutters d-flex justify-content-end">
-                                                                0
-                                                            </div>
-                                                        </div>
-                                                    </div>
+                                                <!-- Table - This month -->
+                                                <div class="tab-pane fade show" id="thismonth" role="tabpanel"
+                                                     aria-labelledby="thismonth-tab">
+                                                    <table id="tableThisMonthSold"
+                                                           class="table table-striped table-bordered dt-responsive"
+                                                           style="width: 100%;">
+                                                        <thead>
+                                                        <tr class="text-dark">
+                                                            <th>Sold</th>
+                                                            <th>Product</th>
+                                                            <th>Royalties</th>
+                                                            <th>Price</th>
+                                                            <th>Username</th>
+                                                        </tr>
+                                                        </thead>
+                                                    </table>
                                                 </div>
                                             </div>
                                         </div>
 
                                     </div>
 
-                                    <!-- Table Orders -->
-                                    <ul class="card-header nav nav-tabs custom-nav" role="tablist">
-                                        <li class="nav-item">
-                                            <a class="m-0 font-weight-bold text-primary nav-link active custom-card-title"
-                                               data-toggle="tab" href="#today" role="tab" aria-controls="today"
-                                               aria-selected="true" th:text="#{dashboard.tab.today}" id="todayLink">
-                                                Today
-                                            </a>
-                                        </li>
-                                        <li class="nav-item">
-                                            <a class="m-0 font-weight-bold text-primary nav-link custom-card-title"
-                                               data-toggle="tab" href="#thirtyday" role="tab" aria-controls="thirtyday"
-                                               aria-selected="false" th:text="#{dashboard.tab.thirtyDays}"
-                                               id="thirtyDaysLink">
-                                                30 Days
-                                            </a>
-                                        </li>
-                                        <li class="nav-item">
-                                            <a class="m-0 font-weight-bold text-primary nav-link custom-card-title"
-                                               data-toggle="tab" href="#thismonth" role="tab" aria-controls="thismonth"
-                                               aria-selected="false" th:text="#{dashboard.tab.thisMonth}"
-                                               id="thisMonthLink">
-                                                This month
-                                            </a>
-                                        </li>
-                                    </ul>
-
-                                    <div class="card-body tab-content">
-                                        <!-- Table - Today -->
-                                        <div class="tab-pane fade show active" id="today" role="tabpanel"
-                                             aria-labelledby="today-tab">
-                                            <table class="table table-striped table-bordered dt-responsive" id="tableTodaySold">
-                                                <thead>
-                                                <tr class="text-dark">
-                                                    <th>Sold</th>
-                                                    <th>Product</th>
-                                                    <th>Royalties</th>
-                                                    <th>Price</th>
-                                                    <th>Username</th>
-                                                </tr>
-                                                </thead>
-                                            </table>
-                                        </div>
-                                        <!-- Table - 30 Days -->
-                                        <div class="tab-pane fade show" id="thirtyday" role="tabpanel"
-                                             aria-labelledby="thirtyday-tab">
-                                            <table class="table table-striped table-bordered dt-responsive" id="table30DaysSold">
-                                                <thead class="text-dark">
-                                                <tr>
-                                                    <th>Sold</th>
-                                                    <th>Product</th>
-                                                    <th>Royalties</th>
-                                                    <th>Price</th>
-                                                    <th>Username</th>
-                                                </tr>
-                                                </thead>
-                                            </table>
-                                        </div>
-                                        <!-- Table - This month -->
-                                        <div class="tab-pane fade show" id="thismonth" role="tabpanel"
-                                             aria-labelledby="thismonth-tab">
-                                            <table class="table table-striped table-bordered dt-responsive" id="tableThisMonthSold">
-                                                <thead>
-                                                <tr class="text-dark">
-                                                    <th>Sold</th>
-                                                    <th>Product</th>
-                                                    <th>Royalties</th>
-                                                    <th>Price</th>
-                                                    <th>Username</th>
-                                                </tr>
-                                                </thead>
-                                            </table>
-                                        </div>
-                                    </div>
                                 </div>
 
                                 <!-- Card Body -- Analytics -->
                                 <div class="tab-pane fade" id="analytics" role="tabpanel"
                                      aria-labelledby="analytics-tab">
-                                    <table>
+                                    <table id="table-analytics"
+                                           style="width: 100%;"
+                                           class="table table-striped table-bordered dt-responsive nowrap">
                                         <thead>
-                                        <tr>
+                                        <tr class="text-dark">
+                                            <th style="visibility: hidden">Id</th>
                                             <th>User</th>
                                             <th>Published</th>
                                             <th>Tier</th>
@@ -463,7 +484,6 @@
                                             <th>Slot Total</th>
                                             <th>Reject</th>
                                             <th>Remove</th>
-                                            <th>Sales</th>
                                             <th>Note</th>
                                         </tr>
                                         </thead>
@@ -471,15 +491,35 @@
                                 </div>
 
                                 <!-- Card Body -- Account Die -->
-                                <div class="tab-pane fade" id="accountdie" role="tabpanel"
-                                     aria-labelledby="accountdie-tab">
-                                    <table>
+                                <div class="tab-pane fade" id="accountDie" role="tabpanel"
+                                     aria-labelledby="accountDie-tab">
+                                    <table id="table-account-die"
+                                           style="width: 100%;"
+                                           class="table table-striped table-bordered dt-responsive">
                                         <thead>
-                                        <tr>
+                                        <tr class="text-dark">
+                                            <th style="visibility: hidden">Id</th>
                                             <th>#</th>
-                                            <th>Email</th>
+                                            <th>Username</th>
                                             <th>Last Update</th>
                                             <th>Account Status</th>
+                                        </tr>
+                                        </thead>
+                                    </table>
+                                </div>
+
+                                <!-- Card Body -- Last Check -->
+                                <div class="tab-pane fade" id="lastCheck" role="tabpanel"
+                                     aria-labelledby="lastCheck-tab">
+                                    <table id="table-last-check"
+                                           style="width: 100%;"
+                                           class="table table-striped table-bordered dt-responsive">
+                                        <thead>
+                                        <tr class="text-dark">
+                                            <th style="visibility: hidden">Id</th>
+                                            <th>#</th>
+                                            <th>Username</th>
+                                            <th>Last Check</th>
                                         </tr>
                                         </thead>
                                     </table>
@@ -511,7 +551,7 @@
     <i class="fas fa-angle-up"></i>
 </a>
 
-<div id="spinner"></div>
+<th:block th:replace="layout/modals-dashboard :: add-note"/>
 
 <th:block th:replace="layout/script :: script-dashboard"/>
 
@@ -520,16 +560,20 @@
 <script>
 
     let currentGrpId = window.location.pathname.split('/')[2];
-    var userId = [[${userId}]];
+    let userId = [[${userId}]];
 
     let page = {
         urls: {
-            findAllAmznAccount: CommonApp.BASE_URL_AMZN_ACCOUNT + "/findAll",
-            findAmznAccInGrp: CommonApp.BASE_URL_GROUP + "/findInGrpFilter/",
-            findCardsAll: CommonApp.BASE_URL_ORDER + "/card-all",
+            findAmznAccInGrpFilter: CommonApp.BASE_URL_GROUP + "/findInGrpFilter/",
+
+            findAnalyticsByGroupId: CommonApp.BASE_URL_AMZN_ACCOUNT + "/analytics-grp/",
+            findAnalyticsByUserId: CommonApp.BASE_URL_AMZN_ACCOUNT + "/analytics-acc/",
+            addNote: CommonApp.BASE_URL_AMZN_ACCOUNT + "/analytics-note/",
+
+            findAccountDieByGroupId: CommonApp.BASE_URL_AMZN_ACCOUNT + "/die-grp/",
+
             findCardsByGroupId: CommonApp.BASE_URL_ORDER + "/card-grp/",
             findCardsByAmznId: CommonApp.BASE_URL_ORDER + "/card-acc/",
-            findChartAll: CommonApp.BASE_URL_ORDER + "/chart-all",
             findChartByGroupId: CommonApp.BASE_URL_ORDER + "/chart-grp/",
             findChartByUserId: CommonApp.BASE_URL_ORDER + "/chart-acc/",
 
@@ -540,6 +584,9 @@
             findAllTodaySoldEveryAmznAcc: CommonApp.BASE_URL_PRODUCT + "/findAllTodaySoldEveryAmznAcc/",
             findAllLast30DaysSoldEveryAmznAcc: CommonApp.BASE_URL_PRODUCT + "/findAllLast30DaysSoldEveryAmznAcc/",
             findAllThisMonthSoldEveryAmznAcc: CommonApp.BASE_URL_PRODUCT + "/findAllThisMonthSoldEveryAmznAcc/",
+
+            findLastCheckAll: CommonApp.BASE_URL_AMZN_ACCOUNT + "/last-check-all",
+            findLastCheckByGroupId: CommonApp.BASE_URL_AMZN_ACCOUNT + "/last-check-grp/"
         },
         element: {},
         commands: {},
@@ -550,11 +597,12 @@
         }
     }
 
-    page.element.groupHeader = $("#groupHeader");
-
     page.element.tableTodaySold = $("#tableTodaySold");
     page.element.table30DaysSold = $("#table30DaysSold");
     page.element.tableThisMonthSold = $("#tableThisMonthSold");
+    page.element.tableAnalytics = $("#table-analytics");
+    page.element.tableAccountDie = $("#table-account-die");
+    page.element.tableLastCheck = $("#table-last-check");
 
     page.element.todayLink = $("#todayLink");
     page.element.thirtyDaysLink = $("#thirtyDaysLink");
@@ -601,7 +649,10 @@
     page.dialogs.element.previousMonthReturned = $("#previousMonthReturned");
     page.dialogs.element.previousMonthRoyalties = $("#previousMonthRoyalties");
 
-    page.element.spinner = $('#spinner');
+    page.dialogs.element.mdAddNote = $('#mdAddNote');
+    page.dialogs.element.frmAddNote = $('#frmAddNote');
+    page.dialogs.element.noteArea = $('#addNoteArea');
+    page.dialogs.element.btnSaveNote = $('#btnSaveNote');
 
     page.commands.initTodaySoldTable = () => {
         let todaySoldTable = page.element.tableTodaySold.DataTable({
@@ -622,13 +673,13 @@
                 {
                     targets: 1,
                     render: (data, type, row) =>
-                        `<a href='https://www.amazon.com/dp/${row.asin}' title='${btnManage}'target='_blank'>
-                            ${row.productName}
+                        `<a href='https://www.amazon.com/dp/${row.asin}' target='_blank'>
+                            ${CommonApp.clipText(row.productName, 20)}
                         </a>`
                 },
                 {
                     targets: 0,
-                    className: "text-dark",
+                    className: "text-dark font-weight-bold"
                 },
             ],
             language: {
@@ -647,9 +698,10 @@
             },
             dom: '<"row mb-2"<"col"l><"col"f>>rtp'
         });
-        todaySoldTable.order([ 0, "desc" ]).draw();
 
+        todaySoldTable.order([0, "desc"]).draw();
     }
+
     page.commands.init30DaysSoldTable = () => {
         let thirtyDaysSoldTable = page.element.table30DaysSold.DataTable({
             ajax: {
@@ -669,13 +721,13 @@
                 {
                     targets: 1,
                     render: (data, type, row) =>
-                        `<a href='https://www.amazon.com/dp/${row.asin}' title='${btnManage}' target='_blank'>
-                            ${row.productName}
+                        `<a href='https://www.amazon.com/dp/${row.asin}' title='${row.asin}' target='_blank'>
+                            ${CommonApp.clipText(row.productName, 20)}
                         </a>`
                 },
                 {
                     targets: 0,
-                    className: "text-dark"
+                    className: "text-dark font-weight-bold"
                 },
             ],
             language: {
@@ -694,8 +746,10 @@
             },
             dom: '<"row mb-2"<"col"l><"col"f>>rtp'
         });
-        thirtyDaysSoldTable.order([ 0, "desc" ]).draw();
+
+        thirtyDaysSoldTable.order([0, "desc"]).draw();
     }
+
     page.commands.initThisMonthSoldTable = () => {
         let thisMonthSoldTable = page.element.tableThisMonthSold.DataTable({
             ajax: {
@@ -715,13 +769,13 @@
                 {
                     targets: 1,
                     render: (data, type, row) =>
-                        `<a href='https://www.amazon.com/dp/${row.asin}' title='${btnManage}' target='_blank'>
-                            ${row.productName}
+                        `<a href='https://www.amazon.com/dp/${row.asin}' title='${row.asin}' target='_blank'>
+                            ${CommonApp.clipText(row.productName, 20)}
                         </a>`
                 },
                 {
                     targets: 0,
-                    className: "text-dark"
+                    className: "text-dark font-weight-bold"
                 },
             ],
             language: {
@@ -741,12 +795,243 @@
             dom: '<"row mb-2"<"col"l><"col"f>>rtp'
         });
 
-        thisMonthSoldTable.order([ 0, "desc" ]).draw();
+        thisMonthSoldTable.order([0, "desc"]).draw();
+    }
 
+    page.commands.initAnalyticsTable = () => {
+        let analyticsTable = page.element.tableAnalytics.DataTable({
+            ajax: {
+                contentType: 'application/json',
+                url: '/assets/json/data.json',
+                dataSrc: ''
+            },
+            pagingType: 'simple_numbers',
+            columns: [
+                {data: 'id'},
+                {data: 'username'},
+                {data: 'published'},
+                {data: 'tier'},
+                {data: 'slotRemaining'},
+                {data: 'slotTotal'},
+                {data: 'reject'},
+                {data: 'remove'},
+                {data: 'note'}
+            ],
+            columnDefs: [
+                {
+                    targets: 0,
+                    visible: false
+                },
+                {
+                    targets: [1, 2, 3, 4, 5, 6],
+                    type: 'natural'
+                },
+                {
+                    targets: [2, 3, 4, 5, 6, 7],
+                    className: 'text-right'
+                },
+                {
+                    targets: -1,
+                    className: 'text-center add-note',
+                    orderable: false,
+                    render: (data, type, row) => CommonApp.clipText(data, 6)
+                }
+            ],
+            language: {
+                search: `<i class="fas fa-search text-primary"></i> `,
+                paginate: {
+                    previous: `<i class="fas fa-angle-left"></i>`,
+                    next: `<i class="fas fa-angle-right"></i>`
+                },
+                aria: {
+                    paginate: {
+                        previous: 'Previous',
+                        next: 'Next'
+                    }
+                },
+                emptyTable: `${noDataInTable}`
+            },
+            pageLength: 10,
+            lengthChange: false,
+            dom: '<"text-right mb-2"f>rtp'
+        });
+
+        let currentAmznUser = new AmznUser();
+        let currentRowDOM;
+        let currentRow;
+
+        page.element.tableAnalytics.on('click', '.add-note', function () {
+            currentRowDOM = $(this).parents('tr');
+
+            if (currentRowDOM.hasClass('child'))
+                currentRowDOM = currentRowDOM.prev();
+
+            currentRow = analyticsTable.row(currentRowDOM);
+            currentAmznUser = currentRow.data();
+
+            page.dialogs.element.noteArea.val(currentAmznUser.note);
+
+            page.dialogs.element.mdAddNote.modal('show');
+        });
+
+        page.dialogs.element.btnSaveNote.on('click', function () {
+            page.dialogs.element.frmAddNote.submit();
+        })
+
+        page.dialogs.element.frmAddNote.validate({
+            rules: {
+                note: {
+                    maxlength: 50
+                }
+            },
+            messages: {
+                note: {
+                    maxlength: validNote
+                }
+            },
+            submitHandler: function () {
+                page.commands.doAddNote(currentAmznUser, currentRow);
+            }
+        })
+    }
+
+    page.commands.doAddNote = (currentAmznUser, currentRow) => {
+        let note = page.dialogs.element.noteArea.val();
+        $.ajax({
+            "headers": {
+                "accept": "application/json",
+                "content-type": "application/json"
+            },
+            "type": "POST",
+            "url": page.urls.addNote + currentAmznUser.id,
+            "data": note
+        })
+            .done(() => {
+                let tableAnalytics = page.element.tableAnalytics.DataTable();
+
+                tableAnalytics.row(currentRow).data({
+                    'id': currentAmznUser.id,
+                    'username': currentAmznUser.username,
+                    'published': currentAmznUser.published,
+                    'tier': currentAmznUser.tier,
+                    'slotRemaining': currentAmznUser.slotRemaining,
+                    'slotTotal': currentAmznUser.slotTotal,
+                    'reject': currentAmznUser.reject,
+                    'remove': currentAmznUser.remove,
+                    'note': note
+                })
+                    .draw('full-hold');
+
+                page.dialogs.element.frmAddNote[0].reset();
+                page.dialogs.element.mdAddNote.modal("hide");
+
+                CommonApp.SweetAlert.showSuccessAlert(SUCCESS_UPDATED);
+            })
+            .fail((jqXHR) => {
+                DBApp.handleFailedTasks(jqXHR);
+            })
+    }
+
+    page.commands.initAccountDieTable = () => {
+        let accountDieTable = page.element.tableAccountDie.DataTable({
+            ajax: {
+                contentType: 'application/json',
+                url: '/assets/json/data.json',
+                dataSrc: ''
+            },
+            pagingType: 'simple_numbers',
+            columns: [
+                {data: 'id'},
+                {data: 'no'},
+                {data: 'username'},
+                {data: 'lastUpdate'},
+                {data: 'accountStatus'}
+            ],
+            columnDefs: [
+                {
+                    targets: 0,
+                    visible: false
+                },
+                {
+                    targets: 1,
+                    className: 'text-center'
+                },
+                {
+                    targets: [1, 2],
+                    type: 'natural'
+                },
+                {
+                    targets: -1,
+                    className: 'text-center',
+                    orderable: false
+                }
+            ],
+            language: {
+                search: `<i class="fas fa-search text-primary"></i> `,
+                paginate: {
+                    previous: `<i class="fas fa-angle-left"></i>`,
+                    next: `<i class="fas fa-angle-right"></i>`
+                },
+                aria: {
+                    paginate: {
+                        previous: 'Previous',
+                        next: 'Next'
+                    }
+                },
+                emptyTable: `${noDataInTable}`
+            },
+            pageLength: 10,
+            lengthChange: false,
+            dom: '<"text-right mb-2"f>rtp'
+        });
+    }
+
+    page.commands.initLastCheckTable = () => {
+        let lastCheckTable = page.element.tableLastCheck.DataTable({
+            ajax: {
+                contentType: 'application/json',
+                url: '/assets/json/data.json',
+                dataSrc: ''
+            },
+            pagingType: 'simple_numbers',
+            columns: [
+                {data: 'id'},
+                {data: 'no'},
+                {data: 'username'},
+                {data: 'lastCheck'}
+            ],
+            columnDefs: [
+                {
+                    targets: 0,
+                    visible: false
+                },
+                {
+                    targets: [1, -1],
+                    className: 'text-center'
+                }
+            ],
+            ordering: false,
+            language: {
+                search: `<i class="fas fa-search text-primary"></i> `,
+                paginate: {
+                    previous: `<i class="fas fa-angle-left"></i>`,
+                    next: `<i class="fas fa-angle-right"></i>`
+                },
+                aria: {
+                    paginate: {
+                        previous: 'Previous',
+                        next: 'Next'
+                    }
+                },
+                emptyTable: `${noDataInTable}`
+            },
+            pageLength: 10,
+            lengthChange: false,
+            dom: '<"text-right mb-2"f>rtp'
+        })
     }
 
     page.commands.createSideBarGroupList = (userId) => {
-
         let container = $('#filter-sidebar');
 
         return $.ajax({
@@ -755,7 +1040,7 @@
                 "content-type": "application/json"
             },
             "type": "GET",
-            "url": CommonApp.BASE_URL_USER + "/asgnGrp" + "/" + userId,
+            "url": CommonApp.BASE_URL_USER + "/asgnGrp/" + userId,
         })
             .done((groups) => {
                 let str = ``
@@ -777,38 +1062,25 @@
 
     $(document).ready(function () {
         page.commands.createSideBarGroupList(userId).then(() => {
-
-            if (isNaN(currentGrpId) || currentGrpId === '') {
+            if (isNaN(currentGrpId) || currentGrpId === '')
                 currentGrpId = $('#filter-sidebar .collapse-item').data('id');
-                page.element.groupHeader.html($('#filter-sidebar .collapse-item').html());
-            }
-            if (currentGrpId) {
+
+            page.commands.initTodaySoldTable();
+            page.commands.init30DaysSoldTable();
+            page.commands.initThisMonthSoldTable();
+            page.commands.initAnalyticsTable();
+            page.commands.initAccountDieTable();
+            page.commands.initLastCheckTable();
+
+            if (currentGrpId)
                 page.commands.handleContentDashboard(currentGrpId);
-            }
         });
-        page.commands.initTodaySoldTable();
-        page.commands.init30DaysSoldTable();
-        page.commands.initThisMonthSoldTable();
     })
-
-    //sticky Filter
-    var stickyFilter = $("#topNav");
-
-    var stickyFilterHeader = $("header").height();
-
-    $(window).scroll(function () {
-        if ($(this).scrollTop() > hdrHeight + 50) {
-            navBar.addClass("navScrolled");
-        } else {
-            navBar.removeClass("navScrolled");
-        }
-    });
 
     function getProductSoldDataForEachAmznAcc(amznAccId) {
         page.element.tableTodaySold.DataTable().ajax.url(page.urls.findAllTodaySoldEveryAmznAcc + amznAccId).load();
         page.element.table30DaysSold.DataTable().ajax.url(page.urls.findAllLast30DaysSoldEveryAmznAcc + amznAccId).load();
         page.element.tableThisMonthSold.DataTable().ajax.url(page.urls.findAllThisMonthSoldEveryAmznAcc + amznAccId).load();
-
     }
 
     //chart
@@ -820,7 +1092,25 @@
         $('#' + id)[0].setData(chartData);
     }
 
+    /** chart */
+    var chartData;
+    var layoutStr;
+
+    function chartReadyHandler(id) {
+        $('#' + id)[0].setLayout(layoutStr);
+        $('#' + id)[0].setData(chartData);
+    }
+
     var chartVars = "KoolOnLoadCallFunction=chartReadyHandler";
+
+    function formatAxis(id, value) {
+        return DBApp.fmtNumWMetricSuffix(value);
+    }
+
+    /** reset-chart on tab change */
+    $('a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
+        window.dispatchEvent(new Event('resize'));
+    })
 
     page.commands.getChart = (url) => {
         $.ajax({
@@ -829,9 +1119,7 @@
                 "content-type": "application/json"
             },
             "type": "GET",
-            "url": url,
-            "beforeSend": () => page.element.spinner.show(),
-            "complete": () => page.element.spinner.hide()
+            "url": url
         })
             .done((chart) => {
                 chartData = chart.columns;
@@ -839,21 +1127,19 @@
                 layoutStr =
                     `<KoolChart backgroundColor="#FFFFFF"  borderStyle="none">'
                     +'<Options>'
-                        +'<Caption text="${chartCaption}" fontSize="20"/>'
-                        +'<SubCaption text="Royalties" textAlign="left" height="0"/>'
-                        +'<SubCaption text="Sold" textAlign="right"/>'
+                        +'<Caption text="${chartCaption}" fontSize="12"/>'
+                        +'<SubCaption text="Royalties $" textAlign="left" height="0" fontSize="10"/>'
+                        +'<SubCaption text="Sold" textAlign="right" fontSize="10"/>'
                         +'<SubCaption/>'
                     +'</Options>'
 
-                    +'<NumberFormatter id="numfmt" useThousandsSeparator="true"/>'
-
-                    +'<Combination2DChart showDataTips="true">'
+                    +'<Combination2DChart showDataTips="true" touchMoveEnable="false">'
                         +'<horizontalAxis>'
                             +'<CategoryAxis categoryField="date"/>'
                         +'</horizontalAxis>'
 
                         +'<verticalAxis>'
-                            +'<LinearAxis id="vAxis1" formatter="{numfmt}" maximum="${chart.maxRoyaltiesAxis}"/>'
+                            +'<LinearAxis id="vAxis1" labelJsFunction="formatAxis" maximum="${chart.maxRoyaltiesAxis}"/>'
                         +'</verticalAxis>'
 
                         +'<series>'
@@ -868,7 +1154,7 @@
 
                             +'<Line2DSeries radius="6" yField="sold" displayName="Sold" itemRenderer="CircleItemRenderer">'
                                 +'<verticalAxis>'
-                                    +'<LinearAxis id="vAxis2" maximum="${chart.maxSoldAxis}"/>'
+                                    +'<LinearAxis id="vAxis2" labelJsFunction="formatAxis" maximum="${chart.maxSoldAxis}"/>'
                                 +'</verticalAxis>'
                                 +'<showDataEffect>'
                                     +'<SeriesInterpolate/>'
@@ -904,51 +1190,79 @@
                 "content-type": "application/json"
             },
             "type": "GET",
-            "url": url,
-            "beforeSend": () => page.element.spinner.show(),
-            "complete": () => page.element.spinner.hide()
+            "url": url
         })
             .done((cards) => {
                 page.dialogs.element.todayDate.text(cards.today.date);
-                page.dialogs.element.todayPurchased.text(cards.today.purchased);
-                page.dialogs.element.todaySold.text(cards.today.sold);
-                page.dialogs.element.todayCancelled.text(cards.today.cancelled);
-                page.dialogs.element.todayReturned.text(cards.today.returned);
-                page.dialogs.element.todayRoyalties.text(cards.today.royalties);
+                page.dialogs.element.todayPurchased
+                    .text(DBApp.fmtNumComma(cards.today.purchased));
+                page.dialogs.element.todaySold
+                    .text(DBApp.fmtNumComma(cards.today.sold));
+                page.dialogs.element.todayCancelled
+                    .text(DBApp.fmtNumComma(cards.today.cancelled));
+                page.dialogs.element.todayReturned
+                    .text(DBApp.fmtNumComma(cards.today.returned));
+                page.dialogs.element.todayRoyalties
+                    .text('$' + DBApp.fmtNumComma(cards.today.royalties));
 
-                page.dialogs.element.allTimePurchased.text(cards.allTime.purchased);
-                page.dialogs.element.allTimeSold.text(cards.allTime.sold);
-                page.dialogs.element.allTimeCancelled.text(cards.allTime.cancelled);
-                page.dialogs.element.allTimeReturned.text(cards.allTime.returned);
-                page.dialogs.element.allTimeRoyalties.text(cards.allTime.royalties);
+                page.dialogs.element.allTimePurchased
+                    .text(DBApp.fmtNumComma(cards.allTime.purchased));
+                page.dialogs.element.allTimeSold
+                    .text(DBApp.fmtNumComma(cards.allTime.sold));
+                page.dialogs.element.allTimeCancelled
+                    .text(DBApp.fmtNumComma(cards.allTime.cancelled));
+                page.dialogs.element.allTimeReturned
+                    .text(DBApp.fmtNumComma(cards.allTime.returned));
+                page.dialogs.element.allTimeRoyalties
+                    .text('$' + DBApp.fmtNumComma(cards.allTime.royalties));
 
                 page.dialogs.element.yesterdayDate.text(cards.yesterday.date);
-                page.dialogs.element.yesterdayPurchased.text(cards.yesterday.purchased);
-                page.dialogs.element.yesterdaySold.text(cards.yesterday.sold);
-                page.dialogs.element.yesterdayCancelled.text(cards.yesterday.cancelled);
-                page.dialogs.element.yesterdayReturned.text(cards.yesterday.returned);
-                page.dialogs.element.yesterdayRoyalties.text(cards.yesterday.royalties);
+                page.dialogs.element.yesterdayPurchased
+                    .text(DBApp.fmtNumComma(cards.yesterday.purchased));
+                page.dialogs.element.yesterdaySold
+                    .text(DBApp.fmtNumComma(cards.yesterday.sold));
+                page.dialogs.element.yesterdayCancelled
+                    .text(DBApp.fmtNumComma(cards.yesterday.cancelled));
+                page.dialogs.element.yesterdayReturned
+                    .text(DBApp.fmtNumComma(cards.yesterday.returned));
+                page.dialogs.element.yesterdayRoyalties
+                    .text('$' + DBApp.fmtNumComma(cards.yesterday.royalties));
 
                 page.dialogs.element.lastSevenDaysDate.text(cards.lastSevenDays.date);
-                page.dialogs.element.lastSevenDaysPurchased.text(cards.lastSevenDays.purchased);
-                page.dialogs.element.lastSevenDaysSold.text(cards.lastSevenDays.sold);
-                page.dialogs.element.lastSevenDaysCancelled.text(cards.lastSevenDays.cancelled);
-                page.dialogs.element.lastSevenDaysReturned.text(cards.lastSevenDays.returned);
-                page.dialogs.element.lastSevenDaysRoyalties.text(cards.lastSevenDays.royalties);
+                page.dialogs.element.lastSevenDaysPurchased
+                    .text(DBApp.fmtNumComma(cards.lastSevenDays.purchased));
+                page.dialogs.element.lastSevenDaysSold
+                    .text(DBApp.fmtNumComma(cards.lastSevenDays.sold));
+                page.dialogs.element.lastSevenDaysCancelled
+                    .text(DBApp.fmtNumComma(cards.lastSevenDays.cancelled));
+                page.dialogs.element.lastSevenDaysReturned
+                    .text(DBApp.fmtNumComma(cards.lastSevenDays.returned));
+                page.dialogs.element.lastSevenDaysRoyalties
+                    .text('$' + DBApp.fmtNumComma(cards.lastSevenDays.royalties));
 
                 page.dialogs.element.thisMonthDate.text(cards.thisMonth.date);
-                page.dialogs.element.thisMonthPurchased.text(cards.thisMonth.purchased);
-                page.dialogs.element.thisMonthSold.text(cards.thisMonth.sold);
-                page.dialogs.element.thisMonthCancelled.text(cards.thisMonth.cancelled);
-                page.dialogs.element.thisMonthReturned.text(cards.thisMonth.returned);
-                page.dialogs.element.thisMonthRoyalties.text(cards.thisMonth.royalties);
+                page.dialogs.element.thisMonthPurchased
+                    .text(DBApp.fmtNumComma(cards.thisMonth.purchased));
+                page.dialogs.element.thisMonthSold
+                    .text(DBApp.fmtNumComma(cards.thisMonth.sold));
+                page.dialogs.element.thisMonthCancelled
+                    .text(DBApp.fmtNumComma(cards.thisMonth.cancelled));
+                page.dialogs.element.thisMonthReturned
+                    .text(DBApp.fmtNumComma(cards.thisMonth.returned));
+                page.dialogs.element.thisMonthRoyalties
+                    .text('$' + DBApp.fmtNumComma(cards.thisMonth.royalties));
 
                 page.dialogs.element.previousMonthDate.text(cards.previousMonth.date);
-                page.dialogs.element.previousMonthPurchased.text(cards.previousMonth.purchased);
-                page.dialogs.element.previousMonthSold.text(cards.previousMonth.sold);
-                page.dialogs.element.previousMonthCancelled.text(cards.previousMonth.cancelled);
-                page.dialogs.element.previousMonthReturned.text(cards.previousMonth.returned);
-                page.dialogs.element.previousMonthRoyalties.text(cards.previousMonth.royalties);
+                page.dialogs.element.previousMonthPurchased
+                    .text(DBApp.fmtNumComma(cards.previousMonth.purchased));
+                page.dialogs.element.previousMonthSold
+                    .text(DBApp.fmtNumComma(cards.previousMonth.sold));
+                page.dialogs.element.previousMonthCancelled
+                    .text(DBApp.fmtNumComma(cards.previousMonth.cancelled));
+                page.dialogs.element.previousMonthReturned
+                    .text(DBApp.fmtNumComma(cards.previousMonth.returned));
+                page.dialogs.element.previousMonthRoyalties
+                    .text('$' + DBApp.fmtNumComma(cards.previousMonth.royalties));
             })
             .fail((jqXHR) => {
                 DBApp.handleFailedTasks(jqXHR);
@@ -956,13 +1270,15 @@
     }
 
     page.commands.handleContentDashboard = (groupId) => {
-        let listUserUrl = page.urls.findAmznAccInGrp + groupId;
+        let listUserUrl = page.urls.findAmznAccInGrpFilter + groupId;
         let chartDataUrl = page.urls.findChartByGroupId + groupId;
         let cardDataUrl = page.urls.findCardsByGroupId + groupId;
-
-        page.element.tableTodaySold.DataTable().ajax.url(page.urls.findAllTodaySoldInGroup + groupId).load();
-        page.element.table30DaysSold.DataTable().ajax.url(page.urls.findAllLast30DaysSoldInGroup + groupId).load();
-        page.element.tableThisMonthSold.DataTable().ajax.url(page.urls.findAllThisMonthSoldInGroup + groupId).load();
+        let tableTodayUrl = page.urls.findAllTodaySoldInGroup + groupId;
+        let table30DaysUrl = page.urls.findAllLast30DaysSoldInGroup + groupId;
+        let tableThisMonthUrl = page.urls.findAllThisMonthSoldInGroup + groupId;
+        let tableAnalyticsUrl = page.urls.findAnalyticsByGroupId + groupId;
+        let tableAccDieUrl = page.urls.findAccountDieByGroupId + groupId;
+        let tableLastCheckUrl = page.urls.findLastCheckByGroupId + groupId;
 
         $.ajax({
             "headers": {
@@ -976,6 +1292,14 @@
                 page.commands.handleFilterDashboard(accounts);
                 page.commands.getChart(chartDataUrl);
                 page.commands.getCards(cardDataUrl);
+
+                page.element.tableTodaySold.DataTable().ajax.url(tableTodayUrl).load();
+                page.element.table30DaysSold.DataTable().ajax.url(table30DaysUrl).load();
+                page.element.tableThisMonthSold.DataTable().ajax.url(tableThisMonthUrl).load();
+
+                page.element.tableAnalytics.DataTable().ajax.url(tableAnalyticsUrl).load();
+                page.element.tableAccountDie.DataTable().ajax.url(tableAccDieUrl).load();
+                page.element.tableLastCheck.DataTable().ajax.url(tableLastCheckUrl).load();
             })
             .fail((jqXHR) => {
                 DBApp.handleFailedTasks(jqXHR);
@@ -990,10 +1314,12 @@
         let currentUserId = $(this).data('id');
         let cardDataUrl = page.urls.findCardsByAmznId + currentUserId;
         let chartDataUrl = page.urls.findChartByUserId + currentUserId;
+        let tableAnalyticsUrl = page.urls.findAnalyticsByUserId + currentUserId;
 
         page.commands.getCards(cardDataUrl);
         page.commands.getChart(chartDataUrl);
         getProductSoldDataForEachAmznAcc(currentUserId);
+        page.element.tableAnalytics.DataTable().ajax.url(tableAnalyticsUrl).load();
     })
 
     page.commands.handleFilterDashboard = (accounts) => {
@@ -1010,6 +1336,8 @@
         DBApp.handleFilter('filter-dashboard', 'dashboard-user-search', 'list-group-item');
     }
 
+    /** custom appearance for global content */
+    $('.shadow').removeClass('shadow');
 </script>
 </body>
 
