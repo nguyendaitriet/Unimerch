@@ -95,6 +95,7 @@
 .custom-scrollbar::-webkit-scrollbar
 {
     width: 10px;
+    height: 10px;
     background-color: #F5F5F5;
 }
 
@@ -844,7 +845,7 @@ pre code {
 
 .row {
     display: flex;
-    flex-wrap: wrap;
+    flex-wrap: unset;
     margin-right: -0.75rem;
     margin-left: -0.75rem;
 }
@@ -12853,4 +12854,16 @@ footer.sticky-footer .copyright {
 
 body.sidebar-toggled footer.sticky-footer {
     width: 100%;
+}
+
+.btn-text-sm {
+    font-size: 13px;
+}
+
+#table-amzn-acc-in_filter input {
+    width: 85%;
+}
+
+.tb-padding-sm th, .tb-padding-sm td {
+    padding: 0.5rem;
 }

@@ -55,7 +55,6 @@ public class AuthAPI {
         return setCookies(authentication, user.getId().toString());
     }
 
-
     private ResponseEntity<?> setCookies(Authentication authentication, String userId) {
         String accessToken = jwtService.generateTokenLogin(authentication);
         UserDetails userDetails = (UserDetails) authentication.getPrincipal();

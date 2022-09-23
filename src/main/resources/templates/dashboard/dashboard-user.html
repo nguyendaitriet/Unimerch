@@ -784,11 +784,12 @@
             }
             if (currentGrpId) {
                 page.commands.handleContentDashboard(currentGrpId);
+                page.commands.initTodaySoldTable();
+                page.commands.init30DaysSoldTable();
+                page.commands.initThisMonthSoldTable();
             }
         });
-        page.commands.initTodaySoldTable();
-        page.commands.init30DaysSoldTable();
-        page.commands.initThisMonthSoldTable();
+
     })
 
     //sticky Filter

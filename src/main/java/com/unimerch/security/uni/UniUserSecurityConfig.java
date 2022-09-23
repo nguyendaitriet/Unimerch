@@ -84,16 +84,15 @@ public class UniUserSecurityConfig extends WebSecurityConfigurerAdapter {
                         "/webjars/**"
                 ).permitAll()
 //                .antMatchers("/assets/**", "/messages/**").permitAll()
-                .antMatchers("/api/amzn/updateMetadata", "/api/amzn/updateStatus", "/api/orders", "/api/products/updatePrice").permitAll()
                 .antMatchers("/users/**").hasAnyAuthority("USER")
                 .antMatchers("/dashboard/**").hasAnyAuthority("MANAGER")
-                .antMatchers("/",
+//                .antMatchers("/",
 //                        "/api/products/**",
-                        "/api/users/**",
+//                        "/api/users/**",
 //                        "/api/orders/**",
 //                        "/api/amzn/**",
-                        "/api/groups/**")
-                .hasAnyAuthority("MANAGER", "USER")
+//                        "/api/groups/**")
+//                .hasAnyAuthority("MANAGER", "USER")
                 .and()
                 .formLogin()
                 .loginPage("/login")
