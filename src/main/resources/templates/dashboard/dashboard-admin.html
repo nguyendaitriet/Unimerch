@@ -53,7 +53,7 @@
 
                     <!-- Main Content -->
                     <div class="col-9 col-lg-88-mod no-padding">
-                        <div class="card shadow mb-4">
+                        <div class="card shadow">
                             <!-- Card Header -->
                             <ul class="card-header nav nav-tabs custom-nav" role="tablist">
                                 <li class="nav-item">
@@ -160,11 +160,9 @@
                                             <div class="col-6 mb-1 no-padding">
                                                 <div class="card border-left-primary shadow">
                                                     <div class="card-body custom-card-body">
-                                                        <div
-                                                                class="row no-gutters align-items-center mb-2 custom-card-header">
+                                                        <div class="row no-gutters align-items-center mb-2 custom-card-header">
                                                             <div class="col mr-2">
-                                                                <div
-                                                                        class="custom-card-header text-center font-weight-bold text-primary text-uppercase">
+                                                                <div class="custom-card-header text-center font-weight-bold text-primary text-uppercase">
                                                                     Yesterday
                                                                     <br>
                                                                     <span id="yesterdayDate"></span>
@@ -549,10 +547,10 @@
 </a>
 
 <th:block th:replace="layout/modals-dashboard :: add-note"/>
+<th:block th:replace="layout/texts :: texts"/>
 
 <th:block th:replace="layout/script :: script-dashboard"/>
 
-<th:block th:replace="layout/texts :: texts"/>
 
 <script>
 
@@ -601,6 +599,11 @@
             inputError: {}
         }
     }
+
+    page.element.tabDashboard = $("a[href='#dashboard']");
+    page.element.tabAnalytics = $("a[href='#analytics']");
+    page.element.tabAccountDie = $("a[href='#accountDie']");
+    page.element.tabLastCheck = $("a[href='#lastCheck']");
 
     page.element.tableTodaySold = $("#tableTodaySold");
     page.element.table30DaysSold = $("#table30DaysSold");
@@ -1049,7 +1052,37 @@
         page.commands.handleContentDashboard(currentGrpId);
     })
 
-    function getProductSoldDataForEachAmznAcc(amznAccId) {
+    page.commands.addEventsToSubTabs = (analyticsUrl, accDieUrl, lastCheckUrl) => {
+        page.commands.addEventToAnalyticsTab(analyticsUrl);
+        page.commands.addEventToAccDieTab(accDieUrl);
+        page.commands.addEventToLastCheckTab(lastCheckUrl);
+    }
+
+    page.commands.addEventToAnalyticsTab = (analyticsUrl) => {
+        page.element.tabAnalytics.on('shown.bs.tab', function () {
+            let hasData = page.element.tableAnalytics.DataTable().row().count();
+            if (!hasData)
+                page.element.tableAnalytics.DataTable().ajax.url(analyticsUrl).load();
+        });
+    }
+
+    page.commands.addEventToAccDieTab = (accDieUrl) => {
+        page.element.tabAccountDie.on('shown.bs.tab', function () {
+            let hasData = page.element.tableAccountDie.DataTable().row().count();
+            if (!hasData)
+                page.element.tableAccountDie.DataTable().ajax.url(accDieUrl).load();
+        });
+    }
+
+    page.commands.addEventToLastCheckTab = (lastCheckUrl) => {
+        page.element.tabLastCheck.on('shown.bs.tab', function () {
+            let hasData = page.element.tableLastCheck.DataTable().row().count();
+            if (!hasData)
+                page.element.tableLastCheck.DataTable().ajax.url(lastCheckUrl).load();
+        });
+    }
+
+    page.commands.getProductSoldDataForEachAmznAcc = (amznAccId) => {
         page.element.tableTodaySold.DataTable().ajax.url(page.urls.findAllTodaySoldEveryAmznAcc + amznAccId).load();
         page.element.table30DaysSold.DataTable().ajax.url(page.urls.findAllLast30DaysSoldEveryAmznAcc + amznAccId).load();
         page.element.tableThisMonthSold.DataTable().ajax.url(page.urls.findAllThisMonthSoldEveryAmznAcc + amznAccId).load();
@@ -1071,7 +1104,7 @@
     }
 
     /** reset-chart on tab change */
-    $('a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
+    page.element.tabDashboard.on('shown.bs.tab', function () {
         window.dispatchEvent(new Event('resize'));
     })
 
@@ -1274,9 +1307,7 @@
                 page.element.table30DaysSold.DataTable().ajax.url(table30DaysUrl).load();
                 page.element.tableThisMonthSold.DataTable().ajax.url(tableThisMonthUrl).load();
 
-                page.element.tableAnalytics.DataTable().ajax.url(tableAnalyticsUrl).load();
-                page.element.tableAccountDie.DataTable().ajax.url(tableAccDieUrl).load();
-                page.element.tableLastCheck.DataTable().ajax.url(tableLastCheckUrl).load();
+                page.commands.addEventsToSubTabs(tableAnalyticsUrl, tableAccDieUrl, tableLastCheckUrl);
             })
             .fail((jqXHR) => {
                 DBApp.handleFailedTasks(jqXHR);
@@ -1295,8 +1326,14 @@
 
         page.commands.getCards(cardDataUrl);
         page.commands.getChart(chartDataUrl);
-        getProductSoldDataForEachAmznAcc(currentUserId);
-        page.element.tableAnalytics.DataTable().ajax.url(tableAnalyticsUrl).load();
+        page.commands.getProductSoldDataForEachAmznAcc(currentUserId);
+
+        if (page.element.tabAnalytics.hasClass('active'))
+            page.element.tableAnalytics.DataTable().ajax.url(tableAnalyticsUrl).load();
+        else {
+            page.element.tableAnalytics.DataTable().clear();
+            page.commands.addEventToAnalyticsTab(tableAnalyticsUrl);
+        }
     })
 
     page.commands.handleFilterDashboard = (accounts) => {

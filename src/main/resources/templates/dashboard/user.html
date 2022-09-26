@@ -92,7 +92,6 @@
             findAllUsers: CommonApp.BASE_URL_USER,
             findUser: CommonApp.BASE_URL_USER + "/",
             createUser: CommonApp.BASE_URL_USER + "/create",
-            changeMyPassword: CommonApp.BASE_URL_USER + "/changePassword",
             changePassword: CommonApp.BASE_URL_USER + "/changePassword/",
             changeStatus: CommonApp.BASE_URL_USER + "/changeStatus/",
         },
@@ -304,7 +303,8 @@
                 },
                 passwordCreate: {
                     required: true,
-                    passwordregex: true
+                    minlength: 5,
+                    maxlength: 128
                 }
             },
             messages: {
@@ -320,7 +320,8 @@
                 },
                 passwordCreate: {
                     required: validEmpty,
-                    passwordregex: validPassword
+                    minlength: validPassword,
+                    maxlength: validPassword
                 }
             },
             submitHandler: function () {
@@ -336,13 +337,15 @@
             rules: {
                 passwordCP: {
                     required: true,
-                    passwordregex: true
+                    minlength: 5,
+                    maxLength: 128
                 }
             },
             messages: {
                 passwordCP: {
                     required: validEmpty,
-                    passwordregex: validPassword
+                    minlength: validPassword,
+                    maxlength: validPassword
                 }
             },
             submitHandler: function () {
@@ -453,10 +456,6 @@
                 DBApp.handleFailedTasks(jqXHR);
             })
     }
-
-    $.validator.addMethod("passwordregex", function (value, element) {
-        return this.optional(element) || /^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{5,128}$/.test(value)
-    })
 
 </script>
 </body>

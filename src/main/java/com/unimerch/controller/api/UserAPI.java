@@ -60,7 +60,6 @@ public class UserAPI {
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
-    @PreAuthorize("hasAnyAuthority('MANAGER')")
     @PutMapping("/changePassword")
     public ResponseEntity<?> changeMyPassword(@RequestBody String newPassword) {
         userService.changeMyPassword(newPassword);

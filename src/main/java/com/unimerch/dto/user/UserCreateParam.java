@@ -28,8 +28,7 @@ public class UserCreateParam {
     private String username;
 
     @NotBlank(message = "{validation.inputEmpty}")
-    @Pattern(regexp = ValidationUtils.PASSWORD_REGEX,
-            message = "{validation.validPassword}")
+    @Size(min = 5, max= 128, message = "{validation.validPassword}")
     private String password;
 
 }

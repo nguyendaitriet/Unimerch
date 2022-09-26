@@ -177,6 +177,67 @@ class DBApp {
             }
         })
     }
+
+    static handleChangePasswordSidebar() {
+        let modalCP = $('#mdCPSelf');
+        let formCP = $('#frmCPSelf');
+        let btnSavePassword = $('#btnCPSelf');
+        let newPassword;
+
+        CommonApp.allowShowingPassword(formCP);
+
+        btnSavePassword.on('click', function () {
+            newPassword = $('#passwordCPSelf').val();
+            formCP.submit();
+        })
+
+        modalCP.on('hidden.bs.modal', function () {
+            formCP[0].reset();
+            CPSelfValidator.resetForm();
+            $("#mdCPSelf input").removeClass("error");
+        })
+
+        const CPSelfValidator = formCP.validate({
+            rules: {
+                passwordCPSelf: {
+                    required: true,
+                    minlength: 5,
+                    maxlength: 128
+                }
+            },
+            messages: {
+                passwordCPSelf: {
+                    required: validEmpty,
+                    minlength: validPassword,
+                    maxlength: validPassword
+                }
+            },
+            submitHandler: function () {
+                DBApp.changePasswordSelf(newPassword);
+            }
+        });
+    }
+
+    static changePasswordSelf(newPassword) {
+        return $.ajax({
+            "headers": {
+                "accept": "application/json",
+                "content-type": "application/json"
+            },
+            "type": "PUT",
+            "url": CommonApp.BASE_URL_USER + "/changePassword",
+            "data": newPassword
+        })
+            .done(() => {
+                $('#frmCPSelf')[0].reset();
+                $('#mdCPSelf').modal("hide");
+
+                CommonApp.SweetAlert.showSuccessAlert(SUCCESS_UPDATED);
+            })
+            .fail((jqXHR) => {
+                DBApp.handleFailedTasks(jqXHR);
+            })
+    }
 }
 
 class User {
@@ -201,8 +262,7 @@ class AmznUser {
     }
 }
 
-
 (() => {
-    DBApp.handleBtnFullScreen();
+    DBApp.handleChangePasswordSidebar();
     CommonApp.loadingbar.handleLoadingBarDB();
 })()

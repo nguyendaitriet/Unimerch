@@ -77,6 +77,13 @@
         </div>
 
         <li class="nav-item">
+            <a class="nav-link" data-toggle="modal" data-target="#mdCPSelf" style="cursor: pointer">
+                <i class="fas fa-key"></i>
+                <span th:text="#{sidebar.navItem.changePassword}">Change Password</span>
+            </a>
+        </li>
+
+        <li class="nav-item">
             <a class="nav-link" data-toggle="modal" data-target="#mdContact" style="cursor: pointer">
                 <i class="fas fa-mobile-alt"></i>
                 <span th:text="#{sidebar.navItem.contact}">Contact</span>
@@ -100,6 +107,46 @@
 
     </ul>
 
+    <!-- modal CPSelf -->
+    <div id="mdCPSelf" class="modal fade" tabindex="-1" role="dialog">
+        <div class="modal-dialog modal-dialog-centered" data-backdrop="static" data-keyboard="false">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" th:text="#{user.mdCP.title}">Change account's password</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+
+                    <form class="mb-3" id="frmCPSelf">
+                        <div class="row mb-3">
+                            <div class="col-xl-4">
+                                <label for="passwordCPSelf" th:text="#{user.mdCP.password}">New password:</label>
+                            </div>
+                            <div class="col-xl-8">
+                                <input type="password" id="passwordCPSelf" name="passwordCPSelf" class="form-control password">
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-xl-4"></div>
+                            <div class="col-xl-8">
+                                <input type="checkbox" class="checkbox show-password" th:text="#{form.showPassword}">
+                            </div>
+                        </div>
+                    </form>
+
+                </div>
+                <div class="modal-footer">
+                    <button type="button" id="btnCPSelf" class="btn btn-primary" th:text="#{btn.save}">Save</button>
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal" th:text="#{btn.close}">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- modal Contact -->
     <div id="mdContact" class="modal fade" tabindex="-1" role="dialog">
         <div class="modal-dialog modal-dialog-centered" data-backdrop="static" data-keyboard="false">
             <div class="modal-content">
