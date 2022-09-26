@@ -83,7 +83,7 @@
                                 <div class="tab-pane fade show active" id="dashboard" role="tabpanel"
                                      aria-labelledby="dashboard-tab">
 
-                                    <div class="row flex-md-row-reverse mb-3">
+                                    <div class="row flex-lg-row-reverse mb-3">
                                         <!-- Chart -->
                                         <div class="col-12 col-md-8">
                                             <div class="row" id="chartHolder" style="height:300px; width:100%;">
@@ -153,9 +153,9 @@
                                         </div>
                                     </div>
 
-                                    <div class="row flex-md-row-reverse">
+                                    <div class="row flex-lg-row-reverse">
                                         <!-- Cards -->
-                                        <div class="col-12 col-lg-5 d-flex flex-wrap justify-content-center no-padding">
+                                        <div class="col-12 col-lg-5 d-flex flex-wrap justify-content-center no-padding" style="height: fit-content">
                                             <!-- Yesterday -->
                                             <div class="col-6 mb-1 no-padding">
                                                 <div class="card border-left-primary shadow">
@@ -682,7 +682,7 @@
                     targets: 1,
                     render: (data, type, row) =>
                         `<a href='https://www.amazon.com/dp/${row.asin}' target='_blank'>
-                            ${CommonApp.clipText(row.productName, 20)}
+                            ${CommonApp.clipText(row.productName, 15)}
                         </a>`
                 },
                 {
@@ -730,7 +730,7 @@
                     targets: 1,
                     render: (data, type, row) =>
                         `<a href='https://www.amazon.com/dp/${row.asin}' title='${row.asin}' target='_blank'>
-                            ${CommonApp.clipText(row.productName, 20)}
+                            ${CommonApp.clipText(row.productName, 15)}
                         </a>`
                 },
                 {
@@ -778,7 +778,7 @@
                     targets: 1,
                     render: (data, type, row) =>
                         `<a href='https://www.amazon.com/dp/${row.asin}' title='${row.asin}' target='_blank'>
-                            ${CommonApp.clipText(row.productName, 20)}
+                            ${CommonApp.clipText(row.productName, 15)}
                         </a>`
                 },
                 {
@@ -1331,7 +1331,7 @@
         if (page.element.tabAnalytics.hasClass('active'))
             page.element.tableAnalytics.DataTable().ajax.url(tableAnalyticsUrl).load();
         else {
-            page.element.tableAnalytics.DataTable().clear();
+            page.element.tableAnalytics.DataTable().clear().draw();
             page.commands.addEventToAnalyticsTab(tableAnalyticsUrl);
         }
     })
