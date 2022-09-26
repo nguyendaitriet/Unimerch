@@ -13,7 +13,10 @@ import java.time.Instant;
 @Entity
 @Getter
 @Setter
-@Table(name = "amzn_users")
+@Table(
+        name = "amzn_users",
+        indexes = @Index(name = "idx_last_check", columnList = "last_check")
+)
 @Accessors(chain = true)
 public class AmznUser {
     @Id
