@@ -14,10 +14,14 @@ public class HomeController {
 
     @GetMapping("/")
     public String redirectToDashBoard() {
-        if (principalUtils.getPrincipalRoleCode().equals(Role.CODE_ADMIN)) {
-            return "redirect:/dashboard";
+        try {
+            if (principalUtils.getPrincipalRoleCode().equals(Role.CODE_ADMIN)) {
+                return "redirect:/dashboard";
+            }
+            return "redirect:/users";
+        } catch (Exception e) {
+            return "redirect:/login";
         }
-        return "redirect:/users";
     }
 
     @GetMapping("/login")
