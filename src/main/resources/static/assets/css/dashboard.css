@@ -172,15 +172,19 @@ body.loading .modal {
 }
 
 .btn-text-sm {
-    font-size: 13px;
+    font-size: 13px !important;
 }
 
 #table-amzn-acc-in_filter input {
-    width: 85%;
+    width: 85% !important;
 }
 
 .tb-padding-sm th, .tb-padding-sm td {
-    padding: 0.5rem;
+    padding: 0.5rem !important;
+}
+
+#table-amzn-acc_wrapper .flex-wrap {
+    flex-wrap: unset !important;
 }
 
 /*template-css*/
