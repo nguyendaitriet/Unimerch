@@ -15,8 +15,8 @@ public class OrderRepositoryExtension {
     private EntityManager entityManager;
 
 
-    public void deleteAllByDate(List<String> dateStrings) {
-        StringBuilder query = new StringBuilder("DELETE FROM orders WHERE ");
+    public void deleteAllByDate(List<String> dateStrings, Integer id) {
+        StringBuilder query = new StringBuilder("DELETE FROM orders WHERE (");
 
         int size = dateStrings.size();
         for (int i = 0; i < size; i++) {
@@ -25,6 +25,7 @@ public class OrderRepositoryExtension {
             query.append(String.format(format, dateString))
                     .append(i < size - 1 ? " OR " : "");
         }
+        query.append(") AND amzn_user_id = " + id);
         entityManager.createNativeQuery(query.toString()).executeUpdate();
     }
 

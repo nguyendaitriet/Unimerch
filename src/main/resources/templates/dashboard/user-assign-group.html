@@ -270,6 +270,9 @@
 
             page.commands.doAssignGroups(selectedRowIds);
         })
+
+        CommonApp.enableEnterKeyboard('#mdAssignGrpUser','#btnAssignGrpUser');
+
     })
 
     page.commands.doRemoveGroup = (groupId, currentRow) => {

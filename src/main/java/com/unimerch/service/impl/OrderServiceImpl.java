@@ -79,7 +79,7 @@ public class OrderServiceImpl implements OrderService {
                 );
             });
 
-            orderRepositoryExt.deleteAllByDate(orderDates);
+            orderRepositoryExt.deleteAllByDate(orderDates, id);
             productRepository.deleteAllByIdInBatch(orderData.getAsinList());
             productRepository.saveAll(orderData.getProductList());
 

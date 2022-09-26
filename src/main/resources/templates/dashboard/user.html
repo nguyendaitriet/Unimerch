@@ -365,6 +365,10 @@
             CPUserValidator.resetForm();
             $("#mdCPUser input").removeClass("error");
         })
+
+        CommonApp.enableEnterKeyboard('#mdCreateUser','#btnCreateUser');
+        CommonApp.enableEnterKeyboard('#mdCPUser','#btnCPUser');
+
     });
 
     page.commands.doCreateUser = () => {
@@ -455,6 +459,7 @@
             .fail((jqXHR) => {
                 DBApp.handleFailedTasks(jqXHR);
             })
+
     }
 
 </script>
