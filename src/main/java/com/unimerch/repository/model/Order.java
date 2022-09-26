@@ -15,7 +15,9 @@ import java.time.Instant;
 @AllArgsConstructor
 @Getter
 @Setter
-@Table(name = "orders")
+@Table(name = "orders",
+        indexes = @Index(name = "idx_date", columnList = "date")
+)
 @Accessors(chain = true)
 public class Order {
 

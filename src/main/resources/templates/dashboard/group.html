@@ -660,6 +660,11 @@
         page.dialogs.element.btnAddAmznAccToGroup.on('click', () => {
             page.commands.addAmznAccToGroup(currentGroup, tableAmznAccIn, tableAmznAccOut);
         })
+
+        CommonApp.enableEnterKeyboard('#mdCreateGroup','#btnCreateGroup');
+        CommonApp.enableEnterKeyboard('#mdUpdateGroup','#btnUpdateGroup');
+        CommonApp.enableEnterKeyboard('#mdAddAmznAccToGroup','#btnAddAmznAccToGroup');
+
     });
 
 
