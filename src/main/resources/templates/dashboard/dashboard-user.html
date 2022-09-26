@@ -155,7 +155,7 @@
 
                                     <div class="row flex-md-row-reverse">
                                         <!-- Cards -->
-                                        <div class="col-12 col-lg-5 d-flex flex-wrap justify-content-center no-padding">
+                                        <div class="col-12 col-lg-5 d-flex flex-wrap justify-content-center no-padding" style="height: fit-content">
                                             <!-- Yesterday -->
                                             <div class="col-6 mb-1 no-padding">
                                                 <div class="card border-left-primary shadow">
@@ -600,6 +600,8 @@
     page.element.tabAnalytics = $("a[href='#analytics']");
     page.element.tabAccountDie = $("a[href='#accountDie']");
     page.element.tabLastCheck = $("a[href='#lastCheck']");
+    page.element.tab30DaysSold = $("a[href='#thirtyday']")
+    page.element.tabThisMonthSold = $("a[href='#thismonth']")
 
     page.element.tableTodaySold = $("#tableTodaySold");
     page.element.table30DaysSold = $("#table30DaysSold");
@@ -1081,10 +1083,12 @@
         });
     })
 
-    page.commands.addEventsToSubTabs = (analyticsUrl, accDieUrl, lastCheckUrl) => {
+    page.commands.addEventsToSubTabs = (analyticsUrl, accDieUrl, lastCheckUrl, thirtyDaysUrl, thisMonthUrl) => {
         page.commands.addEventToAnalyticsTab(analyticsUrl);
         page.commands.addEventToAccDieTab(accDieUrl);
         page.commands.addEventToLastCheckTab(lastCheckUrl);
+        page.commands.addEventToThirtyDaysTab(thirtyDaysUrl);
+        page.commands.addEventToThisMonthTab(thisMonthUrl);
     }
 
     page.commands.addEventToAnalyticsTab = (analyticsUrl) => {
@@ -1092,6 +1096,22 @@
             let hasData = page.element.tableAnalytics.DataTable().row().count();
             if (!hasData)
                 page.element.tableAnalytics.DataTable().ajax.url(analyticsUrl).load();
+        });
+    }
+
+    page.commands.addEventToThirtyDaysTab = (thirtyDaysUrl) => {
+        page.element.tab30DaysSold.on('shown.bs.tab', function () {
+            let hasData = page.element.table30DaysSold.DataTable().row().count();
+            if (!hasData)
+                page.element.table30DaysSold.DataTable().ajax.url(thirtyDaysUrl).load();
+        });
+    }
+
+    page.commands.addEventToThisMonthTab = (thisMonthUrl) => {
+        page.element.tabThisMonthSold.on('shown.bs.tab', function () {
+            let hasData = page.element.tableThisMonthSold.DataTable().row().count();
+            if (!hasData)
+                page.element.tableThisMonthSold.DataTable().ajax.url(thisMonthUrl).load();
         });
     }
 
@@ -1109,12 +1129,6 @@
             if (!hasData)
                 page.element.tableLastCheck.DataTable().ajax.url(lastCheckUrl).load();
         });
-    }
-
-    page.commands.getProductSoldDataForEachAmznAcc = (amznAccId) => {
-        page.element.tableTodaySold.DataTable().ajax.url(page.urls.findAllTodaySoldEveryAmznAcc + amznAccId).load();
-        page.element.table30DaysSold.DataTable().ajax.url(page.urls.findAllLast30DaysSoldEveryAmznAcc + amznAccId).load();
-        page.element.tableThisMonthSold.DataTable().ajax.url(page.urls.findAllThisMonthSoldEveryAmznAcc + amznAccId).load();
     }
 
     //chart
@@ -1331,7 +1345,8 @@
                 page.element.table30DaysSold.DataTable().ajax.url(table30DaysUrl).load();
                 page.element.tableThisMonthSold.DataTable().ajax.url(tableThisMonthUrl).load();
 
-                page.commands.addEventsToSubTabs(tableAnalyticsUrl, tableAccDieUrl, tableLastCheckUrl);
+                page.commands.addEventsToSubTabs(tableAnalyticsUrl, tableAccDieUrl, tableLastCheckUrl,
+                    table30DaysUrl, tableThisMonthUrl);
             })
             .fail((jqXHR) => {
                 DBApp.handleFailedTasks(jqXHR);
@@ -1346,11 +1361,26 @@
         let currentUserId = $(this).data('id');
         let cardDataUrl = page.urls.findCardsByAmznId + currentUserId;
         let chartDataUrl = page.urls.findChartByUserId + currentUserId;
+        let tableThirtyDaysUrl = page.urls.findAllLast30DaysSoldEveryAmznAcc + currentUserId;
+        let tableThisMonthUrl = page.urls.findAllThisMonthSoldEveryAmznAcc + currentUserId;
         let tableAnalyticsUrl = page.urls.findAnalyticsByUserId + currentUserId;
 
         page.commands.getCards(cardDataUrl);
         page.commands.getChart(chartDataUrl);
-        page.commands.getProductSoldDataForEachAmznAcc(currentUserId);
+        page.element.tableTodaySold.DataTable().ajax.url(tableTodayUrl).load();
+
+        if (page.element.tab30DaysSold.hasClass('active'))
+            page.element.table30DaysSold.DataTable().ajax.url(tableThirtyDaysUrl).load();
+        else {
+            page.element.table30DaysSold.DataTable().clear().draw();
+            page.commands.addEventToThirtyDaysTab(tableThirtyDaysUrl);
+        }
+
+        if (page.element.tabThisMonthSold.hasClass('active'))
+            page.element.tableThisMonthSold.DataTable().ajax.url(tableThisMonthUrl).load();
+        else {
+            page.element.tableThisMonthSold.DataTable().clear().draw();
+            page.commands.addEventToThisMonthTab(tableThisMonthUrl);
 
         if (page.element.tabAnalytics.hasClass('active'))
             page.element.tableAnalytics.DataTable().ajax.url(tableAnalyticsUrl).load();
