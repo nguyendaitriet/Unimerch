@@ -52,87 +52,10 @@
     <i class="fas fa-angle-up"></i>
 </a>
 
-<div id="spinner"></div>
-
+<th:block th:replace="layout/texts :: texts"/>
 <th:block th:replace="layout/script :: script-dashboard"/>
 
-<th:block th:replace="layout/texts :: texts"/>
 
-<script>
-
-    let currentGrpId = window.location.pathname.split('/')[2];
-    var userId = [[${userId}]];
-
-    let page = {
-        urls: {
-            findAmznAccInGrp: DBApp.BASE_URL_GROUP + "/findInGrpFilter/",
-            findCardsAll: DBApp.BASE_URL_ORDER + "/card-all",
-            findCardsByGroupId: DBApp.BASE_URL_ORDER + "/card-grp/",
-            findCardsByAmznId: DBApp.BASE_URL_ORDER + "/card-acc/",
-            findChartAll: DBApp.BASE_URL_ORDER + "/chart-all",
-            findChartByGroupId: DBApp.BASE_URL_ORDER + "/chart-grp/",
-            findChartByUserId: DBApp.BASE_URL_ORDER + "/chart-acc/",
-
-            findAllTodaySoldInGroup: DBApp.BASE_URL_PRODUCT + "/findAllTodaySoldInGroup/",
-            findAllLast30DaysSoldInGroup: DBApp.BASE_URL_PRODUCT + "/findAllLast30DaysSoldInGroup/",
-            findAllThisMonthSoldInGroup: DBApp.BASE_URL_PRODUCT + "/findAllThisMonthSoldInGroup/",
-
-            findAllTodaySoldEveryAmznAcc: DBApp.BASE_URL_PRODUCT + "/findAllTodaySoldEveryAmznAcc/",
-            findAllLast30DaysSoldEveryAmznAcc: DBApp.BASE_URL_PRODUCT + "/findAllLast30DaysSoldEveryAmznAcc/",
-            findAllThisMonthSoldEveryAmznAcc: DBApp.BASE_URL_PRODUCT + "/findAllThisMonthSoldEveryAmznAcc/",
-        },
-        element: {},
-        commands: {},
-        dialogs: {
-            element: {},
-            alertDanger: {},
-            inputError: {}
-        }
-    }
-
-    page.commands.createSideBarGroupList = (userId) => {
-
-        let container = $('#filter-sidebar');
-
-        return $.ajax({
-            "headers": {
-                "accept": "application/json",
-                "content-type": "application/json"
-            },
-            "type": "GET",
-            "url": DBApp.BASE_URL_USER + "/asgnGrp" + "/" + userId,
-        })
-            .done((groups) => {
-                let str = ``
-
-                $.each(groups, function (index, group) {
-                    str += `<a class="collapse-item" data-id="${group.id}" href="/users/${group.id}">${group.title}</a>`
-                })
-                container.append(str);
-
-                DBApp.handleFilter('filter-sidebar', 'sidebar-grp-search', 'collapse-item');
-
-                DBApp.handleStatusNavDashboard();
-                DBApp.handleCollapsedFilterSidebar();
-            })
-            .fail((jqXHR) => {
-                DBApp.IziToast.showErrorAlert(ERROR_GRP_RETRIEVE);
-            })
-    }
-
-    $(document).ready(function () {
-        page.commands.createSideBarGroupList(userId).then(() => {
-            if (isNaN(currentGrpId) || currentGrpId === '') {
-                currentGrpId = $('#filter-sidebar .collapse-item').data('id');
-                page.element.groupHeader.html($('#filter-sidebar .collapse-item').html());
-            }
-            if (currentGrpId) {
-                page.commands.handleContentDashboard(currentGrpId);
-            }
-        });
-    })
-
-</script>
 </body>
 
 </html>
