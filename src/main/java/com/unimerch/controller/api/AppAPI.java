@@ -5,7 +5,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -25,6 +24,7 @@ public class AppAPI {
         return new ResponseEntity<>(configurationService.updateAppsConfig(newAppsConfig), HttpStatus.OK);
     }
 
+    @PreAuthorize("hasAnyAuthority('MANAGER')")
     @PutMapping("/updateBackendConfig")
     public ResponseEntity<?> updateBackendConfig(@RequestBody String newBackendConfig) {
         return new ResponseEntity<>(configurationService.updateBackendConfig(newBackendConfig), HttpStatus.OK);

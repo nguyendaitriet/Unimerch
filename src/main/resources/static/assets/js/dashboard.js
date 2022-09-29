@@ -185,7 +185,7 @@ class DBApp {
         let newPassword;
 
         CommonApp.allowShowingPassword(formCP);
-
+        CommonApp.enableEnterKeyboard('#mdCPSelf','btnCPSelf');
         btnSavePassword.on('click', function () {
             newPassword = $('#passwordCPSelf').val();
             formCP.submit();
@@ -238,6 +238,9 @@ class DBApp {
                 DBApp.handleFailedTasks(jqXHR);
             })
     }
+
+
+
 }
 
 class User {

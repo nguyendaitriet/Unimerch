@@ -229,4 +229,13 @@ class CommonApp {
             return `<i class="fas fa-edit text-primary"></i>`;
         return (data.length > lengthShown) ? (data.substr(0, lengthShown) + "...") : data
     }
+
+    static enableEnterKeyboard(formId, btnId) {
+        $(`${formId}`).keypress(function (event) {
+            let keycode = (event.keyCode ? event.keyCode : event.which);
+            if (keycode == '13') {
+                $(`${btnId}`).click();
+            }
+        });
+    }
 }

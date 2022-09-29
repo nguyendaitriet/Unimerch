@@ -12,6 +12,7 @@ class LGApp {
                 break;
         }
     }
+
 }
 
 class User {
