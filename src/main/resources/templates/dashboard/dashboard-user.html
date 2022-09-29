@@ -1225,6 +1225,7 @@
 
                 KoolChart.create("chart1", "chartHolder", chartVars, "100%", "100%");
 
+                page.element.legends.removeClass('d-none');
             })
             .fail((jqXHR) => {
                 DBApp.handleFailedTasks(jqXHR);
@@ -1381,6 +1382,7 @@
         else {
             page.element.tableThisMonthSold.DataTable().clear().draw();
             page.commands.addEventToThisMonthTab(tableThisMonthUrl);
+        }
 
         if (page.element.tabAnalytics.hasClass('active'))
             page.element.tableAnalytics.DataTable().ajax.url(tableAnalyticsUrl).load();

@@ -2,7 +2,7 @@
 <html xmlns:th="http://www.thymeleaf.org" lang="en">
 <head>
     <th:block th:replace="layout/head :: dashboard-head"/>
-    <title th:text="#{errorPage.title}">404 Not Found</title>
+    <title th:text="#{dashboard.pageTitle}">Dashboard</title>
 </head>
 
 <body id="page-top">
@@ -20,16 +20,12 @@
         <!-- Main Content -->
         <div id="content">
 
-            <!-- Topbar -->
-            <th:block th:replace="layout/topbar"/>
-            <!-- End of Topbar -->
-
             <!-- Begin Page Content -->
             <div class="container-fluid">
 
                 <!-- 404 Error Text -->
-                <div class="text-center">
-                    <div class="error-page mx-auto" data-text="404">404</div>
+                <div class="d-flex flex-column align-items-center">
+                    <div class="error-page mx-auto mt-5" data-text="404">404</div>
                     <p class="lead text-gray-800 mb-5" th:text="#{errorPage.header}">Page Not Found</p>
                     <p class="text-gray-500 mb-0" th:text="#{errorPage.content}">It looks like you found a glitch in the matrix...</p>
                     <a href="/dashboard" th:text="#{errorPage.back}">&larr; Back to Dashboard</a>
@@ -58,6 +54,12 @@
 
 <th:block th:replace="layout/script :: script-dashboard"/>
 
+<script>
+    $(document).ready(function () {
+        DBApp.handleGroupsFilterSidebar();
+    })
+</script>
 </body>
+
 
 </html>
