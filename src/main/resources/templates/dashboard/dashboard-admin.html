@@ -91,7 +91,7 @@
                                             </div>
 
                                             <!-- Legends -->
-                                            <div class="row mt-1 text-center justify-content-center small">
+                                            <div id="legends" class="row mt-1 text-center justify-content-center small d-none">
                                                     <span class="mr-4">
                                                         <i class="fas fa-square" style="color: #41b2e6"></i>
                                                         <br th:text="#{dashboard.chart.legend.royalties}">
@@ -618,7 +618,9 @@
     page.element.thirtyDaysLink = $("#thirtyDaysLink");
     page.element.thisMonthLink = $("#thisMonthLink");
 
-    page.dialogs.element.todayDate = $("#todayDate");
+    page.element.legends = $("#legends");
+
+        page.dialogs.element.todayDate = $("#todayDate");
     page.dialogs.element.todayPurchased = $("#todayPurchased");
     page.dialogs.element.todaySold = $("#todaySold");
     page.dialogs.element.todayCancelled = $("#todayCancelled");
@@ -1187,6 +1189,7 @@
 
                 KoolChart.create("chart1", "chartHolder", chartVars, "100%", "100%");
 
+                page.element.legends.removeClass('d-none');
             })
             .fail((jqXHR) => {
                 DBApp.handleFailedTasks(jqXHR);
