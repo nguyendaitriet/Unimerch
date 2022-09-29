@@ -64,7 +64,6 @@ public class UniUserSecurityConfig extends WebSecurityConfigurerAdapter {
         auth.userDetailsService(userDetailsService);
     }
 
-
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http.csrf().ignoringAntMatchers("/**");
@@ -83,16 +82,9 @@ public class UniUserSecurityConfig extends WebSecurityConfigurerAdapter {
                         "/swagger-ui/**",
                         "/webjars/**"
                 ).permitAll()
-//                .antMatchers("/assets/**", "/messages/**").permitAll()
+                .antMatchers("/assets/**", "/messages/**").permitAll()
                 .antMatchers("/users/**").hasAnyAuthority("USER")
                 .antMatchers("/dashboard/**").hasAnyAuthority("MANAGER")
-//                .antMatchers("/",
-//                        "/api/products/**",
-//                        "/api/users/**",
-//                        "/api/orders/**",
-//                        "/api/amzn/**",
-//                        "/api/groups/**")
-//                .hasAnyAuthority("MANAGER", "USER")
                 .and()
                 .formLogin()
                 .loginPage("/login")
