@@ -2,7 +2,7 @@ package com.unimerch.security.uni;
 
 import com.unimerch.security.NameConstant;
 import com.unimerch.security.RestAuthenticationEntryPoint;
-import com.unimerch.security.handlers.UniAuthenticationSuccessHandler;
+import com.unimerch.security.RoleConstant;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
@@ -18,7 +18,6 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.access.AccessDeniedHandler;
-import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
 
 import javax.servlet.Filter;
@@ -39,10 +38,7 @@ public class UniUserSecurityConfig extends WebSecurityConfigurerAdapter {
     @Qualifier(NameConstant.UNI_JWT_FILTER_NAME)
     private Filter jwtAuthenticationFilter;
 
-    @Bean
-    public AuthenticationSuccessHandler authenticationSuccessHandler(){
-        return new UniAuthenticationSuccessHandler();
-    }
+
 
     @Bean
     public DaoAuthenticationProvider authenticationProvider1() {
@@ -83,8 +79,8 @@ public class UniUserSecurityConfig extends WebSecurityConfigurerAdapter {
                         "/webjars/**"
                 ).permitAll()
                 .antMatchers("/assets/**", "/messages/**").permitAll()
-                .antMatchers("/users/**").hasAnyAuthority("USER")
-                .antMatchers("/dashboard/**").hasAnyAuthority("MANAGER")
+                .antMatchers("/users/**").hasAnyAuthority(RoleConstant.CODE_USER)
+                .antMatchers("/dashboard/**").hasAnyAuthority(RoleConstant.CODE_ADMIN)
                 .and()
                 .formLogin()
                 .loginPage("/login")
