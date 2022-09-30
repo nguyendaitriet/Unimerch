@@ -33,8 +33,7 @@ public class AmznUserSecurityConfig extends WebSecurityConfigurerAdapter {
     private RestAuthenticationEntryPoint restAuthenticationEntryPoint;
     @Autowired
     private AccessDeniedHandler accessDeniedHandler;
-    @Autowired
-    private AuthenticationSuccessHandler authenticationSuccessHandler;
+
     @Autowired
     @Qualifier(NameConstant.AMZN_JWT_FILTER_NAME)
     private Filter jwtAuthenticationFilter;

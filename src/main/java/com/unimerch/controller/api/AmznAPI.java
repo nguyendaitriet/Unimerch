@@ -1,8 +1,8 @@
 package com.unimerch.controller.api;
 
 import com.unimerch.dto.amznacc.*;
+import com.unimerch.security.RoleConstant;
 import com.unimerch.service.AmznUserService;
-import com.unimerch.service.impl.ConfigurationServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.jpa.datatables.mapping.DataTablesInput;
 import org.springframework.data.jpa.datatables.mapping.DataTablesOutput;
@@ -27,124 +27,124 @@ public class AmznAPI {
     @Autowired
     private AmznUserService amznUserService;
 
-    @PreAuthorize("isAuthenticated()")
+    @RoleConstant.AuthenticatedUser
     @PutMapping("/updateMetadata")
     public ResponseEntity<?> updateMetadata(Authentication authentication, @RequestBody Metadata data) {
         amznUserService.updateMetadata(data, authentication);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
-    @PreAuthorize("isAuthenticated()")
+    @RoleConstant.AuthenticatedUser
     @PutMapping("/updateStatus")
     public ResponseEntity<?> updateStatus(Authentication authentication, @RequestBody AmznStatus status) {
         amznUserService.updateStatus(status, authentication);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
-    @PreAuthorize("hasAnyAuthority('MANAGER')")
+    @RoleConstant.ManagerAuthorization
     @PostMapping
     public DataTablesOutput<AmznAccResult> findAllAmznAccountsPageable(@Valid @RequestBody DataTablesInput input) {
         return amznUserService.findAll(input);
     }
 
-    @PreAuthorize("hasAnyAuthority('MANAGER')")
+    @RoleConstant.ManagerAuthorization
     @GetMapping("/findAllAmznAccs")
     public ResponseEntity<?> findAllAmznAccounts() {
         return new ResponseEntity<>(amznUserService.findAll(), HttpStatus.OK);
     }
 
-    @PreAuthorize("hasAnyAuthority('MANAGER')")
+    @RoleConstant.ManagerAuthorization
     @PostMapping("/create")
     public ResponseEntity<?> createAmznAcc(@Validated @RequestBody AmznAccParam amznAccCreateParam) {
         AmznAccResult newAmznAcc = amznUserService.create(amznAccCreateParam);
         return new ResponseEntity<>(newAmznAcc, HttpStatus.CREATED);
     }
 
-    @PreAuthorize("hasAnyAuthority('MANAGER')")
+    @RoleConstant.ManagerAuthorization
     @PostMapping("/import")
     public ResponseEntity<?> importNewAmznAcc(@RequestParam MultipartFile fileUploadAmznAcc) throws IOException {
         List<AmznAccResult> amznAccResultList = amznUserService.importFile(fileUploadAmznAcc);
         return new ResponseEntity<>(amznAccResultList, HttpStatus.OK);
     }
 
-    @PreAuthorize("hasAnyAuthority('MANAGER')")
+    @RoleConstant.ManagerAuthorization
     @PutMapping("/update/{id}")
     public ResponseEntity<?> updateAmznAcc(@RequestBody AmznAccParam amznAccParam, @PathVariable String id) {
         amznUserService.update(id, amznAccParam);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
-    @PreAuthorize("hasAnyAuthority('MANAGER')")
+    @RoleConstant.ManagerAuthorization
     @DeleteMapping("/delete/{id}")
     public ResponseEntity<?> deleteAmznAcc(@PathVariable String id) {
         amznUserService.delete(id);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
-    @PreAuthorize("hasAnyAuthority('MANAGER')")
+    @RoleConstant.ManagerAuthorization
     @DeleteMapping("/delete")
     public ResponseEntity<?> deleteMultiAmznAcc(@RequestBody Map<String, ArrayList<Integer>> amznAccIdList) {
         amznUserService.deleteAllByListId(amznAccIdList.get("amznAccSelected"));
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
-    @PreAuthorize("hasAnyAuthority('MANAGER')")
+    @RoleConstant.ManagerAuthorization
     @GetMapping("/findAllFilter")
     public ResponseEntity<?> findAllAmznAccFilter() {
         List<AmznAccFilterResult> amznAccResults = amznUserService.findAllFilter();
         return new ResponseEntity<>(amznAccResults, HttpStatus.OK);
     }
 
-    @PreAuthorize("hasAnyAuthority('MANAGER','USER')")
+    @RoleConstant.ManagerUserAuthorization
     @GetMapping("/analytics-all")
     public ResponseEntity<?> findAllAnalytics() {
         List<AmznAccAnalyticsResult> analyticsList = amznUserService.findAllAnalytics();
         return new ResponseEntity<>(analyticsList, HttpStatus.OK);
     }
 
-    @PreAuthorize("hasAnyAuthority('MANAGER','USER')")
+    @RoleConstant.ManagerUserAuthorization
     @GetMapping("/analytics-grp/{id}")
     public ResponseEntity<?> findAnalyticsByGroupId(@PathVariable String id) {
         List<AmznAccAnalyticsResult> analyticsList = amznUserService.findAnalyticsByGrpId(id);
         return new ResponseEntity<>(analyticsList, HttpStatus.OK);
     }
 
-    @PreAuthorize("hasAnyAuthority('MANAGER','USER')")
+    @RoleConstant.ManagerUserAuthorization
     @GetMapping("/analytics-acc/{id}")
     public ResponseEntity<?> findAnalyticsByAmznAccId(@PathVariable String id) {
         List<AmznAccAnalyticsResult> analyticsList = amznUserService.findAnalyticsByAmznAccId(id);
         return new ResponseEntity<>(analyticsList, HttpStatus.OK);
     }
 
-    @PreAuthorize("hasAnyAuthority('MANAGER','USER')")
+    @RoleConstant.ManagerUserAuthorization
     @PostMapping("/analytics-note/{id}")
     public ResponseEntity<?> addNoteToAmznAcc(@PathVariable String id, @RequestBody(required = false) String note) {
         amznUserService.addNoteToAmznAcc(id, note);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
-    @PreAuthorize("hasAnyAuthority('MANAGER','USER')")
+    @RoleConstant.ManagerUserAuthorization
     @GetMapping("/die-all")
     public ResponseEntity<?> findAllAccountDie() {
         List<AmznAccDieResult> accDieList = amznUserService.findAllAccDie();
         return new ResponseEntity<>(accDieList, HttpStatus.OK);
     }
 
-    @PreAuthorize("hasAnyAuthority('MANAGER','USER')")
+    @RoleConstant.ManagerUserAuthorization
     @GetMapping("/die-grp/{id}")
     public ResponseEntity<?> findAccountDieByGrpId(@PathVariable String id) {
         List<AmznAccDieResult> accDieList = amznUserService.findAccDieByGrpId(id);
         return new ResponseEntity<>(accDieList, HttpStatus.OK);
     }
 
-    @PreAuthorize("hasAnyAuthority('MANAGER','USER')")
+    @RoleConstant.ManagerUserAuthorization
     @GetMapping("/last-check-all")
     public ResponseEntity<?> findAccountLastCheck12Hours() {
         List<AmznAccLastCheckResult> amznUserList = amznUserService.findAllLastCheck12Hours();
         return new ResponseEntity<>(amznUserList, HttpStatus.OK);
     }
 
-    @PreAuthorize("hasAnyAuthority('MANAGER','USER')")
+    @RoleConstant.ManagerUserAuthorization
     @GetMapping("/last-check-grp/{id}")
     public ResponseEntity<?> findAccountLastCheck12HoursByGrpId(@PathVariable String id) {
         List<AmznAccLastCheckResult> amznUserList = amznUserService.findAllLastCheck12HoursByGrpId(id);

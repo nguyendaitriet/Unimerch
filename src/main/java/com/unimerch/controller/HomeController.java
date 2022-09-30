@@ -1,6 +1,7 @@
 package com.unimerch.controller;
 
 import com.unimerch.repository.model.Role;
+import com.unimerch.security.RoleConstant;
 import com.unimerch.util.PrincipalUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -15,7 +16,7 @@ public class HomeController {
     @GetMapping("/")
     public String redirectToDashBoard() {
         try {
-            if (principalUtils.getPrincipalRoleCode().equals(Role.CODE_ADMIN)) {
+            if (principalUtils.getPrincipalRoleCode().equals(RoleConstant.CODE_ADMIN)) {
                 return "redirect:/dashboard";
             }
             return "redirect:/users";

@@ -3,6 +3,7 @@ package com.unimerch.controller.api;
 import com.unimerch.dto.group.GroupResult;
 import com.unimerch.dto.user.UserCreateParam;
 import com.unimerch.dto.user.UserResult;
+import com.unimerch.security.RoleConstant;
 import com.unimerch.service.UniUserService;
 import com.unimerch.util.AppUtils;
 import com.unimerch.util.PrincipalUtils;
@@ -28,21 +29,21 @@ public class UserAPI {
     @Autowired
     private UniUserService userService;
 
-    @PreAuthorize("hasAnyAuthority('MANAGER')")
+    @RoleConstant.ManagerAuthorization
     @PostMapping
     public DataTablesOutput<UserResult> findAllUsersPageableExclSelf(@Valid @RequestBody(required = false) DataTablesInput input) {
         String principalUsername = principalUtils.getPrincipalUsername();
         return userService.findAllUserDTOExclSelf(input, principalUsername);
     }
 
-    @PreAuthorize("hasAnyAuthority('MANAGER')")
+    @RoleConstant.ManagerAuthorization
     @GetMapping("/{id}")
     public ResponseEntity<?> findUserById(@PathVariable String id) {
         UserResult userResult = userService.findUserListById(id);
         return new ResponseEntity<>(userResult, HttpStatus.OK);
     }
 
-    @PreAuthorize("hasAnyAuthority('MANAGER')")
+    @RoleConstant.ManagerAuthorization
     @PostMapping("/create")
     public ResponseEntity<?> createUser(@Validated @RequestBody UserCreateParam userCreateParam, BindingResult bindingResult) {
 
@@ -53,7 +54,7 @@ public class UserAPI {
         return new ResponseEntity<>(newUser, HttpStatus.CREATED);
     }
 
-    @PreAuthorize("hasAnyAuthority('MANAGER')")
+    @RoleConstant.ManagerAuthorization
     @PutMapping("/changePassword/{id}")
     public ResponseEntity<?> changeUserPassword(@PathVariable String id, @RequestBody String newPassword) {
         userService.changePassword(id, newPassword);
@@ -66,35 +67,35 @@ public class UserAPI {
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
-    @PreAuthorize("hasAnyAuthority('MANAGER')")
+    @RoleConstant.ManagerAuthorization
     @PutMapping("/changeStatus/{id}")
     public ResponseEntity<?> changeUserStatus(@PathVariable String id) {
         UserResult userResult = userService.changeStatus(id);
         return new ResponseEntity<>(userResult, HttpStatus.OK);
     }
 
-    @PreAuthorize("hasAnyAuthority('MANAGER','USER')")
+    @RoleConstant.ManagerUserAuthorization
     @GetMapping("/asgnGrp/{id}")
     public ResponseEntity<?> findAssignedGroups(@PathVariable String id) {
         List<GroupResult> groupList = userService.findAssignedGroups(id);
         return new ResponseEntity<>(groupList, HttpStatus.OK);
     }
 
-    @PreAuthorize("hasAnyAuthority('MANAGER')")
+    @RoleConstant.ManagerAuthorization
     @GetMapping("/asgnGrpNot/{id}")
     public ResponseEntity<?> findUnassignedGroups(@PathVariable String id) {
         List<GroupResult> groupList = userService.findUnassignedGroups(id);
         return new ResponseEntity<>(groupList, HttpStatus.OK);
     }
 
-    @PreAuthorize("hasAnyAuthority('MANAGER')")
+    @RoleConstant.ManagerAuthorization
     @PostMapping("/asgnGrp/{userId}/add")
     public ResponseEntity<?> assignNewGroups(@PathVariable String userId, @RequestBody List<String> listGroupId) {
         List<GroupResult> groupList = userService.assignGroupToUser(userId, listGroupId);
         return new ResponseEntity<>(groupList, HttpStatus.OK);
     }
 
-    @PreAuthorize("hasAnyAuthority('MANAGER')")
+    @RoleConstant.ManagerAuthorization
     @DeleteMapping("/asgnGrp/{userId}/remove")
     public ResponseEntity<?> removeOldGroup(@PathVariable String userId, @RequestBody String groupId) {
         userService.removeGroupFromUser(userId, groupId);

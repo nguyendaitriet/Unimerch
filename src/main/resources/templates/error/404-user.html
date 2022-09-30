@@ -27,8 +27,9 @@
                 <div class="d-flex flex-column align-items-center">
                     <div class="error-page mx-auto mt-5" data-text="404">404</div>
                     <p class="lead text-gray-800 mb-5" th:text="#{errorPage.header}">Page Not Found</p>
-                    <p class="text-gray-500 mb-0" th:text="#{errorPage.content}">It looks like you found a glitch in the matrix...</p>
-                    <a href="/dashboard" th:text="#{errorPage.back}">&larr; Back to Dashboard</a>
+                    <p class="text-gray-500 mb-0" th:text="#{errorPage.content}">It looks like you found a glitch in the
+                        matrix...</p>
+                    <a href="/users" th:text="#{errorPage.back}">&larr; Back to Dashboard</a>
                 </div>
 
             </div>
@@ -55,7 +56,51 @@
 <th:block th:replace="layout/texts :: texts"/>
 <th:block th:replace="layout/script :: script-dashboard"/>
 
+<script>
 
+    let userId = [[${userId}]];
+    let page = {
+        urls: {},
+        element: {},
+        commands: {},
+        dialogs: {}
+    }
+
+    page.commands.createSideBarGroupList = (userId) => {
+        let container = $('#filter-sidebar');
+
+        return $.ajax({
+            "headers": {
+                "accept": "application/json",
+                "content-type": "application/json"
+            },
+            "type": "GET",
+            "url": CommonApp.BASE_URL_USER + "/asgnGrp/" + userId,
+        })
+            .done((groups) => {
+                let str = ``
+
+                $.each(groups, function (index, group) {
+                    str += `<a class="collapse-item" data-id="${group.id}" href="/users/${group.id}">${group.title}</a>`
+                })
+                container.append(str);
+
+                DBApp.handleFilter('filter-sidebar', 'sidebar-grp-search', 'collapse-item');
+
+                DBApp.handleStatusNavDashboard();
+                DBApp.handleCollapsedFilterSidebar();
+            })
+            .fail((jqXHR) => {
+                CommonApp.IziToast.showErrorAlert(ERROR_GRP_RETRIEVE);
+            })
+    }
+
+    $(document).ready(function () {
+        page.commands.createSideBarGroupList(userId);
+    })
+
+</script>
 </body>
+
 
 </html>
