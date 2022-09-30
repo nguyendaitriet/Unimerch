@@ -1,8 +1,5 @@
 package com.unimerch.util;
 
-import java.text.Collator;
-import java.util.Locale;
-
 public class NaturalSortUtils {
     public static int compareString(String o1, String o2) {
         String o1StringPart = o1.replaceAll("\\d", "");
@@ -10,14 +7,15 @@ public class NaturalSortUtils {
 
         if(o1StringPart.equalsIgnoreCase(o2StringPart))
         {
-            return extractInt(o1) - extractInt(o2);
+//            return (int) (extractInt(o1) - extractInt(o2));
+            return Long.compare(extractNumber(o1), extractNumber(o2));
         }
         return o1.compareTo(o2);
     }
 
-    public static int extractInt(String s) {
+    public static long extractNumber(String s) {
         String num = s.replaceAll("\\D", "");
-        return num.isEmpty() ? 0 : Integer.parseInt(num);
+        return num.isEmpty() ? 0 : Long.parseLong(num);
     }
 
 }

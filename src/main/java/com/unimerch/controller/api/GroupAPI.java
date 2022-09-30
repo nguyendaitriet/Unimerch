@@ -37,20 +37,20 @@ public class GroupAPI {
         return groupService.findAll(input);
     }
 
-     @RoleConstant.ManagerAuthorization
+    @RoleConstant.ManagerAuthorization
     @GetMapping("/findAllGroups")
     public ResponseEntity<?> findAllGroups() {
         return new ResponseEntity<>(groupService.findAll(), HttpStatus.OK);
     }
 
-     @RoleConstant.ManagerAuthorization
+    @RoleConstant.ManagerAuthorization
     @GetMapping("/{id}")
     public ResponseEntity<?> findGroupById(@PathVariable String id) {
         Group group = groupService.findById(id);
         return new ResponseEntity<>(group, HttpStatus.OK);
     }
 
-     @RoleConstant.ManagerAuthorization
+    @RoleConstant.ManagerAuthorization
     @PostMapping("/create")
     public ResponseEntity<?> createGroup(@Validated @RequestBody GroupCreateParam groupCreateParam,
                                          BindingResult bindingResult) {
@@ -61,21 +61,21 @@ public class GroupAPI {
         return new ResponseEntity<>(newGroup, HttpStatus.CREATED);
     }
 
-     @RoleConstant.ManagerAuthorization
+    @RoleConstant.ManagerAuthorization
     @PutMapping("/update/{id}")
     public ResponseEntity<?> updateGroup(@PathVariable String id, @RequestBody GroupUpdateParam groupUpdateParam) {
         GroupResult group = groupService.updateGroup(id, groupUpdateParam);
         return new ResponseEntity<>(group, HttpStatus.OK);
     }
 
-     @RoleConstant.ManagerAuthorization
+    @RoleConstant.ManagerAuthorization
     @DeleteMapping("/delete/{id}")
     public ResponseEntity<?> deleteGroup(@PathVariable String id) {
         groupService.deleteGroup(id);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
-     @RoleConstant.ManagerAuthorization
+    @RoleConstant.ManagerAuthorization
     @PostMapping("/addAmznAccountToGroup/{id}")
     public ResponseEntity<?> addAmznAccountToGroup(@PathVariable String id,
                                                    @RequestBody Map<String, ArrayList<String>> amznAccIdList) {
@@ -91,21 +91,21 @@ public class GroupAPI {
         return new ResponseEntity<>(amznAccResultList, HttpStatus.OK);
     }
 
-     @RoleConstant.ManagerAuthorization
+    @RoleConstant.ManagerAuthorization
     @GetMapping("/showAmznAccOutsideGroup/{id}")
     public ResponseEntity<?> showAmznAccOutsideGroup(@PathVariable String id) {
         List<AmznAccResult> amznAccResultList = groupService.getAmznAccOutsideGroup(id);
         return new ResponseEntity<>(amznAccResultList, HttpStatus.OK);
     }
 
-     @RoleConstant.ManagerAuthorization
+    @RoleConstant.ManagerAuthorization
     @DeleteMapping("/deleteAmznAccFromGroup/{amznAccId}/{groupId}")
     public ResponseEntity<?> deleteAmznAccFromGroup(@PathVariable int amznAccId, @PathVariable int groupId) {
         groupService.deleteAmznAccFromGroup(amznAccId, groupId);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
-     @RoleConstant.ManagerAuthorization
+    @RoleConstant.ManagerAuthorization
     @DeleteMapping("/deleteAmznAccFromGroup/{id}")
     public ResponseEntity<?> deleteMultiAmznAccFromGroup(@RequestBody Map<String, List<Integer>> amznAccIdList, @PathVariable Integer id) {
         groupService.deleteMultiAmznAccFromGroup(amznAccIdList.get("amznAccSelected"), id);
