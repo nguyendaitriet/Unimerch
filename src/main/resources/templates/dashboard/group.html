@@ -661,9 +661,9 @@
             page.commands.addAmznAccToGroup(currentGroup, tableAmznAccIn, tableAmznAccOut);
         })
 
-        CommonApp.enableEnterKeyboard('#mdCreateGroup','#btnCreateGroup');
-        CommonApp.enableEnterKeyboard('#mdUpdateGroup','#btnUpdateGroup');
-        CommonApp.enableEnterKeyboard('#mdAddAmznAccToGroup','#btnAddAmznAccToGroup');
+        CommonApp.enableEnterKeyboard(page.dialogs.element.mdCreateGroup, page.dialogs.element.btnCreateGroup);
+        CommonApp.enableEnterKeyboard(page.dialogs.element.mdUpdateGroup, page.dialogs.element.btnUpdateGroup);
+        CommonApp.enableEnterKeyboard(page.dialogs.element.mdAddAmznAccToGroup, page.dialogs.element.btnAddAmznAccToGroup);
 
     });
 

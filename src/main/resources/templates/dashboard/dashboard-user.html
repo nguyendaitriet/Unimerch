@@ -1080,6 +1080,8 @@
 
             if (currentGrpId)
                 page.commands.handleContentDashboard(currentGrpId);
+
+            CommonApp.enableEnterKeyboard(page.dialogs.element.mdAddNote, page.dialogs.element.btnSaveNote);
         });
     })
 

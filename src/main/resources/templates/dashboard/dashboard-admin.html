@@ -91,7 +91,8 @@
                                             </div>
 
                                             <!-- Legends -->
-                                            <div id="legends" class="row mt-1 text-center justify-content-center small d-none">
+                                            <div id="legends"
+                                                 class="row mt-1 text-center justify-content-center small d-none">
                                                     <span class="mr-4">
                                                         <i class="fas fa-square" style="color: #41b2e6"></i>
                                                         <br th:text="#{dashboard.chart.legend.royalties}">
@@ -155,7 +156,8 @@
 
                                     <div class="row flex-lg-row-reverse">
                                         <!-- Cards -->
-                                        <div class="col-12 col-lg-5 d-flex flex-wrap justify-content-center no-padding" style="height: fit-content">
+                                        <div class="col-12 col-lg-5 d-flex flex-wrap justify-content-center no-padding"
+                                             style="height: fit-content">
                                             <!-- Yesterday -->
                                             <div class="col-6 mb-1 no-padding">
                                                 <div class="card border-left-primary shadow">
@@ -382,13 +384,15 @@
                                                 <li class="nav-item">
                                                     <a class="m-0 font-weight-bold text-primary nav-link active custom-card-title"
                                                        data-toggle="tab" href="#today" role="tab" aria-controls="today"
-                                                       aria-selected="true" th:text="#{dashboard.tab.today}" id="todayLink">
+                                                       aria-selected="true" th:text="#{dashboard.tab.today}"
+                                                       id="todayLink">
                                                         Today
                                                     </a>
                                                 </li>
                                                 <li class="nav-item">
                                                     <a class="m-0 font-weight-bold text-primary nav-link custom-card-title"
-                                                       data-toggle="tab" href="#thirtyday" role="tab" aria-controls="thirtyday"
+                                                       data-toggle="tab" href="#thirtyday" role="tab"
+                                                       aria-controls="thirtyday"
                                                        aria-selected="false" th:text="#{dashboard.tab.thirtyDays}"
                                                        id="thirtyDaysLink">
                                                         30 Days
@@ -396,7 +400,8 @@
                                                 </li>
                                                 <li class="nav-item">
                                                     <a class="m-0 font-weight-bold text-primary nav-link custom-card-title"
-                                                       data-toggle="tab" href="#thismonth" role="tab" aria-controls="thismonth"
+                                                       data-toggle="tab" href="#thismonth" role="tab"
+                                                       aria-controls="thismonth"
                                                        aria-selected="false" th:text="#{dashboard.tab.thisMonth}"
                                                        id="thisMonthLink">
                                                         This month
@@ -620,7 +625,7 @@
 
     page.element.legends = $("#legends");
 
-        page.dialogs.element.todayDate = $("#todayDate");
+    page.dialogs.element.todayDate = $("#todayDate");
     page.dialogs.element.todayPurchased = $("#todayPurchased");
     page.dialogs.element.todaySold = $("#todaySold");
     page.dialogs.element.todayCancelled = $("#todayCancelled");
@@ -1054,6 +1059,7 @@
         page.commands.initLastCheckTable();
 
         page.commands.handleContentDashboard(currentGrpId);
+        CommonApp.enableEnterKeyboard(page.dialogs.element.mdAddNote, page.dialogs.element.btnSaveNote);
     })
 
     page.commands.addEventsToSubTabs = (analyticsUrl, accDieUrl, lastCheckUrl, thirtyDaysUrl, thisMonthUrl) => {

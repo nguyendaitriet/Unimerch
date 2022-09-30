@@ -230,11 +230,12 @@ class CommonApp {
         return (data.length > lengthShown) ? (data.substr(0, lengthShown) + "...") : data
     }
 
-    static enableEnterKeyboard(formId, btnId) {
-        $(`${formId}`).keypress(function (event) {
+    static enableEnterKeyboard(form, btn) {
+        form.keypress(function (event) {
+            // event.preventDefault();
             let keycode = (event.keyCode ? event.keyCode : event.which);
             if (keycode == '13') {
-                $(`${btnId}`).click();
+                btn.click();
             }
         });
     }

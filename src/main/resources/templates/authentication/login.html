@@ -63,16 +63,11 @@
             })
     })
 
-    // page.dialogs.element.frmLogin.keypress(function (event) {
-    //     let keycode = (event.keyCode ? event.keyCode : event.which);
-    //     if (keycode == '13') {
-    //         page.element.btnLogin.click();
-    //     }
-    // });
+    $(window).ready(function () {
+        CommonApp.enableEnterKeyboard(page.dialogs.element.frmLogin, page.element.btnLogin);
+        CommonApp.allowShowingPassword(page.dialogs.element.frmLogin);
+    })
 
-   CommonApp.enableEnterKeyboard('#frmLogin','#btnLogin');
-
-    CommonApp.allowShowingPassword(page.dialogs.element.frmLogin);
 </script>
 </body>
 </html>
