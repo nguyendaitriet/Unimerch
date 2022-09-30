@@ -91,7 +91,7 @@
                                             </div>
 
                                             <!-- Legends -->
-                                            <div class="row mt-1 text-center justify-content-center small">
+                                            <div id="legend" class="row mt-1 text-center justify-content-center small">
                                                     <span class="mr-4">
                                                         <i class="fas fa-square" style="color: #41b2e6"></i>
                                                         <br th:text="#{dashboard.chart.legend.royalties}">
@@ -659,6 +659,8 @@
     page.dialogs.element.frmAddNote = $('#frmAddNote');
     page.dialogs.element.noteArea = $('#addNoteArea');
     page.dialogs.element.btnSaveNote = $('#btnSaveNote');
+
+    page.element.legends = $("#legends");
 
     page.commands.initTodaySoldTable = () => {
         let todaySoldTable = page.element.tableTodaySold.DataTable({

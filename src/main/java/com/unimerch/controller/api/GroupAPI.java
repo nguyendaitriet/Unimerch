@@ -6,6 +6,7 @@ import com.unimerch.dto.group.GroupCreateParam;
 import com.unimerch.dto.group.GroupResult;
 import com.unimerch.dto.group.GroupUpdateParam;
 import com.unimerch.repository.model.Group;
+import com.unimerch.security.RoleConstant;
 import com.unimerch.service.GroupService;
 import com.unimerch.util.AppUtils;
 import lombok.RequiredArgsConstructor;
@@ -30,26 +31,26 @@ public class GroupAPI {
     @Autowired
     private GroupService groupService;
 
-    @PreAuthorize("hasAnyAuthority('MANAGER')")
+    @RoleConstant.ManagerAuthorization
     @PostMapping
     public DataTablesOutput<GroupResult> findAllGroupsPageable(@Valid @RequestBody DataTablesInput input) {
         return groupService.findAll(input);
     }
 
-    @PreAuthorize("hasAnyAuthority('MANAGER')")
+     @RoleConstant.ManagerAuthorization
     @GetMapping("/findAllGroups")
     public ResponseEntity<?> findAllGroups() {
         return new ResponseEntity<>(groupService.findAll(), HttpStatus.OK);
     }
 
-    @PreAuthorize("hasAnyAuthority('MANAGER')")
+     @RoleConstant.ManagerAuthorization
     @GetMapping("/{id}")
     public ResponseEntity<?> findGroupById(@PathVariable String id) {
         Group group = groupService.findById(id);
         return new ResponseEntity<>(group, HttpStatus.OK);
     }
 
-    @PreAuthorize("hasAnyAuthority('MANAGER')")
+     @RoleConstant.ManagerAuthorization
     @PostMapping("/create")
     public ResponseEntity<?> createGroup(@Validated @RequestBody GroupCreateParam groupCreateParam,
                                          BindingResult bindingResult) {
@@ -60,21 +61,21 @@ public class GroupAPI {
         return new ResponseEntity<>(newGroup, HttpStatus.CREATED);
     }
 
-    @PreAuthorize("hasAnyAuthority('MANAGER')")
+     @RoleConstant.ManagerAuthorization
     @PutMapping("/update/{id}")
     public ResponseEntity<?> updateGroup(@PathVariable String id, @RequestBody GroupUpdateParam groupUpdateParam) {
         GroupResult group = groupService.updateGroup(id, groupUpdateParam);
         return new ResponseEntity<>(group, HttpStatus.OK);
     }
 
-    @PreAuthorize("hasAnyAuthority('MANAGER')")
+     @RoleConstant.ManagerAuthorization
     @DeleteMapping("/delete/{id}")
     public ResponseEntity<?> deleteGroup(@PathVariable String id) {
         groupService.deleteGroup(id);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
-    @PreAuthorize("hasAnyAuthority('MANAGER')")
+     @RoleConstant.ManagerAuthorization
     @PostMapping("/addAmznAccountToGroup/{id}")
     public ResponseEntity<?> addAmznAccountToGroup(@PathVariable String id,
                                                    @RequestBody Map<String, ArrayList<String>> amznAccIdList) {
@@ -83,35 +84,35 @@ public class GroupAPI {
         return new ResponseEntity<>(newAmznAccResultList, HttpStatus.OK);
     }
 
-    @PreAuthorize("hasAnyAuthority('MANAGER','USER')")
+    @RoleConstant.ManagerUserAuthorization
     @GetMapping("/showAmznAccInsideGroup/{id}")
     public ResponseEntity<?> showAmznAccInsideGroup(@PathVariable String id) {
         List<AmznAccResult> amznAccResultList = groupService.getAmznAccInsideGroup(id);
         return new ResponseEntity<>(amznAccResultList, HttpStatus.OK);
     }
 
-    @PreAuthorize("hasAnyAuthority('MANAGER')")
+     @RoleConstant.ManagerAuthorization
     @GetMapping("/showAmznAccOutsideGroup/{id}")
     public ResponseEntity<?> showAmznAccOutsideGroup(@PathVariable String id) {
         List<AmznAccResult> amznAccResultList = groupService.getAmznAccOutsideGroup(id);
         return new ResponseEntity<>(amznAccResultList, HttpStatus.OK);
     }
 
-    @PreAuthorize("hasAnyAuthority('MANAGER')")
+     @RoleConstant.ManagerAuthorization
     @DeleteMapping("/deleteAmznAccFromGroup/{amznAccId}/{groupId}")
     public ResponseEntity<?> deleteAmznAccFromGroup(@PathVariable int amznAccId, @PathVariable int groupId) {
         groupService.deleteAmznAccFromGroup(amznAccId, groupId);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
-    @PreAuthorize("hasAnyAuthority('MANAGER')")
+     @RoleConstant.ManagerAuthorization
     @DeleteMapping("/deleteAmznAccFromGroup/{id}")
     public ResponseEntity<?> deleteMultiAmznAccFromGroup(@RequestBody Map<String, List<Integer>> amznAccIdList, @PathVariable Integer id) {
         groupService.deleteMultiAmznAccFromGroup(amznAccIdList.get("amznAccSelected"), id);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
-    @PreAuthorize("hasAnyAuthority('MANAGER','USER')")
+    @RoleConstant.ManagerUserAuthorization
     @GetMapping("/findInGrpFilter/{id}")
     public ResponseEntity<?> findAllAmznAccountsInGroup(@PathVariable Integer id) {
         List<AmznAccFilterResult> amznAccResultList = groupService.findAllAmznAccInGrpFilter(id);
