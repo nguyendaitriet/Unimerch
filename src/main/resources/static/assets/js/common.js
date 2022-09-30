@@ -232,10 +232,10 @@ class CommonApp {
 
     static enableEnterKeyboard(form, btn) {
         form.keypress(function (event) {
-            // event.preventDefault();
             let keycode = (event.keyCode ? event.keyCode : event.which);
             if (keycode == '13') {
                 btn.click();
+                return false;
             }
         });
     }
