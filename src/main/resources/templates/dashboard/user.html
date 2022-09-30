@@ -366,8 +366,8 @@
             $("#mdCPUser input").removeClass("error");
         })
 
-        CommonApp.enableEnterKeyboard('#mdCreateUser','#btnCreateUser');
-        CommonApp.enableEnterKeyboard('#mdCPUser','#btnCPUser');
+        CommonApp.enableEnterKeyboard(page.dialogs.element.mdCreateUser, page.dialogs.element.btnCreateUser);
+        CommonApp.enableEnterKeyboard(page.dialogs.element.mdCPUser,page.dialogs.element.btnCPUser);
 
     });
 
