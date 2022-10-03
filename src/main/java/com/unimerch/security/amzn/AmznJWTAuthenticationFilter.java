@@ -1,8 +1,7 @@
 package com.unimerch.security.amzn;
 
+import com.unimerch.security.JWTUser;
 import com.unimerch.security.NameConstant;
-import com.unimerch.service.AmznUserService;
-import com.unimerch.service.UniUserService;
 import com.unimerch.service.impl.JwtService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -92,8 +91,8 @@ public class AmznJWTAuthenticationFilter extends OncePerRequestFilter {
     private void setAuthentication(HttpServletRequest request, String authorizationValue) {
         if (authorizationValue != null && jwtService.validateJwtToken(authorizationValue)) {
 
-            String username = jwtService.getUserNameFromJwtToken(authorizationValue);
-            UserDetails userDetails = userDetailsService.loadUserByUsername(username);
+            JWTUser jwtUser = jwtService.getPrincipalFromJwtToken(authorizationValue);
+            UserDetails userDetails = userDetailsService.loadUserByUsername(jwtUser.getUsername());
 
             UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(
                     userDetails, null, userDetails.getAuthorities());

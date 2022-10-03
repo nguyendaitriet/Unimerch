@@ -15,20 +15,10 @@ import org.springframework.web.servlet.ModelAndView;
 @ControllerAdvice
 @Slf4j
 public class ErrorControllerAdvice {
-    @Autowired
-    private PrincipalUtils principalUtils;
-
     @ExceptionHandler(value = {InvalidIdException.class})
     @ResponseStatus(HttpStatus.NOT_FOUND)
     public ModelAndView invalidIdException(final InvalidIdException throwable) {
         log.error("Id not found", throwable);
-        String role = principalUtils.getPrincipalRoleCode();
-        if (role.equals(RoleConstant.CODE_ADMIN)) {
-            return new ModelAndView("/error/404");
-        }
-        ModelAndView mav = new ModelAndView("/error/404-user");
-        mav.addObject("userId",principalUtils.getPrincipalId());
-        return mav;
+        return new ModelAndView("/error/404");
     }
-
 }
