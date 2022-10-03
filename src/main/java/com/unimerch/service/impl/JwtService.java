@@ -1,9 +1,9 @@
 package com.unimerch.service.impl;
 
+import com.unimerch.security.JWTUser;
 import io.jsonwebtoken.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 
@@ -16,12 +16,13 @@ public class JwtService {
     public static final long JWT_TOKEN_VALIDITY = 1000L;
     private static final Logger logger = LoggerFactory.getLogger(JwtService.class.getName());
 
-    public String generateTokenLogin(Authentication authentication) {
+    public String generateTokenLogin(String userId, String username) {
         return Jwts.builder()
-                .setSubject(authentication.getName())
+                .setSubject(username)
                 .setIssuedAt(new Date())
                 .setExpiration(new Date((new Date()).getTime() + JWT_TOKEN_VALIDITY * 60 * 60 * 24 * 30))
                 .signWith(SignatureAlgorithm.HS256, SECRET_KEY)
+                .claim("userId", userId)
                 .compact();
     }
 
@@ -44,12 +45,14 @@ public class JwtService {
         return false;
     }
 
-    public String getUserNameFromJwtToken(String token) {
-        return Jwts.parser()
+    public JWTUser getPrincipalFromJwtToken(String token) {
+        Claims body = Jwts.parser()
                 .setSigningKey(SECRET_KEY)
                 .parseClaimsJws(token)
-                .getBody().getSubject();
+                .getBody();
+        return new JWTUser((String) body.get("userId"), body.getSubject());
     }
+
 
 }
 

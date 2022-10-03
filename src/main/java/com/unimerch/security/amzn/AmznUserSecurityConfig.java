@@ -66,6 +66,7 @@ public class AmznUserSecurityConfig extends WebSecurityConfigurerAdapter {
                         "/api/products/updatePrice",
                         "/apps/**")
                 .authenticated()
+                .anyRequest().authenticated()
                 .and()
                 .csrf().disable();
         http.addFilterBefore(jwtAuthenticationFilter, BasicAuthenticationFilter.class)

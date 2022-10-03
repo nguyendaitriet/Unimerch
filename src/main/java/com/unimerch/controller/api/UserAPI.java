@@ -4,6 +4,7 @@ import com.unimerch.dto.group.GroupResult;
 import com.unimerch.dto.user.UserCreateParam;
 import com.unimerch.dto.user.UserResult;
 import com.unimerch.security.RoleConstant;
+import com.unimerch.security.UserPrinciple;
 import com.unimerch.service.UniUserService;
 import com.unimerch.util.AppUtils;
 import com.unimerch.util.PrincipalUtils;
@@ -13,6 +14,7 @@ import org.springframework.data.jpa.datatables.mapping.DataTablesOutput;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.Authentication;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -75,6 +77,13 @@ public class UserAPI {
     }
 
     @RoleConstant.ManagerUserAuthorization
+    @GetMapping("/asgnGrp")
+    public ResponseEntity<?> findAssignedGroups(Authentication authentication) {
+        UserPrinciple principal = (UserPrinciple) authentication.getPrincipal();
+        return findAssignedGroups(principal.getId());
+    }
+
+    @RoleConstant.ManagerAuthorization
     @GetMapping("/asgnGrp/{id}")
     public ResponseEntity<?> findAssignedGroups(@PathVariable String id) {
         List<GroupResult> groupList = userService.findAssignedGroups(id);

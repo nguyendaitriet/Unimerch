@@ -25,6 +25,7 @@ import javax.servlet.Filter;
 @Configuration
 @Order(1)
 public class UniUserSecurityConfig extends WebSecurityConfigurerAdapter {
+
     @Autowired
     @Qualifier(NameConstant.UNI_USER_SECURITY_SERVICE_NAME)
     private UserDetailsService userDetailsService;
@@ -37,8 +38,6 @@ public class UniUserSecurityConfig extends WebSecurityConfigurerAdapter {
     @Autowired
     @Qualifier(NameConstant.UNI_JWT_FILTER_NAME)
     private Filter jwtAuthenticationFilter;
-
-
 
     @Bean
     public DaoAuthenticationProvider authenticationProvider1() {
@@ -81,7 +80,8 @@ public class UniUserSecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/assets/**", "/messages/**").permitAll()
                 .antMatchers("/users/**").hasAnyAuthority(RoleConstant.CODE_USER)
                 .antMatchers("/dashboard/**").hasAnyAuthority(RoleConstant.CODE_ADMIN)
-                .and()
+                .antMatchers("/error/**").hasAnyAuthority(RoleConstant.CODE_USER, RoleConstant.CODE_ADMIN)
+                .anyRequest().authenticated().and()
                 .formLogin()
                 .loginPage("/login")
                 .and()

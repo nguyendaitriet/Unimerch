@@ -50,14 +50,17 @@ public class AuthAPI {
 
     @PostMapping("/api/amzn/login")
     public ResponseEntity<?> amznLogin(@RequestBody LoginParam loginParam) {
-        Authentication authentication = amznAuthenticationManager.authenticate(new UsernamePasswordAuthenticationToken(loginParam.getUsername(), loginParam.getPassword()));
+        Authentication authentication = amznAuthenticationManager.authenticate(
+                new UsernamePasswordAuthenticationToken(loginParam.getUsername(),
+                        loginParam.getPassword()));
         AmznAccResult user = amznUserService.findByUsername(loginParam.getUsername());
         return setCookies(authentication, user.getId().toString());
     }
 
     private ResponseEntity<?> setCookies(Authentication authentication, String userId) {
-        String accessToken = jwtService.generateTokenLogin(authentication);
         UserDetails userDetails = (UserDetails) authentication.getPrincipal();
+        String accessToken = jwtService.generateTokenLogin(userId, userDetails.getUsername());
+
         JwtResponse jwtResponse = new JwtResponse(accessToken, Integer.parseInt(userId), userDetails.getUsername(), userDetails.getAuthorities());
 
         ResponseCookie springCookie = ResponseCookie.from("JWT", accessToken).httpOnly(false).secure(false).path("/").maxAge(60 * 1000).domain("localhost").build();
