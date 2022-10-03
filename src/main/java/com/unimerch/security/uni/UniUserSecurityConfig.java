@@ -79,7 +79,7 @@ public class UniUserSecurityConfig extends WebSecurityConfigurerAdapter {
                         "/webjars/**"
                 ).permitAll()
                 .antMatchers("/assets/**", "/messages/**").permitAll()
-                .antMatchers("/users/**").hasAnyAuthority(RoleConstant.CODE_USER)
+                .antMatchers("/dashboard-employee/**").hasAnyAuthority(RoleConstant.CODE_USER)
                 .antMatchers("/dashboard/**").hasAnyAuthority(RoleConstant.CODE_ADMIN)
                 .and()
                 .formLogin()

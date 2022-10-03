@@ -19,7 +19,7 @@ public class HomeController {
             if (principalUtils.getPrincipalRoleCode().equals(RoleConstant.CODE_ADMIN)) {
                 return "redirect:/dashboard";
             }
-            return "redirect:/users";
+            return "redirect:/dashboard-employee";
         } catch (Exception e) {
             return "redirect:/login";
         }

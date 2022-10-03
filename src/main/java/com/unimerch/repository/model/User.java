@@ -33,9 +33,6 @@ public class User {
     @Column(name = "disabled", nullable = false)
     private boolean disabled;
 
-    @Column(name = "mobile", length = 15)
-    private String mobile;
-
     @Column(name = "password_hash", nullable = false, length = 128, updatable = false)
     private String passwordHash;
 

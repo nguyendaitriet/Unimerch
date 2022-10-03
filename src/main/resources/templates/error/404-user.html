@@ -29,7 +29,7 @@
                     <p class="lead text-gray-800 mb-5" th:text="#{errorPage.header}">Page Not Found</p>
                     <p class="text-gray-500 mb-0" th:text="#{errorPage.content}">It looks like you found a glitch in the
                         matrix...</p>
-                    <a href="/users" th:text="#{errorPage.back}">&larr; Back to Dashboard</a>
+                    <a href="/dashboard-employee" th:text="#{errorPage.back}">&larr; Back to Dashboard</a>
                 </div>
 
             </div>
@@ -81,7 +81,7 @@
                 let str = ``
 
                 $.each(groups, function (index, group) {
-                    str += `<a class="collapse-item" data-id="${group.id}" href="/users/${group.id}">${group.title}</a>`
+                    str += `<a class="collapse-item" data-id="${group.id}" href="/dashboard-employee/${group.id}">${group.title}</a>`
                 })
                 container.append(str);
 
