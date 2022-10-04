@@ -1,7 +1,5 @@
 package com.unimerch.security;
 
-import com.unimerch.repository.model.Role;
-import com.unimerch.repository.model.User;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;

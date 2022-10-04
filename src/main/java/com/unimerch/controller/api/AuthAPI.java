@@ -42,9 +42,6 @@ public class AuthAPI {
     public ResponseEntity<?> uniLogin(@RequestBody LoginParam loginParam) {
         Authentication authentication = uniAuthenticationManager.authenticate(new UsernamePasswordAuthenticationToken(loginParam.getUsername(), loginParam.getPassword()));
         UserResult user = uniUserService.findUserItemResultByUsername(loginParam.getUsername());
-        if (user.isDisabled()) {
-            return new ResponseEntity<>(HttpStatus.FORBIDDEN);
-        }
         return setCookies(authentication, user.getId().toString());
     }
 
