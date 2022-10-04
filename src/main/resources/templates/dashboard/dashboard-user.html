@@ -1367,6 +1367,7 @@
         let currentUserId = $(this).data('id');
         let cardDataUrl = page.urls.findCardsByAmznId + currentUserId;
         let chartDataUrl = page.urls.findChartByUserId + currentUserId;
+        let tableTodayUrl = page.urls.findAllTodaySoldEveryAmznAcc + currentUserId;
         let tableThirtyDaysUrl = page.urls.findAllLast30DaysSoldEveryAmznAcc + currentUserId;
         let tableThisMonthUrl = page.urls.findAllThisMonthSoldEveryAmznAcc + currentUserId;
         let tableAnalyticsUrl = page.urls.findAnalyticsByUserId + currentUserId;

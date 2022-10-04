@@ -24,7 +24,7 @@
             <div class="container-fluid">
 
                 <!-- 404 Error Text -->
-                <div class="d-flex flex-column align-items-center">
+                <div class="d-flex flex-column align-items-center vh-100">
                     <div class="error-page mx-auto mt-5" data-text="404">404</div>
                     <p class="lead text-gray-800 mb-5" th:text="#{errorPage.header}">Page Not Found</p>
                     <p class="text-gray-500 mb-0" th:text="#{errorPage.content}">It looks like you found a glitch in the matrix...</p>
@@ -48,12 +48,6 @@
 </a>
 
 <th:block th:replace="layout/script :: script-404"/>
-
-<!--<script>-->
-<!--    $(document).ready(function () {-->
-<!--        DBApp.handleGroupsFilterSidebar();-->
-<!--    })-->
-<!--</script>-->
 </body>
 
 
