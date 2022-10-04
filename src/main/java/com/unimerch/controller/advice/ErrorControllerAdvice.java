@@ -1,11 +1,7 @@
 package com.unimerch.controller.advice;
 
 import com.unimerch.exception.InvalidIdException;
-import com.unimerch.exception.ResourceNotFoundException;
-import com.unimerch.security.RoleConstant;
-import com.unimerch.util.PrincipalUtils;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
