@@ -239,4 +239,10 @@ class CommonApp {
             }
         });
     }
+
+    static disableBrowserAlert() {
+        window.alert = function (text) {
+            console.log(text);
+        };
+    }
 }

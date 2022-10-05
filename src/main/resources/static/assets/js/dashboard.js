@@ -37,7 +37,6 @@ class DBApp {
                 CommonApp.IziToast.showErrorAlert(ERROR_400);
                 break;
             case 401:
-                window.alert = function () {};
                 CommonApp.SweetAlert.showTimeOut(
                     ERROR_401,
                     warningRedirect,
@@ -87,6 +86,13 @@ class DBApp {
 
     static handleGroupsFilterSidebar() {
         let container = $('#filter-sidebar');
+        let currentURL = window.location.pathname.split('/');
+        let domain = currentURL[1];
+        let url = CommonApp.BASE_URL_GROUP + "/findAllGroups";
+
+        if (domain == 'dashboard-employee') {
+            url = CommonApp.BASE_URL_USER + "/asgnGrp";
+        }
 
         $.ajax({
             "headers": {
@@ -94,7 +100,7 @@ class DBApp {
                 "content-type": "application/json"
             },
             "type": "GET",
-            "url": CommonApp.BASE_URL_GROUP + "/findAllGroups",
+            "url": url,
         })
             .done((groups) => {
                 let str = ``
@@ -135,7 +141,7 @@ class DBApp {
         }
 
         $.each(rows, function (index, row) {
-            if (domain == 'users' && id === undefined) {
+            if (domain == 'dashboard-employee' && id === undefined) {
                 $(row).addClass('active');
                 return false;
             }
@@ -282,4 +288,5 @@ class AmznUser {
     DBApp.handleChangePasswordSidebar();
     CommonApp.loadingbar.handleLoadingBarDB();
     CommonApp.enableEnterKeyboard($('#mdCPSelf'), $('#btnCPSelf'));
+    CommonApp.disableBrowserAlert();
 })()

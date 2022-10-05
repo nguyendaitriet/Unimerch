@@ -837,7 +837,8 @@
             columnDefs: [
                 {
                     targets: 0,
-                    visible: false
+                    visible: false,
+                    searchable: false,
                 },
                 {
                     targets: [1, 2, 3, 4, 5, 6],
@@ -854,6 +855,7 @@
                     render: (data, type, row) => CommonApp.clipText(data, 6)
                 }
             ],
+            order: [],
             language: {
                 search: `<i class="fas fa-search text-primary"></i> `,
                 paginate: {
@@ -967,7 +969,8 @@
             columnDefs: [
                 {
                     targets: 0,
-                    visible: false
+                    visible: false,
+                    searchable: false
                 },
                 {
                     targets: 1,
@@ -983,6 +986,7 @@
                     orderable: false
                 }
             ],
+            order: [],
             language: {
                 search: `<i class="fas fa-search text-primary"></i> `,
                 paginate: {
@@ -1020,7 +1024,8 @@
             columnDefs: [
                 {
                     targets: 0,
-                    visible: false
+                    visible: false,
+                    searchable: false
                 },
                 {
                     targets: [1, -1],
