@@ -106,6 +106,16 @@
     background-color: #a1a1a1;
 }
 
+.custom-scrollbar {
+    scrollbar-color: #a1a1a1 #F5F5F5 !important;
+    scrollbar-width: thin !important;
+}
+
+:root {
+    scrollbar-color: #a1a1a1 #F5F5F5 !important;
+    scrollbar-width: thin !important;
+}
+
 ::-webkit-scrollbar {
     width: 10px;
     height: 10px;
