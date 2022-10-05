@@ -278,6 +278,7 @@ public class AmznUserServiceImpl implements AmznUserService {
     @Override
     public List<AmznAccAnalyticsResult> findAllAnalytics() {
         return amznAccountRepository.findAll().stream()
+                .sorted((o1, o2) -> NaturalSortUtils.compareString(o1.getUsername(),o2.getUsername()))
                 .map(amznUser -> amznMapper.toAmznAccAnalyticsResult(amznUser))
                 .collect(Collectors.toList());
     }
@@ -286,6 +287,7 @@ public class AmznUserServiceImpl implements AmznUserService {
     public List<AmznAccAnalyticsResult> findAnalyticsByGrpId(String groupId) {
         Group group = groupService.findById(groupId);
         return brgGroupAmznUserRepository.getAmznAccInGroup(group.getId()).stream()
+                .sorted((o1, o2) -> NaturalSortUtils.compareString(o1.getUsername(),o2.getUsername()))
                 .map(amznAccResult -> amznMapper.toAmznAccAnalyticsResult(amznAccResult))
                 .collect(Collectors.toList());
     }
@@ -312,6 +314,7 @@ public class AmznUserServiceImpl implements AmznUserService {
     @Override
     public List<AmznAccDieResult> findAllAccDie() {
         List<AmznUser> userList = amznAccountRepository.findByStatus(AzmnStatus.TERMINATED);
+        userList.sort((o1, o2) -> NaturalSortUtils.compareString(o1.getUsername(), o2.getUsername()));
         return amznMapper.toAmznAccDieResults(userList);
     }
 

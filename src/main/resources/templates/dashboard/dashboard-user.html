@@ -559,7 +559,6 @@
 <script>
 
     let currentGrpId = window.location.pathname.split('/')[2];
-    let userId = [[${userId}]];
 
     let page = {
         urls: {
@@ -828,7 +827,8 @@
             columnDefs: [
                 {
                     targets: 0,
-                    visible: false
+                    visible: false,
+                    searchable: false
                 },
                 {
                     targets: [1, 2, 3, 4, 5, 6],
@@ -958,7 +958,8 @@
             columnDefs: [
                 {
                     targets: 0,
-                    visible: false
+                    visible: false,
+                    searchable: false
                 },
                 {
                     targets: 1,
@@ -1011,7 +1012,8 @@
             columnDefs: [
                 {
                     targets: 0,
-                    visible: false
+                    visible: false,
+                    searchable: false
                 },
                 {
                     targets: [1, -1],
@@ -1039,7 +1041,7 @@
         })
     }
 
-    page.commands.createSideBarGroupList = (userId) => {
+    page.commands.createSideBarGroupList = () => {
         let container = $('#filter-sidebar');
 
         return $.ajax({
@@ -1048,7 +1050,6 @@
                 "content-type": "application/json"
             },
             "type": "GET",
-            //"url": CommonApp.BASE_URL_USER + "/asgnGrp/" + userId,
             "url": CommonApp.BASE_URL_USER + "/asgnGrp",
         })
             .done((groups) => {
@@ -1063,6 +1064,8 @@
 
                 DBApp.handleStatusNavDashboard();
                 DBApp.handleCollapsedFilterSidebar();
+                DBApp.autoScrollFilterSidebar();
+
             })
             .fail((jqXHR) => {
                 CommonApp.IziToast.showErrorAlert(ERROR_GRP_RETRIEVE);
@@ -1070,7 +1073,7 @@
     }
 
     $(document).ready(function () {
-        page.commands.createSideBarGroupList(userId).then(() => {
+        page.commands.createSideBarGroupList().then(() => {
             if (isNaN(currentGrpId) || currentGrpId === '')
                 currentGrpId = $('#filter-sidebar .collapse-item').data('id');
 

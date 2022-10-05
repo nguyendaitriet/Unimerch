@@ -341,7 +341,8 @@
             columnDefs: [
                 {
                     targets: 0,
-                    visible: false
+                    visible: false,
+                    searchable: false
                 },
                 {
                     targets: 1,
@@ -434,7 +435,8 @@
                         },
                         {
                             targets: 1,
-                            visible: false
+                            visible: false,
+                            searchable: false
                         },
                         {
                             targets: 2,
@@ -610,9 +612,15 @@
                         {data: null},
                     ],
                     columnDefs: [
+                        {   targets: 0,
+                            visible: false,
+                            searchable: false,
+                            orderable: false,
+                        },
                         {
                             targets: 1,
                             type: 'natural',
+                            className: 'text-center'
                         },
                         {
                             targets: 2,
