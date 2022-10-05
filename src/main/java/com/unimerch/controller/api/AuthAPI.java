@@ -60,7 +60,10 @@ public class AuthAPI {
 
         JwtResponse jwtResponse = new JwtResponse(accessToken, Integer.parseInt(userId), userDetails.getUsername(), userDetails.getAuthorities());
 
-        ResponseCookie springCookie = ResponseCookie.from("JWT", accessToken).httpOnly(false).secure(false).path("/").maxAge(60 * 1000).domain("localhost").build();
+        ResponseCookie springCookie = ResponseCookie.from("JWT", accessToken)
+                .httpOnly(false).secure(false).path("/")
+                .maxAge(60 * 60 * 24 * 30)
+                .domain("localhost").build();
 
         return ResponseEntity.ok().header(HttpHeaders.SET_COOKIE, springCookie.toString()).body(jwtResponse);
     }

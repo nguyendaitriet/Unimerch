@@ -37,7 +37,6 @@ class DBApp {
                 CommonApp.IziToast.showErrorAlert(ERROR_400);
                 break;
             case 401:
-                window.alert = function () {};
                 CommonApp.SweetAlert.showTimeOut(
                     ERROR_401,
                     warningRedirect,
