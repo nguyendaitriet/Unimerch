@@ -132,7 +132,7 @@ public class TimeUtils {
     }
 
     public static LocalDate instantToLocalDate(Instant instant) {
-        return LocalDate.ofInstant(instant, zoneIdVN);
+        return instant.atZone(zoneIdVN).toLocalDate();
     }
 
     public static String dateToString(Date date, String pattern) {
