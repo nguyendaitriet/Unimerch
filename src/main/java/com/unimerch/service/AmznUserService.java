@@ -7,7 +7,6 @@ import org.springframework.data.jpa.datatables.mapping.DataTablesOutput;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.time.Instant;
 import java.util.List;
 
 public interface AmznUserService {
@@ -49,6 +48,8 @@ public interface AmznUserService {
     void deleteAllByListId(List<Integer> idList);
 
     List<AmznAccResult> importFile(MultipartFile amznAccFile);
+
+    byte[] getAmznAccFileSample();
 
     void addNoteToAmznAcc(String id, String note);
 

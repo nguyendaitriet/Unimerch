@@ -4,9 +4,12 @@ import com.unimerch.dto.amznacc.*;
 import com.unimerch.security.RoleConstant;
 import com.unimerch.service.AmznUserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.ByteArrayResource;
 import org.springframework.data.jpa.datatables.mapping.DataTablesInput;
 import org.springframework.data.jpa.datatables.mapping.DataTablesOutput;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
@@ -65,6 +68,16 @@ public class AmznAPI {
     public ResponseEntity<?> importNewAmznAcc(@RequestParam MultipartFile fileUploadAmznAcc) throws IOException {
         List<AmznAccResult> amznAccResultList = amznUserService.importFile(fileUploadAmznAcc);
         return new ResponseEntity<>(amznAccResultList, HttpStatus.OK);
+    }
+
+    @RoleConstant.ManagerAuthorization
+    @GetMapping("/getFileSample")
+    public ResponseEntity<?> getAmznAccFileSample() {
+        HttpHeaders header = new HttpHeaders();
+        header.setContentType(new MediaType("application", "force-download"));
+        header.set(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=AmznAccountList.xlsx");
+        return new ResponseEntity<>(new ByteArrayResource(amznUserService.getAmznAccFileSample()),
+                header, HttpStatus.CREATED);
     }
 
     @RoleConstant.ManagerAuthorization
