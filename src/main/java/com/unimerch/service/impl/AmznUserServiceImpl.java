@@ -219,8 +219,12 @@ public class AmznUserServiceImpl implements AmznUserService {
 
                 if (cell.getColumnIndex() == usernameColumnIndex) {
                     switch (cell.getCellType()) {
-                        case STRING -> amznUsername = cell.getRichStringCellValue().getString().trim().toLowerCase();
-                        case NUMERIC -> amznUsername = String.valueOf((int) cell.getNumericCellValue());
+                        case STRING:
+                            amznUsername = cell.getRichStringCellValue().getString().trim().toLowerCase();
+                            break;
+                        case NUMERIC:
+                            amznUsername = String.valueOf((int) cell.getNumericCellValue());
+                            break;
                     }
                 }
 
@@ -231,8 +235,12 @@ public class AmznUserServiceImpl implements AmznUserService {
 
                 if (cell.getColumnIndex() == usernameColumnIndex + 1) {
                     switch (cell.getCellType()) {
-                        case STRING -> amznPassword = cell.getRichStringCellValue().getString().trim().toLowerCase();
-                        case NUMERIC -> amznPassword = String.valueOf((int) cell.getNumericCellValue());
+                        case STRING:
+                            amznPassword = cell.getRichStringCellValue().getString().trim().toLowerCase();
+                            break;
+                        case NUMERIC:
+                            amznPassword = String.valueOf((int) cell.getNumericCellValue());
+                            break;
                     }
                 }
             }
@@ -328,7 +336,7 @@ public class AmznUserServiceImpl implements AmznUserService {
     @Override
     public List<AmznAccAnalyticsResult> findAllAnalytics() {
         return amznAccountRepository.findAll().stream()
-                .sorted((o1, o2) -> NaturalSortUtils.compareString(o1.getUsername(),o2.getUsername()))
+                .sorted((o1, o2) -> NaturalSortUtils.compareString(o1.getUsername(), o2.getUsername()))
                 .map(amznUser -> amznMapper.toAmznAccAnalyticsResult(amznUser))
                 .collect(Collectors.toList());
     }
@@ -337,7 +345,7 @@ public class AmznUserServiceImpl implements AmznUserService {
     public List<AmznAccAnalyticsResult> findAnalyticsByGrpId(String groupId) {
         Group group = groupService.findById(groupId);
         return brgGroupAmznUserRepository.getAmznAccInGroup(group.getId()).stream()
-                .sorted((o1, o2) -> NaturalSortUtils.compareString(o1.getUsername(),o2.getUsername()))
+                .sorted((o1, o2) -> NaturalSortUtils.compareString(o1.getUsername(), o2.getUsername()))
                 .map(amznAccResult -> amznMapper.toAmznAccAnalyticsResult(amznAccResult))
                 .collect(Collectors.toList());
     }
