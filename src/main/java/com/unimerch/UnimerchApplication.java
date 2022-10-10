@@ -13,7 +13,7 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 @SpringBootApplication
 @EnableJpaRepositories(repositoryFactoryBeanClass = DataTablesRepositoryFactoryBean.class)
-public class UnimerchApplication extends SpringBootServletInitializer implements WebMvcConfigurer {
+public class UnimerchApplication implements WebMvcConfigurer {
 
     public static void main(String[] args) {
         SpringApplication.run(UnimerchApplication.class, args);
