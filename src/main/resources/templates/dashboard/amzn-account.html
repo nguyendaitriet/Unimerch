@@ -238,7 +238,7 @@
                 url: page.urls.findAllAmznAccs,
                 dataSrc: ''
             },
-            info: false,
+            info: true,
             pagingType: 'simple_numbers',
             columns: [
                 {data: null},
@@ -281,6 +281,7 @@
                 style: 'multi+shift'
             },
             language: {
+                info: "Đang hiển thị 8 trong tổng _TOTAL_ tài khoản",
                 search: `<i class="fas fa-search text-primary"></i> `,
                 paginate: {
                     previous: `<i class="fas fa-angle-left"></i>`,
@@ -296,7 +297,7 @@
             },
             pageLength: 8,
             lengthChange: false,
-            dom: '<"row mb-2"<"col-6"B><"col-6"f>>rtp',
+            dom: '<"row mb-2"<"col-6"B><"col-6"f>>rt<"row"<"col-4"i><"col-8"p>>',
             buttons: {
                 dom: {
                     button: {

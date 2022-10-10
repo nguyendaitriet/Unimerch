@@ -1,8 +1,5 @@
 package com.unimerch.service.impl;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.module.SimpleModule;
 import com.unimerch.dto.amznacc.*;
 import com.unimerch.exception.*;
 import com.unimerch.mapper.AmznUserMapper;
@@ -21,6 +18,7 @@ import com.unimerch.util.TimeUtils;
 import com.unimerch.util.ValidationUtils;
 import org.apache.poi.openxml4j.exceptions.NotOfficeXmlFileException;
 import org.apache.poi.ss.usermodel.*;
+import org.apache.poi.xssf.usermodel.XSSFFont;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
@@ -33,7 +31,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.transaction.Transactional;
-import java.io.IOException;
+import java.io.*;
 import java.time.Instant;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -211,7 +209,9 @@ public class AmznUserServiceImpl implements AmznUserService {
             String amznPassword = null;
             boolean isUsernameExisted = false;
             for (Cell cell : row) {
-                if (cell.getCellType() == CellType.STRING && cell.getRichStringCellValue().getString().trim().equalsIgnoreCase("username")) {
+                if (cell.getCellType() == CellType.STRING && cell.getRichStringCellValue()
+                        .getString().trim()
+                        .equalsIgnoreCase("username")) {
                     usernameColumnIndex = cell.getColumnIndex();
                     usernameRowIndex = cell.getRowIndex();
                     break;
@@ -219,12 +219,8 @@ public class AmznUserServiceImpl implements AmznUserService {
 
                 if (cell.getColumnIndex() == usernameColumnIndex) {
                     switch (cell.getCellType()) {
-                        case STRING:
-                            amznUsername = cell.getRichStringCellValue().getString().trim().toLowerCase();
-                            break;
-                        case NUMERIC:
-                            amznUsername = String.valueOf((int) cell.getNumericCellValue());
-                            break;
+                        case STRING -> amznUsername = cell.getRichStringCellValue().getString().trim().toLowerCase();
+                        case NUMERIC -> amznUsername = String.valueOf((int) cell.getNumericCellValue());
                     }
                 }
 
@@ -235,12 +231,8 @@ public class AmznUserServiceImpl implements AmznUserService {
 
                 if (cell.getColumnIndex() == usernameColumnIndex + 1) {
                     switch (cell.getCellType()) {
-                        case STRING:
-                            amznPassword = cell.getRichStringCellValue().getString().trim().toLowerCase();
-                            break;
-                        case NUMERIC:
-                            amznPassword = String.valueOf((int) cell.getNumericCellValue());
-                            break;
+                        case STRING -> amznPassword = cell.getRichStringCellValue().getString().trim().toLowerCase();
+                        case NUMERIC -> amznPassword = String.valueOf((int) cell.getNumericCellValue());
                     }
                 }
             }
@@ -265,6 +257,64 @@ public class AmznUserServiceImpl implements AmznUserService {
         }
         amznAccResultList = amznUserList.stream().map(amznUser -> amznMapper.toDTO(amznUser)).collect(Collectors.toList());
         return amznAccResultList;
+    }
+
+    @Override
+    public byte[] getAmznAccFileSample() {
+        Workbook workbook = new XSSFWorkbook();
+
+        Sheet sheet = workbook.createSheet("Amzn Acc");
+        sheet.setColumnWidth(0, 6000);
+        sheet.setColumnWidth(1, 4000);
+
+        styleHeaderRow(workbook, sheet);
+        writeTableContent(workbook, sheet);
+        return generateFile(workbook);
+
+    }
+
+    private void styleHeaderRow(Workbook workbook, Sheet sheet) {
+
+        Row header = sheet.createRow(0);
+        CellStyle headerStyle = workbook.createCellStyle();
+        XSSFFont font = ((XSSFWorkbook) workbook).createFont();
+        font.setFontName("Arial");
+        font.setFontHeightInPoints((short) 16);
+        font.setBold(true);
+        headerStyle.setFont(font);
+
+        Cell headerCell = header.createCell(0);
+        headerCell.setCellValue("Username");
+        headerCell.setCellStyle(headerStyle);
+
+        headerCell = header.createCell(1);
+        headerCell.setCellValue("Password");
+        headerCell.setCellStyle(headerStyle);
+    }
+
+    private void writeTableContent(Workbook workbook, Sheet sheet) {
+        CellStyle style = workbook.createCellStyle();
+        style.setWrapText(true);
+
+        Row row = sheet.createRow(1);
+        Cell cell = row.createCell(0);
+        cell.setCellValue("<Edit here>");
+        cell.setCellStyle(style);
+
+        cell = row.createCell(1);
+        cell.setCellValue("<Edit here>");
+        cell.setCellStyle(style);
+    }
+
+    private byte[] generateFile(Workbook workbook) {
+        ByteArrayOutputStream stream = new ByteArrayOutputStream();
+        try {
+            workbook.write(stream);
+            workbook.close();
+        } catch (IOException e) {
+            throw new ServerErrorException(messageSource.getMessage("error.500", null, Locale.getDefault()));
+        }
+        return stream.toByteArray();
     }
 
     @Override

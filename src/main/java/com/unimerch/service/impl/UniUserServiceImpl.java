@@ -13,6 +13,7 @@ import com.unimerch.repository.model.*;
 import com.unimerch.repository.model.metamodel.User_;
 import com.unimerch.security.UserPrinciple;
 import com.unimerch.service.UniUserService;
+import com.unimerch.util.NaturalSortUtils;
 import com.unimerch.util.PrincipalUtils;
 import com.unimerch.util.ValidationUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,6 +37,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 @Transactional
@@ -202,25 +204,21 @@ public class UniUserServiceImpl implements UniUserService {
     @Override
     public List<GroupResult> findAssignedGroups(String userId) {
         User user = findById(userId);
-
-        List<GroupResult> groupListResult = new ArrayList<>();
-
-        brgGroupUserRepository.findAssignedGroupsByUserId(user.getId())
-                .forEach(group -> groupListResult.add(groupMapper.toGroupResult(group)));
-
-        return groupListResult;
+        return brgGroupUserRepository
+                .findAssignedGroupsByUserId(user.getId()).stream()
+                .sorted((o1, o2) -> NaturalSortUtils.compareString(o1.getTitle(), o2.getTitle()))
+                .map(item -> groupMapper.toGroupResult(item))
+                .collect(Collectors.toList());
     }
 
     @Override
     public List<GroupResult> findUnassignedGroups(String userId) {
         User user = findById(userId);
-
-        List<GroupResult> groupListResult = new ArrayList<>();
-
-        brgGroupUserRepository.findUnassignedGroupsByUserId(user.getId())
-                .forEach(group -> groupListResult.add(groupMapper.toGroupResult(group)));
-
-        return groupListResult;
+        return brgGroupUserRepository
+                .findUnassignedGroupsByUserId(user.getId()).stream()
+                .sorted((o1, o2) -> NaturalSortUtils.compareString(o1.getTitle(), o2.getTitle()))
+                .map(item -> groupMapper.toGroupResult(item))
+                .collect(Collectors.toList());
     }
 
     @Override
