@@ -13,7 +13,7 @@ import java.util.List;
 @Repository
 public interface ProductRepository extends JpaRepository<Product, String> {
     @Query(name = "get_product_item_result", nativeQuery = true)
-    List<ProductResult> getProductItemResultList(@Param("startDay")Instant startDay, @Param("amznAccId") List<Integer> amznAccId);
+    List<ProductResult> getProductItemResultList(@Param("startDay")Instant startDay, @Param("amznAccIds") List<Integer> amznAccIds);
 
     @Query("SELECT NEW com.unimerch.dto.product.ProductResult (" +
                 "SUM(o.purchased - o.cancelled), " +
