@@ -12,6 +12,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.Paths;
 
 @Service
 public class ConfigurationServiceImpl implements InitializingBean {
@@ -38,7 +39,7 @@ public class ConfigurationServiceImpl implements InitializingBean {
         } catch (IOException | ParseException e) {
             throw new RuntimeException(e);
         }
-        appsConfigString = Files.readString(Path.of(dirPath, appFileName));
+        appsConfigString = new String(Files.readAllBytes(Paths.get(dirPath, appFileName)));
     }
 
     public boolean updateAppsConfig(String newAppsConfigString) {
@@ -50,11 +51,10 @@ public class ConfigurationServiceImpl implements InitializingBean {
     }
 
     private boolean updateConfigString(String newConfigString, String backendFileName) {
-        try {
-            FileWriter file = new FileWriter(String.format("%s%s", dirPath, backendFileName));
+        try( FileWriter file = new FileWriter(String.format("%s%s", dirPath, backendFileName))) {
             file.write(newConfigString);
             file.flush();
-            appsConfigString = Files.readString(Path.of(dirPath, backendFileName));
+            appsConfigString = new String(Files.readAllBytes(Paths.get(dirPath, backendFileName)));
             return true;
         } catch (IOException e) {
             return false;
