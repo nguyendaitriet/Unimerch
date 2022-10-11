@@ -61,7 +61,12 @@
                     </form>
                 </div>
                 <div class="modal-footer tex">
-                    <button type="button" class="btnUpload" id="btnImportAmznAcc" th:text="#{btn.upload}">Upload file</button>
+                    <div class="col-md-7">
+                        <a href="/api/amzn/getFileSample" th:text="#{amznAcc.getFileSample}"></a>
+                    </div>
+                    <div class="col-md-4">
+                        <button type="button" class="btnUpload" id="btnImportAmznAcc" th:text="#{btn.upload}">Upload file</button>
+                    </div>
                 </div>
             </div>
         </div>
