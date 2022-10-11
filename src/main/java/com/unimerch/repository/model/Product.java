@@ -30,7 +30,7 @@ import java.util.Objects;
                 "FROM orders AS o " +
                 "LEFT JOIN products AS p " +
                 "ON p.ASIN = o.ASIN " +
-                "WHERE o.amzn_user_id IN (:amznAccId) " +
+                "WHERE o.amzn_user_id IN (:amznAcccId) " +
                 "AND o.date >= :startDay " +
                 "GROUP BY o.ASIN ",
         resultSetMapping = "product_item_result"
