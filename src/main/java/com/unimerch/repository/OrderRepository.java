@@ -75,4 +75,11 @@ public interface OrderRepository extends JpaRepository<Order, Integer> {
 
     void deleteAllByAmznUserIdIn(List<Integer> ids);
 
+    @Query(value = "SELECT * " +
+            "FROM orders " +
+            "ORDER BY RAND() " +
+            "LIMIT :number ",
+            nativeQuery = true
+    )
+    List<Order> findRandomOrders(@Param("number") int number);
 }

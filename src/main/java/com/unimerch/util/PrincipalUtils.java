@@ -10,7 +10,7 @@ import org.springframework.stereotype.Component;
 @Component
 public class PrincipalUtils {
     @Autowired
-    UniUserService userService;
+    private UniUserService userService;
 
     public int getPrincipalId() {
         Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
