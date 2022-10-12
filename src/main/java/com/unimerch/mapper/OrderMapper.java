@@ -12,6 +12,7 @@ import com.unimerch.dto.order.OrderData;
 import com.unimerch.repository.model.Order;
 import com.unimerch.repository.model.Product;
 import com.unimerch.util.ChartUtils;
+import com.unimerch.util.TimeUtils;
 import org.springframework.stereotype.Component;
 
 import java.io.IOException;
@@ -46,7 +47,7 @@ public class OrderMapper extends StdDeserializer<OrderData> {
         for (JsonNode node : orderNodeList) {
 
             String asin = node.get("asin").textValue();
-            Instant date = Instant.parse(node.get("period").textValue());
+            Instant date = TimeUtils.parseStringToInstant(node.get("period").textValue());
             String title = node.get("asinName").textValue();
             String info = node.get("variationInfo").toString();
             Integer purchased = node.get("unitsSold").asInt();
