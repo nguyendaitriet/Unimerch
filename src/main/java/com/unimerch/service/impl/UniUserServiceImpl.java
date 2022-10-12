@@ -155,17 +155,19 @@ public class UniUserServiceImpl implements UniUserService {
 
     @Override
     public void changeMyPassword(String password) {
-        User user = findById(String.valueOf(principalUtils.getPrincipalId()));
+        throw new DuplicateDataException("Chức năng tạm khoá");
 
-        if (!ValidationUtils.isPasswordvalid(password))
-            throw new InvalidPasswordException(messageSource.getMessage("validation.validPassword", null, Locale.getDefault()));
-
-        try {
-            String newPasswordHash = passwordEncoder.encode(password);
-            userRepository.changePassword(user.getId(), newPasswordHash);
-        } catch (Exception e) {
-            throw new ServerErrorException(messageSource.getMessage("error.500", null, Locale.getDefault()));
-        }
+//        User user = findById(String.valueOf(principalUtils.getPrincipalId()));
+//
+//        if (!ValidationUtils.isPasswordvalid(password))
+//            throw new InvalidPasswordException(messageSource.getMessage("validation.validPassword", null, Locale.getDefault()));
+//
+//        try {
+//            String newPasswordHash = passwordEncoder.encode(password);
+//            userRepository.changePassword(user.getId(), newPasswordHash);
+//        } catch (Exception e) {
+//            throw new ServerErrorException(messageSource.getMessage("error.500", null, Locale.getDefault()));
+//        }
     }
 
     @Override
