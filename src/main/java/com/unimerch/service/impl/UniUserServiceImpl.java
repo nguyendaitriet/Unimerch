@@ -28,10 +28,6 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import javax.persistence.criteria.CriteriaBuilder;
-import javax.persistence.criteria.CriteriaQuery;
-import javax.persistence.criteria.Predicate;
-import javax.persistence.criteria.Root;
 import javax.transaction.Transactional;
 import java.util.ArrayList;
 import java.util.List;
@@ -159,17 +155,19 @@ public class UniUserServiceImpl implements UniUserService {
 
     @Override
     public void changeMyPassword(String password) {
-        User user = findById(String.valueOf(principalUtils.getPrincipalId()));
+        throw new DuplicateDataException("Chức năng tạm khoá");
 
-        if (!ValidationUtils.isPasswordvalid(password))
-            throw new InvalidPasswordException(messageSource.getMessage("validation.validPassword", null, Locale.getDefault()));
-
-        try {
-            String newPasswordHash = passwordEncoder.encode(password);
-            userRepository.changePassword(user.getId(), newPasswordHash);
-        } catch (Exception e) {
-            throw new ServerErrorException(messageSource.getMessage("error.500", null, Locale.getDefault()));
-        }
+//        User user = findById(String.valueOf(principalUtils.getPrincipalId()));
+//
+//        if (!ValidationUtils.isPasswordvalid(password))
+//            throw new InvalidPasswordException(messageSource.getMessage("validation.validPassword", null, Locale.getDefault()));
+//
+//        try {
+//            String newPasswordHash = passwordEncoder.encode(password);
+//            userRepository.changePassword(user.getId(), newPasswordHash);
+//        } catch (Exception e) {
+//            throw new ServerErrorException(messageSource.getMessage("error.500", null, Locale.getDefault()));
+//        }
     }
 
     @Override
