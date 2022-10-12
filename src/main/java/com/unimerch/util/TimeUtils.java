@@ -22,6 +22,11 @@ public class TimeUtils {
 
     static final private String daysAndHoursFormat = "%d day(s) ago";
 
+
+    public static Instant parseStringToInstant(String date) {
+        return ZonedDateTime.parse(date).toInstant();
+    }
+
     public static String toDayMonthYear(LocalDate date) {
         return date.format(DateTimeFormatter.ofPattern(dayMonthYearPattern));
     }
