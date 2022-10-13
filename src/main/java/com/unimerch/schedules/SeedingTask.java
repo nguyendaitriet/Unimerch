@@ -1,4 +1,4 @@
-package com.unimerch.util;
+package com.unimerch.schedules;
 
 import com.unimerch.repository.OrderRepository;
 import com.unimerch.repository.model.Order;
@@ -11,7 +11,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Component
-public class ScheduledTaskUtils {
+public class SeedingTask {
     @Autowired
     private OrderRepository orderRepository;
 
