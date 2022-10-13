@@ -160,4 +160,8 @@ public class TimeUtils {
 
         return String.format(daysAndHoursFormat, days);
     }
+
+    public static void main(String[] args) {
+        System.out.println(getInstantToday());;
+    }
 }

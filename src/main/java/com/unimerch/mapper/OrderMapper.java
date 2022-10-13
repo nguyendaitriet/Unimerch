@@ -94,35 +94,10 @@ public class OrderMapper extends StdDeserializer<OrderData> {
                 .setRoyalties(royalties);
     }
 
-    public OrderChartColumn toOrderChartColumn(List<Order> orderList, String date) {
-        int columnNumSold = 0;
-        BigDecimal columnRoyalties = BigDecimal.ZERO;
-
-        for (Order order : orderList) {
-            columnNumSold += order.getPurchased() - order.getCancelled();
-            columnRoyalties = columnRoyalties.add(order.getRoyalties());
-        }
-
-        return new OrderChartColumn()
-                .setDate(date)
-                .setSold(columnNumSold)
-                .setRoyalties(columnRoyalties);
-    }
-
-    public OrderChartResult toOrderChartResult(List<OrderChartColumn> columnList) {
-        BigDecimal maxRoyalties = BigDecimal.ZERO;
-        long maxSold = 0;
-
-        for (OrderChartColumn column : columnList) {
-            if (column.getRoyalties().compareTo(maxRoyalties) > 0)
-                maxRoyalties = column.getRoyalties();
-            if (column.getSold() > maxSold)
-                maxSold = column.getSold();
-        }
-
+    public OrderChartResult toOrderChartResult(List<String> dates, List<BigDecimal> royalties, List<Integer> soldNumbers) {
         return new OrderChartResult()
-                .setMaxRoyaltiesAxis(ChartUtils.getMaxAxis(maxRoyalties))
-                .setMaxSoldAxis(ChartUtils.getMaxAxis(BigDecimal.valueOf(maxSold)))
-                .setColumns(columnList);
+                .setDates(dates)
+                .setRoyalties(royalties)
+                .setSoldNumbers(soldNumbers);
     }
 }

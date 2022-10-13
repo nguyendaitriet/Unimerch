@@ -108,56 +108,83 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     public OrderChartResult getChartAllAcc() {
-        List<OrderChartColumn> columnList = new ArrayList<>();
-        List<String> dateList = TimeUtils.getCardsLastSevenDays();
+        List<String> dates = TimeUtils.getCardsLastSevenDays();
+        List<BigDecimal> royalties = new LinkedList<>();
+        List<Integer> soldNumbers = new LinkedList<>();
         int columnNumber = 7;
-        int dateListIndex = 0;
 
         while (columnNumber > 0) {
             Instant startDate = TimeUtils.getInstantLastSomeDays(columnNumber);
             Instant endDate = TimeUtils.getInstantLastSomeDays(--columnNumber);
+            BigDecimal royaltyPerDay = BigDecimal.ZERO;
+            int soldPerDay = 0;
 
-            List<Order> orderColumn = orderRepository.findAllWithTimeRange(startDate, endDate);
-            columnList.add(orderMapper.toOrderChartColumn(orderColumn, dateList.get(dateListIndex++)));
+            List<Order> orderPerDay = orderRepository.findAllWithTimeRange(startDate, endDate);
+
+            for (Order order : orderPerDay) {
+                royaltyPerDay = royaltyPerDay.add(order.getRoyalties());
+                soldPerDay += order.getPurchased() - order.getCancelled();
+            }
+
+            royalties.add(royaltyPerDay);
+            soldNumbers.add(soldPerDay);
         }
 
-        return orderMapper.toOrderChartResult(columnList);
+        return orderMapper.toOrderChartResult(dates, royalties, soldNumbers);
     }
 
     @Override
     public OrderChartResult getChartUser(Integer amznAccId) {
-        List<OrderChartColumn> columnList = new ArrayList<>();
-        List<String> dateList = TimeUtils.getCardsLastSevenDays();
+        List<String> dates = TimeUtils.getCardsLastSevenDays();
+        List<BigDecimal> royalties = new LinkedList<>();
+        List<Integer> soldNumbers = new LinkedList<>();
         int columnNumber = 7;
-        int dateListIndex = 0;
 
         while (columnNumber > 0) {
             Instant startDate = TimeUtils.getInstantLastSomeDays(columnNumber);
             Instant endDate = TimeUtils.getInstantLastSomeDays(--columnNumber);
+            BigDecimal royaltyPerDay = BigDecimal.ZERO;
+            int soldPerDay = 0;
 
-            List<Order> orderColumn = orderRepository.findByAmznAccIdWithTimeRange(amznAccId, startDate, endDate);
-            columnList.add(orderMapper.toOrderChartColumn(orderColumn, dateList.get(dateListIndex++)));
+            List<Order> orderPerDay = orderRepository.findByAmznAccIdWithTimeRange(amznAccId, startDate, endDate);
+
+            for (Order order : orderPerDay) {
+                royaltyPerDay = royaltyPerDay.add(order.getRoyalties());
+                soldPerDay += order.getPurchased() - order.getCancelled();
+            }
+
+            royalties.add(royaltyPerDay);
+            soldNumbers.add(soldPerDay);
         }
 
-        return orderMapper.toOrderChartResult(columnList);
+        return orderMapper.toOrderChartResult(dates, royalties, soldNumbers);
     }
 
     @Override
     public OrderChartResult getChartGroup(Integer groupId) {
-        List<OrderChartColumn> columnList = new ArrayList<>();
-        List<String> dateList = TimeUtils.getCardsLastSevenDays();
+        List<String> dates = TimeUtils.getCardsLastSevenDays();
+        List<BigDecimal> royalties = new LinkedList<>();
+        List<Integer> soldNumbers = new LinkedList<>();
         int columnNumber = 7;
-        int dateListIndex = 0;
 
         while (columnNumber > 0) {
             Instant startDate = TimeUtils.getInstantLastSomeDays(columnNumber);
             Instant endDate = TimeUtils.getInstantLastSomeDays(--columnNumber);
+            BigDecimal royaltyPerDay = BigDecimal.ZERO;
+            int soldPerDay = 0;
 
-            List<Order> orderColumn = orderRepository.findByGroupIdWithTimeRange(groupId, startDate, endDate);
-            columnList.add(orderMapper.toOrderChartColumn(orderColumn, dateList.get(dateListIndex++)));
+            List<Order> orderPerDay = orderRepository.findByGroupIdWithTimeRange(groupId, startDate, endDate);
+
+            for (Order order : orderPerDay) {
+                royaltyPerDay = royaltyPerDay.add(order.getRoyalties());
+                soldPerDay += order.getPurchased() - order.getCancelled();
+            }
+
+            royalties.add(royaltyPerDay);
+            soldNumbers.add(soldPerDay);
         }
 
-        return orderMapper.toOrderChartResult(columnList);
+        return orderMapper.toOrderChartResult(dates, royalties, soldNumbers);
     }
 
     @Override

@@ -85,21 +85,9 @@
 
                                     <div class="row flex-md-row-reverse mb-3">
                                         <!-- Chart -->
-                                        <div class="col-12 col-md-8">
+                                        <div class="col-12 col-md-8 no-padding">
                                             <div class="row" id="chartHolder" style="height:300px; width:100%;">
                                                 <!-- Chart Content -->
-                                            </div>
-
-                                            <!-- Legends -->
-                                            <div id="legend" class="row mt-1 text-center justify-content-center small">
-                                                    <span class="mr-4">
-                                                        <i class="fas fa-square" style="color: #41b2e6"></i>
-                                                        <br th:text="#{dashboard.chart.legend.royalties}">
-                                                    </span>
-                                                <span class="mr-4">
-                                                        <i class="fas fa-square" style="color: #f9bd03"></i>
-                                                    <br th:text="#{dashboard.chart.legend.numberSold}">
-                                                    </span>
                                             </div>
                                         </div>
 
@@ -659,8 +647,6 @@
     page.dialogs.element.noteArea = $('#addNoteArea');
     page.dialogs.element.btnSaveNote = $('#btnSaveNote');
 
-    page.element.legends = $("#legends");
-
     page.commands.initTodaySoldTable = () => {
         let todaySoldTable = page.element.tableTodaySold.DataTable({
             ajax: {
@@ -1140,33 +1126,140 @@
     }
 
     //chart
-    var chartData;
-    var layoutStr;
+    var options = {
+        title: {
+            text: "Revenues Dashboard",
+            align: "center",
+            style: {
+                fontSize: '16px',
+                fontWeight: "bold",
+                color: "#41b2e6 "
+            }
+        },
+        chart: {
+            height: '300',
+            type: "line",
+            stacked: false,
+            toolbar: {
+                offsetX: -30,
+                tools: {
+                    download: '<img src="/assets/img/download-chart.png" width="20" height="20"/>',
+                    selection: false,
+                    zoom: false,
+                    zoomin: false,
+                    zoomout: false,
+                    reset: false,
+                    pan: false
+                },
+                export: {
+                    csv: {
+                        filename: "Weekly Revenues"
+                    },
+                    svg: {
+                        filename: "Weekly Revenues"
+                    },
+                    png: {
+                        filename: "Weekly Revenues"
+                    }
+                }
+            }
+        },
+        colors: ["#41b2e6", "#f9bd03"],
+        series: [
+            {
+                name: "Royalties",
+                type: "column",
+                data: []
+            },
+            {
+                name: "Sold",
+                type: "line",
+                data: []
+            }
+        ],
+        xaxis: {
+            categores: []
+        },
+        noData: {
+            text: "Loading...",
+        },
+        yaxis: [
+            {
+                axisTicks: {
+                    show: true
+                },
+                axisBorder: {
+                    show: true,
+                    color: "#41b2e6"
+                },
+                labels: {
+                    formatter: function (value) {
+                        return DBApp.fmtNumWMetricSuffix(value)
+                    },
+                    style: {
+                        colors: "#41b2e6",
+                        cssClass: "font-weight-bold"
+                    }
+                }
+            },
+            {
+                opposite: true,
+                axisTicks: {
+                    show: true
+                },
+                axisBorder: {
+                    show: true,
+                    color: "#f9bd03"
+                },
+                labels: {
+                    formatter: function (value) {
+                        return DBApp.fmtNumWMetricSuffix(value)
+                    },
+                    style: {
+                        colors: "#f9bd03",
+                        cssClass: "font-weight-bold"
+                    }
+                }
+            }
+        ],
+        stroke: {
+            width: [4, 4]
+        },
+        plotOptions: {
+            bar: {
+                columnWidth: "70%"
+            }
+        },
+        markers: {
+            size: 5,
+        },
+        tooltip: {
+            shared: false,
+            intersect: true,
+            x: {
+                show: false
+            }
+        },
+        grid: {
+            padding: {
+                left: -8,
+                right: -8
+            },
+            yaxis: {
+                lines: {
+                    show: false
+                }
+            }
+        },
+        legend: {
+            horizontalAlign: "center",
+            offsetX: 0
+        }
+    };
 
-    function chartReadyHandler(id) {
-        $('#' + id)[0].setLayout(layoutStr);
-        $('#' + id)[0].setData(chartData);
-    }
+    var chart = new ApexCharts($("#chartHolder")[0], options);
 
-    /** chart */
-    var chartData;
-    var layoutStr;
-
-    function chartReadyHandler(id) {
-        $('#' + id)[0].setLayout(layoutStr);
-        $('#' + id)[0].setData(chartData);
-    }
-
-    var chartVars = "KoolOnLoadCallFunction=chartReadyHandler";
-
-    function formatAxis(id, value) {
-        return DBApp.fmtNumWMetricSuffix(value);
-    }
-
-    /** reset-chart on tab change */
-    page.element.tabDashboard.on('shown.bs.tab', function () {
-        window.dispatchEvent(new Event('resize'));
-    })
+    chart.render();
 
     page.commands.getChart = (url) => {
         $.ajax({
@@ -1177,63 +1270,23 @@
             "type": "GET",
             "url": url
         })
-            .done((chart) => {
-                chartData = chart.columns;
+            .done((chartData) => {
+                chart.updateOptions({
+                    xaxis: {
+                        categories: chartData.dates
+                    },
+                    series: [
+                        {
+                            name: "Royalties",
+                            data: chartData.royalties,
+                        },
+                        {
+                            name: "Sold",
+                            data: chartData.soldNumbers,
+                        }
+                    ]
+                });
 
-                layoutStr =
-                    `<KoolChart backgroundColor="#FFFFFF"  borderStyle="none">'
-                    +'<Options>'
-                        +'<Caption text="${chartCaption}" fontSize="12"/>'
-                        +'<SubCaption text="Royalties $" textAlign="left" height="0" fontSize="10"/>'
-                        +'<SubCaption text="Sold" textAlign="right" fontSize="10"/>'
-                        +'<SubCaption/>'
-                    +'</Options>'
-
-                    +'<Combination2DChart showDataTips="true" touchMoveEnable="false">'
-                        +'<horizontalAxis>'
-                            +'<CategoryAxis categoryField="date"/>'
-                        +'</horizontalAxis>'
-
-                        +'<verticalAxis>'
-                            +'<LinearAxis id="vAxis1" labelJsFunction="formatAxis" maximum="${chart.maxRoyaltiesAxis}"/>'
-                        +'</verticalAxis>'
-
-                        +'<series>'
-                            +'<Column2DSeries labelPosition="none" yField="royalties" displayName="Royalties" columnWidthRatio="0.54">'
-                                +'<fill>'
-                                    +'<SolidColor color="#41b2e6"/>'
-                                +'</fill>'
-                                +'<showDataEffect>'
-                                    +'<SeriesInterpolate/>'
-                                +'</showDataEffect>'
-                            +'</Column2DSeries>'
-
-                            +'<Line2DSeries radius="6" yField="sold" displayName="Sold" itemRenderer="CircleItemRenderer">'
-                                +'<verticalAxis>'
-                                    +'<LinearAxis id="vAxis2" labelJsFunction="formatAxis" maximum="${chart.maxSoldAxis}"/>'
-                                +'</verticalAxis>'
-                                +'<showDataEffect>'
-                                    +'<SeriesInterpolate/>'
-                                +'</showDataEffect>'
-                                +'<lineStroke>'
-                                    +'<Stroke color="#f9bd03" weight="4"/>'
-                                +'</lineStroke>'
-                                +'<stroke>'
-                                    +'<Stroke color="#f9bd03" weight="3"/>'
-                                +'</stroke>'
-                            +'</Line2DSeries>'
-                        +'</series>'
-
-                        +'<verticalAxisRenderers>'
-                            +'<Axis2DRenderer axis="{vAxis1}" showLine="false"/>'
-                            +'<Axis2DRenderer axis="{vAxis2}" showLine="false"/>'
-                        +'</verticalAxisRenderers>'
-                    +'</Combination2DChart>'
-                +'</KoolChart>`;
-
-                KoolChart.create("chart1", "chartHolder", chartVars, "100%", "100%");
-
-                page.element.legends.removeClass('d-none');
             })
             .fail((jqXHR) => {
                 DBApp.handleFailedTasks(jqXHR);

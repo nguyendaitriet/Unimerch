@@ -6,6 +6,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.experimental.Accessors;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 @Getter
@@ -14,9 +15,9 @@ import java.util.List;
 @AllArgsConstructor
 @Accessors(chain = true)
 public class OrderChartResult {
-    private long maxRoyaltiesAxis;
+    private List<String> dates;
 
-    private long maxSoldAxis;
+    private List<BigDecimal> royalties;
 
-    private List<OrderChartColumn> columns;
+    private List<Integer> soldNumbers;
 }
