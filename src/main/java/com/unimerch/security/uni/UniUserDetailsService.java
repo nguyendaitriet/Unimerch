@@ -30,7 +30,8 @@ public class UniUserDetailsService implements UserDetailsService {
         if (user.isDisabled()) {
             throw new NotAllowDisableException(messageSource.getMessage("error.login.403", null, Locale.getDefault()));
         }
-        return UserPrinciple.build(user.getId().toString(),
+        return UserPrinciple.build(
+                user.getId().toString(),
                 user.getUsername(),
                 user.getPasswordHash(),
                 user.getRole().getCode());
