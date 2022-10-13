@@ -22,7 +22,8 @@ public class AmznUserDetailsService implements UserDetailsService {
         if (user == null) {
             throw new UsernameNotFoundException("No amzn acc found with the given username.");
         }
-        return UserPrinciple.build(user.getId().toString(),
+        return UserPrinciple.build(
+                user.getId().toString(),
                 user.getUsername(),
                 user.getPassword(),
                 null);
