@@ -32,7 +32,7 @@ import java.util.Objects;
                 "ON p.ASIN = o.ASIN " +
                 "WHERE o.amzn_user_id IN (:amznAccIds) " +
                 "AND o.date >= :startDay " +
-                "GROUP BY o.ASIN",
+                "GROUP BY o.ASIN, o.title, p.price, o.amzn_user_id",
         resultSetMapping = "product_item_result"
 )
 @SqlResultSetMapping(
