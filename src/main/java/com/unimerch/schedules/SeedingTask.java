@@ -17,7 +17,7 @@ public class SeedingTask {
 
     @Scheduled(cron = "0 10 0 * * *", zone = "Asia/Ho_Chi_Minh")
     public void generateOrdersDaily() {
-        int orderNumber = getRandomNumber(50, 100);
+        int orderNumber = getRandomNumber(20, 100);
         List<Order> orders = orderRepository.findRandomOrders(orderNumber);
         Instant today = Instant.now();
         orders = orders.stream()
