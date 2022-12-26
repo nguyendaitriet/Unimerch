@@ -29,5 +29,4 @@ public class BrgGroupAmznUser {
     @JoinColumn(name = "amzn_user_id")
     private AmznUser amznUser;
 
-
 }
