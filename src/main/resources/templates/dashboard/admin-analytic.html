@@ -46,31 +46,37 @@
                                 <div class="row mt-3">
                                     <div class="input-group-btn" data-toggle="buttons">
                                         <label class="btn btn-outline-info active">
-                                            <input type="radio" name="options" id="option1" autocomplete="off" checked>
+                                            <input value="today" type="radio" name="dateFilter" id="option1" autocomplete="off" checked>
                                             Today
                                         </label>
                                         <label class="btn btn-outline-info">
-                                            <input type="radio" name="options" id="option2" autocomplete="off">
+                                            <input value="yesterday" type="radio" name="dateFilter" id="option2" autocomplete="off">
                                             Yesterday
                                         </label>
                                         <label class="btn btn-outline-info">
-                                            <input type="radio" name="options" id="option3" autocomplete="off">
+                                            <input value="thisMonth" type="radio" name="dateFilter" id="option3" autocomplete="off">
                                             This month
                                         </label>
                                         <label class="btn btn-outline-info">
-                                            <input type="radio" name="options" id="option4" autocomplete="off">
+                                            <input value="previousMonth" type="radio" name="dateFilter" id="option4" autocomplete="off">
                                             Previous month
                                         </label>
                                         <label class="btn btn-outline-info">
-                                            <input type="radio" name="options" id="option5" autocomplete="off">
+                                            <input value="custom" type="radio" name="dateFilter" id="option5" autocomplete="off">
                                             Custom
                                             <input type="text" name="dateRange" id="dateRange" autocomplete="off">
                                         </label>
                                     </div>
                                 </div>
                                 <div class="row mt-3">
-                                    <button class="btn btn-primary" type="button">ANALYSE SALES</button>
+                                    <button id="btnAnalyse" class="btn btn-primary" type="button">ANALYSE SALES</button>
                                 </div>
+                                <div class="row mt-3">
+                                    <div class="row" id="chartHolder" style="height:1000px; width:100%;">
+                                        <!-- Chart Content -->
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </div>
 
@@ -106,7 +112,8 @@
         urls: {
             findAllGroups: CommonApp.BASE_URL_GROUP + "/findAllGroups",
             findAllAmzns: CommonApp.BASE_URL_AMZN_ACCOUNT + "/findAllAmznAccs",
-            findAmznsInsideGroup: CommonApp.BASE_URL_GROUP + "/showAmznAccInsideGroup"
+            findAmznsInsideGroup: CommonApp.BASE_URL_GROUP + "/showAmznAccInsideGroup",
+            getAnalyticsSale: CommonApp.BASE_URL_ANALYTICS
         },
         element: {},
         commands: {},
@@ -122,6 +129,8 @@
     page.element.analAmznSelect = $('#analAmznSelect');
     page.element.tempOption = $('#tempOption');
     page.element.dateRange = $('#dateRange');
+    page.element.btnAnalyse = $('#btnAnalyse');
+
     let tempOption = $.validator.format($.trim(page.element.tempOption.val().toString()));
 
     page.commands.findAllGroups = () => {
@@ -179,7 +188,6 @@
 
     page.commands.renderAmznOptions = (amzns) => {
 
-
         page.element.analAmznSelect.find('option').remove().end()
             .append(`<option value="0" selected>${allAmznsSelect}</option>`).val('0');
 
@@ -206,6 +214,191 @@
         })
     }
 
+    page.commands.handleBtnAnalyse = () => {
+        let groupId = page.element.analGrpSelect.selectpicker('val');
+        let amznId = page.element.analAmznSelect.selectpicker('val');
+        let dateFilter = $('input[name=dateFilter]:checked').val();
+        let analyticsParam = {
+            groupId: {},
+            amznId: {},
+            dateFilter: {}
+        }
+        analyticsParam.groupId = groupId;
+        analyticsParam.amznId = amznId;
+        analyticsParam.dateFilter = dateFilter;
+
+        page.commands.getChart(analyticsParam);
+    }
+
+    //Chart
+
+    var options = {
+        title: {
+            text: "Revenues Dashboard",
+            align: "center",
+            style: {
+                fontSize: '16px',
+                fontWeight: "bold",
+                color: "#41b2e6 "
+            }
+        },
+        chart: {
+            height: '300',
+            type: "line",
+            stacked: false,
+            toolbar: {
+                offsetX: -30,
+                tools: {
+                    download: '<img src="/assets/img/download-chart.png" width="20" height="20"/>',
+                    selection: false,
+                    zoom: false,
+                    zoomin: false,
+                    zoomout: false,
+                    reset: false,
+                    pan: false
+                },
+                export: {
+                    csv: {
+                        filename: "Weekly Revenues"
+                    },
+                    svg: {
+                        filename: "Weekly Revenues"
+                    },
+                    png: {
+                        filename: "Weekly Revenues"
+                    }
+                }
+            }
+        },
+        colors: ["#41b2e6", "#f9bd03"],
+        series: [
+            {
+                name: "Royalties",
+                type: "column",
+                data: []
+            },
+            {
+                name: "Sold",
+                type: "line",
+                data: []
+            }
+        ],
+        xaxis: {
+            categores: []
+        },
+        noData: {
+            text: "Loading...",
+        },
+        yaxis: [
+            {
+                axisTicks: {
+                    show: true
+                },
+                axisBorder: {
+                    show: true,
+                    color: "#41b2e6"
+                },
+                labels: {
+                    formatter: function (value) {
+                        return DBApp.fmtNumWMetricSuffix(value)
+                    },
+                    style: {
+                        colors: "#41b2e6",
+                        cssClass: "font-weight-bold"
+                    }
+                }
+            },
+            {
+                opposite: true,
+                axisTicks: {
+                    show: true
+                },
+                axisBorder: {
+                    show: true,
+                    color: "#f9bd03"
+                },
+                labels: {
+                    formatter: function (value) {
+                        return DBApp.fmtNumWMetricSuffix(value)
+                    },
+                    style: {
+                        colors: "#f9bd03",
+                        cssClass: "font-weight-bold"
+                    }
+                }
+            }
+        ],
+        stroke: {
+            width: [2, 5]
+        },
+        plotOptions: {
+            bar: {
+                columnWidth: "70%"
+            }
+        },
+        markers: {
+            size: 5,
+        },
+        tooltip: {
+            shared: false,
+            intersect: true,
+            x: {
+                show: false
+            }
+        },
+        grid: {
+            padding: {
+                left: -8,
+                right: -8
+            },
+            yaxis: {
+                lines: {
+                    show: false
+                }
+            }
+        },
+        legend: {
+            horizontalAlign: "center",
+            offsetX: 0
+        }
+    };
+
+    var chart = new ApexCharts($("#chartHolder")[0], options);
+
+    chart.render();
+
+    page.commands.getChart = (analyticsParam) => {
+        $.ajax({
+            headers: {
+                "accept": "application/json",
+                "content-type": "application/json"
+            },
+            type: "POST",
+            url: page.urls.getAnalyticsSale,
+            data: JSON.stringify(analyticsParam)
+        })
+        .done((chartData) => {
+            chart.updateOptions({
+                xaxis: {
+                    categories: chartData.dates
+                },
+                series: [
+                    {
+                        name: "Royalties",
+                        data: chartData.royalties,
+                    },
+                    {
+                        name: "Sold",
+                        data: chartData.soldNumbers,
+                    }
+                ]
+            });
+        })
+        .fail((jqXHR) => {
+            DBApp.handleFailedTasks(jqXHR);
+        })
+    }
+
     $(document).ready(function () {
         DBApp.handleGroupsFilterSidebar();
         page.commands.findAllGroups();
@@ -214,6 +407,9 @@
         page.element.dateRange.daterangepicker();
         page.element.analGrpSelect.selectpicker('setStyle', 'btn-outline-primary');
         page.element.analAmznSelect.selectpicker('setStyle', 'btn-outline-primary');
+        page.element.btnAnalyse.click(() => {
+            page.commands.handleBtnAnalyse();
+        })
     });
 
 </script>
