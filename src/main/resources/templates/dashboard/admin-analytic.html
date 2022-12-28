@@ -40,41 +40,58 @@
                                         <option value="0" th:text="#{analyse.allGroupsSelect}">All Groups</option>
                                     </select>
                                     <select class="selectpicker ml-3" id="analAmznSelect" data-live-search="true">
-                                        <option value="0" th:text="#{analyse.allAmznsSelect}">All Amazon Accounts</option>
+                                        <option value="0" th:text="#{analyse.allAmznsSelect}">All Amazon Accounts
+                                        </option>
                                     </select>
                                 </div>
                                 <div class="row mt-3">
                                     <div class="input-group-btn" data-toggle="buttons">
                                         <label class="btn btn-outline-info active">
-                                            <input value="today" type="radio" name="dateFilter" id="option1" autocomplete="off" checked>
+                                            <input value="today" type="radio" name="dateFilter" id="option1"
+                                                   autocomplete="off" checked>
                                             Today
                                         </label>
                                         <label class="btn btn-outline-info">
-                                            <input value="yesterday" type="radio" name="dateFilter" id="option2" autocomplete="off">
+                                            <input value="yesterday" type="radio" name="dateFilter" id="option2"
+                                                   autocomplete="off">
                                             Yesterday
                                         </label>
                                         <label class="btn btn-outline-info">
-                                            <input value="thisMonth" type="radio" name="dateFilter" id="option3" autocomplete="off">
+                                            <input value="thisMonth" type="radio" name="dateFilter" id="option3"
+                                                   autocomplete="off">
                                             This month
                                         </label>
                                         <label class="btn btn-outline-info">
-                                            <input value="previousMonth" type="radio" name="dateFilter" id="option4" autocomplete="off">
+                                            <input value="previousMonth" type="radio" name="dateFilter" id="option4"
+                                                   autocomplete="off">
                                             Previous month
                                         </label>
                                         <label class="btn btn-outline-info">
-                                            <input value="custom" type="radio" name="dateFilter" id="option5" autocomplete="off">
+                                            <input value="custom" type="radio" name="dateFilter" id="customDateFilter"
+                                                   autocomplete="off">
                                             Custom
-                                            <input type="text" name="dateRange" id="dateRange" autocomplete="off">
                                         </label>
+                                        <input class="form-control" type="text" name="dateRange" id="dateRange"
+                                               autocomplete="off" hidden>
                                     </div>
                                 </div>
                                 <div class="row mt-3">
                                     <button id="btnAnalyse" class="btn btn-primary" type="button">ANALYSE SALES</button>
                                 </div>
                                 <div class="row mt-3">
-                                    <div class="row" id="chartHolder" style="height:1000px; width:100%;">
-                                        <!-- Chart Content -->
+                                    <div class="input-group-btn" data-toggle="buttons">
+                                        <label class="btn btn-light active">
+                                            <input id="dailyChartRadio" value="daily" type="radio" name="dailyOrMonthly" autocomplete="off" checked>
+                                            Daily
+                                        </label>
+                                        <label class="btn btn-light">
+                                            <input id="monthlyChartRadio" value="monthly" type="radio" name="dailyOrMonthly" autocomplete="off">
+                                            Monthly
+                                        </label>
                                     </div>
+                                </div>
+                                <div class="row mt-3" id="chartHolder" style="height:1000px; width:100%;">
+                                    <!-- Chart Content -->
                                 </div>
                             </div>
                         </div>
@@ -130,6 +147,10 @@
     page.element.tempOption = $('#tempOption');
     page.element.dateRange = $('#dateRange');
     page.element.btnAnalyse = $('#btnAnalyse');
+    page.element.customDateFilter = $('#customDateFilter');
+    page.element.dateRange = $('#dateRange');
+    page.element.dailyChartRadio = $('#dailyChartRadio');
+    page.element.monthlyChartRadio = $('#monthlyChartRadio');
 
     let tempOption = $.validator.format($.trim(page.element.tempOption.val().toString()));
 
@@ -191,11 +212,11 @@
         page.element.analAmznSelect.find('option').remove().end()
             .append(`<option value="0" selected>${allAmznsSelect}</option>`).val('0');
 
-            $.each(amzns, (index, amzn) => {
-                page.commands.addAmznToSelect(amzn);
-            });
+        $.each(amzns, (index, amzn) => {
+            page.commands.addAmznToSelect(amzn);
+        });
 
-            page.element.analAmznSelect.selectpicker('refresh');
+        page.element.analAmznSelect.selectpicker('refresh');
 
     }
 
@@ -218,16 +239,73 @@
         let groupId = page.element.analGrpSelect.selectpicker('val');
         let amznId = page.element.analAmznSelect.selectpicker('val');
         let dateFilter = $('input[name=dateFilter]:checked').val();
+        let starDate = page.element.dateRange.data('daterangepicker').startDate.format('DD/MM/YYYY');
+        let endDate = page.element.dateRange.data('daterangepicker').endDate.format('DD/MM/YYYY');
         let analyticsParam = {
             groupId: {},
             amznId: {},
-            dateFilter: {}
+            dateFilter: {},
+            startDate: {},
+            endDate: {}
         }
         analyticsParam.groupId = groupId;
         analyticsParam.amznId = amznId;
         analyticsParam.dateFilter = dateFilter;
+        analyticsParam.startDate = starDate;
+        analyticsParam.endDate = endDate;
 
         page.commands.getChart(analyticsParam);
+    }
+
+    page.commands.handleCustomDateRange = () => {
+        $('input[type=radio][name=dateFilter]').change(function () {
+            if (this.value === 'custom') {
+                page.element.dateRange.attr('hidden', false);
+            } else {
+                page.element.dateRange.attr('hidden', true);
+            }
+        });
+    }
+
+    page.commands.handleDailyOrMonthLy = () => {
+        $('input[type=radio][name=dailyOrMonthly]').change(function () {
+            if (this.value === 'daily') {
+                chart.updateOptions({
+                    xaxis: {
+                        categories: dataOfChart.dates
+                    },
+                    series: [
+                        {
+                            name: "Royalties",
+                            data: dataOfChart.royalties,
+                        },
+                        {
+                            name: "Sold",
+                            data: dataOfChart.soldNumbers,
+                        }
+                    ]
+                });
+            } else {
+                let royaltiesSum = [dataOfChart.royalties.reduce((royaltiesSum, e) => royaltiesSum + e, 0)];
+                let soldSum = [dataOfChart.soldNumbers.reduce((soldSum, e) => soldSum + e, 0)];
+                let monthTitle = [dataOfChart.dates[0].substring(3)];
+                chart.updateOptions({
+                    xaxis: {
+                        categories: monthTitle
+                    },
+                    series: [
+                        {
+                            name: "Royalties",
+                            data: royaltiesSum,
+                        },
+                        {
+                            name: "Sold",
+                            data: soldSum,
+                        }
+                    ]
+                });
+            }
+        });
     }
 
     //Chart
@@ -237,7 +315,7 @@
             text: "Revenues Dashboard",
             align: "center",
             style: {
-                fontSize: '16px',
+                fontSize: '25px',
                 fontWeight: "bold",
                 color: "#41b2e6 "
             }
@@ -367,6 +445,8 @@
 
     chart.render();
 
+    var dataOfChart;
+
     page.commands.getChart = (analyticsParam) => {
         $.ajax({
             headers: {
@@ -377,26 +457,42 @@
             url: page.urls.getAnalyticsSale,
             data: JSON.stringify(analyticsParam)
         })
-        .done((chartData) => {
-            chart.updateOptions({
-                xaxis: {
-                    categories: chartData.dates
-                },
-                series: [
-                    {
-                        name: "Royalties",
-                        data: chartData.royalties,
+            .done((chartData) => {
+                dataOfChart = chartData;
+                let titleChartUpdate;
+                let datesLength = chartData.dates.length;
+                if (datesLength === 1) {
+                    titleChartUpdate = `Revenues Dashboard ${chartData.dates[0]}`;
+                } else {
+                    titleChartUpdate = `Revenues Dashboard ${chartData.dates[0]} - ${chartData.dates[datesLength - 1]}`;
+                }
+
+                chart.updateOptions({
+                    title: {
+                        text: titleChartUpdate,
                     },
-                    {
-                        name: "Sold",
-                        data: chartData.soldNumbers,
-                    }
-                ]
-            });
-        })
-        .fail((jqXHR) => {
-            DBApp.handleFailedTasks(jqXHR);
-        })
+                    xaxis: {
+                        categories: chartData.dates
+                    },
+                    series: [
+                        {
+                            name: "Royalties",
+                            data: chartData.royalties,
+                        },
+                        {
+                            name: "Sold",
+                            data: chartData.soldNumbers,
+                        }
+                    ]
+                });
+
+                page.element.dailyChartRadio.prop('checked', true);
+                page.element.dailyChartRadio.parent().addClass('active');
+                page.element.monthlyChartRadio.parent().removeClass('active');
+            })
+            .fail((jqXHR) => {
+                DBApp.handleFailedTasks(jqXHR);
+            })
     }
 
     $(document).ready(function () {
@@ -404,7 +500,13 @@
         page.commands.findAllGroups();
         page.commands.findAllAmzns();
         page.commands.handleAnalGrpSelect();
-        page.element.dateRange.daterangepicker();
+        page.commands.handleCustomDateRange();
+        page.commands.handleDailyOrMonthLy();
+        page.element.dateRange.daterangepicker({
+            locale: {
+                format: "DD/MM/YYYY"
+            }
+        });
         page.element.analGrpSelect.selectpicker('setStyle', 'btn-outline-primary');
         page.element.analAmznSelect.selectpicker('setStyle', 'btn-outline-primary');
         page.element.btnAnalyse.click(() => {

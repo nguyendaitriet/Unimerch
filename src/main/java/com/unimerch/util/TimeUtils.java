@@ -14,17 +14,22 @@ import java.util.stream.IntStream;
 public class TimeUtils {
     static final public ZoneId zoneIdVN = ZoneId.of("Asia/Ho_Chi_Minh");
 
-    static final private String dayMonthYearPattern = "dd/MM/yyyy";
+    static final public String dayMonthYearPattern = "dd/MM/yyyy";
 
-    static final private String monthYearPattern = "MM/yyyy";
+    static final public String monthYearPattern = "MM/yyyy";
 
-    static final private String hoursFormat = "%d hour(s) ago";
+    static final public String hoursFormat = "%d hour(s) ago";
 
-    static final private String daysAndHoursFormat = "%d day(s) ago";
-
+    static final public String daysAndHoursFormat = "%d day(s) ago";
 
     public static Instant parseStringToInstant(String date) {
         return ZonedDateTime.parse(date).toInstant();
+    }
+
+    public static Instant convertStringToInstant(String date, String pattern) {
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern(pattern);
+        LocalDate dateTime = LocalDate.parse(date, formatter);
+        return dateTime.atStartOfDay(ZoneId.systemDefault()).toInstant();
     }
 
     public static String toDayMonthYear(LocalDate date) {

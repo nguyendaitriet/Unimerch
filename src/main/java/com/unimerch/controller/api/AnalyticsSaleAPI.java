@@ -18,7 +18,6 @@ public class AnalyticsSaleAPI {
     @RoleConstant.ManagerUserAuthorization
     @PostMapping
     public ResponseEntity<?> getAnalyticsChart(@RequestBody AnalyticsParam analyticsParam) {
-        System.out.println(analyticsParam);
         return new ResponseEntity<> (analyticService.getAnalyticsChart(analyticsParam), HttpStatus.OK);
     }
 }

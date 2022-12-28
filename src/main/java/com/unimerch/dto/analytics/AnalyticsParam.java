@@ -13,4 +13,6 @@ public class AnalyticsParam {
     private Integer groupId;
     private Integer amznId;
     private String dateFilter;
+    private String startDate;
+    private String endDate;
 }

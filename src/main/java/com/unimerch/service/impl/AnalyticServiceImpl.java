@@ -14,10 +14,8 @@ import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 import java.time.Instant;
+import java.time.Period;
 import java.util.*;
-
-import static java.util.stream.Collectors.reducing;
-
 
 @Service
 public class AnalyticServiceImpl implements AnalyticService {
@@ -33,7 +31,6 @@ public class AnalyticServiceImpl implements AnalyticService {
         return getChartAllAcc(analyticsParam);
     }
 
-
     public OrderChartResult getChartAllAcc(AnalyticsParam analyticsParam) {
         DateFilter dateFilter = DateFilter.parseDateFilter(analyticsParam.getDateFilter());
         switch (dateFilter) {
@@ -46,7 +43,7 @@ public class AnalyticServiceImpl implements AnalyticService {
             case PREVIOUS_MONTH:
                 return getChartPreviousMonth();
             case CUSTOM:
-                return null;
+                return getChartCustomDateRange(analyticsParam);
             default:
                 return null;
         }
@@ -56,7 +53,6 @@ public class AnalyticServiceImpl implements AnalyticService {
         List<String> dates = new ArrayList<>(Collections.singleton(TimeUtils.getCardTimeToday()));
         Instant startDate = TimeUtils.getInstantToday();
         List<Order> orderList = orderRepository.findAllWithStartDate(startDate);
-
         return processOrderChartWithOneColumn(orderList, dates);
     }
 
@@ -64,24 +60,24 @@ public class AnalyticServiceImpl implements AnalyticService {
         List<String> dates = new ArrayList<>(Collections.singleton(TimeUtils.getCardTimeYesterday()));
         Map<String, Instant> instantYesterday = TimeUtils.getInstantYesterday();
         List<Order> orderList = orderRepository.findAllWithTimeRange(instantYesterday.get("startTime"), instantYesterday.get("endTime"));
-
         return processOrderChartWithOneColumn(orderList, dates);
     }
 
     public OrderChartResult getChartThisMonth() {
         Instant firstDateOfThisMonth = TimeUtils.getInstantThisMonth();
-        List<Order> orderList = orderRepository.findAllWithStartDate(firstDateOfThisMonth);
         Instant today = Instant.now();
         return processOrderChartWithMultiColumn(firstDateOfThisMonth, today);
-//        return processOrderChartWithOneColumn(orderList, dates);
     }
 
     public OrderChartResult getChartPreviousMonth() {
-        Instant startDate = TimeUtils.getInstantThisMonth();
-        List<Order> orderList = orderRepository.findAllWithStartDate(startDate);
         Map<String, Instant> instantPreviousMonth = TimeUtils.getInstantPreviousMonth();
         return processOrderChartWithMultiColumn(instantPreviousMonth.get("startTime"), instantPreviousMonth.get("endTime"));
-//        return processOrderChartWithOneColumn(orderList, dates);
+    }
+
+    public OrderChartResult getChartCustomDateRange(AnalyticsParam analyticsParam) {
+        Instant startDate = TimeUtils.convertStringToInstant(analyticsParam.getStartDate(), TimeUtils.dayMonthYearPattern);
+        Instant endDate = TimeUtils.convertStringToInstant(analyticsParam.getEndDate(), TimeUtils.dayMonthYearPattern).plus(Period.ofDays(1));
+        return processOrderChartWithMultiColumn(startDate, endDate);
     }
 
     public OrderChartResult processOrderChartWithOneColumn(List<Order> orderList, List<String> dates) {
