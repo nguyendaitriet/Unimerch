@@ -94,8 +94,8 @@ public class TimeUtils {
         Map<String, Instant> results = new HashMap<>();
 
         LocalDate firstDayOfLastMonth = YearMonth.now().minusMonths(1).atDay(1);
-        ZonedDateTime zdtFirstDayofLastMonth = firstDayOfLastMonth.atStartOfDay(zoneIdVN);
-        Instant startTime = zdtFirstDayofLastMonth.toInstant();
+        ZonedDateTime zdtFirstDayOfLastMonth = firstDayOfLastMonth.atStartOfDay(zoneIdVN);
+        Instant startTime = zdtFirstDayOfLastMonth.toInstant();
         results.put("startTime", startTime);
 
         LocalDate firstDayOfThisMonth = LocalDate.now().withDayOfMonth(1);
@@ -116,8 +116,33 @@ public class TimeUtils {
 
         LocalDate start = LocalDate.now().minusDays(6);
 
-        IntStream.range(0, 7).mapToObj(start::plusDays).collect(Collectors.toList()).forEach(localDate -> cards.add(toDayMonthYear(localDate)));
+        IntStream.range(0, 7).mapToObj(start::plusDays)
+                .collect(Collectors.toList())
+                .forEach(localDate -> cards.add(toDayMonthYear(localDate)));
 
+        return cards;
+    }
+
+    public static List<String> getCardsThisMonth() {
+        List<String> cards = new ArrayList<>();
+        int numOfDaysBetween = LocalDate.now().getDayOfMonth();
+        LocalDate start = LocalDate.now().minusDays(numOfDaysBetween - 1);
+
+        IntStream.range(0, numOfDaysBetween).mapToObj(start::plusDays)
+                .collect(Collectors.toList())
+                .forEach(localDate -> cards.add(toDayMonthYear(localDate)));
+        return cards;
+    }
+
+    public static List<String> getCardsPreviousMonth() {
+        List<String> cards = new ArrayList<>();
+        LocalDate endDay =YearMonth.now().minusMonths(1).atEndOfMonth();
+        int numOfDaysBetween = endDay.getDayOfMonth();
+        LocalDate start = endDay.minusDays(numOfDaysBetween - 1);
+
+        IntStream.range(0, numOfDaysBetween).mapToObj(start::plusDays)
+                .collect(Collectors.toList())
+                .forEach(localDate -> cards.add(toDayMonthYear(localDate)));
         return cards;
     }
 

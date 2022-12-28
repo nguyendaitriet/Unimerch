@@ -19,4 +19,5 @@ public class OrderChartColumn {
     private BigDecimal royalties;
 
     private int sold;
+
 }

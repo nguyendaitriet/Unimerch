@@ -1,5 +1,7 @@
 package com.unimerch.repository.model;
 
+import com.unimerch.dto.order.OrderChartColumn;
+import com.unimerch.dto.product.ProductResult;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -18,6 +20,29 @@ import java.time.Instant;
 @Table(
         name = "orders",
         indexes = @Index(name = "idx_date", columnList = "date")
+)
+@NamedNativeQuery(
+        name = "get_order_chart_column_result",
+        query =
+                "SELECT  " +
+                    "DATE_FORMAT(o.`date`, '%d/%m/%Y') AS date, " +
+                    "SUM(o.royalties) AS royalties, " +
+                    "SUM(o.purchased - o.cancelled) AS sold " +
+                "FROM orders o " +
+                "WHERE o.date BETWEEN :startDay AND :endDay " +
+                "GROUP BY DATE_FORMAT(o.`date`, '%d/%m/%Y') ",
+        resultSetMapping = "order_chart_column_result"
+)
+@SqlResultSetMapping(
+        name = "order_chart_column_result",
+        classes = @ConstructorResult(
+                targetClass = OrderChartColumn.class,
+                columns = {
+                        @ColumnResult(name = "date", type = String.class),
+                        @ColumnResult(name = "royalties", type = BigDecimal.class),
+                        @ColumnResult(name = "sold", type = Integer.class),
+                }
+        )
 )
 @Accessors(chain = true)
 public class Order {
@@ -75,4 +100,8 @@ public class Order {
         this.currency = currency;
     }
 
+    public Order(BigDecimal royalties,Integer purchased) {
+        this.purchased = purchased;
+        this.royalties = royalties;
+    }
 }

@@ -1,5 +1,6 @@
 package com.unimerch.repository;
 
+import com.unimerch.dto.order.OrderChartColumn;
 import com.unimerch.repository.model.Order;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -82,4 +83,9 @@ public interface OrderRepository extends JpaRepository<Order, Integer> {
             nativeQuery = true
     )
     List<Order> findRandomOrders(@Param("number") int number);
+
+    @Query(name = "get_order_chart_column_result", nativeQuery = true)
+    List<OrderChartColumn> findAllOrderChartWithDateRange(@Param("startDay") Instant startDay, @Param("endDay") Instant endDay);
+
+
 }
