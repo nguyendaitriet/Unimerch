@@ -286,21 +286,22 @@
                     ]
                 });
             } else {
-                let royaltiesSum = [dataOfChart.royalties.reduce((royaltiesSum, e) => royaltiesSum + e, 0)];
-                let soldSum = [dataOfChart.soldNumbers.reduce((soldSum, e) => soldSum + e, 0)];
-                let monthTitle = [dataOfChart.dates[0].substring(3)];
+                let royaltiesSum = dataOfChart.royalties.reduce((royaltiesSum, e) => royaltiesSum + e, 0);
+                let roundedRoyaltiesSum = Math.round((royaltiesSum + Number.EPSILON) * 100) / 100;
+                let soldSum = dataOfChart.soldNumbers.reduce((soldSum, e) => soldSum + e, 0)
+                let monthTitle = dataOfChart.dates[0].substring(3);
                 chart.updateOptions({
                     xaxis: {
-                        categories: monthTitle
+                        categories: [monthTitle]
                     },
                     series: [
                         {
                             name: "Royalties",
-                            data: royaltiesSum,
+                            data: [roundedRoyaltiesSum],
                         },
                         {
                             name: "Sold",
-                            data: soldSum,
+                            data: [soldSum],
                         }
                     ]
                 });

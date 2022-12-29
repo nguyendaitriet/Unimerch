@@ -7,7 +7,6 @@ import com.unimerch.dto.order.OrderChartResult;
 import com.unimerch.exception.ServerErrorException;
 import com.unimerch.mapper.OrderMapper;
 import com.unimerch.repository.OrderRepository;
-import com.unimerch.repository.model.Order;
 import com.unimerch.service.AnalyticService;
 import com.unimerch.util.TimeUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -53,49 +52,20 @@ public class AnalyticServiceImpl implements AnalyticService {
     }
 
     public OrderChartResult getChartToday(AnalyticsParam analyticsParam, String amznFilter) {
-        List<String> dates = new ArrayList<>(Collections.singleton(TimeUtils.getCardTimeToday()));
         Instant startDate = TimeUtils.getInstantToday();
-        List<Order> orderList;
+        Instant endDate = Instant.now();
+        List<OrderChartColumn> orderChartColumnList = getOrderChartColumnList(analyticsParam, amznFilter, startDate, endDate);
 
-        switch (amznFilter) {
-            case "all":
-                orderList = orderRepository.findAllWithStartDate(startDate);
-                break;
-            case "group":
-                orderList = orderRepository.findByGroupIdWithStartDate(analyticsParam.getGroupId(), startDate);
-                break;
-            case "amzn":
-                orderList = orderRepository.findByAmznAccIdWithStartDate(analyticsParam.getGroupId(), startDate);
-                break;
-            default:
-                throw new ServerErrorException(messageSource.getMessage("error.500", null, Locale.getDefault()));
-        }
-
-        return processOrderChartWithOneColumn(orderList, dates);
+        return processOrderChartList(orderChartColumnList);
     }
 
     public OrderChartResult getChartYesterday(AnalyticsParam analyticsParam, String amznFilter) {
-        List<String> dates = new ArrayList<>(Collections.singleton(TimeUtils.getCardTimeYesterday()));
         Map<String, Instant> instantYesterday = TimeUtils.getInstantYesterday();
         Instant startDate = instantYesterday.get("startTime");
         Instant endDate = instantYesterday.get("endTime");
-        List<Order> orderList;
+        List<OrderChartColumn> orderChartColumnList = getOrderChartColumnList(analyticsParam, amznFilter, startDate, endDate);
 
-        switch (amznFilter) {
-            case "all":
-                orderList = orderRepository.findAllWithTimeRange(startDate, endDate);
-                break;
-            case "group":
-                orderList = orderRepository.findByGroupIdWithTimeRange(analyticsParam.getGroupId(), startDate, endDate);
-                break;
-            case "amzn":
-                orderList = orderRepository.findByAmznAccIdWithTimeRange(analyticsParam.getAmznId(), startDate, endDate);
-                break;
-            default:
-                throw new ServerErrorException(messageSource.getMessage("error.500", null, Locale.getDefault()));
-        }
-
-        return processOrderChartWithOneColumn(orderList, dates);
+        return processOrderChartList(orderChartColumnList);
     }
 
     public OrderChartResult getChartThisMonth(AnalyticsParam analyticsParam, String amznFilter) {
@@ -103,7 +73,7 @@ public class AnalyticServiceImpl implements AnalyticService {
         Instant endDate = Instant.now();
         List<OrderChartColumn> orderChartColumnList = getOrderChartColumnList(analyticsParam, amznFilter, startDate, endDate);
 
-        return processOrderChartWithMultiColumn(orderChartColumnList);
+        return processOrderChartList(orderChartColumnList);
     }
 
     public OrderChartResult getChartPreviousMonth(AnalyticsParam analyticsParam, String amznFilter) {
@@ -112,7 +82,7 @@ public class AnalyticServiceImpl implements AnalyticService {
         Instant endDate = instantPreviousMonth.get("endTime");
         List<OrderChartColumn> orderChartColumnList = getOrderChartColumnList(analyticsParam, amznFilter, startDate, endDate);
 
-        return processOrderChartWithMultiColumn(orderChartColumnList);
+        return processOrderChartList(orderChartColumnList);
     }
 
     public OrderChartResult getChartCustomDateRange(AnalyticsParam analyticsParam, String amznFilter) {
@@ -120,7 +90,7 @@ public class AnalyticServiceImpl implements AnalyticService {
         Instant endDate = TimeUtils.convertStringToInstant(analyticsParam.getEndDate(), TimeUtils.dayMonthYearPattern).plus(Period.ofDays(1));
         List<OrderChartColumn> orderChartColumnList = getOrderChartColumnList(analyticsParam, amznFilter, startDate, endDate);
 
-        return processOrderChartWithMultiColumn(orderChartColumnList);
+        return processOrderChartList(orderChartColumnList);
     }
 
     public List<OrderChartColumn> getOrderChartColumnList(AnalyticsParam analyticsParam, String amznFilter, Instant startDate, Instant endDate) {
@@ -136,24 +106,7 @@ public class AnalyticServiceImpl implements AnalyticService {
         }
     }
 
-    public OrderChartResult processOrderChartWithOneColumn(List<Order> orderList, List<String> dates) {
-        List<BigDecimal> royalties = new LinkedList<>();
-        List<Integer> soldNumbers = new LinkedList<>();
-        BigDecimal royaltyPerDay = BigDecimal.ZERO;
-        int soldPerDay = 0;
-
-        for (Order order : orderList) {
-            royaltyPerDay = royaltyPerDay.add(order.getRoyalties());
-            soldPerDay += order.getPurchased() - order.getCancelled();
-        }
-
-        royalties.add(royaltyPerDay);
-        soldNumbers.add(soldPerDay);
-
-        return orderMapper.toOrderChartResult(dates, royalties, soldNumbers);
-    }
-
-    public OrderChartResult processOrderChartWithMultiColumn(List<OrderChartColumn> orderChartColumnList) {
+    public OrderChartResult processOrderChartList(List<OrderChartColumn> orderChartColumnList) {
         List<String> dates = new LinkedList<>();
         List<BigDecimal> royalties = new LinkedList<>();
         List<Integer> soldNumbers = new LinkedList<>();
