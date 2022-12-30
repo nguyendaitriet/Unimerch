@@ -76,6 +76,14 @@
             </a>
         </li>
 
+        <li class="nav-item"
+            th:classappend="${#httpServletRequest.requestURI.startsWith('/dashboard/tag')} ? 'active' : ''">
+            <a class="nav-link" href="/dashboard/tag">
+                <i class="fas fa-tags"></i>
+                <span th:text="#{sidebar.navItem.tag}">Tags</span>
+            </a>
+        </li>
+
         <!-- Divider -->
         <hr class="sidebar-divider">
 

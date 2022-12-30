@@ -1,31 +1,31 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org" lang="en">
 
-<th:block th:fragment="create-group">
-    <div id="mdCreateGroup" class="modal fade" tabindex="-1" role="dialog">
+<th:block th:fragment="create-tag">
+    <div id="mdCreateTag" class="modal fade" tabindex="-1" role="dialog">
         <div class="modal-dialog modal-dialog-centered" data-backdrop="static" data-keyboard="false">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" th:text="#{group.mdCreateGroupTitle}">Add new group</h5>
+                    <h5 class="modal-title" th:text="#{tag.mdCreateTagTitle}">Add new group</h5>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>
                 </div>
                 <div class="modal-body">
-                    <form class="mb-3" id="frmCreateGroup">
+                    <form class="mb-3" id="frmCreateTag">
                         <div class="row mb-3">
                             <div class="col-xl-4 d-flex flex-column justify-content-center">
-                                <label for="groupTitleCreate" th:text="#{group.groupTitle}">Group title</label>
+                                <label for="tagNameCreate" th:text="#{tag.tagTitle}">Tag title</label>
                             </div>
                             <div class="col-xl-8 d-flex flex-column justify-content-center">
-                                <input type="text" id="groupTitleCreate" name="groupTitleCreate" class="form-control"
+                                <input type="text" id="tagNameCreate" name="tagNameCreate" class="form-control"
                                        required>
                             </div>
                         </div>
                     </form>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-primary" id="btnCreateGroup" th:text="#{group.btnCreate}">
+                    <button type="button" class="btn btn-primary" id="btnCreateTag" th:text="#{group.btnCreate}">
                         Create
                     </button>
                     <button type="button" class="btn btn-secondary" data-dismiss="modal" th:text="#{group.btnClose}">
@@ -37,12 +37,12 @@
     </div>
 </th:block>
 
-<th:block th:fragment="update-group">
-    <div id="mdUpdateGroup" class="modal fade" tabindex="-1" role="dialog">
+<th:block th:fragment="update-tag">
+    <div id="mdUpdateTag" class="modal fade" tabindex="-1" role="dialog">
         <div class="modal-dialog modal-dialog-centered" data-backdrop="static" data-keyboard="false">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" th:text="#{group.mdUpdateGroupTitle}">Change group title</h5>
+                    <h5 class="modal-title" th:text="#{tag.mdUpdateTagTitle}">Change group title</h5>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>
@@ -52,21 +52,20 @@
                     <div class="modal-alert-danger hide">
                     </div>
 
-                    <form class="mb-3" id="frmUpdateGroup">
+                    <form class="mb-3" id="frmUpdateTag">
                         <div class="row mb-3">
                             <div class="col-xl-4 d-flex flex-column justify-content-center">
-                                <label for="groupTitleUpdate" th:text="#{group.groupTitle}">Group Title</label>
+                                <label for="tagNameUpdate" th:text="#{tag.tagTitle}">Group Title</label>
                             </div>
                             <div class="col-xl-8">
-                                <input type="text" id="groupTitleUpdate" name="groupTitleUpdate" class="form-control"/>
+                                <input type="text" id="tagNameUpdate" name="tagNameUpdate" class="form-control"/>
                             </div>
                         </div>
-
                     </form>
 
                 </div>
                 <div class="modal-footer">
-                    <button type="button" id="btnUpdateGroup" class="btn btn-primary" th:text="#{group.btnSave}">
+                    <button type="button" id="btnUpdateTag" class="btn btn-primary" th:text="#{group.btnSave}">
                         Change
                     </button>
                     <button type="button" class="btn btn-secondary" data-dismiss="modal" th:text="#{group.btnClose}">
@@ -78,13 +77,13 @@
     </div>
 </th:block>
 
-<th:block th:fragment="add-amzn-acc">
-    <div id="mdAddAmznAccToGroup" class="modal fade" tabindex="-1" role="dialog">
+<th:block th:fragment="add-tag-content">
+    <div id="mdAddTagContentToTag" class="modal fade" tabindex="-1" role="dialog">
         <div class="modal-dialog modal-dialog-centered" data-backdrop="static" data-keyboard="false">
             <div class="modal-content">
 
                 <div class="modal-header">
-                    <h5 class="modal-title" th:text="#{group.mdAddAmznAccTitle}">Add Amazon account to group</h5>
+                    <h5 class="modal-title" th:text="#{tag.mdAddTagContentToTagTitle}">Add Amazon account to group</h5>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>
@@ -94,19 +93,18 @@
 
                     <div class="modal-alert-danger hide">
                     </div>
-                    <table id="table-amzn-acc-out" class="table stripe nowrap table-borderless" style="width: 100%;">
+                    <table id="table-tag-content-out" class="table stripe nowrap table-borderless" style="width: 100%;">
                         <thead>
                         <tr>
                             <th>#</th>
-                            <th th:text="#{group.tableAmznAccUsername}" class="text-center">Username</th>
+                            <th th:text="#{tag.tagContentName}" class="text-center">Name</th>
                             <th></th>
                         </tr>
                         </thead>
                     </table>
-
                 </div>
                 <div class="modal-footer">
-                    <button type="button" id="btnAddAmznAccToGroup" class="btn btn-primary" th:text="#{group.btnAdd}">
+                    <button type="button" id="btnAddTagContentToTag" class="btn btn-primary" th:text="#{group.btnAdd}">
                         Add
                     </button>
                     <button type="button" class="btn btn-secondary" data-dismiss="modal" th:text="#{group.btnClose}">

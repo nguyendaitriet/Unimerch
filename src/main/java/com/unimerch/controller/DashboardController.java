@@ -77,4 +77,11 @@ public class DashboardController {
     public ModelAndView showAdminAnalyticPage() {
         return new ModelAndView("/dashboard/analytics-admin");
     }
+
+    @GetMapping("/tag")
+    public ModelAndView showAdminTagPage() {
+        return new ModelAndView("/dashboard/tag");
+    }
+
+
 }

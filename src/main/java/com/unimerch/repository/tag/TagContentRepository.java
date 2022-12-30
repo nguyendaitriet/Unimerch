@@ -1,6 +1,5 @@
 package com.unimerch.repository.tag;
 
-import com.unimerch.repository.model.Tag;
 import com.unimerch.repository.model.TagContent;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
@@ -47,6 +46,5 @@ public interface TagContentRepository extends JpaRepository<TagContent, Integer>
     @Query("DELETE FROM BrgTagTagContent AS b " +
             "WHERE b.tagContent.id IN :tagContentIdList AND b.tag.id = :tagId")
     void deleteMultiTagContentFromTag(@Param("tagContentIdList") List<Integer> tagContentIdList, @Param("tagId") Integer tagId);
-
 
 }
