@@ -6,7 +6,7 @@ import com.unimerch.dto.order.OrderChartColumn;
 import com.unimerch.dto.order.OrderChartResult;
 import com.unimerch.exception.ServerErrorException;
 import com.unimerch.mapper.OrderMapper;
-import com.unimerch.repository.OrderRepository;
+import com.unimerch.repository.order.OrderRepository;
 import com.unimerch.service.AnalyticService;
 import com.unimerch.util.TimeUtils;
 import org.springframework.beans.factory.annotation.Autowired;

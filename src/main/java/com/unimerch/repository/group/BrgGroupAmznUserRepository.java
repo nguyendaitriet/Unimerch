@@ -1,4 +1,4 @@
-package com.unimerch.repository;
+package com.unimerch.repository.group;
 
 import com.unimerch.repository.model.AmznUser;
 import com.unimerch.repository.model.BrgGroupAmznUser;
@@ -17,11 +17,11 @@ public interface BrgGroupAmznUserRepository extends JpaRepository<BrgGroupAmznUs
     @Query("SELECT a " +
             "FROM AmznUser AS a " +
             "WHERE a.id NOT IN ( " +
-            "SELECT br.amznUser.id " +
-            "FROM BrgGroupAmznUser AS br " +
-            "INNER JOIN AmznUser AS a " +
-            "ON br.amznUser.id = a.id " +
-            "WHERE br.group.id = :id) ")
+                "SELECT br.amznUser.id " +
+                "FROM BrgGroupAmznUser AS br " +
+                "WHERE br.group.id = :id" +
+            ")"
+    )
     List<AmznUser> getAmznAccOutGroup(@Param("id") Integer id);
 
     @Query("SELECT a " +

@@ -75,6 +75,6 @@ public class DashboardController {
 
     @GetMapping("/analytics")
     public ModelAndView showAdminAnalyticPage() {
-        return new ModelAndView("/dashboard/admin-analytic");
+        return new ModelAndView("/dashboard/analytics-admin");
     }
 }

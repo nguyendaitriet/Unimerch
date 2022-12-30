@@ -256,7 +256,7 @@
                         'username': amznAcc.username
                     })
                 });
-                tableAmznAccIn.order([1, 'asc']).draw();
+                tableAmznAccIn.draw();
                 page.dialogs.element.mdAddAmznAccToGroup.modal("hide");
                 CommonApp.SweetAlert.showSuccessAlert(SUCCESS_CREATED);
             })
@@ -308,7 +308,6 @@
                 DBApp.handleFailedTasks(jqXHR);
             })
     }
-
 
     page.dialogs.close.mdCreateGroup = () => {
         page.dialogs.element.frmCreateGroup.find("input.error").removeClass("error");

@@ -1,4 +1,4 @@
-package com.unimerch.repository;
+package com.unimerch.repository.user;
 
 import com.unimerch.repository.model.User;
 import org.springframework.data.jpa.repository.JpaRepository;

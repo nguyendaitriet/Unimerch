@@ -1,6 +1,6 @@
 package com.unimerch.service.impl;
 
-import com.unimerch.repository.RoleRepository;
+import com.unimerch.repository.user.RoleRepository;
 import com.unimerch.repository.model.Role;
 import com.unimerch.repository.model.User;
 import com.unimerch.service.RoleService;

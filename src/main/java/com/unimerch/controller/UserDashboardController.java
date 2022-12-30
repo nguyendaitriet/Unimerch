@@ -39,4 +39,14 @@ public class UserDashboardController {
         mav.addObject("userId", userId);
         return mav;
     }
+
+    @GetMapping("/analytics")
+    public ModelAndView showUserAnalyticPage() {
+        ModelAndView mav = new ModelAndView("/dashboard/analytics-user");
+        int userId = principalUtils.getPrincipalId();
+        GroupResult group = new GroupResult();
+        mav.addObject("userId", userId);
+        mav.addObject("group", group);
+        return mav;
+    }
 }

@@ -1,4 +1,4 @@
-package com.unimerch.repository;
+package com.unimerch.repository.order;
 
 import com.unimerch.dto.order.OrderChartColumn;
 import com.unimerch.repository.model.Order;

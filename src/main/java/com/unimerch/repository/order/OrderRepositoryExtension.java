@@ -1,4 +1,4 @@
-package com.unimerch.repository;
+package com.unimerch.repository.order;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.stereotype.Component;
