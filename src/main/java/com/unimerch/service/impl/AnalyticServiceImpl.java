@@ -2,11 +2,18 @@ package com.unimerch.service.impl;
 
 import com.unimerch.dto.analytics.AnalyticsParam;
 import com.unimerch.dto.analytics.DateFilter;
+import com.unimerch.dto.analytics.ProductAnalyticsResult;
 import com.unimerch.dto.order.OrderChartColumn;
 import com.unimerch.dto.order.OrderChartResult;
+import com.unimerch.dto.product.ProductResult;
 import com.unimerch.exception.ServerErrorException;
 import com.unimerch.mapper.OrderMapper;
-import com.unimerch.repository.order.OrderRepository;
+import com.unimerch.mapper.ProductMapper;
+import com.unimerch.repository.native_query_dto.order.OrderNativeQueryDTORepo;
+import com.unimerch.repository.native_query_dto.product.ProductNativeQueryDTO;
+import com.unimerch.repository.native_query_dto.product.ProductNativeQueryDTORepo;
+import com.unimerch.repository.product.ProductRepository;
+import com.unimerch.repository.tag.BrgProductTagRepository;
 import com.unimerch.service.AnalyticService;
 import com.unimerch.util.TimeUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,12 +24,17 @@ import java.math.BigDecimal;
 import java.time.Instant;
 import java.time.Period;
 import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 public class AnalyticServiceImpl implements AnalyticService {
 
     @Autowired
-    private OrderRepository orderRepository;
+    private OrderNativeQueryDTORepo orderNativeQueryDTORepo;
+    @Autowired
+    private ProductRepository productRepository;
+    @Autowired
+    private ProductMapper productMapper;
     @Autowired
     private OrderMapper orderMapper;
     @Autowired
@@ -33,7 +45,7 @@ public class AnalyticServiceImpl implements AnalyticService {
         DateFilter dateFilter = DateFilter.parseDateFilter(analyticsParam.getDateFilter());
         int groupId = analyticsParam.getGroupId();
         int amznId = analyticsParam.getAmznId();
-        String amznFilter = groupId == 0 && amznId == 0 ? "all" : groupId != 0 && amznId == 0? "group" : "amzn";
+        String amznFilter = groupId == 0 && amznId == 0 ? "all" : groupId != 0 && amznId == 0 ? "group" : "amzn";
 
         switch (dateFilter) {
             case TODAY:
@@ -96,11 +108,11 @@ public class AnalyticServiceImpl implements AnalyticService {
     public List<OrderChartColumn> getOrderChartColumnList(AnalyticsParam analyticsParam, String amznFilter, Instant startDate, Instant endDate) {
         switch (amznFilter) {
             case "all":
-                return orderRepository.findAllOrderChartWithDateRange(startDate, endDate);
+                return orderNativeQueryDTORepo.findAllOrderChartWithDateRange(startDate, endDate);
             case "group":
-                return orderRepository.findGroupOrderChartWithDateRange(analyticsParam.getGroupId(), startDate, endDate);
+                return orderNativeQueryDTORepo.findGroupOrderChartWithDateRange(analyticsParam.getGroupId(), startDate, endDate);
             case "amzn":
-                return orderRepository.findAmznOrderChartWithDateRange(analyticsParam.getAmznId(), startDate, endDate);
+                return orderNativeQueryDTORepo.findAmznOrderChartWithDateRange(analyticsParam.getAmznId(), startDate, endDate);
             default:
                 throw new ServerErrorException(messageSource.getMessage("error.500", null, Locale.getDefault()));
         }
@@ -118,6 +130,87 @@ public class AnalyticServiceImpl implements AnalyticService {
         });
 
         return orderMapper.toOrderChartResult(dates, royalties, soldNumbers);
+    }
+
+    @Override
+    public List<ProductAnalyticsResult> getProductAnalyticsList(AnalyticsParam analyticsParam) {
+        DateFilter dateFilter = DateFilter.parseDateFilter(analyticsParam.getDateFilter());
+        int groupId = analyticsParam.getGroupId();
+        int amznId = analyticsParam.getAmznId();
+        String amznFilter = groupId == 0 && amznId == 0 ? "all" : groupId != 0 && amznId == 0 ? "group" : "amzn";
+
+        switch (dateFilter) {
+            case TODAY:
+                return getProductAnalyticsToday(analyticsParam, amznFilter);
+            case YESTERDAY:
+                return getProductAnalyticsYesterday(analyticsParam, amznFilter);
+            case THIS_MONTH:
+                return getProductAnalyticsThisMonth(analyticsParam, amznFilter);
+            case PREVIOUS_MONTH:
+                return getProductAnalyticsPreviousMonth(analyticsParam, amznFilter);
+            case CUSTOM:
+                return getProductAnalyticsCustomDateRange(analyticsParam, amznFilter);
+            default:
+                throw new ServerErrorException(messageSource.getMessage("error.500", null, Locale.getDefault()));
+        }
+    }
+
+    public List<ProductAnalyticsResult> getProductAnalyticsToday(AnalyticsParam analyticsParam, String amznFilter) {
+        Instant startDate = TimeUtils.getInstantToday();
+        Instant endDate = Instant.now();
+        List<ProductResult> productResultList = getProductResultList(analyticsParam, amznFilter, startDate, endDate);
+
+        return processProductResultList(productResultList);
+    }
+
+    public List<ProductAnalyticsResult> getProductAnalyticsYesterday(AnalyticsParam analyticsParam, String amznFilter) {
+        Map<String, Instant> instantYesterday = TimeUtils.getInstantYesterday();
+        Instant startDate = instantYesterday.get("startTime");
+        Instant endDate = instantYesterday.get("endTime");
+        List<ProductResult> productResultList = getProductResultList(analyticsParam, amznFilter, startDate, endDate);
+
+        return processProductResultList(productResultList);
+    }
+
+    public List<ProductAnalyticsResult> getProductAnalyticsThisMonth(AnalyticsParam analyticsParam, String amznFilter) {
+        Instant startDate = TimeUtils.getInstantThisMonth();
+        Instant endDate = Instant.now();
+        List<ProductResult> productResultList = getProductResultList(analyticsParam, amznFilter, startDate, endDate);
+
+        return processProductResultList(productResultList);
+    }
+
+    public List<ProductAnalyticsResult> getProductAnalyticsPreviousMonth(AnalyticsParam analyticsParam, String amznFilter) {
+        Instant startDate = TimeUtils.getInstantThisMonth();
+        Instant endDate = Instant.now();
+        List<ProductResult> productResultList = getProductResultList(analyticsParam, amznFilter, startDate, endDate);
+
+        return processProductResultList(productResultList);
+    }
+
+    public List<ProductAnalyticsResult> getProductAnalyticsCustomDateRange(AnalyticsParam analyticsParam, String amznFilter) {
+        Instant startDate = TimeUtils.convertStringToInstant(analyticsParam.getStartDate(), TimeUtils.dayMonthYearPattern);
+        Instant endDate = TimeUtils.convertStringToInstant(analyticsParam.getEndDate(), TimeUtils.dayMonthYearPattern).plus(Period.ofDays(1));
+        List<ProductResult> productResultList = getProductResultList(analyticsParam, amznFilter, startDate, endDate);
+
+        return processProductResultList(productResultList);
+    }
+
+    public List<ProductResult> getProductResultList(AnalyticsParam analyticsParam, String amznFilter, Instant startDate, Instant endDate) {
+        switch (amznFilter) {
+            case "all":
+                return productRepository.getAllProductAnalyticsList(startDate, endDate);
+            case "group":
+                return productRepository.getGroupProductAnalyticsList(analyticsParam.getGroupId(), startDate, endDate);
+            case "amzn":
+                return productRepository.getAmznProductAnalyticsList(analyticsParam.getAmznId(), startDate, endDate);
+            default:
+                throw new ServerErrorException(messageSource.getMessage("error.500", null, Locale.getDefault()));
+        }
+    }
+
+    public List<ProductAnalyticsResult> processProductResultList(List<ProductResult> productResultList) {
+        return productResultList.stream().map(productResult -> productMapper.toProductAnalyticsResult(productResult)).collect(Collectors.toList());
     }
 
 }

@@ -5,6 +5,7 @@ import com.unimerch.dto.product.ProductResult;
 import com.unimerch.exception.ServerErrorException;
 import com.unimerch.mapper.ProductMapper;
 import com.unimerch.repository.group.BrgGroupAmznUserRepository;
+import com.unimerch.repository.native_query_dto.product.ProductNativeQueryDTORepo;
 import com.unimerch.repository.product.ProductRepository;
 import com.unimerch.repository.model.Product;
 import com.unimerch.service.ProductService;
@@ -27,18 +28,16 @@ public class ProductServiceImpl implements ProductService {
 
     @Autowired
     private ProductRepository productRepository;
-
     @Autowired
     private MessageSource messageSource;
-
     @Autowired
     private BrgGroupAmznUserRepository brgGroupAmznUserRepository;
-
     @Autowired
     private ConfigurationServiceImpl configurationService;
-
     @Autowired
     private ProductMapper productMapper;
+    @Autowired
+    private ProductNativeQueryDTORepo productNativeQueryDTORepo;
 
     @Override
     public List<ProductResult> findAllTodaySoldProduct(Integer id, int choice) {
@@ -87,12 +86,12 @@ public class ProductServiceImpl implements ProductService {
             //With amazon account id
             case 1:
                 amznAccIdList.add(id);
-                productResultList = productRepository.getProductItemResultList(instant, amznAccIdList);
+                productResultList = productNativeQueryDTORepo.getProductItemResultList(instant, amznAccIdList);
                 break;
             //With group id
             case 2:
                 amznAccIdList.addAll(brgGroupAmznUserRepository.getAmznAccIdInGroup(id));
-                productResultList = productRepository.getProductItemResultList(instant, amznAccIdList);
+                productResultList = productNativeQueryDTORepo.getProductItemResultList(instant, amznAccIdList);
                 break;
             //All amazon account
             case 3:

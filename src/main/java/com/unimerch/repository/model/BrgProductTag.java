@@ -9,7 +9,10 @@ import javax.persistence.*;
 @AllArgsConstructor
 @Getter
 @Setter
-@Table(name = "brg_product_tag")
+@Table(
+        name = "brg_product_tag",
+        indexes = @Index(name = "idx_asin", columnList = "ASIN")
+)
 public class BrgProductTag {
 
     @Id

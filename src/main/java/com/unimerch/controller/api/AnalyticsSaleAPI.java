@@ -20,4 +20,12 @@ public class AnalyticsSaleAPI {
     public ResponseEntity<?> getAnalyticsChart(@RequestBody AnalyticsParam analyticsParam) {
         return new ResponseEntity<> (analyticService.getAnalyticsChart(analyticsParam), HttpStatus.OK);
     }
+
+    @RoleConstant.ManagerUserAuthorization
+    @PostMapping("/getProductAnalytics")
+    public ResponseEntity<?> getProductAnalytics(@RequestBody AnalyticsParam analyticsParam) {
+        return new ResponseEntity<> (analyticService.getProductAnalyticsList(analyticsParam), HttpStatus.OK);
+    }
+
+
 }
