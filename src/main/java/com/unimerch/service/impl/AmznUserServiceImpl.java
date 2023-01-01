@@ -28,16 +28,16 @@ import org.springframework.data.jpa.datatables.mapping.DataTablesOutput;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
-import javax.transaction.Transactional;
 import java.io.*;
 import java.time.Instant;
 import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
-@Transactional
+
 public class AmznUserServiceImpl implements AmznUserService {
 
     @Autowired
@@ -68,6 +68,7 @@ public class AmznUserServiceImpl implements AmznUserService {
     private PasswordEncoder passwordEncoder;
 
     @Override
+    @Transactional(readOnly = true)
     public AmznUser findById(String id) {
         if (!ValidationUtils.isIdValid(id)) {
             throw new InvalidIdException(messageSource.getMessage("validation.idNotExist", null, Locale.getDefault()));
@@ -82,6 +83,7 @@ public class AmznUserServiceImpl implements AmznUserService {
     }
 
     @Override
+    @Transactional
     public void updateMetadata(Metadata metadata, Authentication authentication) {
         try {
             String username = authentication.getName();

@@ -15,7 +15,7 @@ import javax.validation.constraints.Size;
 @NoArgsConstructor
 @AllArgsConstructor
 @Accessors(chain = true)
-public class CreateUserParam {
+public class UpdateUserParam {
 
     @NotBlank(message = "{validation.inputEmpty}")
     @Size(min = 3, max = 80, message = "{validation.fullNameLength}")

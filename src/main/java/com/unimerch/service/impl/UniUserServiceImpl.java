@@ -1,7 +1,7 @@
 package com.unimerch.service.impl;
 
 import com.unimerch.dto.group.GroupResult;
-import com.unimerch.dto.user.UserCreateParam;
+import com.unimerch.dto.user.CreateUserParam;
 import com.unimerch.dto.user.UserResult;
 import com.unimerch.exception.*;
 import com.unimerch.mapper.GroupMapper;
@@ -27,8 +27,8 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
-import javax.transaction.Transactional;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
@@ -36,7 +36,6 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
-@Transactional
 public class UniUserServiceImpl implements UniUserService {
     @Autowired
     private UserRepository userRepository;
@@ -81,15 +80,17 @@ public class UniUserServiceImpl implements UniUserService {
                 input,
                 null,
                 notAdmin(),
-                user -> userMapper.toUserResult(user));
+                user -> userMapper.toDTO(user));
     }
 
     @Override
+    @Transactional(readOnly = true)
     public UserResult findUserItemResultByUsername(String username) {
-        return userMapper.toUserResult(getByUsername(username));
+        return userMapper.toDTO(getByUsername(username));
     }
 
     @Override
+    @Transactional(readOnly = true)
     public User getByUsername(String username) {
         Optional<User> optUser = userRepository.findByUsername(username);
         if (!optUser.isPresent())
@@ -99,6 +100,7 @@ public class UniUserServiceImpl implements UniUserService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public User findById(String id) {
         if (!ValidationUtils.isIdValid(id))
             throw new InvalidIdException(messageSource.getMessage("validation.idNotExist", null, Locale.getDefault()));
@@ -113,13 +115,16 @@ public class UniUserServiceImpl implements UniUserService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public UserResult findUserListById(String id) {
-        return userMapper.toUserResult(findById(id));
+        return userMapper.toDTO(findById(id));
     }
 
     @Override
-    public UserResult create(UserCreateParam userCreateParam) {
-        User newUser = userMapper.toUser(userCreateParam);
+    @Transactional
+    public UserResult create(CreateUserParam userCreateParam) {
+        //Transiet
+        User newUser = userMapper.toModel(userCreateParam);
 
         newUser.setSalt("abc");
         newUser.setPasswordHash(passwordEncoder.encode(userCreateParam.getPassword()));
@@ -130,11 +135,11 @@ public class UniUserServiceImpl implements UniUserService {
 
         try {
             newUser = userRepository.save(newUser);
+
         } catch (DataIntegrityViolationException e) {
             throw new DataInputException(messageSource.getMessage("validation.invalidAccountInformation", null, Locale.getDefault()));
         }
-
-        return userMapper.toUserResult(newUser);
+        return userMapper.toDTO(newUser);
     }
 
 
@@ -181,7 +186,7 @@ public class UniUserServiceImpl implements UniUserService {
 
         try {
             user = userRepository.save(user);
-            return userMapper.toUserResult(user);
+            return userMapper.toDTO(user);
         } catch (Exception e) {
             throw new ServerErrorException(messageSource.getMessage("error.500", null, Locale.getDefault()));
         }
