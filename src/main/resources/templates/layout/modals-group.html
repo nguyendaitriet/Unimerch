@@ -18,14 +18,19 @@
                                 <label for="groupTitleCreate" th:text="#{group.groupTitle}">Group title</label>
                             </div>
                             <div class="col-xl-8 d-flex flex-column justify-content-center">
-                                <input type="text" id="groupTitleCreate" name="groupTitleCreate" class="form-control" required>
+                                <input type="text" id="groupTitleCreate" name="groupTitleCreate" class="form-control"
+                                       required>
                             </div>
                         </div>
                     </form>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-primary" id="btnCreateGroup" th:text="#{group.btnCreate}">Create</button>
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal" th:text="#{group.btnClose}">Close</button>
+                    <button type="button" class="btn btn-primary" id="btnCreateGroup" th:text="#{group.btnCreate}">
+                        Create
+                    </button>
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal" th:text="#{group.btnClose}">
+                        Close
+                    </button>
                 </div>
             </div>
         </div>
@@ -61,8 +66,12 @@
 
                 </div>
                 <div class="modal-footer">
-                    <button type="button" id="btnUpdateGroup" class="btn btn-primary" th:text="#{group.btnSave}">Change</button>
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal" th:text="#{group.btnClose}">Close</button>
+                    <button type="button" id="btnUpdateGroup" class="btn btn-primary" th:text="#{group.btnSave}">
+                        Change
+                    </button>
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal" th:text="#{group.btnClose}">
+                        Close
+                    </button>
                 </div>
             </div>
         </div>
@@ -85,24 +94,24 @@
 
                     <div class="modal-alert-danger hide">
                     </div>
-
-<!--                    <form class="mb-3" id="frmUpdateGroup">-->
-                            <table id="table-amzn-acc-out" class="table stripe nowrap table-borderless" style="width: 100%;">
-                                <thead>
-                                <tr>
-                                    <th>#</th>
-                                    <th th:text="#{group.tableAmznAccUsername}" class="text-center">Username</th>
-                                    <th></th>
-                                </tr>
-                                </thead>
-                                <!-- Tbody -->
-                            </table>
-<!--                    </form>-->
+                    <table id="table-amzn-acc-out" class="table stripe nowrap table-borderless" style="width: 100%;">
+                        <thead>
+                        <tr>
+                            <th>#</th>
+                            <th th:text="#{group.tableAmznAccUsername}" class="text-center">Username</th>
+                            <th></th>
+                        </tr>
+                        </thead>
+                    </table>
 
                 </div>
                 <div class="modal-footer">
-                    <button type="button" id="btnAddAmznAccToGroup" class="btn btn-primary" th:text="#{group.btnAdd}">Add</button>
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal" th:text="#{group.btnClose}">Close</button>
+                    <button type="button" id="btnAddAmznAccToGroup" class="btn btn-primary" th:text="#{group.btnAdd}">
+                        Add
+                    </button>
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal" th:text="#{group.btnClose}">
+                        Close
+                    </button>
                 </div>
             </div>
         </div>

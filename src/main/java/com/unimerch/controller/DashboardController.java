@@ -17,6 +17,7 @@ import java.util.Locale;
 @Controller
 @RequestMapping("/dashboard")
 public class DashboardController {
+
     @Autowired
     private UniUserService userService;
 
@@ -71,4 +72,16 @@ public class DashboardController {
     public ModelAndView showGroupManagementPage() {
         return new ModelAndView("/dashboard/group");
     }
+
+    @GetMapping("/analytics")
+    public ModelAndView showAdminAnalyticPage() {
+        return new ModelAndView("/dashboard/analytics-admin");
+    }
+
+    @GetMapping("/tag")
+    public ModelAndView showAdminTagPage() {
+        return new ModelAndView("/dashboard/tag");
+    }
+
+
 }

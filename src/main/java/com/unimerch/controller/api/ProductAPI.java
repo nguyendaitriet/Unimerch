@@ -90,6 +90,4 @@ public class ProductAPI {
         return new ResponseEntity<>(productResultList, HttpStatus.OK);
     }
 
-
-
 }

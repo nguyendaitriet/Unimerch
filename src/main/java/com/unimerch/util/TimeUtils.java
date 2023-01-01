@@ -14,17 +14,22 @@ import java.util.stream.IntStream;
 public class TimeUtils {
     static final public ZoneId zoneIdVN = ZoneId.of("Asia/Ho_Chi_Minh");
 
-    static final private String dayMonthYearPattern = "dd/MM/yyyy";
+    static final public String dayMonthYearPattern = "dd/MM/yyyy";
 
-    static final private String monthYearPattern = "MM/yyyy";
+    static final public String monthYearPattern = "MM/yyyy";
 
-    static final private String hoursFormat = "%d hour(s) ago";
+    static final public String hoursFormat = "%d hour(s) ago";
 
-    static final private String daysAndHoursFormat = "%d day(s) ago";
-
+    static final public String daysAndHoursFormat = "%d day(s) ago";
 
     public static Instant parseStringToInstant(String date) {
         return ZonedDateTime.parse(date).toInstant();
+    }
+
+    public static Instant convertStringToInstant(String date, String pattern) {
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern(pattern);
+        LocalDate dateTime = LocalDate.parse(date, formatter);
+        return dateTime.atStartOfDay(ZoneId.systemDefault()).toInstant();
     }
 
     public static String toDayMonthYear(LocalDate date) {
@@ -94,8 +99,8 @@ public class TimeUtils {
         Map<String, Instant> results = new HashMap<>();
 
         LocalDate firstDayOfLastMonth = YearMonth.now().minusMonths(1).atDay(1);
-        ZonedDateTime zdtFirstDayofLastMonth = firstDayOfLastMonth.atStartOfDay(zoneIdVN);
-        Instant startTime = zdtFirstDayofLastMonth.toInstant();
+        ZonedDateTime zdtFirstDayOfLastMonth = firstDayOfLastMonth.atStartOfDay(zoneIdVN);
+        Instant startTime = zdtFirstDayOfLastMonth.toInstant();
         results.put("startTime", startTime);
 
         LocalDate firstDayOfThisMonth = LocalDate.now().withDayOfMonth(1);
@@ -116,8 +121,33 @@ public class TimeUtils {
 
         LocalDate start = LocalDate.now().minusDays(6);
 
-        IntStream.range(0, 7).mapToObj(start::plusDays).collect(Collectors.toList()).forEach(localDate -> cards.add(toDayMonthYear(localDate)));
+        IntStream.range(0, 7).mapToObj(start::plusDays)
+                .collect(Collectors.toList())
+                .forEach(localDate -> cards.add(toDayMonthYear(localDate)));
 
+        return cards;
+    }
+
+    public static List<String> getCardsThisMonth() {
+        List<String> cards = new ArrayList<>();
+        int numOfDaysBetween = LocalDate.now().getDayOfMonth();
+        LocalDate start = LocalDate.now().minusDays(numOfDaysBetween - 1);
+
+        IntStream.range(0, numOfDaysBetween).mapToObj(start::plusDays)
+                .collect(Collectors.toList())
+                .forEach(localDate -> cards.add(toDayMonthYear(localDate)));
+        return cards;
+    }
+
+    public static List<String> getCardsPreviousMonth() {
+        List<String> cards = new ArrayList<>();
+        LocalDate endDay =YearMonth.now().minusMonths(1).atEndOfMonth();
+        int numOfDaysBetween = endDay.getDayOfMonth();
+        LocalDate start = endDay.minusDays(numOfDaysBetween - 1);
+
+        IntStream.range(0, numOfDaysBetween).mapToObj(start::plusDays)
+                .collect(Collectors.toList())
+                .forEach(localDate -> cards.add(toDayMonthYear(localDate)));
         return cards;
     }
 
@@ -161,7 +191,4 @@ public class TimeUtils {
         return String.format(daysAndHoursFormat, days);
     }
 
-    public static void main(String[] args) {
-        System.out.println(getInstantToday());;
-    }
 }

@@ -1,6 +1,6 @@
 package com.unimerch.security.amzn;
 
-import com.unimerch.repository.AmznUserRepository;
+import com.unimerch.repository.amzn.AmznUserRepository;
 import com.unimerch.repository.model.AmznUser;
 import com.unimerch.security.NameConstant;
 import com.unimerch.security.UserPrinciple;

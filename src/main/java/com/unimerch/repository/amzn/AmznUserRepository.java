@@ -1,4 +1,4 @@
-package com.unimerch.repository;
+package com.unimerch.repository.amzn;
 
 import com.unimerch.repository.model.AmznUser;
 import com.unimerch.repository.model.AzmnStatus;

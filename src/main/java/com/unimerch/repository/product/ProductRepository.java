@@ -1,4 +1,4 @@
-package com.unimerch.repository;
+package com.unimerch.repository.product;
 
 import com.unimerch.dto.product.ProductResult;
 import com.unimerch.repository.model.Product;

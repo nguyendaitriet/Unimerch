@@ -13,8 +13,6 @@ import javax.validation.constraints.NotBlank;
 @AllArgsConstructor
 @Accessors(chain = true)
 public class GroupCreateParam {
-
     @NotBlank(message = "{validation.inputEmpty}")
     private String title;
-
 }

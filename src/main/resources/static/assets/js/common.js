@@ -8,8 +8,9 @@ class CommonApp {
     static BASE_URL_USER_GROUPS = this.DOMAIN + "/api/users/asgnGrp";
     static BASE_URL_AMZN_ACCOUNT = this.DOMAIN + "/api/amzn";
     static BASE_URL_GROUP = this.DOMAIN + "/api/groups";
-    static BASE_URL_ORDER = this.DOMAIN + "/api/orders";
     static BASE_URL_PRODUCT = this.DOMAIN + "/api/products";
+    static BASE_URL_ANALYTICS = this.DOMAIN + "/api/analytics";
+    static BASE_URL_TAG = this.DOMAIN + "/api/tags";
     static BASE_URL_FILE_UPLOAD = this.DOMAIN + "/api/file-upload";
 
     static SweetAlert = class {

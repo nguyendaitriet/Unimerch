@@ -1,0 +1,677 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+    <title th:text="#{tag.tabTitle}">Tags Management</title>
+    <th:block th:replace="layout/head :: dashboard-head"/>
+</head>
+<body id="page-top">
+
+<!-- Page Wrapper -->
+<div id="wrapper">
+
+    <!-- Sidebar -->
+    <th:block th:replace="layout/sidebar :: sidebar"/>
+    <!-- End of Sidebar -->
+
+    <!-- Content Wrapper -->
+    <div id="content-wrapper" class="d-flex flex-column">
+
+        <!-- Main Content -->
+        <div id="content">
+            <!-- Begin Page Content -->
+            <div class="container-fluid mt-3">
+                
+                <div class="row">
+
+                    <div class="col-md-7">
+                        <div class="card shadow mb-4">
+                            <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+                                <a class="m-0 h4 font-weight-bold text-primary text-decoration-none"
+                                    th:href="@{'/dashboard/tag'}"
+                                    th:text="#{tag.tagTableTitle}">
+                                    Tags Management
+                                </a>
+                            </div>
+
+                            <div class="card-body">
+                                <table id="table-tag" class="table stripe nowrap tb-padding-sm" style="width: 100%;">
+                                    <thead>
+                                        <tr>
+                                            <th style="visibility: hidden">#</th>
+                                            <th th:text="#{tag.tagTitle}">Tag Title</th>
+                                            <th th:text="#{tag.action}">Action</th>
+                                        </tr>
+                                    </thead>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-md-5">
+                        <div class="card shadow mb-4">
+                            <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between bg-primary">
+                                <h6 class="tag-title m-0 font-weight-bold text-light"
+                                    th:text="#{tag.tagContentTableTitle}">Tag Content</h6>
+                            </div>
+                            <div class="card-body">
+                                <table id="table-tag-content-in" class="table-borderless stripe nowrap table tb-padding-sm" style="width: 100%;">
+                                    <thead>
+                                    <tr>
+                                        <th>#</th>
+                                        <th style="visibility: hidden"></th>
+                                        <th th:text="#{tag.tagContentName}">Name</th>
+                                        <th th:text="#{tag.action}">Action</th>
+                                    </tr>
+                                    </thead>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+
+            </div>
+            <!-- /.container-fluid -->
+
+        </div>
+        <!-- End of Main Content -->
+
+        <!-- Footer -->
+        <th:block th:replace="layout/footer :: footer"/>
+        <!-- End of Footer -->
+
+    </div>
+    <!-- End of Content Wrapper -->
+
+</div>
+<!-- End of Page Wrapper -->
+
+<!-- Scroll to Top Button-->
+<a class="scroll-to-top rounded" href="#page-top">
+    <i class="fas fa-angle-up"></i>
+</a>
+
+<th:block th:replace="layout/modals-tag :: create-tag"/>
+<th:block th:replace="layout/modals-tag :: update-tag"/>
+<th:block th:replace="layout/modals-tag :: add-tag-content"/>
+<th:block th:replace="layout/texts :: texts"/>
+
+<th:block th:replace="layout/script :: script-dashboard"/>
+
+<script>
+    let page = {
+        urls: {
+            findAllTags: CommonApp.BASE_URL_TAG + "/findAllTags",
+            getTagContentInsideTag: CommonApp.BASE_URL_TAG + "/getTagContentInsideTag/",
+            getTagContentOutsideTag: CommonApp.BASE_URL_TAG + "/getTagContentOutsideTag/",
+            createTag: CommonApp.BASE_URL_TAG + "/create",
+            updateTag: CommonApp.BASE_URL_TAG + "/update/",
+            deleteTag: CommonApp.BASE_URL_TAG + "/delete/",
+            deleteTagContentFromTag: CommonApp.BASE_URL_TAG + "/deleteTagContentFromTag/",
+            deleteMultiTagContentFromTag: CommonApp.BASE_URL_TAG + "/deleteMultiTagContentFromTag",
+            addTagContentToTag: CommonApp.BASE_URL_TAG + "/addTagContentToTag/"
+        },
+        element: {},
+        commands: {},
+        dialogs: {
+            element: {},
+            alertDanger: {},
+            inputError: {},
+            close: {}
+        }
+    }
+
+    page.element.tableTag = $('#table-tag');
+    page.element.tableTagContentIn = $('#table-tag-content-in');
+    page.element.tableTagContentOut = $('#table-tag-content-out');
+    page.element.tagTitle = $(".tag-title");
+
+    page.dialogs.element.mdCreateTag = $('#mdCreateTag');
+    page.dialogs.element.frmCreateTag = $('#frmCreateTag');
+    page.dialogs.element.btnCreateTag = $('#btnCreateTag');
+    page.dialogs.element.tagNameCreate = $('#tagNameCreate');
+
+    page.dialogs.element.mdUpdateTag = $('#mdUpdateTag');
+    page.dialogs.element.frmUpdateTag = $('#frmUpdateTag');
+    page.dialogs.element.btnUpdateTag = $('#btnUpdateTag');
+    page.dialogs.element.tagNameUpdate = $('#tagNameUpdate');
+
+    page.dialogs.element.mdAddTagContentToTag = $('#mdAddTagContentToTag');
+    page.dialogs.element.btnAddTagContentToTag = $('#btnAddTagContentToTag');
+
+    page.commands.doCreateTag = () => {
+        let newTag = {
+            id: 0,
+            name: {}
+        };
+        newTag.name = page.dialogs.element.tagNameCreate.val().trim();
+
+        $.ajax({
+            headers: {
+                "accept": "application/json",
+                "content-type": "application/json"
+            },
+            type: "POST",
+            url: page.urls.createTag,
+            data: JSON.stringify(newTag)
+        })
+            .done((data) => {
+                let tableTag = page.element.tableTag.DataTable();
+                tableTag.row.add({
+                    'id': data.id,
+                    'name': data.name
+                })
+                tableTag.order([0, 'desc']).draw();
+
+                page.dialogs.element.mdCreateTag.modal("hide");
+                CommonApp.SweetAlert.showSuccessAlert(SUCCESS_CREATED);
+            })
+            .fail(function (jqXHR) {
+                DBApp.handleFailedTasks(jqXHR);
+            })
+    }
+    
+    page.commands.doUpdateTag = (currentTag, currentRowTag) => {
+        let tag = {
+            id: null,
+            name: {}
+        };
+        tag.name = page.dialogs.element.tagNameUpdate.val().trim();
+
+        $.ajax({
+            headers: {
+                "accept": "application/json",
+                "content-type": "application/json"
+            },
+            type: "PUT",
+            url: page.urls.updateTag + currentTag.id,
+            data: JSON.stringify(tag)
+        })
+            .done((data) => {
+                let tableTag = page.element.tableTag.DataTable();
+                tableTag.row(currentRowTag).data({
+                    'id': data.id,
+                    'name': data.name
+                }).draw('full-hold');
+                page.dialogs.element.frmUpdateTag[0].reset();
+                page.dialogs.element.mdUpdateTag.modal("hide");
+                CommonApp.SweetAlert.showSuccessAlert(SUCCESS_UPDATED);
+            })
+            .fail(function (jqXHR) {
+                DBApp.handleFailedTasks(jqXHR);
+            })
+    }
+    page.commands.doDeleteTag = (currentTag, currentRowTag, tableTagContentIn) => {
+        $.ajax({
+            type: "DELETE",
+            url: page.urls.deleteTag + currentTag.id,
+        })
+            .done((data) => {
+                let tableTag = page.element.tableTag.DataTable();
+                tableTag.row(currentRowTag).remove().draw('full-hold');
+                if (tableTagContentIn) {
+                    page.element.tableTagContentOut.DataTable().clear().draw();
+                    page.element.tableTagContentIn.DataTable().clear().draw();
+                    page.element.tagTitle.html('');
+                }
+                
+                CommonApp.SweetAlert.showSuccessAlert(SUCCESS_REMOVED);
+            })
+            .fail(function (jqXHR) {
+                DBApp.handleFailedTasks(jqXHR);
+            })
+    }
+
+    page.commands.addTagContentToTag = (currentTag, tableTagContentIn, tableTagContentOut) => {
+        if (currentTag === undefined) return;
+
+        let tagContentSelected = [];
+
+        let rows_selected = tableTagContentOut.rows({selected: true}).data()
+        $.each(rows_selected, function (index, value) {
+            tagContentSelected.push(value.id);
+        });
+
+        if (tagContentSelected.length === 0) {
+            CommonApp.IziToast.showErrorAlert(`${noDataSelected}`);
+            return;
+        }
+
+        $.ajax({
+            headers: {
+                "accept": "application/json",
+                "content-type": "application/json"
+            },
+            type: "POST",
+            url: page.urls.addTagContentToTag + currentTag.id,
+            data: JSON.stringify({tagContentSelected: tagContentSelected})
+        })
+            .done((data) => {
+                data.forEach((tagContent) => {
+                    tableTagContentIn.row.add({
+                        'id': tagContent.id,
+                        'name': tagContent.name
+                    })
+                });
+                tableTagContentIn.draw();
+                page.dialogs.element.mdAddTagContentToTag.modal("hide");
+                CommonApp.SweetAlert.showSuccessAlert(SUCCESS_CREATED);
+            })
+            .fail(function (jqXHR) {
+                DBApp.handleFailedTasks(jqXHR);
+            })
+    }
+    page.commands.doDeleteTagContent = (currentTag, currentTagContent, currentRowTagContent) => {
+        $.ajax({
+            type: "DELETE",
+            url: page.urls.deleteTagContentFromTag + currentTagContent.id + '/' + currentTag.id,
+        })
+            .done((data) => {
+                let tableTagContentIn = page.element.tableTagContentIn.DataTable();
+                tableTagContentIn.row(currentRowTagContent).remove().draw('page');
+            })
+            .fail(function (jqXHR) {
+                DBApp.handleFailedTasks(jqXHR);
+            })
+    }
+
+    page.commands.doDeletedMultiTagContentInTag = (currentTag, tableTagContentIn) => {
+        let tagContentSelected = [];
+
+        let rows_selected = tableTagContentIn.rows({selected: true}).data()
+        $.each(rows_selected, function (index, value) {
+            tagContentSelected.push(value.id);
+        });
+
+        if (tagContentSelected.length === 0) {
+            CommonApp.IziToast.showErrorAlert(`${noDataSelected}`);
+            return;
+        }
+
+        $.ajax({
+            headers: {
+                "accept": "application/json",
+                "content-type": "application/json"
+            },
+            type: "DELETE",
+            url: page.urls.deleteMultiTagContentFromTag + "/" + currentTag.id,
+            data: JSON.stringify({tagContentSelected})
+        })
+            .done((data) => {
+                tableTagContentIn.rows({selected: true}).remove().draw();
+                CommonApp.SweetAlert.showSuccessAlert(SUCCESS_REMOVED);
+            })
+            .fail(function (jqXHR) {
+                DBApp.handleFailedTasks(jqXHR);
+            })
+    }
+
+    page.dialogs.close.mdCreateTag = () => {
+        page.dialogs.element.frmCreateTag.find("input.error").removeClass("error");
+        page.dialogs.element.frmCreateTag[0].reset();
+        page.dialogs.element.frmCreateTag.validate().resetForm();
+    }
+    page.dialogs.close.mdUpdateTag = () => {
+        page.dialogs.element.frmUpdateTag.find("input.error").removeClass("error");
+        page.dialogs.element.frmUpdateTag[0].reset();
+        page.dialogs.element.frmUpdateTag.validate().resetForm();
+    }
+
+    $(document).ready(function () {
+        DBApp.handleGroupsFilterSidebar();
+
+        let tableTag = page.element.tableTag.DataTable({
+            ajax: {
+                contentType: 'application/json',
+                url: page.urls.findAllTags,
+                dataSrc: ''
+
+            },
+            info: false,
+            pagingType: 'simple_numbers',
+            columns: [
+                {data: 'id'},
+                {data: 'name'},
+                {data: null}
+            ],
+            columnDefs: [
+                {
+                    targets: 0,
+                    visible: false,
+                    searchable: false
+                },
+                {
+                    targets: 1,
+                    type: 'natural'
+                },
+                {
+                    targets: -1,
+                    className: "text-center",
+                    orderable: false,
+                    render: (data, type, row) =>
+                        `<button type='button' class='manage-tag btn btn-outline-primary mr-3' title='${btnManage}'>
+                            <i class="fas fa-cogs"></i>
+                        </button>
+                        <button type='button' class='update-tag btn btn-outline-warning mr-3' title='${btnUpdate}'>
+                            <i class="fas fa-pencil-alt"></i>
+                        </button>
+                        <button type='button' class='delete-tag btn btn-outline-danger' title='${btnDelete}'>
+                            <i class="fas fa-trash"></i>
+                        </button>`,
+                },
+            ],
+            language: {
+                search: `<i class="fas fa-search text-primary"></i> `,
+                paginate: {
+                    previous: `<i class="fas fa-angle-left"></i>`,
+                    next: `<i class="fas fa-angle-right"></i>`
+                },
+                aria: {
+                    paginate: {
+                        previous: 'Previous',
+                        next: 'Next'
+                    }
+                },
+                emptyTable: `${noDataInTable}`
+            },
+            pageLength: 7,
+            lengthChange: false,
+            dom: '<"row mb-2"<"col"B><"col"f>>rtp',
+            buttons: {
+                dom: {
+                    button: {
+                        tag: 'button',
+                        className: ''
+                    }
+                },
+                buttons: [
+                    {
+                        text: `<i class="fas fa-plus"></i> ${btnCreate}`,
+                        className: 'showCrGrpMd btn btn-primary',
+                        init: function (api, node, config) {
+                            $(node).on('click', () => page.dialogs.element.mdCreateTag.modal("show"));
+                        }
+                    }
+                ]
+            },
+        });
+        tableTag.order([1, "asc"]).draw();
+
+        let tableTagContentIn;
+        let tableTagContentOut;
+        let currentRowTag;
+        let currentTag;
+        let currentRowTagContent;
+        let currentTagContent;
+
+        page.element.tableTag.on('click', 'button.manage-tag', function () {
+            currentTag = tableTag.row($(this).parents('tr')).data();
+            page.element.tagTitle.html(currentTag.name);
+
+            if (tableTagContentIn === undefined) {
+                tableTagContentIn = page.element.tableTagContentIn.DataTable({
+                    ajax: {
+                        url: page.urls.getTagContentInsideTag + currentTag.id,
+                        dataSrc: ''
+                    },
+                    info: false,
+                    pagingType: 'simple_numbers',
+                    columns: [
+                        {data: null},
+                        {data: 'id'},
+                        {data: 'name'},
+                        {data: null}
+                    ],
+                    columnDefs: [
+                        {
+                            targets: 0,
+                            orderable: false,
+                            className: 'select-checkbox',
+                            render: () => '',
+                        },
+                        {
+                            targets: 1,
+                            visible: false,
+                            searchable: false
+                        },
+                        {
+                            targets: 2,
+                            className: "text-center",
+                            type: 'natural',
+                        },
+                        {
+                            targets: -1,
+                            className: "text-center",
+                            orderable: false,
+                            defaultContent:
+                                `<button type='button' class='delete-tag-content btn btn-outline-danger mr-3' title='${btnDelete}'>`
+                                + `<i class="fas fa-ban"></i>`
+                                + `</button>`
+                        },
+                    ],
+                    select: {
+                        style: 'multi+shift'
+                    },
+                    language: {
+                        search: `<i class="fas fa-search text-primary"></i> `,
+                        paginate: {
+                            previous: `<i class="fas fa-angle-left"></i>`,
+                            next: `<i class="fas fa-angle-right"></i>`
+                        },
+                        aria: {
+                            paginate: {
+                                previous: 'Previous',
+                                next: 'Next'
+                            }
+                        },
+                        emptyTable: `${noDataInTable}`
+                    },
+                    pageLength: 7,
+                    lengthChange: false,
+                    dom: '<"row mb-2"<"col-7"B><"col-5"f>>rtp',
+                    buttons: {
+                        dom: {
+                            button: {
+                                tag: 'button',
+                                className: 'btn-text-sm'
+                            }
+                        },
+                        buttons: [
+                            {
+                                text: `<i class="fas fa-plus"></i> ${btnAdd}`,
+                                className: 'showAddAmzAccMd btn btn-primary',
+                                init: function (api, node, config) {
+                                    $(node).on('click', () => {
+                                        page.dialogs.element.mdAddTagContentToTag.modal("show");
+                                    })
+                                }
+                            },
+                            {
+                                text: `<i class="fas fa-trash"></i> ${btnDelete}`,
+                                className: 'btn btn-danger',
+                                init: function (api, node, config) {
+                                    $(node).on('click', () => CommonApp.SweetAlert.showDeleteDialog()
+                                        .then((result) => {
+                                            if (result.isConfirmed) {
+                                                page.commands.doDeletedMultiTagContentInTag(currentTag, tableTagContentIn);
+                                            }
+                                        })
+                                    );
+                                }
+                            }
+                        ]
+                    },
+                });
+                tableTagContentIn.order([2, "asc"]).draw();
+            } else {
+                tableTagContentIn.ajax.url(page.urls.getTagContentInsideTag + currentTag.id).load();
+            }
+        });
+
+        page.element.tableTag.on('click', 'button.update-tag', function () {
+            currentRowTag = tableTag.row($(this).parents('tr'));
+            currentTag = currentRowTag.data();
+            page.dialogs.element.tagNameUpdate.val(currentTag.name);
+            page.dialogs.element.mdUpdateTag.modal('show');
+        });
+        page.element.tableTag.on('click', 'button.delete-tag', function () {
+            currentRowTag = tableTag.row($(this).parents('tr'));
+            currentTag = currentRowTag.data();
+            CommonApp.SweetAlert.showDeleteDialog()
+                .then((result) => {
+                    if (result.isConfirmed) {
+                        page.commands.doDeleteTag(currentTag, currentRowTag, tableTagContentIn);
+                        currentTag = undefined;
+                    }
+                })
+        });
+
+        page.dialogs.element.btnCreateTag.on('click', function () {
+            page.dialogs.element.frmCreateTag.submit();
+        });
+
+        page.dialogs.element.frmCreateTag.validate({
+            onkeyup: function (element) {
+                $(element).valid()
+            },
+            onclick: false,
+            onfocusout: false,
+            rules: {
+                tagNameCreate: {
+                    required: true
+                }
+            },
+            messages: {
+                tagNameCreate: {
+                    required: `${requiredGroupTitle}`
+                }
+            },
+            submitHandler: function () {
+                page.commands.doCreateTag();
+            }
+        })
+        page.dialogs.element.frmUpdateTag.validate({
+            onkeyup: function (element) {
+                $(element).valid()
+            },
+            onclick: false,
+            onfocusout: false,
+            rules: {
+                tagNameUpdate: {
+                    required: true
+                }
+            },
+            messages: {
+                tagNameUpdate: {
+                    required: `${requiredGroupTitle}`
+                }
+            },
+            submitHandler: function () {
+                page.commands.doUpdateTag(currentTag, currentRowTag);
+            }
+        })
+
+        page.dialogs.element.mdCreateTag.on('hidden.bs.modal', () => {
+            page.dialogs.close.mdCreateTag();
+        });
+        page.dialogs.element.mdUpdateTag.on('hidden.bs.modal', () => {
+            page.dialogs.close.mdUpdateTag();
+        });
+
+        page.dialogs.element.btnUpdateTag.on('click', function () {
+            page.dialogs.element.frmUpdateTag.submit();
+        });
+
+        page.element.tableTagContentIn.on('click', 'button.delete-tag-content', function () {
+            currentRowTagContent = tableTagContentIn.row($(this).parents('tr'));
+            currentTagContent = currentRowTagContent.data();
+            page.commands.doDeleteTagContent(currentTag, currentTagContent, currentRowTagContent);
+        });
+
+        page.dialogs.element.mdAddTagContentToTag.on('shown.bs.modal', () => {
+
+            if (currentTag === undefined) {
+                return;
+            }
+
+            if (tableTagContentOut === undefined) {
+                tableTagContentOut = page.element.tableTagContentOut.DataTable({
+                    ajax: {
+                        url: page.urls.getTagContentOutsideTag + currentTag.id,
+                        dataSrc: ''
+                    },
+                    info: false,
+                    pagingType: 'simple_numbers',
+                    columns: [
+                        {data: 'id'},
+                        {data: 'name'},
+                        {data: null},
+                    ],
+                    columnDefs: [
+                        {   targets: 0,
+                            visible: false,
+                            searchable: false,
+                            orderable: false,
+                        },
+                        {
+                            targets: 1,
+                            type: 'natural',
+                            className: 'text-center'
+                        },
+                        {
+                            targets: 2,
+                            orderable: false,
+                            className: 'select-checkbox',
+                            render: () => '',
+                        }
+                    ],
+                    select: {
+                        style: 'multi+shift'
+                    },
+                    language: {
+                        search: `<i class="fas fa-search text-primary"></i> `,
+                        paginate: {
+                            previous: `<i class="fas fa-angle-left"></i>`,
+                            next: `<i class="fas fa-angle-right"></i>`
+                        },
+                        aria: {
+                            paginate: {
+                                previous: 'Previous',
+                                next: 'Next'
+                            }
+                        },
+                        emptyTable: `${noDataInTable}`
+                    },
+                    pageLength: 8,
+                    lengthChange: false,
+                    dom: '<"d-flex justify-content-around flex-column flex-sm-row mb-2"<"align-self-center align-self-sm-start table-quickselect"><"align-self-center align-self-sm-start"f>>tp'
+                });
+                tableTagContentOut.order([1, "asc"]).draw();
+
+                $('div.table-quickselect').html(`<p class="font-italic font-weight-light text-center text-sm-left" style="margin-bottom: 0;">${tableQuickSelectP1}</p>
+                <p class="font-italic font-weight-light text-center text-sm-left">${tableQuickSelectP2}</p>`);
+            } else {
+                tableTagContentOut.ajax.url(page.urls.getTagContentOutsideTag + currentTag.id).load();
+            }
+            page.element.tableTagContentOut.css('cursor', 'pointer');
+        });
+
+        page.dialogs.element.mdAddTagContentToTag.on('hidden.bs.modal', () => {
+            tableTagContentOut.clear().draw();
+            tableTagContentOut.search('').draw();
+        });
+
+        page.dialogs.element.btnAddTagContentToTag.on('click', () => {
+            page.commands.addTagContentToTag(currentTag, tableTagContentIn, tableTagContentOut);
+        })
+
+        CommonApp.enableEnterKeyboard(page.dialogs.element.mdCreateTag, page.dialogs.element.btnCreateTag);
+        CommonApp.enableEnterKeyboard(page.dialogs.element.mdUpdateTag, page.dialogs.element.btnUpdateTag);
+        CommonApp.enableEnterKeyboard(page.dialogs.element.mdAddTagContentToTag, page.dialogs.element.btnAddTagContentToTag);
+
+    });
+
+
+</script>
+</body>
+</html>

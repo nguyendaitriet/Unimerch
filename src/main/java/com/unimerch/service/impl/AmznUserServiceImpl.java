@@ -4,9 +4,9 @@ import com.unimerch.dto.amznacc.*;
 import com.unimerch.exception.*;
 import com.unimerch.mapper.AmznUserMapper;
 import com.unimerch.mapper.MetadataMapper;
-import com.unimerch.repository.AmznUserRepository;
-import com.unimerch.repository.BrgGroupAmznUserRepository;
-import com.unimerch.repository.OrderRepository;
+import com.unimerch.repository.amzn.AmznUserRepository;
+import com.unimerch.repository.group.BrgGroupAmznUserRepository;
+import com.unimerch.repository.order.OrderRepository;
 import com.unimerch.repository.datatable.AmznAccTableRepository;
 import com.unimerch.repository.model.AmznUser;
 import com.unimerch.repository.model.AzmnStatus;
@@ -274,6 +274,7 @@ public class AmznUserServiceImpl implements AmznUserService {
         Workbook workbook = new XSSFWorkbook();
 
         Sheet sheet = workbook.createSheet("Amzn Acc");
+
         sheet.setColumnWidth(0, 6000);
         sheet.setColumnWidth(1, 4000);
 

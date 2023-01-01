@@ -1,6 +1,6 @@
 package com.unimerch.schedules;
 
-import com.unimerch.repository.OrderRepository;
+import com.unimerch.repository.order.OrderRepository;
 import com.unimerch.repository.model.Order;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
