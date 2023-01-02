@@ -76,22 +76,194 @@
                                     </div>
                                 </div>
                                 <div class="row mt-3">
-                                    <button id="btnAnalyse" class="btn btn-primary" type="button">ANALYSE SALES</button>
+                                    <button id="btnAnalyse" class="btn btn-primary text-uppercase" type="button"
+                                            th:text="#{analyse.btn.analyseSale}">ANALYSE SALES
+                                    </button>
                                 </div>
+                                <hr class="sidebar-divider">
                                 <div class="row mt-3">
                                     <div class="input-group-btn" data-toggle="buttons">
                                         <label class="btn btn-light active">
-                                            <input id="dailyChartRadio" value="daily" type="radio" name="dailyOrMonthly" autocomplete="off" checked>
+                                            <input id="dailyChartRadio" value="daily" type="radio" name="dailyOrMonthly"
+                                                   autocomplete="off" checked>
                                             Daily
                                         </label>
                                         <label class="btn btn-light">
-                                            <input id="monthlyChartRadio" value="monthly" type="radio" name="dailyOrMonthly" autocomplete="off">
+                                            <input id="monthlyChartRadio" value="monthly" type="radio"
+                                                   name="dailyOrMonthly" autocomplete="off">
                                             Monthly
                                         </label>
                                     </div>
                                 </div>
-                                <div class="row mt-3" id="chartHolder" style="height:1000px; width:100%;">
+                                <div class="row mt-3" id="chartHolder" style="width:100%;">
                                     <!-- Chart Content -->
+                                </div>
+                                <hr class="sidebar-divider">
+                                <div class="mt-3 mb-3 row">
+                                    <div class="col-md-4">
+                                        <div class="input-group">
+                                            <input type="text" class="form-control bg-light border-0 small"
+                                                   placeholder="Search for asin or title" aria-label="Search"
+                                                   aria-describedby="basic-addon2">
+                                            <div class="input-group-append">
+                                                <button class="btn btn-primary" type="button">
+                                                    <i class="fas fa-search fa-sm"></i>
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="ml-3 col-md-8">
+                                        <div class="mb-3 row">
+                                            <div class="col-md-2">Include Tag</div>
+                                            <div class="col-md-10">
+                           <span class="dropdown">
+                            <button class="btn btn-success dropdown-toggle" type="button"
+                                    data-toggle="dropdown" aria-haspopup="true"
+                                    aria-expanded="false">
+                                Idea tag
+                            </button>
+                            <div class="dropdown-menu animated--fade-in"
+                                 aria-labelledby="dropdownMenuButton" style="">
+                                <a class="dropdown-item" href="#">Action</a>
+                                <a class="dropdown-item" href="#">Another action</a>
+                                <a class="dropdown-item" href="#">Something else here</a>
+                            </div>
+                        </span>
+                                                <span class="dropdown">
+                            <button class="btn btn-warning dropdown-toggle" type="button"
+                                    data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                Design tag
+                            </button>
+                            <div class="dropdown-menu animated--fade-in"
+                                 aria-labelledby="dropdownMenuButton" style="">
+                                <a class="dropdown-item" href="#">Action</a>
+                                <a class="dropdown-item" href="#">Another action</a>
+                                <a class="dropdown-item" href="#">Something else here</a>
+                            </div>
+                        </span>
+                                                <span class="dropdown">
+                            <button class="btn btn-secondary dropdown-toggle" type="button"
+                                    data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                Support tag
+                            </button>
+                            <div class="dropdown-menu animated--fade-in"
+                                 aria-labelledby="dropdownMenuButton" style="">
+                                <a class="dropdown-item" href="#">Action</a>
+                                <a class="dropdown-item" href="#">Another action</a>
+                                <a class="dropdown-item" href="#">Something else here</a>
+                            </div>
+                        </span>
+                                            </div>
+                                        </div>
+                                        <div class="mb-3 row">
+                                            <div class="col-md-2">Exclude Tag</div>
+                                            <div class="col-md-10">
+                           <span class="dropdown">
+                            <button class="btn btn-success dropdown-toggle" type="button"
+                                    data-toggle="dropdown" aria-haspopup="true"
+                                    aria-expanded="false">
+                                Idea tag
+                            </button>
+                            <div class="dropdown-menu animated--fade-in"
+                                 aria-labelledby="dropdownMenuButton" style="">
+                                <a class="dropdown-item" href="#">Action</a>
+                                <a class="dropdown-item" href="#">Another action</a>
+                                <a class="dropdown-item" href="#">Something else here</a>
+                            </div>
+                        </span>
+                                                <span class="dropdown">
+                            <button class="btn btn-warning dropdown-toggle" type="button"
+                                    data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                Design tag
+                            </button>
+                            <div class="dropdown-menu animated--fade-in"
+                                 aria-labelledby="dropdownMenuButton" style="">
+                                <a class="dropdown-item" href="#">Action</a>
+                                <a class="dropdown-item" href="#">Another action</a>
+                                <a class="dropdown-item" href="#">Something else here</a>
+                            </div>
+                        </span>
+                                                <span class="dropdown">
+                            <button class="btn btn-secondary dropdown-toggle" type="button"
+                                    data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                Support tag
+                            </button>
+                            <div class="dropdown-menu animated--fade-in"
+                                 aria-labelledby="dropdownMenuButton" style="">
+                                <a class="dropdown-item" href="#">Action</a>
+                                <a class="dropdown-item" href="#">Another action</a>
+                                <a class="dropdown-item" href="#">Something else here</a>
+                            </div>
+                        </span>
+                                            </div>
+                                        </div>
+                                        <div class="mb-3 row">
+                                            <div class="col-md-2">Date Range</div>
+                                            <div class="col-md-10">
+                                                <input class="form-control col-md-10" type="text" name="dateRange" id="productAnalDateRange" autocomplete="off">
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <button type="button" class="btn btn-primary mr-3" id="btnAnalyseProductFilter" th:text="#{analyse.btn.analyse}">Analyse</button>
+                                            <button type="button" class="btn btn-info" id="btnResetProductFilter" th:text="#{analyse.btn.reset}">Reset</button>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row mt-3">
+
+                                    <div class="table-responsive">
+                                        <table class="table table-bordered table-sm" id="tableProductAnalytics">
+                                            <thead>
+                                            <tr class="text-center">
+                                                <th class="col-md-1">ASIN</th>
+                                                <th>Title</th>
+                                                <th>Sales</th>
+                                                <th>Royalties</th>
+                                                <th>Price</th>
+                                                <th>Username</th>
+                                            </tr>
+                                            </thead>
+
+                                            <tbody>
+                                            <tr>
+                                                <td rowspan="2" class="align-middle text-center">HSFB44421</td>
+                                                <td>System Architect</td>
+                                                <td class="text-center font-weight-bold text-dark">3</td>
+                                                <td class="text-center">61.01</td>
+                                                <td class="text-center">30.20</td>
+                                                <td class="text-center">140</td>
+                                            </tr>
+                                            <tr>
+                                                <td colspan="5">
+                                                    <span class="btn btn-success btn-sm">James</span>
+                                                    <span class="btn btn-warning btn-sm">Emily</span>
+                                                    <span class="btn btn-secondary btn-sm">Victor</span>
+                                                    <button class="btn btn-primary btn-sm btn-handle-tag"
+                                                            title="Tag handler">
+                                                        <i class="far fa-edit"></i>
+                                                    </button>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td rowspan="2" class="align-middle text-center">MJAX445561</td>
+                                                <td>System Architect</td>
+                                                <td class="text-center font-weight-bold text-dark">10</td>
+                                                <td>33.87</td>
+                                                <td>22.15</td>
+                                                <td>38</td>
+                                            </tr>
+                                            <tr>
+                                                <td colspan="5">
+                                                    <button class="btn btn-primary btn-sm btn-handle-tag"
+                                                            title="Tag handler">
+                                                        <i class="far fa-edit"></i>
+                                                    </button>
+                                                </td>
+                                            </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
                                 </div>
 
                             </div>
@@ -122,6 +294,7 @@
 </a>
 
 <th:block th:replace="dashboard/temp/temp-option :: temp-option"/>
+<th:block th:replace="layout/modals-analytics :: product-analytics-filter"/>
 <th:block th:replace="layout/texts :: texts"/>
 <th:block th:replace="layout/script :: script-dashboard"/>
 
@@ -310,7 +483,7 @@
         });
     }
 
-    //Chart
+    //Analytics Sales Chart
 
     var options = {
         title: {
@@ -497,6 +670,15 @@
             })
     }
 
+    // Analytics Sales Table
+    page.element.btnProductFilter = $('#btnProductFilter');
+    page.element.tableProductAnalytics = $('#tableProductAnalytics');
+
+    page.dialogs.element.mdProductAnalyticsFilter = $('#mdProductAnalyticsFilter');
+    page.dialogs.element.productAnalDateRange = $('#productAnalDateRange')
+    page.dialogs.element.btnAnalyseProductFilter = $('#btnAnalyseProductFilter');
+    page.dialogs.element.btnResetProductFilter = $('#btnResetProductFilter');
+
     $(document).ready(function () {
         DBApp.handleGroupsFilterSidebar();
         page.commands.findAllGroups();
@@ -513,6 +695,14 @@
         page.element.analAmznSelect.selectpicker('setStyle', 'btn-outline-primary');
         page.element.btnAnalyse.click(() => {
             page.commands.handleBtnAnalyse();
+        })
+        page.dialogs.element.productAnalDateRange.daterangepicker({
+            locale: {
+                format: "DD/MM/YYYY"
+            }
+        });
+        page.element.btnProductFilter.click(() => {
+            page.dialogs.element.mdProductAnalyticsFilter.modal('show');
         })
     });
 

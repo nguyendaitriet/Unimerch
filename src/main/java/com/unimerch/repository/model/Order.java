@@ -1,7 +1,5 @@
 package com.unimerch.repository.model;
 
-import com.unimerch.dto.order.OrderChartColumn;
-import com.unimerch.dto.product.ProductResult;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -20,81 +18,6 @@ import java.time.Instant;
 @Table(
         name = "orders",
         indexes = @Index(name = "idx_date", columnList = "date")
-)
-@NamedNativeQuery(
-        name = "get_order_chart_column_result_all_acc",
-        query =
-                "SELECT  " +
-                    "DATE_FORMAT(o.`date`, '%d/%m/%Y') AS date, " +
-                    "SUM(o.royalties) AS royalties, " +
-                    "SUM(o.purchased - o.cancelled) AS sold " +
-                "FROM orders o " +
-                "WHERE o.date BETWEEN :startDay AND :endDay " +
-                "GROUP BY DATE_FORMAT(o.`date`, '%d/%m/%Y') ",
-        resultSetMapping = "order_chart_column_result_all_acc"
-)
-@SqlResultSetMapping(
-        name = "order_chart_column_result_all_acc",
-        classes = @ConstructorResult(
-                targetClass = OrderChartColumn.class,
-                columns = {
-                        @ColumnResult(name = "date", type = String.class),
-                        @ColumnResult(name = "royalties", type = BigDecimal.class),
-                        @ColumnResult(name = "sold", type = Integer.class),
-                }
-        )
-)
-@NamedNativeQuery(
-        name = "get_order_chart_column_result_group",
-        query =
-                "SELECT  " +
-                    "DATE_FORMAT(o.`date`, '%d/%m/%Y') AS date, " +
-                    "SUM(o.royalties) AS royalties, " +
-                    "SUM(o.purchased - o.cancelled) AS sold " +
-                "FROM orders o " +
-                "WHERE o.date BETWEEN :startDay AND :endDay " +
-                "AND o.amzn_user_id IN ( " +
-                        "SELECT b.amzn_user_id " +
-                        "FROM brg_group_amzn_user AS b " +
-                        "WHERE b.group_id = :groupId " +
-                    ") " +
-                "GROUP BY DATE_FORMAT(o.`date`, '%d/%m/%Y') ",
-        resultSetMapping = "order_chart_column_result_group"
-)
-@SqlResultSetMapping(
-        name = "order_chart_column_result_group",
-        classes = @ConstructorResult(
-                targetClass = OrderChartColumn.class,
-                columns = {
-                        @ColumnResult(name = "date", type = String.class),
-                        @ColumnResult(name = "royalties", type = BigDecimal.class),
-                        @ColumnResult(name = "sold", type = Integer.class),
-                }
-        )
-)
-@NamedNativeQuery(
-        name = "get_order_chart_column_result_amzn",
-        query =
-                "SELECT  " +
-                        "DATE_FORMAT(o.`date`, '%d/%m/%Y') AS date, " +
-                        "SUM(o.royalties) AS royalties, " +
-                        "SUM(o.purchased - o.cancelled) AS sold " +
-                        "FROM orders o " +
-                        "WHERE o.date BETWEEN :startDay AND :endDay " +
-                        "AND o.amzn_user_id = :amznId " +
-                        "GROUP BY DATE_FORMAT(o.`date`, '%d/%m/%Y') ",
-        resultSetMapping = "order_chart_column_result_amzn"
-)
-@SqlResultSetMapping(
-        name = "order_chart_column_result_amzn",
-        classes = @ConstructorResult(
-                targetClass = OrderChartColumn.class,
-                columns = {
-                        @ColumnResult(name = "date", type = String.class),
-                        @ColumnResult(name = "royalties", type = BigDecimal.class),
-                        @ColumnResult(name = "sold", type = Integer.class),
-                }
-        )
 )
 @Accessors(chain = true)
 public class Order {

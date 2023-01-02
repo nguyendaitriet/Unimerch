@@ -208,6 +208,10 @@ body.loading .modal {
     width: 85% !important;
 }
 
+#table-tag-content-in_filter input {
+    width: 85% !important;
+}
+
 .tb-padding-sm th, .tb-padding-sm td {
     padding: 0.5rem !important;
 }
