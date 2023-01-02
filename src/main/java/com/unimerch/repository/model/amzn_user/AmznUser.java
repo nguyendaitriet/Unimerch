@@ -1,11 +1,8 @@
-package com.unimerch.repository.model;
+package com.unimerch.repository.model.amzn_user;
 
-import lombok.AllArgsConstructor;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.experimental.Accessors;
-import org.hibernate.annotations.ColumnDefault;
 
 import javax.persistence.*;
 import java.time.Instant;

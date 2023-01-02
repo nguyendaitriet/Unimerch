@@ -5,7 +5,7 @@ import com.unimerch.dto.amznacc.AmznAccResult;
 import com.unimerch.dto.group.GroupCreateParam;
 import com.unimerch.dto.group.GroupResult;
 import com.unimerch.dto.group.GroupUpdateParam;
-import com.unimerch.repository.model.Group;
+import com.unimerch.repository.model.group.Group;
 import org.springframework.data.jpa.datatables.mapping.DataTablesInput;
 import org.springframework.data.jpa.datatables.mapping.DataTablesOutput;
 

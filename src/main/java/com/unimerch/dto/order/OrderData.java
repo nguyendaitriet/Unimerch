@@ -1,7 +1,7 @@
 package com.unimerch.dto.order;
 
-import com.unimerch.repository.model.Order;
-import com.unimerch.repository.model.Product;
+import com.unimerch.repository.model.order.Order;
+import com.unimerch.repository.model.product.Product;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;

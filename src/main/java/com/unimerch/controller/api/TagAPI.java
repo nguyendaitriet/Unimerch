@@ -1,7 +1,7 @@
 package com.unimerch.controller.api;
 
 import com.unimerch.dto.tag_content.TagContentResult;
-import com.unimerch.repository.model.Tag;
+import com.unimerch.repository.model.tag.Tag;
 import com.unimerch.security.RoleConstant;
 import com.unimerch.service.TagService;
 import org.springframework.beans.factory.annotation.Autowired;

@@ -1,8 +1,8 @@
 package com.unimerch.repository.group;
 
-import com.unimerch.repository.model.BrgGroupUser;
-import com.unimerch.repository.model.Group;
-import com.unimerch.repository.model.User;
+import com.unimerch.repository.model.group.BrgGroupUser;
+import com.unimerch.repository.model.group.Group;
+import com.unimerch.repository.model.user.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -13,13 +13,13 @@ import java.util.List;
 
 @Repository
 public interface BrgGroupUserRepository extends JpaRepository<BrgGroupUser, Integer> {
-    @Query("SELECT NEW com.unimerch.repository.model.Group " +
+    @Query("SELECT NEW com.unimerch.repository.model.group.Group " +
             "(br.group.id, br.group.title)" +
             "FROM BrgGroupUser AS br " +
             "WHERE br.user.id=:id")
     List<Group> findAssignedGroupsByUserId(@Param("id") Integer userId);
 
-    @Query("SELECT NEW com.unimerch.repository.model.Group " +
+    @Query("SELECT NEW com.unimerch.repository.model.group.Group " +
             "(g.id, g.title)" +
             "FROM Group AS g " +
             "WHERE g.id NOT IN " +

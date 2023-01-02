@@ -22,12 +22,12 @@ import java.math.BigDecimal;
         name = "get_order_chart_column_result_all_acc",
         query =
                 "SELECT  " +
-                        "DATE_FORMAT(o.`date`, '%d/%m/%Y') AS date, " +
-                        "SUM(o.royalties) AS royalties, " +
-                        "SUM(o.purchased - o.cancelled) AS sold " +
-                        "FROM orders o " +
-                        "WHERE o.date BETWEEN :startDay AND :endDay " +
-                        "GROUP BY DATE_FORMAT(o.`date`, '%d/%m/%Y') ",
+                    "DATE_FORMAT(o.`date`, '%d/%m/%Y') AS date, " +
+                    "SUM(o.royalties) AS royalties, " +
+                    "SUM(o.purchased - o.cancelled) AS sold " +
+                "FROM orders o " +
+                "WHERE o.date BETWEEN :startDay AND :endDay " +
+                "GROUP BY DATE_FORMAT(o.`date`, '%d/%m/%Y') ",
         resultSetMapping = "order_chart_column_result_all_acc"
 )
 @SqlResultSetMapping(
@@ -46,17 +46,17 @@ import java.math.BigDecimal;
         name = "get_order_chart_column_result_group",
         query =
                 "SELECT  " +
-                        "DATE_FORMAT(o.`date`, '%d/%m/%Y') AS date, " +
-                        "SUM(o.royalties) AS royalties, " +
-                        "SUM(o.purchased - o.cancelled) AS sold " +
-                        "FROM orders o " +
-                        "WHERE o.date BETWEEN :startDay AND :endDay " +
-                        "AND o.amzn_user_id IN ( " +
-                        "SELECT b.amzn_user_id " +
-                        "FROM brg_group_amzn_user AS b " +
-                        "WHERE b.group_id = :groupId " +
-                        ") " +
-                        "GROUP BY DATE_FORMAT(o.`date`, '%d/%m/%Y') ",
+                    "DATE_FORMAT(o.`date`, '%d/%m/%Y') AS date, " +
+                    "SUM(o.royalties) AS royalties, " +
+                    "SUM(o.purchased - o.cancelled) AS sold " +
+                "FROM orders o " +
+                "WHERE o.date BETWEEN :startDay AND :endDay " +
+                "AND o.amzn_user_id IN ( " +
+                "SELECT b.amzn_user_id " +
+                "FROM brg_group_amzn_user AS b " +
+                "WHERE b.group_id = :groupId " +
+                ") " +
+                "GROUP BY DATE_FORMAT(o.`date`, '%d/%m/%Y') ",
         resultSetMapping = "order_chart_column_result_group"
 )
 @SqlResultSetMapping(

@@ -1,7 +1,7 @@
 package com.unimerch.security.amzn;
 
 import com.unimerch.repository.amzn.AmznUserRepository;
-import com.unimerch.repository.model.AmznUser;
+import com.unimerch.repository.model.amzn_user.AmznUser;
 import com.unimerch.security.NameConstant;
 import com.unimerch.security.UserPrinciple;
 import org.springframework.beans.factory.annotation.Autowired;

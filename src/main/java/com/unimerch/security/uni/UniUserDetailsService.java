@@ -1,7 +1,7 @@
 package com.unimerch.security.uni;
 
 import com.unimerch.exception.NotAllowDisableException;
-import com.unimerch.repository.model.User;
+import com.unimerch.repository.model.user.User;
 import com.unimerch.security.NameConstant;
 import com.unimerch.security.UserPrinciple;
 import com.unimerch.service.UniUserService;

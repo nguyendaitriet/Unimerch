@@ -1,4 +1,4 @@
-package com.unimerch.repository.model;
+package com.unimerch.repository.model.tag;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -18,27 +18,27 @@ import java.util.Objects;
 @Getter
 @Setter
 @Accessors(chain = true)
-public class BrgGroupAmznUserId implements Serializable {
+public class BrgTagTagContentId implements Serializable {
 
-    private static final long serialVersionUID = 1461032386399547886L;
-    @Column(name = "group_id", nullable = false)
-    private Integer groupId;
+    private static final long serialVersionUID = 1461122386399547886L;
+    @Column(name = "tag_id", nullable = false)
+    private Integer tagId;
 
-    @Column(name = "amzn_user_id", nullable = false)
-    private Integer amznUserId;
+    @Column(name = "tag_content_id", nullable = false)
+    private Integer tagContentId;
 
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || Hibernate.getClass(this) != Hibernate.getClass(o)) return false;
-        BrgGroupAmznUserId entity = (BrgGroupAmznUserId) o;
-        return Objects.equals(this.groupId, entity.groupId) &&
-                Objects.equals(this.amznUserId, entity.amznUserId);
+        BrgTagTagContentId entity = (BrgTagTagContentId) o;
+        return Objects.equals(this.tagId, entity.tagId) &&
+                Objects.equals(this.tagContentId, entity.tagContentId);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(groupId, amznUserId);
+        return Objects.hash(tagId, tagContentId);
     }
 
 }

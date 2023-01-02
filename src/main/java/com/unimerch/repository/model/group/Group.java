@@ -1,4 +1,4 @@
-package com.unimerch.repository.model;
+package com.unimerch.repository.model.group;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

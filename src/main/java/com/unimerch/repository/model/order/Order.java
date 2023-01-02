@@ -1,5 +1,6 @@
-package com.unimerch.repository.model;
+package com.unimerch.repository.model.order;
 
+import com.unimerch.repository.model.amzn_user.AmznUser;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
