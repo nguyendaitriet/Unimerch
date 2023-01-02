@@ -78,6 +78,4 @@ public interface ProductRepository extends JpaRepository<Product, String> {
             "AND o.amznUser.id = :amznId " +
             "GROUP BY o.asin, o.title, p.price, o.amznUser.username, o.asin")
     List<ProductResult> getAmznProductAnalyticsList(@Param("amznId") Integer amznId, @Param("startDay") Instant startDay, @Param("endDay") Instant endDay);
-
-
 }

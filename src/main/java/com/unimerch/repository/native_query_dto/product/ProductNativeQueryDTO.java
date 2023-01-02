@@ -23,14 +23,16 @@ import java.math.BigDecimal;
                         "o.title AS productName, " +
                         "SUM(o.royalties) AS royalties, " +
                         "p.price AS price, " +
-                        "o.amzn_user_id AS amznAccUsername, " +
+                        "a.username AS amznAccUsername, " +
                         "o.ASIN AS asin " +
-                        "FROM orders AS o " +
-                        "LEFT JOIN products AS p " +
-                        "ON p.ASIN = o.ASIN " +
-                        "WHERE o.amzn_user_id IN (:amznAccIds) " +
-                        "AND o.date >= :startDay " +
-                        "GROUP BY o.ASIN, o.title, p.price, o.amzn_user_id",
+                    "FROM orders AS o " +
+                    "LEFT JOIN products AS p " +
+                    "ON p.ASIN = o.ASIN " +
+                    "INNER JOIN amzn_users AS a " +
+                    "ON a.id = o.amzn_user_id " +
+                    "WHERE o.amzn_user_id IN (:amznAccIds) " +
+                    "AND o.date >= :startDay " +
+                    "GROUP BY o.ASIN, o.title, p.price, o.amzn_user_id",
         resultSetMapping = "product_item_result"
 )
 @SqlResultSetMapping(
