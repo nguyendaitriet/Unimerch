@@ -204,13 +204,12 @@ body.loading .modal {
     font-size: 13px !important;
 }
 
-#table-amzn-acc-in_filter input {
-    width: 85% !important;
-}
-
+#table-amzn-acc-in_filter input,
+#table-tag-content_filter input,
 #table-tag-content-in_filter input {
     width: 85% !important;
 }
+
 
 .tb-padding-sm th, .tb-padding-sm td {
     padding: 0.5rem !important;

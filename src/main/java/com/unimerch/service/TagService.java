@@ -2,6 +2,7 @@ package com.unimerch.service;
 
 import com.unimerch.dto.tag_content.TagContentResult;
 import com.unimerch.repository.model.tag.Tag;
+import com.unimerch.repository.model.tag.TagContent;
 
 import java.util.List;
 

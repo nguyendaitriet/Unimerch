@@ -27,5 +27,4 @@ public class AnalyticsSaleAPI {
         return new ResponseEntity<> (analyticService.getProductAnalyticsList(analyticsParam), HttpStatus.OK);
     }
 
-
 }

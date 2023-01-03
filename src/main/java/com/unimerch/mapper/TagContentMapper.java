@@ -1,5 +1,6 @@
 package com.unimerch.mapper;
 
+import com.unimerch.dto.tag_content.TagContentParam;
 import com.unimerch.dto.tag_content.TagContentResult;
 import com.unimerch.repository.model.tag.BrgTagTagContent;
 import com.unimerch.repository.model.tag.TagContent;
@@ -17,5 +18,10 @@ public class TagContentMapper {
         return new TagContentResult()
                 .setId(tagContent.getId())
                 .setName(tagContent.getName());
+    }
+    public TagContent toTagContent(TagContentParam tagContentParam) {
+        return new TagContent()
+                .setId(tagContentParam.getId())
+                .setName(tagContentParam.getName());
     }
 }

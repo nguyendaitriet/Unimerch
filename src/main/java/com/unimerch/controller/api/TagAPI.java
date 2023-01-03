@@ -1,8 +1,10 @@
 package com.unimerch.controller.api;
 
+import com.unimerch.dto.tag_content.TagContentParam;
 import com.unimerch.dto.tag_content.TagContentResult;
 import com.unimerch.repository.model.tag.Tag;
 import com.unimerch.security.RoleConstant;
+import com.unimerch.service.TagContentService;
 import com.unimerch.service.TagService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -18,11 +20,19 @@ import java.util.Map;
 public class TagAPI {
     @Autowired
     private TagService tagService;
+    @Autowired
+    private TagContentService tagContentService;
 
     @RoleConstant.ManagerAuthorization
     @GetMapping("/findAllTags")
-    public ResponseEntity<?> findAllGroups() {
+    public ResponseEntity<?> findAllTags() {
         return new ResponseEntity<>(tagService.findAll(), HttpStatus.OK);
+    }
+
+    @RoleConstant.ManagerAuthorization
+    @GetMapping("/getAllTagContent")
+    public ResponseEntity<?> getAllTagContent() {
+        return new ResponseEntity<>(tagContentService.findAll(), HttpStatus.OK);
     }
 
     @RoleConstant.ManagerAuthorization
@@ -35,6 +45,12 @@ public class TagAPI {
     @PostMapping("/create")
     public ResponseEntity<?> createTag(@RequestBody Tag newTag) {
         return new ResponseEntity<>(tagService.createTag(newTag), HttpStatus.CREATED);
+    }
+
+    @RoleConstant.ManagerAuthorization
+    @PostMapping("/createTagContent")
+    public ResponseEntity<?> createTagContent(@RequestBody TagContentParam newTagContent) {
+        return new ResponseEntity<>(tagContentService.createTagContent(newTagContent), HttpStatus.CREATED);
     }
 
     @RoleConstant.ManagerAuthorization
@@ -91,5 +107,6 @@ public class TagAPI {
         tagService.deleteMultiTagContentFromTag(tagContentIdList.get("tagContentSelected"), id);
         return new ResponseEntity<>(HttpStatus.OK);
     }
+
 
 }
