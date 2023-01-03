@@ -1,7 +1,7 @@
 package com.unimerch.controller.api;
 
 import com.unimerch.dto.group.GroupResult;
-import com.unimerch.dto.user.UserCreateParam;
+import com.unimerch.dto.user.CreateUserParam;
 import com.unimerch.dto.user.UserResult;
 import com.unimerch.security.RoleConstant;
 import com.unimerch.security.UserPrinciple;
@@ -13,7 +13,6 @@ import org.springframework.data.jpa.datatables.mapping.DataTablesInput;
 import org.springframework.data.jpa.datatables.mapping.DataTablesOutput;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
@@ -47,7 +46,7 @@ public class UserAPI {
 
     @RoleConstant.ManagerAuthorization
     @PostMapping("/create")
-    public ResponseEntity<?> createUser(@Validated @RequestBody UserCreateParam userCreateParam, BindingResult bindingResult) {
+    public ResponseEntity<?> createUser(@Validated @RequestBody CreateUserParam userCreateParam, BindingResult bindingResult) {
 
         if (bindingResult.hasErrors())
             return AppUtils.mapErrorToResponse(bindingResult);

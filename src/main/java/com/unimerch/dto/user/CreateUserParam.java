@@ -1,6 +1,5 @@
 package com.unimerch.dto.user;
 
-import com.unimerch.util.ValidationUtils;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -8,7 +7,6 @@ import lombok.Setter;
 import lombok.experimental.Accessors;
 
 import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 
 
@@ -17,7 +15,7 @@ import javax.validation.constraints.Size;
 @NoArgsConstructor
 @AllArgsConstructor
 @Accessors(chain = true)
-public class UserCreateParam {
+public class CreateUserParam {
 
     @NotBlank(message = "{validation.inputEmpty}")
     @Size(min = 3, max = 80, message = "{validation.fullNameLength}")
