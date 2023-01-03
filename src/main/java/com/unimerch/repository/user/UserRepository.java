@@ -1,6 +1,6 @@
 package com.unimerch.repository.user;
 
-import com.unimerch.repository.model.User;
+import com.unimerch.repository.model.user.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;

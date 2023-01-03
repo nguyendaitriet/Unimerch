@@ -1,6 +1,6 @@
 package com.unimerch.service;
 
-import com.unimerch.repository.model.Role;
+import com.unimerch.repository.model.user.Role;
 
 public interface RoleService {
 

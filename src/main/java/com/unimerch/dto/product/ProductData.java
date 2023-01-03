@@ -1,6 +1,6 @@
 package com.unimerch.dto.product;
 
-import com.unimerch.repository.model.Product;
+import com.unimerch.repository.model.product.Product;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;

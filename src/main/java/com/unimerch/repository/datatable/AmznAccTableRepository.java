@@ -1,6 +1,6 @@
 package com.unimerch.repository.datatable;
 
-import com.unimerch.repository.model.AmznUser;
+import com.unimerch.repository.model.amzn_user.AmznUser;
 import org.springframework.data.jpa.datatables.repository.DataTablesRepository;
 import org.springframework.stereotype.Repository;
 

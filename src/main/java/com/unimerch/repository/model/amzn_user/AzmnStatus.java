@@ -1,4 +1,4 @@
-package com.unimerch.repository.model;
+package com.unimerch.repository.model.amzn_user;
 
 public enum AzmnStatus {
     TERMINATED("TERMINATED"), APPROVED("APPROVED");

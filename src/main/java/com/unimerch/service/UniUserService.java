@@ -3,7 +3,7 @@ package com.unimerch.service;
 import com.unimerch.dto.group.GroupResult;
 import com.unimerch.dto.user.CreateUserParam;
 import com.unimerch.dto.user.UserResult;
-import com.unimerch.repository.model.User;
+import com.unimerch.repository.model.user.User;
 import org.springframework.data.jpa.datatables.mapping.DataTablesInput;
 import org.springframework.data.jpa.datatables.mapping.DataTablesOutput;
 import org.springframework.security.core.userdetails.UserDetailsService;

@@ -6,12 +6,10 @@ import com.fasterxml.jackson.databind.DeserializationContext;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.deser.std.StdDeserializer;
 import com.unimerch.dto.order.OrderCardResult;
-import com.unimerch.dto.order.OrderChartColumn;
 import com.unimerch.dto.order.OrderChartResult;
 import com.unimerch.dto.order.OrderData;
-import com.unimerch.repository.model.Order;
-import com.unimerch.repository.model.Product;
-import com.unimerch.util.ChartUtils;
+import com.unimerch.repository.model.order.Order;
+import com.unimerch.repository.model.product.Product;
 import com.unimerch.util.TimeUtils;
 import org.springframework.stereotype.Component;
 

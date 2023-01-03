@@ -1,6 +1,6 @@
 package com.unimerch.repository.group;
 
-import com.unimerch.repository.model.Group;
+import com.unimerch.repository.model.group.Group;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;

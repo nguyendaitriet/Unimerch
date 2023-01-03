@@ -1,7 +1,7 @@
 package com.unimerch.repository.group;
 
-import com.unimerch.repository.model.AmznUser;
-import com.unimerch.repository.model.BrgGroupAmznUser;
+import com.unimerch.repository.model.amzn_user.AmznUser;
+import com.unimerch.repository.model.group.BrgGroupAmznUser;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;

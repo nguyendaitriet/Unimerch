@@ -1,7 +1,7 @@
 package com.unimerch.repository.model.metamodel;
 
-import com.unimerch.repository.model.Role;
-import com.unimerch.repository.model.User;
+import com.unimerch.repository.model.user.Role;
+import com.unimerch.repository.model.user.User;
 
 import javax.annotation.Generated;
 import javax.persistence.metamodel.SingularAttribute;

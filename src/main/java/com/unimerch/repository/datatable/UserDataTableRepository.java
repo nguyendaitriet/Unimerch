@@ -1,6 +1,6 @@
 package com.unimerch.repository.datatable;
 
-import com.unimerch.repository.model.User;
+import com.unimerch.repository.model.user.User;
 import org.springframework.data.jpa.datatables.repository.DataTablesRepository;
 import org.springframework.stereotype.Repository;
 

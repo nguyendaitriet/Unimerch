@@ -1,7 +1,7 @@
 package com.unimerch.service;
 
 import com.unimerch.dto.amznacc.*;
-import com.unimerch.repository.model.AmznUser;
+import com.unimerch.repository.model.amzn_user.AmznUser;
 import org.springframework.data.jpa.datatables.mapping.DataTablesInput;
 import org.springframework.data.jpa.datatables.mapping.DataTablesOutput;
 import org.springframework.security.core.Authentication;

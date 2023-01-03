@@ -1,27 +1,32 @@
-package com.unimerch.repository.model;
+package com.unimerch.repository.model.user;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import lombok.experimental.Accessors;
 
 import javax.persistence.*;
 
 @Entity
-@Getter
-@Setter
 @NoArgsConstructor
 @AllArgsConstructor
-@Table(name = "tag_contents")
-@Accessors(chain = true)
-public class TagContent {
+@Getter
+@Setter
+@Table(name = "roles")
+public class Role {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", nullable = false)
     private Integer id;
 
-    @Column(name = "name", nullable = false, length = 200)
+    @Column(name = "name", nullable = false, length = 45)
     private String name;
 
+    @Column(name = "code", nullable = false, length = 45)
+    private String code;
+
+    public Role(Integer id) {
+        this.id = id;
+    }
 }

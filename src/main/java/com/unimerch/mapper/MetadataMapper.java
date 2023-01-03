@@ -1,7 +1,7 @@
 package com.unimerch.mapper;
 
 import com.unimerch.dto.amznacc.Metadata;
-import com.unimerch.repository.model.AmznUser;
+import com.unimerch.repository.model.amzn_user.AmznUser;
 import org.springframework.stereotype.Component;
 
 @Component

@@ -3,12 +3,10 @@ package com.unimerch.service.impl;
 import com.unimerch.dto.tag_content.TagContentResult;
 import com.unimerch.exception.InvalidIdException;
 import com.unimerch.mapper.TagContentMapper;
-import com.unimerch.repository.model.BrgTagTagContent;
-import com.unimerch.repository.model.TagContent;
+import com.unimerch.repository.model.tag.*;
 import com.unimerch.repository.tag.BrgTagTagContentRepository;
 import com.unimerch.repository.tag.TagContentRepository;
 import com.unimerch.repository.tag.TagRepository;
-import com.unimerch.repository.model.Tag;
 import com.unimerch.service.TagService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
@@ -72,9 +70,13 @@ public class TagServiceImpl implements TagService {
     @Override
     public List<TagContentResult> addTagContentToTag(List<Integer> tagContentIdList, int tagId) {
         Tag tag = tagRepository.findById(tagId).get();
-        List<TagContent> tagContentList = tagContentRepository.findAllTagContentByIds(tagContentIdList);
-        List<BrgTagTagContent> brgTagTagContent = tagContentList.stream().map(item ->
-                new BrgTagTagContent(0, item, tag)).collect(Collectors.toList());
+//        List<TagContent> tagContentList = tagContentRepository.findAllTagContentByIds(tagContentIdList);
+        List<BrgTagTagContent> brgTagTagContent = tagContentIdList.stream().map(item -> {
+            TagContent tagContent = tagContentRepository.findById(item).get();
+            BrgTagTagContentId brgTagTagContentId = new BrgTagTagContentId(tagId, item);
+            return new BrgTagTagContent(brgTagTagContentId, tag, tagContent);
+        }).collect(Collectors.toList());
+
         brgTagTagContent = brgTagTagContentRepo.saveAll(brgTagTagContent);
         return brgTagTagContent.stream().map(item -> tagContentMapper.toTagContentResult(item)).collect(Collectors.toList());
     }

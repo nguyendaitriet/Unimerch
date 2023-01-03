@@ -1,4 +1,4 @@
-package com.unimerch.repository.model;
+package com.unimerch.repository.model.tag;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -15,17 +15,18 @@ import javax.persistence.*;
 @Table(name = "brg_tag_tagContent")
 public class BrgTagTagContent {
 
-    @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id", nullable = false)
-    private Integer id;
+    @EmbeddedId
+    private BrgTagTagContentId id;
 
-    @ManyToOne(optional = false)
-    @JoinColumn(name = "tagContent_id", nullable = false)
-    private TagContent tagContent;
-
+    @MapsId("tagId")
     @ManyToOne(optional = false)
     @JoinColumn(name = "tag_id", nullable = false)
     private Tag tag;
+
+    @MapsId("tagContentId")
+    @ManyToOne(optional = false)
+    @JoinColumn(name = "tagContent_id", nullable = false)
+    private TagContent tagContent;
 
 }

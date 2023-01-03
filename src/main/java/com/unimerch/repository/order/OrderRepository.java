@@ -1,7 +1,6 @@
 package com.unimerch.repository.order;
 
-import com.unimerch.dto.order.OrderChartColumn;
-import com.unimerch.repository.model.Order;
+import com.unimerch.repository.model.order.Order;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;

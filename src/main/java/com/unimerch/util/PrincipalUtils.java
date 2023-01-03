@@ -1,6 +1,6 @@
 package com.unimerch.util;
 
-import com.unimerch.repository.model.User;
+import com.unimerch.repository.model.user.User;
 import com.unimerch.service.UniUserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;

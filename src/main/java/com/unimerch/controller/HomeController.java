@@ -1,6 +1,5 @@
 package com.unimerch.controller;
 
-import com.unimerch.repository.model.Role;
 import com.unimerch.security.RoleConstant;
 import com.unimerch.util.PrincipalUtils;
 import org.springframework.beans.factory.annotation.Autowired;

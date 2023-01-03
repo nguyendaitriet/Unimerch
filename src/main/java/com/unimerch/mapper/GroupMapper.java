@@ -2,7 +2,7 @@ package com.unimerch.mapper;
 
 import com.unimerch.dto.group.GroupCreateParam;
 import com.unimerch.dto.group.GroupResult;
-import com.unimerch.repository.model.Group;
+import com.unimerch.repository.model.group.Group;
 import org.springframework.stereotype.Component;
 
 @Component

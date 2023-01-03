@@ -10,8 +10,6 @@ import com.unimerch.exception.ServerErrorException;
 import com.unimerch.mapper.OrderMapper;
 import com.unimerch.mapper.ProductMapper;
 import com.unimerch.repository.native_query_dto.order.OrderNativeQueryDTORepo;
-import com.unimerch.repository.native_query_dto.product.ProductNativeQueryDTO;
-import com.unimerch.repository.native_query_dto.product.ProductNativeQueryDTORepo;
 import com.unimerch.repository.product.ProductRepository;
 import com.unimerch.repository.tag.BrgProductTagRepository;
 import com.unimerch.service.AnalyticService;

@@ -1,5 +1,6 @@
-package com.unimerch.repository.model;
+package com.unimerch.repository.model.tag;
 
+import com.unimerch.repository.model.product.Product;
 import lombok.*;
 
 import javax.persistence.*;
@@ -15,15 +16,16 @@ import javax.persistence.*;
 )
 public class BrgProductTag {
 
-    @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id", nullable = false)
-    private Integer id;
+    @EmbeddedId
+    private BrgProductTagId id;
 
+    @MapsId("productId")
     @ManyToOne(optional = false)
     @JoinColumn(name = "ASIN", nullable = false)
     private Product product;
 
+    @MapsId("tagId")
     @ManyToOne(optional = false)
     @JoinColumn(name = "tag_id", nullable = false)
     private Tag tag;

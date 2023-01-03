@@ -1,5 +1,6 @@
-package com.unimerch.repository.model;
+package com.unimerch.repository.model.group;
 
+import com.unimerch.repository.model.amzn_user.AmznUser;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -12,20 +13,21 @@ import javax.persistence.*;
 @AllArgsConstructor
 @Getter
 @Setter
-@Table(name = "brg_group_user")
-public class BrgGroupUser {
+@Table(name = "brg_group_amzn_user")
+public class BrgGroupAmznUser {
+
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @EmbeddedId
-    private BrgGroupUserId id;
+    private BrgGroupAmznUserId id;
 
     @MapsId("groupId")
     @ManyToOne(optional = false)
-    @JoinColumn(name = "group_id", nullable = false)
+    @JoinColumn(name = "group_id")
     private Group group;
 
-    @MapsId("userId")
+    @MapsId("amznUserId")
     @ManyToOne(optional = false)
-    @JoinColumn(name = "user_id", nullable = false)
-    private User user;
+    @JoinColumn(name = "amzn_user_id")
+    private AmznUser amznUser;
 
 }

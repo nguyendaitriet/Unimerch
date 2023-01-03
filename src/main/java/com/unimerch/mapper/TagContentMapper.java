@@ -1,8 +1,8 @@
 package com.unimerch.mapper;
 
 import com.unimerch.dto.tag_content.TagContentResult;
-import com.unimerch.repository.model.BrgTagTagContent;
-import com.unimerch.repository.model.TagContent;
+import com.unimerch.repository.model.tag.BrgTagTagContent;
+import com.unimerch.repository.model.tag.TagContent;
 import org.springframework.stereotype.Component;
 
 @Component

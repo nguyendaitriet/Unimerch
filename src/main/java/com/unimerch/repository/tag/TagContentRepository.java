@@ -1,6 +1,6 @@
 package com.unimerch.repository.tag;
 
-import com.unimerch.repository.model.TagContent;
+import com.unimerch.repository.model.tag.TagContent;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
