@@ -110,8 +110,10 @@
             getAllTagContent: CommonApp.BASE_URL_TAG + "/getAllTagContent",
             createTag: CommonApp.BASE_URL_TAG + "/create",
             createTagContent: CommonApp.BASE_URL_TAG + "/createTagContent",
-            updateTag: CommonApp.BASE_URL_TAG + "/update/",
+            updateTag: CommonApp.BASE_URL_TAG + "/update",
+            updateTagContent: CommonApp.BASE_URL_TAG + "/updateTagContent",
             deleteTag: CommonApp.BASE_URL_TAG + "/delete/",
+            deleteMultiTagContent: CommonApp.BASE_URL_TAG + "/deleteMultiTagContent",
             deleteTagContentFromTag: CommonApp.BASE_URL_TAG + "/deleteTagContentFromTag/",
             deleteMultiTagContentFromTag: CommonApp.BASE_URL_TAG + "/deleteMultiTagContentFromTag",
             addTagContentToTag: CommonApp.BASE_URL_TAG + "/addTagContentToTag/"
@@ -182,15 +184,15 @@
             name: {}
         };
         // tag.name = page.dialogs.element.tagNameUpdate.val().trim();
+        tag.id = currentTag.id;
         tag.name = $(`#tag-${currentTag.id}`).text().trim();
-        console.log(currentTag.id)
         $.ajax({
             headers: {
                 "accept": "application/json",
                 "content-type": "application/json"
             },
             type: "PUT",
-            url: page.urls.updateTag + currentTag.id,
+            url: page.urls.updateTag,
             data: JSON.stringify(tag)
         })
             .done((data) => {
@@ -284,7 +286,7 @@
     page.commands.doDeletedMultiTagContentInTag = (currentTag, tableTagContentIn) => {
         let tagContentSelected = [];
 
-        let rows_selected = tableTagContentIn.rows({selected: true}).data()
+        let rows_selected = tableTagContentIn.rows({selected: true}).data();
         $.each(rows_selected, function (index, value) {
             tagContentSelected.push(value.id);
         });
@@ -389,6 +391,94 @@
                 DBApp.handleFailedTasks(jqXHR);
             })
     }
+    page.dialogs.commands.doUpdateTagContent = (currentTagContent, currentRowTagContent) => {
+        let tagContentParam = {
+            id: {},
+            name: {}
+        };
+        tagContentParam.id = currentTagContent.id;
+        tagContentParam.name = $(`#tagContent-${currentTagContent.id}`).text().trim();
+
+        $.ajax({
+            headers: {
+                "accept": "application/json",
+                "content-type": "application/json"
+            },
+            type: "PUT",
+            url: page.urls.updateTagContent,
+            data: JSON.stringify(tagContentParam)
+        })
+            .done((data) => {
+                let tableTagContent = page.dialogs.element.tableTagContent.DataTable();
+                tableTagContent.row(currentRowTagContent).data({
+                    'id': data.id,
+                    'name': data.name
+                }).draw('full-hold');
+                CommonApp.SweetAlert.showSuccessAlert(SUCCESS_UPDATED);
+            })
+            .fail(function (jqXHR) {
+                DBApp.handleFailedTasks(jqXHR);
+            })
+    }
+    page.dialogs.commands.handleTagContentNameCellEdit = () => {
+        $('.tagContentName').click(function (e) {
+            e.stopPropagation();
+            let value = $(this).html();
+            page.dialogs.commands.editTagContentNameCellInline(this, value);
+        })
+    }
+    page.dialogs.commands.editTagContentNameCellInline = (currentEle, value) => {
+        $(currentEle).html('<input class="tagContentVal form-control" type="text" width="1" value="' + value + '" />');
+        $(".tagContentVal", currentEle).focus().keyup(function (event) {
+            if (event.keyCode == 13) {
+                $(currentEle).html($(".tagContentVal").val().trim());
+                let tableTagContent = page.dialogs.element.tableTagContent.DataTable();
+                let currentRowTagContent = tableTagContent.row($(currentEle).parents('tr'));
+                let currentTagContent = currentRowTagContent.data();
+                page.dialogs.commands.doUpdateTagContent(currentTagContent, currentRowTagContent);
+            }
+        }).click(function (e) {
+            e.stopPropagation();
+        });
+
+        $(document).click(function () {
+            $(".thVal").replaceWith(function () {
+                return this.value;
+            });
+        });
+    }
+    page.dialogs.commands.doDeletedMultiTagContent = (tableTagContent) => {
+        let tagContentSelected = [];
+
+        let rows_selected = tableTagContent.rows({selected: true}).data();
+        $.each(rows_selected, function (index, value) {
+            tagContentSelected.push(value.id);
+        });
+
+        if (tagContentSelected.length === 0) {
+            CommonApp.IziToast.showErrorAlert(`${noDataSelected}`);
+            return;
+        }
+
+        $.ajax({
+            headers: {
+                "accept": "application/json",
+                "content-type": "application/json"
+            },
+            type: "DELETE",
+            url: page.urls.deleteMultiTagContent,
+            data: JSON.stringify({tagContentSelected})
+        })
+            .done((data) => {
+                tableTagContent.rows({selected: true}).remove().draw();
+                //Delete Tag Content In Tag
+                CommonApp.SweetAlert.showSuccessAlert(SUCCESS_REMOVED);
+            })
+            .fail(function (jqXHR) {
+                DBApp.handleFailedTasks(jqXHR);
+            })
+
+    }
     page.dialogs.close.mdCreateTagContent = () => {
         page.dialogs.element.frmCreateTagContent.find("input.error").removeClass("error");
         page.dialogs.element.frmCreateTagContent[0].reset();
@@ -400,6 +490,7 @@
 
         let tableTag = page.element.tableTag
             .on('init.dt', function () {
+                $('#table-tag thead th').removeClass('tagTitle');
                 page.commands.handleTagNameCellEdit();
             })
             .DataTable({
@@ -759,7 +850,12 @@
 
         page.dialogs.element.mdTagContent.on('shown.bs.modal', () => {
             if (tableTagContent === undefined) {
-                tableTagContent = page.dialogs.element.tableTagContent.DataTable({
+                tableTagContent = page.dialogs.element.tableTagContent
+                    .on('init.dt', function () {
+                        $('#table-tag-content thead th').removeClass('tagContentName');
+                        page.dialogs.commands.handleTagContentNameCellEdit();
+                    })
+                    .DataTable({
                     ajax: {
                         url: page.urls.getAllTagContent,
                         dataSrc: ''
@@ -786,6 +882,10 @@
                         {
                             targets: 2,
                             type: 'natural',
+                            className: 'tagContentName',
+                            createdCell: function (cell, cellData, rowData, row, col) {
+                                $(cell).attr('id', 'tagContent-' + rowData.id);
+                            }
                         }
                     ],
                     select: {
@@ -828,15 +928,15 @@
                             {
                                 text: `<i class="fas fa-trash"></i> ${btnDelete}`,
                                 className: 'btn btn-danger',
-                                // init: function (api, node, config) {
-                                //     $(node).on('click', () => CommonApp.SweetAlert.showDeleteDialog()
-                                //         .then((result) => {
-                                //             if (result.isConfirmed) {
-                                //                 page.commands.doDeletedMultiAmznAccInGroup(currentGroup, tableAmznAccIn);
-                                //             }
-                                //         })
-                                //     );
-                                // }
+                                init: function (api, node, config) {
+                                    $(node).on('click', () => CommonApp.SweetAlert.showDeleteDialog()
+                                        .then((result) => {
+                                            if (result.isConfirmed) {
+                                                page.dialogs.commands.doDeletedMultiTagContent(tableTagContent);
+                                            }
+                                        })
+                                    );
+                                }
                             }
                         ]
                     },
@@ -849,7 +949,7 @@
                 <p class="font-italic font-weight-light text-center text-sm-left">${tableQuickSelectP2}</p>`);
 
         })
-        page.dialogs.element.mdTagContent.on('hidden.bs.modal', () => {
+        page.dialogs.element.mdCreateTagContent.on('hidden.bs.modal', () => {
             page.dialogs.close.mdCreateTagContent();
         })
         page.dialogs.element.btnCreateTagContent.on('click', () => {
@@ -875,6 +975,7 @@
                 page.dialogs.commands.doCreateTagContent();
             }
         })
+
         CommonApp.enableEnterKeyboard(page.dialogs.element.mdCreateTag, page.dialogs.element.btnCreateTag);
         // CommonApp.enableEnterKeyboard(page.dialogs.element.mdUpdateTag, page.dialogs.element.btnUpdateTag);
         CommonApp.enableEnterKeyboard(page.dialogs.element.mdAddTagContentToTag, page.dialogs.element.btnAddTagContentToTag);

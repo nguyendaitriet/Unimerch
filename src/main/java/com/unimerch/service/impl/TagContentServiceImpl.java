@@ -4,8 +4,8 @@ import com.unimerch.dto.tag_content.TagContentParam;
 import com.unimerch.dto.tag_content.TagContentResult;
 import com.unimerch.exception.InvalidIdException;
 import com.unimerch.mapper.TagContentMapper;
-import com.unimerch.repository.model.tag.Tag;
 import com.unimerch.repository.model.tag.TagContent;
+import com.unimerch.repository.tag.BrgTagTagContentRepository;
 import com.unimerch.repository.tag.TagContentRepository;
 import com.unimerch.service.TagContentService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,10 +19,11 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
-@Transactional
 public class TagContentServiceImpl implements TagContentService {
     @Autowired
     private TagContentRepository tagContentRepository;
+    @Autowired
+    private BrgTagTagContentRepository brgTagTagContentRepo;
     @Autowired
     private TagContentMapper tagContentMapper;
     @Autowired
@@ -49,12 +50,15 @@ public class TagContentServiceImpl implements TagContentService {
     }
 
     @Override
-    public TagContentResult updateTagContent(int id, TagContentParam tagContentParam) {
-        return null;
+    public TagContentResult updateTagContent(TagContentParam tagContentParam) {
+        TagContent tagContent = tagContentMapper.toTagContent(tagContentParam);
+        return tagContentMapper.toTagContentResult(tagContentRepository.save(tagContent));
     }
 
     @Override
+    @Transactional
     public void deleteMultiTagContent(List<Integer> tagContentIdList) {
-
+        brgTagTagContentRepo.deleteAllByTagContentIdIn(tagContentIdList);
+        tagContentRepository.deleteAllByIdIn(tagContentIdList);
     }
 }

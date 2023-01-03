@@ -51,13 +51,8 @@ public class TagServiceImpl implements TagService {
     }
 
     @Override
-    public Tag updateTag(int id, Tag tag) {
-        Optional<Tag> currentTag = tagRepository.findById(id);
-        if (currentTag.isPresent()) {
-            currentTag.get().setName(tag.getName());
-            return tagRepository.save(currentTag.get());
-        }
-        throw new InvalidIdException(messageSource.getMessage("validation.idNotExist", null, Locale.getDefault()));
+    public Tag updateTag(Tag tag) {
+        return tagRepository.save(tag);
     }
 
     @Override

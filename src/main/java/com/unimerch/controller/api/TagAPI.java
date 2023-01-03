@@ -54,9 +54,15 @@ public class TagAPI {
     }
 
     @RoleConstant.ManagerAuthorization
-    @PutMapping("/update/{id}")
-    public ResponseEntity<?> updateTag(@PathVariable Integer id, @RequestBody Tag tag) {
-        return new ResponseEntity<>(tagService.updateTag(id, tag), HttpStatus.OK);
+    @PutMapping("/update")
+    public ResponseEntity<?> updateTag(@RequestBody Tag tag) {
+        return new ResponseEntity<>(tagService.updateTag(tag), HttpStatus.OK);
+    }
+
+    @RoleConstant.ManagerAuthorization
+    @PutMapping("/updateTagContent")
+    public ResponseEntity<?> updateTagContent(@RequestBody TagContentParam tagContent) {
+        return new ResponseEntity<>(tagContentService.updateTagContent(tagContent), HttpStatus.OK);
     }
 
     @RoleConstant.ManagerAuthorization
@@ -65,6 +71,14 @@ public class TagAPI {
         tagService.deleteTag(id);
         return new ResponseEntity<>(HttpStatus.OK);
     }
+
+    @RoleConstant.ManagerAuthorization
+    @DeleteMapping("/deleteMultiTagContent")
+    public ResponseEntity<?> deleteMultiTagContent(@RequestBody Map<String, List<Integer>> tagContentIdList) {
+        tagContentService.deleteMultiTagContent(tagContentIdList.get("tagContentSelected"));
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+
 
     @RoleConstant.ManagerAuthorization
     @PostMapping("/addTagContentToTag/{id}")

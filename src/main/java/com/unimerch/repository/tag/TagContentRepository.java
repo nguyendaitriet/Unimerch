@@ -47,4 +47,6 @@ public interface TagContentRepository extends JpaRepository<TagContent, Integer>
             "WHERE b.tagContent.id IN :tagContentIdList AND b.tag.id = :tagId")
     void deleteMultiTagContentFromTag(@Param("tagContentIdList") List<Integer> tagContentIdList, @Param("tagId") Integer tagId);
 
+    @Modifying
+    void deleteAllByIdIn(List<Integer> tagContentIdList);
 }
