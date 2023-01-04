@@ -36,11 +36,10 @@ public class TagContentServiceImpl implements TagContentService {
 
     @Override
     public TagContentResult findById(int id) {
-        Optional<TagContent> tagContent = tagContentRepository.findById(id);
-        if (tagContent.isPresent()) {
-            return tagContentMapper.toTagContentResult(tagContent.get());
-        }
-        throw new InvalidIdException(messageSource.getMessage("validation.idNotExist", null, Locale.getDefault()));
+        TagContent tagContent = tagContentRepository.findById(id)
+                .orElseThrow(() ->
+                new InvalidIdException(messageSource.getMessage("validation.idNotExist", null, Locale.getDefault())));
+        return tagContentMapper.toTagContentResult(tagContent);
     }
 
     @Override

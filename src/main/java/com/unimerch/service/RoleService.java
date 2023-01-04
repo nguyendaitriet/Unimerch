@@ -6,5 +6,4 @@ public interface RoleService {
 
     Role findByName(String name);
 
-    boolean isUserAdmin(String id);
 }

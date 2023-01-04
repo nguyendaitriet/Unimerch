@@ -18,24 +18,27 @@ public class OldAPI {
     @RoleConstant.AuthenticatedUser
     @GetMapping("/updateOrder")
     public ResponseEntity<?> updateOrder() {
+        return null;
 
     }
 
     @RoleConstant.AuthenticatedUser
     @PutMapping("/updateProduct")
     public ResponseEntity<?> updateProduct(@RequestBody String newAppsConfig) {
+        return null;
 
     }
 
     @RoleConstant.ManagerAuthorization
     @PutMapping("/updateAccountStatus")
     public ResponseEntity<?> updateAccountStatus(@RequestBody String newBackendConfig) {
+        return null;
 
     }
     @RoleConstant.ManagerAuthorization
     @PutMapping("/updateMetadata")
-    public ResponseEntity<?> updateAccountStatus(@RequestBody String newBackendConfig) {
-
+    public ResponseEntity<?> updateMetadata(@RequestBody String newBackendConfig) {
+        return null;
     }
 
 

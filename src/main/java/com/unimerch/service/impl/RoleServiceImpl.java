@@ -11,19 +11,10 @@ import org.springframework.stereotype.Service;
 public class RoleServiceImpl implements RoleService {
 
     @Autowired
-    private UniUserServiceImpl userService;
-
-    @Autowired
     private RoleRepository roleRepository;
 
     @Override
     public Role findByName(String name) {
         return roleRepository.findByName(name);
-    }
-
-    @Override
-    public boolean isUserAdmin(String id) {
-        User user = userService.findById(id);
-        return user.getRole().getId() == 1;
     }
 }

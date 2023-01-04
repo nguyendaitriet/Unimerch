@@ -66,12 +66,9 @@ public class UniUserServiceImpl implements UniUserService {
     private MessageSource messageSource;
 
     @Autowired
-    private PrincipalUtils principalUtils;
-
-    @Autowired
     private RoleServiceImpl roleService;
 
-    private Specification<User> notAdmin(){
+    private Specification<User> notAdmin() {
         return (root, query, criteriaBuilder) -> criteriaBuilder.notEqual(root.get(User_.ROLE), 1);
     }
 
@@ -183,7 +180,7 @@ public class UniUserServiceImpl implements UniUserService {
     public UserResult changeStatus(String id) {
         User user = findById(id);
 
-        if (roleService.isUserAdmin(id))
+        if (user.getRole().getId() == 1)
             throw new NotAllowDisableException(messageSource.getMessage("error.403", null, Locale.getDefault()));
 
         user.setDisabled(!user.isDisabled());
