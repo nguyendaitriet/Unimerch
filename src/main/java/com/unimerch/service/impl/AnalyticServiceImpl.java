@@ -208,7 +208,9 @@ public class AnalyticServiceImpl implements AnalyticService {
     }
 
     public List<ProductAnalyticsResult> processProductResultList(List<ProductResult> productResultList) {
-        return productResultList.stream().map(productResult -> productMapper.toProductAnalyticsResult(productResult)).collect(Collectors.toList());
+        return productResultList.stream()
+                .sorted((o1, o2) -> Integer.compare(o2.getQuantitySold(), o1.getQuantitySold()))
+                .map(productResult -> productMapper.toProductAnalyticsResult(productResult)).collect(Collectors.toList());
     }
 
 }
