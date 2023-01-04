@@ -211,8 +211,7 @@
                                     </div>
                                 </div>
                                 <div class="row mt-3">
-
-                                    <div class="table-responsive">
+                                    <div class="table-responsive" style="width: 80%">
                                         <table class="table table-bordered table-sm" id="tableProductAnalytics">
                                             <thead>
                                             <tr class="text-center">
@@ -226,41 +225,26 @@
                                             </thead>
 
                                             <tbody>
-                                            <tr>
-                                                <td rowspan="2" class="align-middle text-center">HSFB44421</td>
-                                                <td>System Architect</td>
-                                                <td class="text-center font-weight-bold text-dark">3</td>
-                                                <td class="text-center">61.01</td>
-                                                <td class="text-center">30.20</td>
-                                                <td class="text-center">140</td>
-                                            </tr>
-                                            <tr>
-                                                <td colspan="5">
-                                                    <span class="btn btn-success btn-sm">James</span>
-                                                    <span class="btn btn-warning btn-sm">Emily</span>
-                                                    <span class="btn btn-secondary btn-sm">Victor</span>
-                                                    <button class="btn btn-primary btn-sm btn-handle-tag"
-                                                            title="Tag handler">
-                                                        <i class="far fa-edit"></i>
-                                                    </button>
-                                                </td>
-                                            </tr>
-                                            <tr>
-                                                <td rowspan="2" class="align-middle text-center">MJAX445561</td>
-                                                <td>System Architect</td>
-                                                <td class="text-center font-weight-bold text-dark">10</td>
-                                                <td>33.87</td>
-                                                <td>22.15</td>
-                                                <td>38</td>
-                                            </tr>
-                                            <tr>
-                                                <td colspan="5">
-                                                    <button class="btn btn-primary btn-sm btn-handle-tag"
-                                                            title="Tag handler">
-                                                        <i class="far fa-edit"></i>
-                                                    </button>
-                                                </td>
-                                            </tr>
+<!--                                            <tr>-->
+<!--                                                <td rowspan="2" class="align-middle text-center">HSFB44421</td>-->
+<!--                                                <td>System Architect</td>-->
+<!--                                                <td class="text-center font-weight-bold text-dark">3</td>-->
+<!--                                                <td class="text-center">61.01</td>-->
+<!--                                                <td class="text-center">30.20</td>-->
+<!--                                                <td class="text-center">140</td>-->
+<!--                                            </tr>-->
+<!--                                            <tr>-->
+<!--                                                <td colspan="5">-->
+<!--                                                    <span class="btn btn-success btn-sm">James</span>-->
+<!--                                                    <span class="btn btn-warning btn-sm">Emily</span>-->
+<!--                                                    <span class="btn btn-secondary btn-sm">Victor</span>-->
+<!--                                                    <button class="btn btn-primary btn-sm btn-handle-tag"-->
+<!--                                                            title="Tag handler">-->
+<!--                                                        <i class="far fa-edit"></i>-->
+<!--                                                    </button>-->
+<!--                                                </td>-->
+<!--                                            </tr>-->
+
                                             </tbody>
                                         </table>
                                     </div>
@@ -294,7 +278,9 @@
 </a>
 
 <th:block th:replace="dashboard/temp/temp-option :: temp-option"/>
-<th:block th:replace="layout/modals-analytics :: product-analytics-filter"/>
+<th:block th:replace="dashboard/temp/temp-table-product-analytics :: temp-table-product-analytics"/>
+<th:block th:replace="dashboard/temp/temp-table-product-analytics :: temp-product-tag"/>
+<!--<th:block th:replace="layout/modals-analytics :: product-analytics-filter"/>-->
 <th:block th:replace="layout/texts :: texts"/>
 <th:block th:replace="layout/script :: script-dashboard"/>
 
@@ -304,7 +290,8 @@
             findAllGroups: CommonApp.BASE_URL_GROUP + "/findAllGroups",
             findAllAmzns: CommonApp.BASE_URL_AMZN_ACCOUNT + "/findAllAmznAccs",
             findAmznsInsideGroup: CommonApp.BASE_URL_GROUP + "/showAmznAccInsideGroup",
-            getAnalyticsSale: CommonApp.BASE_URL_ANALYTICS
+            getAnalyticsSale: CommonApp.BASE_URL_ANALYTICS,
+            getProductAnalytics: CommonApp.BASE_URL_ANALYTICS + "/getProductAnalytics"
         },
         element: {},
         commands: {},
@@ -415,20 +402,10 @@
         let dateFilter = $('input[name=dateFilter]:checked').val();
         let starDate = page.element.dateRange.data('daterangepicker').startDate.format('DD/MM/YYYY');
         let endDate = page.element.dateRange.data('daterangepicker').endDate.format('DD/MM/YYYY');
-        let analyticsParam = {
-            groupId: {},
-            amznId: {},
-            dateFilter: {},
-            startDate: {},
-            endDate: {}
-        }
-        analyticsParam.groupId = groupId;
-        analyticsParam.amznId = amznId;
-        analyticsParam.dateFilter = dateFilter;
-        analyticsParam.startDate = starDate;
-        analyticsParam.endDate = endDate;
+        let analyticsParam = new AnalyticsParam(groupId, amznId, dateFilter, starDate, endDate);
 
         page.commands.getChart(analyticsParam);
+        page.commands.getProductAnalytics(analyticsParam);
     }
 
     page.commands.handleCustomDateRange = () => {
@@ -441,7 +418,7 @@
         });
     }
 
-    page.commands.handleDailyOrMonthLy = () => {
+    page.commands.handleDailyOrMonthLyChart = () => {
         $('input[type=radio][name=dailyOrMonthly]').change(function () {
             if (this.value === 'daily') {
                 chart.updateOptions({
@@ -671,21 +648,59 @@
     }
 
     // Analytics Sales Table
-    page.element.btnProductFilter = $('#btnProductFilter');
-    page.element.tableProductAnalytics = $('#tableProductAnalytics');
+    // page.element.btnProductFilter = $('#btnProductFilter');
+    page.element.tableProductAnalyticsBody = $('#tableProductAnalytics tbody');
+    page.element.tempTableProductAnalytics = $('#tempTableProductAnalytics');
+    page.element.tempProductTag = $('#tempProductTag');
 
-    page.dialogs.element.mdProductAnalyticsFilter = $('#mdProductAnalyticsFilter');
-    page.dialogs.element.productAnalDateRange = $('#productAnalDateRange')
-    page.dialogs.element.btnAnalyseProductFilter = $('#btnAnalyseProductFilter');
-    page.dialogs.element.btnResetProductFilter = $('#btnResetProductFilter');
+    // page.dialogs.element.mdProductAnalyticsFilter = $('#mdProductAnalyticsFilter');
+    page.element.productAnalDateRange = $('#productAnalDateRange')
+    page.element.btnAnalyseProductFilter = $('#btnAnalyseProductFilter');
+    page.element.btnResetProductFilter = $('#btnResetProductFilter');
 
+    let tempTableProductAnalytics = $.validator.format($.trim(page.element.tempTableProductAnalytics.val().toString()));
+    let tempProductTag = $.validator.format($.trim(page.element.tempProductTag.val().toString()));
+
+    page.commands.getProductAnalytics = (analyticsParam) => {
+        $.ajax({
+            headers: {
+                "accept": "application/json",
+                "content-type": "application/json"
+            },
+            type: "POST",
+            url: page.urls.getProductAnalytics,
+            data: JSON.stringify(analyticsParam)
+        })
+            .done((productAnalyticsList) => {
+                $.each(productAnalyticsList, (index, item) => {
+                    page.commands.addProductAnalyticsToTable(item.productResult);
+
+                    let tdId = `${item.productResult.asin}-${item.productResult.amznAccUsername}`;
+                    $.each(item.brgProductTagList, (index, item) => {
+                        page.commands.addTagToProductTable(tdId, item);
+                    })
+                })
+            })
+            .fail((jqXHR) => {
+                DBApp.handleFailedTasks(jqXHR);
+            })
+    }
+    page.commands.addProductAnalyticsToTable = (productAnalytics) => {
+        let shortProductName = CommonApp.clipText(productAnalytics.productName, 20)
+        page.element.tableProductAnalyticsBody.append($(tempTableProductAnalytics(productAnalytics.asin,
+            shortProductName, productAnalytics.quantitySold, productAnalytics.royalties,
+            productAnalytics.price, productAnalytics.amznAccUsername)));
+    }
+    page.commands.addTagToProductTable = (tdId, brgProductTag) => {
+        $(`#${tdId}`).prepend($(tempProductTag(brgProductTag.tag.id, 'Success')))
+    }
     $(document).ready(function () {
         DBApp.handleGroupsFilterSidebar();
         page.commands.findAllGroups();
         page.commands.findAllAmzns();
         page.commands.handleAnalGrpSelect();
         page.commands.handleCustomDateRange();
-        page.commands.handleDailyOrMonthLy();
+        page.commands.handleDailyOrMonthLyChart();
         page.element.dateRange.daterangepicker({
             locale: {
                 format: "DD/MM/YYYY"
@@ -696,14 +711,14 @@
         page.element.btnAnalyse.click(() => {
             page.commands.handleBtnAnalyse();
         })
-        page.dialogs.element.productAnalDateRange.daterangepicker({
+        page.element.productAnalDateRange.daterangepicker({
             locale: {
                 format: "DD/MM/YYYY"
             }
         });
-        page.element.btnProductFilter.click(() => {
-            page.dialogs.element.mdProductAnalyticsFilter.modal('show');
-        })
+        // page.element.btnProductFilter.click(() => {
+        //     page.dialogs.element.mdProductAnalyticsFilter.modal('show');
+        // })
     });
 
 </script>

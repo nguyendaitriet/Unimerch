@@ -247,3 +247,13 @@ class CommonApp {
         };
     }
 }
+
+class AnalyticsParam {
+    constructor(groupId, amznId, dateFilter, startDate, endDate) {
+        this.groupId = groupId;
+        this.amznId = amznId;
+        this.dateFilter = dateFilter;
+        this.startDate = startDate;
+        this.endDate = endDate;
+    }
+}
