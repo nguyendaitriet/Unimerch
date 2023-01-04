@@ -8,19 +8,40 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import javax.transaction.Transactional;
+import java.util.List;
 
 @Repository
-@Transactional
 public interface TagRepository extends JpaRepository<Tag, Integer> {
-    @Query("DELETE FROM BrgProductTag AS br " +
-            "WHERE (br.tag.id = :tagId) ")
+
+    @Query("SELECT t " +
+            "FROM Tag AS t " +
+            "INNER JOIN BrgTagGroupTag AS b " +
+            "ON t.id = b.tag.id " +
+            "WHERE b.tagGroup.id = :tagGroupId ")
+    List<Tag> findAllTagInsideTagGroup(@Param("tagGroupId") Integer tagGroupId);
+
+    @Query("SELECT t " +
+            "FROM Tag AS t " +
+            "WHERE t.id NOT IN ( " +
+                "SELECT b.tag.id " +
+                "FROM BrgTagGroupTag AS b " +
+                "WHERE b.tagGroup.id = :tagGroupId " +
+            ")"
+    )
+    List<Tag> findAllTagOutsideTagGroup(@Param("tagGroupId") Integer tagGroupId);
+
     @Modifying
-    void deleteTagAssociateProduct(@Param("tagId") Integer tagId);
+    @Transactional
+    @Query("DELETE FROM BrgTagGroupTag AS b " +
+            "WHERE b.tag.id = :tagId AND b.tagGroup.id = :tagGroupId")
+    void deleteTagFromTagGroup(@Param("tagId") Integer tagId, @Param("tagGroupId") Integer tagGroupId);
 
-    @Query("DELETE FROM BrgTagTagContent AS br " +
-            "WHERE (br.tag.id = :tagId) ")
     @Modifying
-    void deleteTagAssociateTagContent(@Param("tagId") Integer tagId);
+    @Transactional
+    @Query("DELETE FROM BrgTagGroupTag AS b " +
+            "WHERE b.tag.id IN :tagIdList AND b.tagGroup.id = :tagGroupId")
+    void deleteMultiTagFromTagGroup(@Param("tagIdList") List<Integer> tagIdList, @Param("tagGroupId") Integer tagGroupId);
 
-
+    @Modifying
+    void deleteAllByIdIn(List<Integer> tagIdList);
 }

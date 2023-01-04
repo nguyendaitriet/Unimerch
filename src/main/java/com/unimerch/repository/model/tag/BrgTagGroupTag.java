@@ -1,7 +1,9 @@
 package com.unimerch.repository.model.tag;
 
-import com.unimerch.repository.model.product.Product;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import javax.persistence.*;
 
@@ -10,20 +12,17 @@ import javax.persistence.*;
 @AllArgsConstructor
 @Getter
 @Setter
-@Table(
-        name = "brg_product_tag",
-        indexes = @Index(name = "idx_asin", columnList = "ASIN")
-)
-public class BrgProductTag {
+@Table(name = "brg_tagGroup_tag")
+public class BrgTagGroupTag {
 
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @EmbeddedId
-    private BrgProductTagId id;
+    private BrgTagGroupTagId id;
 
-    @MapsId("productId")
+    @MapsId("tagGroupId")
     @ManyToOne(optional = false)
-    @JoinColumn(name = "ASIN", nullable = false)
-    private Product product;
+    @JoinColumn(name = "tag_group_id", nullable = false)
+    private TagGroup tagGroup;
 
     @MapsId("tagId")
     @ManyToOne(optional = false)

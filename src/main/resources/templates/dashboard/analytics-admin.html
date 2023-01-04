@@ -121,7 +121,7 @@
                             <button class="btn btn-success dropdown-toggle" type="button"
                                     data-toggle="dropdown" aria-haspopup="true"
                                     aria-expanded="false">
-                                Idea tag
+                                Idea tagGroup
                             </button>
                             <div class="dropdown-menu animated--fade-in"
                                  aria-labelledby="dropdownMenuButton" style="">
@@ -133,7 +133,7 @@
                                                 <span class="dropdown">
                             <button class="btn btn-warning dropdown-toggle" type="button"
                                     data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                Design tag
+                                Design tagGroup
                             </button>
                             <div class="dropdown-menu animated--fade-in"
                                  aria-labelledby="dropdownMenuButton" style="">
@@ -145,7 +145,7 @@
                                                 <span class="dropdown">
                             <button class="btn btn-secondary dropdown-toggle" type="button"
                                     data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                Support tag
+                                Support tagGroup
                             </button>
                             <div class="dropdown-menu animated--fade-in"
                                  aria-labelledby="dropdownMenuButton" style="">
@@ -163,7 +163,7 @@
                             <button class="btn btn-success dropdown-toggle" type="button"
                                     data-toggle="dropdown" aria-haspopup="true"
                                     aria-expanded="false">
-                                Idea tag
+                                Idea tagGroup
                             </button>
                             <div class="dropdown-menu animated--fade-in"
                                  aria-labelledby="dropdownMenuButton" style="">
@@ -175,7 +175,7 @@
                                                 <span class="dropdown">
                             <button class="btn btn-warning dropdown-toggle" type="button"
                                     data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                Design tag
+                                Design tagGroup
                             </button>
                             <div class="dropdown-menu animated--fade-in"
                                  aria-labelledby="dropdownMenuButton" style="">
@@ -187,7 +187,7 @@
                                                 <span class="dropdown">
                             <button class="btn btn-secondary dropdown-toggle" type="button"
                                     data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                Support tag
+                                Support tagGroup
                             </button>
                             <div class="dropdown-menu animated--fade-in"
                                  aria-labelledby="dropdownMenuButton" style="">
@@ -238,8 +238,8 @@
 <!--                                                    <span class="btn btn-success btn-sm">James</span>-->
 <!--                                                    <span class="btn btn-warning btn-sm">Emily</span>-->
 <!--                                                    <span class="btn btn-secondary btn-sm">Victor</span>-->
-<!--                                                    <button class="btn btn-primary btn-sm btn-handle-tag"-->
-<!--                                                            title="Tag handler">-->
+<!--                                                    <button class="btn btn-primary btn-sm btn-handle-tagGroup"-->
+<!--                                                            title="TagGroup handler">-->
 <!--                                                        <i class="far fa-edit"></i>-->
 <!--                                                    </button>-->
 <!--                                                </td>-->
@@ -279,7 +279,7 @@
 
 <th:block th:replace="dashboard/temp/temp-option :: temp-option"/>
 <th:block th:replace="dashboard/temp/temp-table-product-analytics :: temp-table-product-analytics"/>
-<th:block th:replace="dashboard/temp/temp-table-product-analytics :: temp-product-tag"/>
+<th:block th:replace="dashboard/temp/temp-table-product-analytics :: temp-product-tagGroup"/>
 <!--<th:block th:replace="layout/modals-analytics :: product-analytics-filter"/>-->
 <th:block th:replace="layout/texts :: texts"/>
 <th:block th:replace="layout/script :: script-dashboard"/>
@@ -676,7 +676,7 @@
                     page.commands.addProductAnalyticsToTable(item.productResult);
 
                     let tdId = `${item.productResult.asin}-${item.productResult.amznAccUsername}`;
-                    $.each(item.brgProductTagList, (index, item) => {
+                    $.each(item.brgProductTagGroupList, (index, item) => {
                         page.commands.addTagToProductTable(tdId, item);
                     })
                 })
@@ -692,7 +692,7 @@
             productAnalytics.price, productAnalytics.amznAccUsername)));
     }
     page.commands.addTagToProductTable = (tdId, brgProductTag) => {
-        $(`#${tdId}`).prepend($(tempProductTag(brgProductTag.tag.id, 'Success')))
+        $(`#${tdId}`).prepend($(tempProductTag(brgProductTag.tagGroup.id, 'Success')))
     }
     $(document).ready(function () {
         DBApp.handleGroupsFilterSidebar();

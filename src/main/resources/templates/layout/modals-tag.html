@@ -1,12 +1,12 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org" lang="en">
 
-<th:block th:fragment="create-tag">
+<th:block th:fragment="create-tagGroup">
     <div id="mdCreateTag" class="modal fade" tabindex="-1" role="dialog">
         <div class="modal-dialog modal-dialog-centered" data-backdrop="static" data-keyboard="false">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" th:text="#{tag.mdCreateTagTitle}">Add new group</h5>
+                    <h5 class="modal-title" th:text="#{tagGroup.mdCreateTagTitle}">Add new group</h5>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>
@@ -15,7 +15,7 @@
                     <form class="mb-3" id="frmCreateTag">
                         <div class="row mb-3">
                             <div class="col-xl-4 d-flex flex-column justify-content-center">
-                                <label for="tagNameCreate" th:text="#{tag.tagTitle}">Tag title</label>
+                                <label for="tagNameCreate" th:text="#{tagGroup.tagTitle}">Tag title</label>
                             </div>
                             <div class="col-xl-8 d-flex flex-column justify-content-center">
                                 <input type="text" id="tagNameCreate" name="tagNameCreate" class="form-control"
@@ -37,12 +37,12 @@
     </div>
 </th:block>
 
-<th:block th:fragment="update-tag">
+<th:block th:fragment="update-tagGroup">
     <div id="mdUpdateTag" class="modal fade" tabindex="-1" role="dialog">
         <div class="modal-dialog modal-dialog-centered" data-backdrop="static" data-keyboard="false">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" th:text="#{tag.mdUpdateTagTitle}">Change group title</h5>
+                    <h5 class="modal-title" th:text="#{tagGroup.mdUpdateTagTitle}">Change group title</h5>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>
@@ -55,7 +55,7 @@
                     <form class="mb-3" id="frmUpdateTag">
                         <div class="row mb-3">
                             <div class="col-xl-4 d-flex flex-column justify-content-center">
-                                <label for="tagNameUpdate" th:text="#{tag.tagTitle}">Group Title</label>
+                                <label for="tagNameUpdate" th:text="#{tagGroup.tagTitle}">Group Title</label>
                             </div>
                             <div class="col-xl-8">
                                 <input type="text" id="tagNameUpdate" name="tagNameUpdate" class="form-control"/>
@@ -83,7 +83,7 @@
             <div class="modal-content">
 
                 <div class="modal-header">
-                    <h5 class="modal-title" th:text="#{tag.mdAddTagContentToTagTitle}">Add Amazon account to group</h5>
+                    <h5 class="modal-title" th:text="#{tagGroup.mdAddTagContentToTagTitle}">Add Amazon account to group</h5>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>
@@ -94,7 +94,7 @@
                         <thead>
                         <tr>
                             <th>#</th>
-                            <th th:text="#{tag.tagContentName}" class="text-center">Name</th>
+                            <th th:text="#{tagGroup.tagContentName}" class="text-center">Name</th>
                             <th></th>
                         </tr>
                         </thead>
@@ -119,7 +119,7 @@
             <div class="modal-content">
 
                 <div class="modal-header bg-warning">
-                    <h5 class="modal-title text-light" th:text="#{tag.tagContentTableTitle}">Tag Content List</h5>
+                    <h5 class="modal-title text-light" th:text="#{tagGroup.tagContentTableTitle}">Tag Content List</h5>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>
@@ -131,7 +131,7 @@
                         <tr>
                             <th class="text-center">#</th>
                             <th>Id</th>
-                            <th th:text="#{tag.tagContentName}">Name</th>
+                            <th th:text="#{tagGroup.tagContentName}">Name</th>
                         </tr>
                         </thead>
                     </table>
@@ -151,7 +151,7 @@
         <div class="modal-dialog modal-dialog-centered" data-backdrop="static" data-keyboard="false">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" th:text="#{tag.addNewTagContentTitle}">Add new tag content</h5>
+                    <h5 class="modal-title" th:text="#{tagGroup.addNewTagContentTitle}">Add new tagGroup content</h5>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>
@@ -160,7 +160,7 @@
                     <form class="mb-3" id="frmCreateTagContent">
                         <div class="row mb-3">
                             <div class="col-xl-4 d-flex flex-column justify-content-center">
-                                <label for="tagContentNameCreate" th:text="#{tag.tagContentNameCreate}">Tag Content Name</label>
+                                <label for="tagContentNameCreate" th:text="#{tagGroup.tagContentNameCreate}">Tag Content Name</label>
                             </div>
                             <div class="col-xl-8 d-flex flex-column justify-content-center">
                                 <input type="text" id="tagContentNameCreate" name="tagContentNameCreate" class="form-control"

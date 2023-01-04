@@ -1,11 +1,11 @@
 package com.unimerch.controller.api;
 
-import com.unimerch.dto.tag_content.TagContentParam;
-import com.unimerch.dto.tag_content.TagContentResult;
-import com.unimerch.repository.model.tag.Tag;
+import com.unimerch.dto.tag.TagParam;
+import com.unimerch.dto.tag.TagResult;
+import com.unimerch.repository.model.tag.TagGroup;
 import com.unimerch.security.RoleConstant;
-import com.unimerch.service.TagContentService;
 import com.unimerch.service.TagService;
+import com.unimerch.service.TagGroupService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -19,106 +19,105 @@ import java.util.Map;
 @RequestMapping("/api/tags")
 public class TagAPI {
     @Autowired
-    private TagService tagService;
+    private TagGroupService tagGroupService;
     @Autowired
-    private TagContentService tagContentService;
+    private TagService tagService;
 
     @RoleConstant.ManagerAuthorization
-    @GetMapping("/findAllTags")
-    public ResponseEntity<?> findAllTags() {
+    @GetMapping("/findAllTagGroups")
+    public ResponseEntity<?> findAllTagGroups() {
+        return new ResponseEntity<>(tagGroupService.findAll(), HttpStatus.OK);
+    }
+
+    @RoleConstant.ManagerAuthorization
+    @GetMapping("/getAllTags")
+    public ResponseEntity<?> getAllTags() {
         return new ResponseEntity<>(tagService.findAll(), HttpStatus.OK);
     }
 
     @RoleConstant.ManagerAuthorization
-    @GetMapping("/getAllTagContent")
-    public ResponseEntity<?> getAllTagContent() {
-        return new ResponseEntity<>(tagContentService.findAll(), HttpStatus.OK);
-    }
-
-    @RoleConstant.ManagerAuthorization
     @GetMapping("/{id}")
-    public ResponseEntity<?> findTagById(@PathVariable Integer id) {
-        return new ResponseEntity<>(tagService.findById(id), HttpStatus.OK);
+    public ResponseEntity<?> findTagGroupById(@PathVariable Integer id) {
+        return new ResponseEntity<>(tagGroupService.findById(id), HttpStatus.OK);
     }
 
     @RoleConstant.ManagerAuthorization
     @PostMapping("/create")
-    public ResponseEntity<?> createTag(@RequestBody Tag newTag) {
+    public ResponseEntity<?> createTagGroup(@RequestBody TagGroup newTagGroup) {
+        return new ResponseEntity<>(tagGroupService.createTagGroup(newTagGroup), HttpStatus.CREATED);
+    }
+
+    @RoleConstant.ManagerAuthorization
+    @PostMapping("/createTag")
+    public ResponseEntity<?> createTag(@RequestBody TagParam newTag) {
         return new ResponseEntity<>(tagService.createTag(newTag), HttpStatus.CREATED);
     }
 
     @RoleConstant.ManagerAuthorization
-    @PostMapping("/createTagContent")
-    public ResponseEntity<?> createTagContent(@RequestBody TagContentParam newTagContent) {
-        return new ResponseEntity<>(tagContentService.createTagContent(newTagContent), HttpStatus.CREATED);
+    @PutMapping("/update")
+    public ResponseEntity<?> updateTagGroup(@RequestBody TagGroup tagGroup) {
+        return new ResponseEntity<>(tagGroupService.updateTagGroup(tagGroup), HttpStatus.OK);
     }
 
     @RoleConstant.ManagerAuthorization
-    @PutMapping("/update")
-    public ResponseEntity<?> updateTag(@RequestBody Tag tag) {
+    @PutMapping("/updateTag")
+    public ResponseEntity<?> updateTag(@RequestBody TagParam tag) {
         return new ResponseEntity<>(tagService.updateTag(tag), HttpStatus.OK);
     }
 
     @RoleConstant.ManagerAuthorization
-    @PutMapping("/updateTagContent")
-    public ResponseEntity<?> updateTagContent(@RequestBody TagContentParam tagContent) {
-        return new ResponseEntity<>(tagContentService.updateTagContent(tagContent), HttpStatus.OK);
-    }
-
-    @RoleConstant.ManagerAuthorization
     @DeleteMapping("/delete/{id}")
-    public ResponseEntity<?> deleteTag(@PathVariable Integer id) {
-        tagService.deleteTag(id);
+    public ResponseEntity<?> deleteTagGroup(@PathVariable Integer id) {
+        tagGroupService.deleteTagGroup(id);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
     @RoleConstant.ManagerAuthorization
-    @DeleteMapping("/deleteMultiTagContent")
-    public ResponseEntity<?> deleteMultiTagContent(@RequestBody Map<String, List<Integer>> tagContentIdList) {
-        tagContentService.deleteMultiTagContent(tagContentIdList.get("tagContentSelected"));
+    @DeleteMapping("/deleteMultiTag")
+    public ResponseEntity<?> deleteMultiTag(@RequestBody Map<String, List<Integer>> tagContentIdList) {
+        tagService.deleteMultiTag(tagContentIdList.get("tagContentSelected"));
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
-
     @RoleConstant.ManagerAuthorization
-    @PostMapping("/addTagContentToTag/{id}")
-    public ResponseEntity<?> addTagContentToTag(
+    @PostMapping("/addTagToTagGroup/{id}")
+    public ResponseEntity<?> addTagToTagGroup(
             @PathVariable Integer id,
-            @RequestBody Map<String, ArrayList<Integer>> tagContentIdList
+            @RequestBody Map<String, ArrayList<Integer>> tagIdList
     ) {
-        List<TagContentResult> newTagContentResultList = tagService
-                .addTagContentToTag(tagContentIdList.get("tagContentSelected"), id);
-        return new ResponseEntity<>(newTagContentResultList, HttpStatus.OK);
+        List<TagResult> newTagResultList = tagGroupService
+                .addTagToTagGroup(tagIdList.get("tagContentSelected"), id);
+        return new ResponseEntity<>(newTagResultList, HttpStatus.OK);
     }
 
     @RoleConstant.ManagerUserAuthorization
-    @GetMapping("/getTagContentInsideTag/{id}")
-    public ResponseEntity<?> getTagContentInsideTag(@PathVariable Integer id) {
-        List<TagContentResult> tagContentResultList = tagService.getTagContentInsideTag(id);
-        return new ResponseEntity<>(tagContentResultList, HttpStatus.OK);
+    @GetMapping("/getTagInsideTagGroup/{id}")
+    public ResponseEntity<?> getTagInsideTagGroup(@PathVariable Integer id) {
+        List<TagResult> tagResultList = tagGroupService.getTagInsideTagGroup(id);
+        return new ResponseEntity<>(tagResultList, HttpStatus.OK);
     }
 
     @RoleConstant.ManagerAuthorization
-    @GetMapping("/getTagContentOutsideTag/{id}")
-    public ResponseEntity<?> getTagContentOutsideTag(@PathVariable Integer id) {
-        List<TagContentResult> tagContentResultList = tagService.getTagContentOutsideTag(id);
-        return new ResponseEntity<>(tagContentResultList, HttpStatus.OK);
+    @GetMapping("/getTagOutsideTagGroup/{id}")
+    public ResponseEntity<?> getTagOutsideTagGroup(@PathVariable Integer id) {
+        List<TagResult> tagResultList = tagGroupService.getTagOutsideTagGroup(id);
+        return new ResponseEntity<>(tagResultList, HttpStatus.OK);
     }
 
     @RoleConstant.ManagerAuthorization
-    @DeleteMapping("/deleteTagContentFromTag/{tagContentId}/{tagId}")
-    public ResponseEntity<?> deleteTagContentFromTag(@PathVariable Integer tagContentId, @PathVariable Integer tagId) {
-        tagService.deleteTagContentFromTag(tagContentId, tagId);
+    @DeleteMapping("/deleteTagFromTagGroup/{tagContentId}/{tagId}")
+    public ResponseEntity<?> deleteTagFromTagGroup(@PathVariable Integer tagContentId, @PathVariable Integer tagId) {
+        tagGroupService.deleteTagFromTagGroup(tagContentId, tagId);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
     @RoleConstant.ManagerAuthorization
-    @DeleteMapping("/deleteMultiTagContentFromTag/{id}")
-    public ResponseEntity<?> deleteMultiTagContentFromTag(
+    @DeleteMapping("/deleteMultiTagFromTagGroup/{id}")
+    public ResponseEntity<?> deleteMultiTagFromTagGroup(
             @PathVariable Integer id,
-            @RequestBody Map<String, List<Integer>> tagContentIdList
+            @RequestBody Map<String, List<Integer>> tagContentId
     ) {
-        tagService.deleteMultiTagContentFromTag(tagContentIdList.get("tagContentSelected"), id);
+        tagGroupService.deleteMultiTagFromTagGroup(tagContentId.get("tagContentSelected"), id);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 

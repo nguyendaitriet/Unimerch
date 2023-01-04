@@ -18,27 +18,27 @@ import java.util.Objects;
 @Getter
 @Setter
 @Accessors(chain = true)
-public class BrgProductTagId implements Serializable {
+public class BrgProductTagGroupId implements Serializable {
 
     private static final long serialVersionUID = 1478932386399547886L;
     @Column(name = "ASIN", nullable = false, length = 150)
     private String productId;
 
     @Column(name = "tag_id", nullable = false)
-    private Integer tagId;
+    private Integer tagGroupId;
 
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || Hibernate.getClass(this) != Hibernate.getClass(o)) return false;
-        BrgProductTagId entity = (BrgProductTagId) o;
+        BrgProductTagGroupId entity = (BrgProductTagGroupId) o;
         return Objects.equals(this.productId, entity.productId) &&
-                Objects.equals(this.tagId, entity.tagId);
+                Objects.equals(this.tagGroupId, entity.tagGroupId);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(productId, tagId);
+        return Objects.hash(productId, tagGroupId);
     }
 
 }

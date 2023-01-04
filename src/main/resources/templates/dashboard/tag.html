@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org" lang="en">
 <head>
-    <title th:text="#{tag.tabTitle}">Tags Management</title>
+    <title th:text="#{tagGroup.tabTitle}">Tags Management</title>
     <th:block th:replace="layout/head :: dashboard-head"/>
 </head>
 <body id="page-top">
@@ -27,19 +27,20 @@
                         <div class="card shadow mb-4">
                             <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
                                 <a class="m-0 h4 font-weight-bold text-primary text-decoration-none"
-                                   th:href="@{'/dashboard/tag'}"
-                                   th:text="#{tag.tagTableTitle}">
+                                   th:href="@{'/dashboard/tagGroup'}"
+                                   th:text="#{tagGroup.tagTableTitle}">
                                     Tags Management
                                 </a>
                             </div>
 
                             <div class="card-body">
-                                <table id="table-tag" class="table stripe nowrap tb-padding-sm" style="width: 100%;">
+                                <table id="table-tagGroup" class="table stripe nowrap tb-padding-sm"
+                                       style="width: 100%;">
                                     <thead>
                                     <tr>
                                         <th style="visibility: hidden">#</th>
-                                        <th th:text="#{tag.tagTitle}">Tag Title</th>
-                                        <th th:text="#{tag.action}">Action</th>
+                                        <th th:text="#{tagGroup.tagTitle}">Tag Title</th>
+                                        <th th:text="#{tagGroup.action}">Action</th>
                                     </tr>
                                     </thead>
                                 </table>
@@ -50,8 +51,8 @@
                     <div class="col-md-6">
                         <div class="card shadow mb-4">
                             <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between bg-primary">
-                                <h6 class="tag-title m-0 font-weight-bold text-light"
-                                    th:text="#{tag.tagContentTableTitle}">Tag Content</h6>
+                                <h6 class="tagGroup-title m-0 font-weight-bold text-light"
+                                    th:text="#{tagGroup.tagContentTableTitle}">Tag Content</h6>
                             </div>
                             <div class="card-body">
                                 <table id="table-tag-content-in"
@@ -60,8 +61,8 @@
                                     <tr>
                                         <th>#</th>
                                         <th style="visibility: hidden"></th>
-                                        <th th:text="#{tag.tagContentName}">Name</th>
-                                        <th th:text="#{tag.action}">Action</th>
+                                        <th th:text="#{tagGroup.tagContentName}">Name</th>
+                                        <th th:text="#{tagGroup.action}">Action</th>
                                     </tr>
                                     </thead>
                                 </table>
@@ -92,8 +93,8 @@
     <i class="fas fa-angle-up"></i>
 </a>
 
-<th:block th:replace="layout/modals-tag :: create-tag"/>
-<!--<th:block th:replace="layout/modals-tag :: update-tag"/>-->
+<th:block th:replace="layout/modals-tag :: create-tagGroup"/>
+<!--<th:block th:replace="layout/modals-tag :: update-tagGroup"/>-->
 <th:block th:replace="layout/modals-tag :: add-tag-content"/>
 <th:block th:replace="layout/modals-tag :: tag-content-list"/>
 <th:block th:replace="layout/modals-tag :: create-tag-content"/>
@@ -104,19 +105,20 @@
 <script>
     let page = {
         urls: {
-            findAllTags: CommonApp.BASE_URL_TAG + "/findAllTags",
-            getTagContentInsideTag: CommonApp.BASE_URL_TAG + "/getTagContentInsideTag/",
-            getTagContentOutsideTag: CommonApp.BASE_URL_TAG + "/getTagContentOutsideTag/",
-            getAllTagContent: CommonApp.BASE_URL_TAG + "/getAllTagContent",
-            createTag: CommonApp.BASE_URL_TAG + "/create",
-            createTagContent: CommonApp.BASE_URL_TAG + "/createTagContent",
-            updateTag: CommonApp.BASE_URL_TAG + "/update",
-            updateTagContent: CommonApp.BASE_URL_TAG + "/updateTagContent",
-            deleteTag: CommonApp.BASE_URL_TAG + "/delete/",
-            deleteMultiTagContent: CommonApp.BASE_URL_TAG + "/deleteMultiTagContent",
-            deleteTagContentFromTag: CommonApp.BASE_URL_TAG + "/deleteTagContentFromTag/",
-            deleteMultiTagContentFromTag: CommonApp.BASE_URL_TAG + "/deleteMultiTagContentFromTag",
-            addTagContentToTag: CommonApp.BASE_URL_TAG + "/addTagContentToTag/"
+            findAllTagGroups: CommonApp.BASE_URL_TAG + "/findAllTagGroups",
+            createTagGroup: CommonApp.BASE_URL_TAG + "/create",
+            updateTagGroup: CommonApp.BASE_URL_TAG + "/update",
+            deleteTagGroup: CommonApp.BASE_URL_TAG + "/delete/",
+
+            getAllTags: CommonApp.BASE_URL_TAG + "/getAllTags",
+            getTagInsideTagGroup: CommonApp.BASE_URL_TAG + "/getTagInsideTagGroup/",
+            getTagOutsideTagGroup: CommonApp.BASE_URL_TAG + "/getTagOutsideTagGroup/",
+            createTag: CommonApp.BASE_URL_TAG + "/createTag",
+            updateTag: CommonApp.BASE_URL_TAG + "/updateTag",
+            deleteMultiTag: CommonApp.BASE_URL_TAG + "/deleteMultiTag",
+            deleteTagFromTagGroup: CommonApp.BASE_URL_TAG + "/deleteTagFromTagGroup/",
+            deleteMultiTagFromTagGroup: CommonApp.BASE_URL_TAG + "/deleteMultiTagFromTagGroup",
+            addTagToTagGroup: CommonApp.BASE_URL_TAG + "/addTagToTagGroup/"
         },
         element: {},
         commands: {},
@@ -129,10 +131,10 @@
         }
     }
 
-    page.element.tableTag = $('#table-tag');
+    page.element.tableTagGroup = $('#table-tagGroup');
     page.element.tableTagContentIn = $('#table-tag-content-in');
     page.element.tableTagContentOut = $('#table-tag-content-out');
-    page.element.tagTitle = $(".tag-title");
+    page.element.tagTitle = $(".tagGroup-title");
 
     page.dialogs.element.mdCreateTag = $('#mdCreateTag');
     page.dialogs.element.frmCreateTag = $('#frmCreateTag');
@@ -147,12 +149,12 @@
     page.dialogs.element.mdAddTagContentToTag = $('#mdAddTagContentToTag');
     page.dialogs.element.btnAddTagContentToTag = $('#btnAddTagContentToTag');
 
-    page.commands.doCreateTag = () => {
-        let newTag = {
+    page.commands.doCreateTagGroup = () => {
+        let newTagGroup = {
             id: 0,
             name: {}
         };
-        newTag.name = page.dialogs.element.tagNameCreate.val().trim();
+        newTagGroup.name = page.dialogs.element.tagNameCreate.val().trim();
 
         $.ajax({
             headers: {
@@ -160,16 +162,16 @@
                 "content-type": "application/json"
             },
             type: "POST",
-            url: page.urls.createTag,
-            data: JSON.stringify(newTag)
+            url: page.urls.createTagGroup,
+            data: JSON.stringify(newTagGroup)
         })
             .done((data) => {
-                let tableTag = page.element.tableTag.DataTable();
-                tableTag.row.add({
+                let tableTagGroup = page.element.tableTagGroup.DataTable();
+                tableTagGroup.row.add({
                     'id': data.id,
                     'name': data.name
                 })
-                tableTag.order([0, 'desc']).draw();
+                tableTagGroup.order([0, 'desc']).draw();
 
                 page.dialogs.element.mdCreateTag.modal("hide");
                 CommonApp.SweetAlert.showSuccessAlert(SUCCESS_CREATED);
@@ -178,26 +180,26 @@
                 DBApp.handleFailedTasks(jqXHR);
             })
     }
-    page.commands.doUpdateTag = (currentTag, currentRowTag) => {
-        let tag = {
+    page.commands.doUpdateTagGroup = (currentTagGroup, currentRowTagGroup) => {
+        let tagGroup = {
             id: null,
             name: {}
         };
-        // tag.name = page.dialogs.element.tagNameUpdate.val().trim();
-        tag.id = currentTag.id;
-        tag.name = $(`#tag-${currentTag.id}`).text().trim();
+        // tagGroup.name = page.dialogs.element.tagNameUpdate.val().trim();
+        tagGroup.id = currentTagGroup.id;
+        tagGroup.name = $(`#tagGroup-${currentTagGroup.id}`).text().trim();
         $.ajax({
             headers: {
                 "accept": "application/json",
                 "content-type": "application/json"
             },
             type: "PUT",
-            url: page.urls.updateTag,
-            data: JSON.stringify(tag)
+            url: page.urls.updateTagGroup,
+            data: JSON.stringify(tagGroup)
         })
             .done((data) => {
-                let tableTag = page.element.tableTag.DataTable();
-                tableTag.row(currentRowTag).data({
+                let tableTagGroup = page.element.tableTagGroup.DataTable();
+                tableTagGroup.row(currentRowTagGroup).data({
                     'id': data.id,
                     'name': data.name
                 }).draw('full-hold');
@@ -209,14 +211,14 @@
                 DBApp.handleFailedTasks(jqXHR);
             })
     }
-    page.commands.doDeleteTag = (currentTag, currentRowTag, tableTagContentIn) => {
+    page.commands.doDeleteTagGroup = (currentTagGroup, currentRowTagGroup, tableTagContentIn) => {
         $.ajax({
             type: "DELETE",
-            url: page.urls.deleteTag + currentTag.id,
+            url: page.urls.deleteTagGroup + currentTagGroup.id,
         })
             .done((data) => {
-                let tableTag = page.element.tableTag.DataTable();
-                tableTag.row(currentRowTag).remove().draw('full-hold');
+                let tableTagGroup = page.element.tableTagGroup.DataTable();
+                tableTagGroup.row(currentRowTagGroup).remove().draw('full-hold');
                 if (tableTagContentIn) {
                     page.element.tableTagContentOut.DataTable().clear().draw();
                     page.element.tableTagContentIn.DataTable().clear().draw();
@@ -230,8 +232,8 @@
             })
     }
 
-    page.commands.addTagContentToTag = (currentTag, tableTagContentIn, tableTagContentOut) => {
-        if (currentTag === undefined) return;
+    page.commands.addTagToTagGroup = (currentTagGroup, tableTagContentIn, tableTagContentOut) => {
+        if (currentTagGroup === undefined) return;
 
         let tagContentSelected = [];
 
@@ -251,14 +253,14 @@
                 "content-type": "application/json"
             },
             type: "POST",
-            url: page.urls.addTagContentToTag + currentTag.id,
+            url: page.urls.addTagToTagGroup + currentTagGroup.id,
             data: JSON.stringify({tagContentSelected: tagContentSelected})
         })
             .done((data) => {
-                data.forEach((tagContent) => {
+                data.forEach((tag) => {
                     tableTagContentIn.row.add({
-                        'id': tagContent.id,
-                        'name': tagContent.name
+                        'id': tag.id,
+                        'name': tag.name
                     })
                 });
                 tableTagContentIn.draw();
@@ -269,10 +271,10 @@
                 DBApp.handleFailedTasks(jqXHR);
             })
     }
-    page.commands.doDeleteTagContentInTag = (currentTag, currentTagContent, currentRowTagContent) => {
+    page.commands.doDeleteTagInTagGroup = (currentTagGroup, currentTagContent, currentRowTagContent) => {
         $.ajax({
             type: "DELETE",
-            url: page.urls.deleteTagContentFromTag + currentTagContent.id + '/' + currentTag.id,
+            url: page.urls.deleteTagFromTagGroup + currentTagContent.id + '/' + currentTagGroup.id,
         })
             .done((data) => {
                 let tableTagContentIn = page.element.tableTagContentIn.DataTable();
@@ -282,8 +284,7 @@
                 DBApp.handleFailedTasks(jqXHR);
             })
     }
-
-    page.commands.doDeletedMultiTagContentInTag = (currentTag, tableTagContentIn) => {
+    page.commands.doDeletedMultiTagInTagGroup = (currentTagGroup, tableTagContentIn) => {
         let tagContentSelected = [];
 
         let rows_selected = tableTagContentIn.rows({selected: true}).data();
@@ -302,7 +303,7 @@
                 "content-type": "application/json"
             },
             type: "DELETE",
-            url: page.urls.deleteMultiTagContentFromTag + "/" + currentTag.id,
+            url: page.urls.deleteMultiTagFromTagGroup + "/" + currentTagGroup.id,
             data: JSON.stringify({tagContentSelected})
         })
             .done((data) => {
@@ -313,22 +314,22 @@
                 DBApp.handleFailedTasks(jqXHR);
             })
     }
-    page.commands.handleTagNameCellEdit = () => {
+    page.commands.handleTagGroupNameCellEdit = () => {
         $('.tagTitle').click(function (e) {
             e.stopPropagation();
             let value = $(this).html();
-            page.commands.editTagNameCellInline(this, value);
+            page.commands.editTagGroupNameCellInline(this, value);
         })
     }
-    page.commands.editTagNameCellInline = (currentEle, value) => {
+    page.commands.editTagGroupNameCellInline = (currentEle, value) => {
         $(currentEle).html('<input class="thVal form-control" type="text" width="1" value="' + value + '" />');
         $(".thVal", currentEle).focus().keyup(function (event) {
             if (event.keyCode == 13) {
                 $(currentEle).html($(".thVal").val().trim());
-                let tableTag = page.element.tableTag.DataTable();
-                let currentRowTag = tableTag.row($(currentEle).parents('tr'));
-                let currentTag = currentRowTag.data();
-                page.commands.doUpdateTag(currentTag, currentRowTag);
+                let tableTagGroup = page.element.tableTagGroup.DataTable();
+                let currentRowTagGroup = tableTagGroup.row($(currentEle).parents('tr'));
+                let currentTagGroup = currentRowTagGroup.data();
+                page.commands.doUpdateTagGroup(currentTagGroup, currentRowTagGroup);
             }
         }).click(function (e) {
             e.stopPropagation();
@@ -341,7 +342,7 @@
         });
     }
 
-    page.dialogs.close.mdCreateTag = () => {
+    page.dialogs.close.mdCreateTagGroup = () => {
         page.dialogs.element.frmCreateTag.find("input.error").removeClass("error");
         page.dialogs.element.frmCreateTag[0].reset();
         page.dialogs.element.frmCreateTag.validate().resetForm();
@@ -352,7 +353,7 @@
     //     page.dialogs.element.frmUpdateTag.validate().resetForm();
     // }
 
-    //CRUD Tag Content
+    //CRUD TagGroup Content
     page.dialogs.element.mdTagContent = $('#mdTagContent');
     page.dialogs.element.tableTagContent = $('#table-tag-content');
 
@@ -361,11 +362,11 @@
     page.dialogs.element.tagContentNameCreate = $("#tagContentNameCreate");
     page.dialogs.element.btnCreateTagContent = $("#btnCreateTagContent");
     page.dialogs.commands.doCreateTagContent = () => {
-        let newTagContent = {
+        let newTag = {
             id: 0,
             name: {}
         };
-        newTagContent.name = page.dialogs.element.tagContentNameCreate.val().trim();
+        newTag.name = page.dialogs.element.tagContentNameCreate.val().trim();
 
         $.ajax({
             headers: {
@@ -373,8 +374,8 @@
                 "content-type": "application/json"
             },
             type: "POST",
-            url: page.urls.createTagContent,
-            data: JSON.stringify(newTagContent)
+            url: page.urls.createTag,
+            data: JSON.stringify(newTag)
         })
             .done((data) => {
                 let tableTagContent = page.dialogs.element.tableTagContent.DataTable();
@@ -392,12 +393,12 @@
             })
     }
     page.dialogs.commands.doUpdateTagContent = (currentTagContent, currentRowTagContent) => {
-        let tagContentParam = {
+        let tagParam = {
             id: {},
             name: {}
         };
-        tagContentParam.id = currentTagContent.id;
-        tagContentParam.name = $(`#tagContent-${currentTagContent.id}`).text().trim();
+        tagParam.id = currentTagContent.id;
+        tagParam.name = $(`#tag-${currentTagContent.id}`).text().trim();
 
         $.ajax({
             headers: {
@@ -405,8 +406,8 @@
                 "content-type": "application/json"
             },
             type: "PUT",
-            url: page.urls.updateTagContent,
-            data: JSON.stringify(tagContentParam)
+            url: page.urls.updateTag,
+            data: JSON.stringify(tagParam)
         })
             .done((data) => {
                 let tableTagContent = page.dialogs.element.tableTagContent.DataTable();
@@ -442,7 +443,7 @@
         });
 
         $(document).click(function () {
-            $(".thVal").replaceWith(function () {
+            $(".tagContentVal").replaceWith(function () {
                 return this.value;
             });
         });
@@ -466,12 +467,12 @@
                 "content-type": "application/json"
             },
             type: "DELETE",
-            url: page.urls.deleteMultiTagContent,
+            url: page.urls.deleteMultiTag,
             data: JSON.stringify({tagContentSelected})
         })
             .done((data) => {
                 tableTagContent.rows({selected: true}).remove().draw();
-                //Delete Tag Content In Tag
+                //Delete TagGroup Content In TagGroup
                 CommonApp.SweetAlert.showSuccessAlert(SUCCESS_REMOVED);
             })
             .fail(function (jqXHR) {
@@ -488,15 +489,15 @@
     $(document).ready(function () {
         DBApp.handleGroupsFilterSidebar();
 
-        let tableTag = page.element.tableTag
+        let tableTagGroup = page.element.tableTagGroup
             .on('init.dt', function () {
-                $('#table-tag thead th').removeClass('tagTitle');
-                page.commands.handleTagNameCellEdit();
+                $('#table-tagGroup thead th').removeClass('tagTitle');
+                page.commands.handleTagGroupNameCellEdit();
             })
             .DataTable({
                 ajax: {
                     contentType: 'application/json',
-                    url: page.urls.findAllTags,
+                    url: page.urls.findAllTagGroups,
                     dataSrc: ''
                 },
                 info: false,
@@ -517,7 +518,7 @@
                         type: 'natural',
                         className: 'tagTitle',
                         createdCell: function (cell, cellData, rowData, row, col) {
-                            $(cell).attr('id', 'tag-' + rowData.id);
+                            $(cell).attr('id', 'tagGroup-' + rowData.id);
                         }
                     },
                     {
@@ -525,13 +526,13 @@
                         className: "text-center",
                         orderable: false,
                         render: (data, type, row) =>
-                            `<button type='button' class='manage-tag btn btn-outline-primary mr-3' title='${btnManage}'>
+                            `<button type='button' class='manage-tagGroup btn btn-outline-primary mr-3' title='${btnManage}'>
                             <i class="fas fa-cogs"></i>
                         </button>
-                        <button type='button' class='update-tag btn btn-outline-warning mr-3' title='${btnUpdate}'>
+                        <button type='button' class='update-tagGroup btn btn-outline-warning mr-3' title='${btnUpdate}'>
                             <i class="fas fa-pencil-alt"></i>
                         </button>
-                        <button type='button' class='delete-tag btn btn-outline-danger' title='${btnDelete}'>
+                        <button type='button' class='delete-tagGroup btn btn-outline-danger' title='${btnDelete}'>
                             <i class="fas fa-trash"></i>
                         </button>`,
                     },
@@ -556,7 +557,7 @@
                 buttons: {
                     dom: {
                         button: {
-                            tag: 'button',
+                            tagGroup: 'button',
                             className: ''
                         }
                     },
@@ -571,24 +572,24 @@
                     ]
                 },
             });
-        tableTag.order([1, "asc"]).draw();
+        tableTagGroup.order([1, "asc"]).draw();
 
         let tableTagContentIn;
         let tableTagContentOut;
         let tableTagContent;
-        let currentRowTag;
-        let currentTag;
+        let currentRowTagGroup;
+        let currentTagGroup;
         let currentRowTagContent;
         let currentTagContent;
 
-        page.element.tableTag.on('click', 'button.manage-tag', function () {
-            currentTag = tableTag.row($(this).parents('tr')).data();
-            page.element.tagTitle.html(currentTag.name);
+        page.element.tableTagGroup.on('click', 'button.manage-tagGroup', function () {
+            currentTagGroup = tableTagGroup.row($(this).parents('tr')).data();
+            page.element.tagTitle.html(currentTagGroup.name);
 
             if (tableTagContentIn === undefined) {
                 tableTagContentIn = page.element.tableTagContentIn.DataTable({
                     ajax: {
-                        url: page.urls.getTagContentInsideTag + currentTag.id,
+                        url: page.urls.getTagInsideTagGroup + currentTagGroup.id,
                         dataSrc: ''
                     },
                     info: false,
@@ -649,7 +650,7 @@
                     buttons: {
                         dom: {
                             button: {
-                                tag: 'button',
+                                tagGroup: 'button',
                                 className: 'btn-text-sm'
                             }
                         },
@@ -670,7 +671,7 @@
                                     $(node).on('click', () => CommonApp.SweetAlert.showDeleteDialog()
                                         .then((result) => {
                                             if (result.isConfirmed) {
-                                                page.commands.doDeletedMultiTagContentInTag(currentTag, tableTagContentIn);
+                                                page.commands.doDeletedMultiTagInTagGroup(currentTagGroup, tableTagContentIn);
                                             }
                                         })
                                     );
@@ -690,31 +691,31 @@
                 });
                 tableTagContentIn.order([2, "asc"]).draw();
             } else {
-                tableTagContentIn.ajax.url(page.urls.getTagContentInsideTag + currentTag.id).load();
+                tableTagContentIn.ajax.url(page.urls.getTagInsideTagGroup + currentTagGroup.id).load();
             }
         });
-        page.element.tableTag.on('click', 'button.update-tag', function () {
-            currentRowTag = tableTag.row($(this).parents('tr'));
-            currentTag = currentRowTag.data();
-            page.commands.doUpdateTag(currentTag, currentRowTag);
+        page.element.tableTagGroup.on('click', 'button.update-tagGroup', function () {
+            currentRowTagGroup = tableTagGroup.row($(this).parents('tr'));
+            currentTagGroup = currentRowTagGroup.data();
+            page.commands.doUpdateTagGroup(currentTagGroup, currentRowTagGroup);
 
-            // page.dialogs.element.tagNameUpdate.val(currentTag.name);
+            // page.dialogs.element.tagNameUpdate.val(currentTagGroup.name);
             // page.dialogs.element.mdUpdateTag.modal('show');
         });
-        page.element.tableTag.on('click', 'button.delete-tag', function () {
-            currentRowTag = tableTag.row($(this).parents('tr'));
-            currentTag = currentRowTag.data();
+        page.element.tableTagGroup.on('click', 'button.delete-tagGroup', function () {
+            currentRowTagGroup = tableTagGroup.row($(this).parents('tr'));
+            currentTagGroup = currentRowTagGroup.data();
             CommonApp.SweetAlert.showDeleteDialog()
                 .then((result) => {
                     if (result.isConfirmed) {
-                        page.commands.doDeleteTag(currentTag, currentRowTag, tableTagContentIn);
-                        currentTag = undefined;
+                        page.commands.doDeleteTagGroup(currentTagGroup, currentRowTagGroup, tableTagContentIn);
+                        currentTagGroup = undefined;
                     }
                 })
         });
 
         page.dialogs.element.mdCreateTag.on('hidden.bs.modal', () => {
-            page.dialogs.close.mdCreateTag();
+            page.dialogs.close.mdCreateTagGroup();
         });
         page.dialogs.element.btnCreateTag.on('click', function () {
             page.dialogs.element.frmCreateTag.submit();
@@ -736,9 +737,10 @@
                 }
             },
             submitHandler: function () {
-                page.commands.doCreateTag();
+                page.commands.doCreateTagGroup();
             }
         })
+
         // page.dialogs.element.frmUpdateTag.validate({
         //     onkeyup: function (element) {
         //         $(element).valid()
@@ -756,7 +758,7 @@
         //         }
         //     },
         //     submitHandler: function () {
-        //         page.commands.doUpdateTag(currentTag, currentRowTag);
+        //         page.commands.doDeleteTagGroup(currentTagGroup, currentRowTagGroup);
         //     }
         // })
         // page.dialogs.element.mdUpdateTag.on('hidden.bs.modal', () => {
@@ -770,18 +772,18 @@
         page.element.tableTagContentIn.on('click', 'button.delete-tag-content', function () {
             currentRowTagContent = tableTagContentIn.row($(this).parents('tr'));
             currentTagContent = currentRowTagContent.data();
-            page.commands.doDeleteTagContentInTag(currentTag, currentTagContent, currentRowTagContent);
+            page.commands.doDeleteTagInTagGroup(currentTagGroup, currentTagContent, currentRowTagContent);
         });
         page.dialogs.element.mdAddTagContentToTag.on('shown.bs.modal', () => {
 
-            if (currentTag === undefined) {
+            if (currentTagGroup === undefined) {
                 return;
             }
 
             if (tableTagContentOut === undefined) {
                 tableTagContentOut = page.element.tableTagContentOut.DataTable({
                     ajax: {
-                        url: page.urls.getTagContentOutsideTag + currentTag.id,
+                        url: page.urls.getTagOutsideTagGroup + currentTagGroup.id,
                         dataSrc: ''
                     },
                     info: false,
@@ -836,7 +838,7 @@
                 $('div.table-quickselect').html(`<p class="font-italic font-weight-light text-center text-sm-left" style="margin-bottom: 0;">${tableQuickSelectP1}</p>
                 <p class="font-italic font-weight-light text-center text-sm-left">${tableQuickSelectP2}</p>`);
             } else {
-                tableTagContentOut.ajax.url(page.urls.getTagContentOutsideTag + currentTag.id).load();
+                tableTagContentOut.ajax.url(page.urls.getTagOutsideTagGroup + currentTagGroup.id).load();
             }
             page.element.tableTagContentOut.css('cursor', 'pointer');
         });
@@ -845,19 +847,18 @@
             tableTagContentOut.search('').draw();
         });
         page.dialogs.element.btnAddTagContentToTag.on('click', () => {
-            page.commands.addTagContentToTag(currentTag, tableTagContentIn, tableTagContentOut);
+            page.commands.addTagToTagGroup(currentTagGroup, tableTagContentIn, tableTagContentOut);
         })
 
         page.dialogs.element.mdTagContent.on('shown.bs.modal', () => {
             if (tableTagContent === undefined) {
-                tableTagContent = page.dialogs.element.tableTagContent
-                    .on('init.dt', function () {
+                tableTagContent = page.dialogs.element.tableTagContent.DataTable({
+                    drawCallback: function (settings) {
                         $('#table-tag-content thead th').removeClass('tagContentName');
                         page.dialogs.commands.handleTagContentNameCellEdit();
-                    })
-                    .DataTable({
+                    },
                     ajax: {
-                        url: page.urls.getAllTagContent,
+                        url: page.urls.getAllTags,
                         dataSrc: ''
                     },
                     info: false,
@@ -884,7 +885,7 @@
                             type: 'natural',
                             className: 'tagContentName',
                             createdCell: function (cell, cellData, rowData, row, col) {
-                                $(cell).attr('id', 'tagContent-' + rowData.id);
+                                $(cell).attr('id', 'tag-' + rowData.id);
                             }
                         }
                     ],
@@ -911,7 +912,7 @@
                     buttons: {
                         dom: {
                             button: {
-                                tag: 'button',
+                                tagGroup: 'button',
                                 className: 'btn-text-sm'
                             }
                         },
@@ -943,7 +944,7 @@
                 });
                 tableTagContent.order([2, "asc"]).draw();
             } else {
-                tableTagContent.ajax.url(page.urls.getAllTagContent).load();
+                tableTagContent.ajax.url(page.urls.getAllTags).load();
             }
             $('div.table-quickselect').html(`<p class="font-italic font-weight-light text-center text-sm-left" style="margin-bottom: 0;">${tableQuickSelectP1}</p>
                 <p class="font-italic font-weight-light text-center text-sm-left">${tableQuickSelectP2}</p>`);

@@ -14,7 +14,7 @@
         </tr>
         <tr>
             <td id="{0}-{5}" colspan="5">
-                <button class="btn btn-primary btn-sm btn-handle-tag"
+                <button class="btn btn-primary btn-sm btn-handle-tagGroup"
                         title="Tag handler">
                     <i class="far fa-edit"></i>
                 </button>
@@ -23,8 +23,8 @@
     </textarea>
 </th:block>
 
-<th:block th:fragment="temp-product-tag">
+<th:block th:fragment="temp-product-tagGroup">
     <textarea id="tempProductTag" style="display:none">
-        <span data-id={0} class="btn btn-success btn-sm product-tag mr-3">{1}</span>
+        <span data-id={0} class="btn btn-success btn-sm product-tagGroup mr-3">{1}</span>
     </textarea>
 </th:block>

@@ -1,29 +1,18 @@
 package com.unimerch.service;
 
-import com.unimerch.dto.tag_content.TagContentResult;
-import com.unimerch.repository.model.tag.Tag;
-import com.unimerch.repository.model.tag.TagContent;
+import com.unimerch.dto.tag.TagParam;
+import com.unimerch.dto.tag.TagResult;
 
 import java.util.List;
 
 public interface TagService {
-    List<Tag> findAll();
+    List<TagResult> findAll();
 
-    Tag findById(int id);
+    TagResult findById(int id);
 
-    Tag createTag(Tag newTag);
+    TagResult createTag(TagParam tagParam);
 
-    Tag updateTag(Tag tag);
+    TagResult updateTag(TagParam tagParam);
 
-    void deleteTag(int id);
-
-    List<TagContentResult> addTagContentToTag(List<Integer> tagContentIdList, int tagId);
-
-    List<TagContentResult> getTagContentInsideTag(int tagId);
-
-    List<TagContentResult> getTagContentOutsideTag(int tagId);
-
-    void deleteTagContentFromTag(int tagContentId, int tagId);
-
-    void deleteMultiTagContentFromTag(List<Integer> tagContentIdList, int tagId);
+    void deleteMultiTag(List<Integer> tagIdList);
 }

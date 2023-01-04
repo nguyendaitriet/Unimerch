@@ -1,4 +1,4 @@
-package com.unimerch.dto.tag_content;
+package com.unimerch.dto.tag;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -11,7 +11,7 @@ import lombok.experimental.Accessors;
 @Getter
 @Setter
 @Accessors(chain = true)
-public class TagContentResult {
+public class TagParam {
     private int id;
     private String name;
 }
