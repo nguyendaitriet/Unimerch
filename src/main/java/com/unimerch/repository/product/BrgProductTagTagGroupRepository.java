@@ -13,13 +13,13 @@ import java.util.List;
 @Repository
 public interface BrgProductTagTagGroupRepository extends JpaRepository<BrgProductTagTagGroup, Integer> {
 
-//    @Query("SELECT NEW com.unimerch.dto.tag.TagGroupTagResult(" +
-//                "b.tagGroup.id," +
-//                "b.tagGroup.color," +
-//                "b.tag.name" +
-//            ") " +
-//            "FROM BrgProductTagTagGroup AS b " +
-//            "WHERE b.product.id = :asin"
-//    )
-//    List<TagGroupTagResult> findTagGroupAndTagByAsin(@Param("asin") String asin);
+    @Query("SELECT NEW com.unimerch.dto.tag.TagGroupTagResult(" +
+                "b.id.brgTagGroupTag.tagGroup.id," +
+                "b.id.brgTagGroupTag.tagGroup.color," +
+                "b.id.brgTagGroupTag.tag.name" +
+            ") " +
+            "FROM BrgProductTagTagGroup AS b " +
+            "WHERE b.product.id = :asin"
+    )
+    List<TagGroupTagResult> findTagGroupAndTagByAsin(@Param("asin") String asin);
 }

@@ -23,13 +23,19 @@ public class TagAPI {
     @Autowired
     private TagService tagService;
 
-    @RoleConstant.ManagerAuthorization
+    @RoleConstant.ManagerUserAuthorization
     @GetMapping("/findAllTagGroups")
     public ResponseEntity<?> findAllTagGroups() {
         return new ResponseEntity<>(tagGroupService.findAll(), HttpStatus.OK);
     }
 
-    @RoleConstant.ManagerAuthorization
+    @RoleConstant.ManagerUserAuthorization
+    @GetMapping("/findAllTagGroupsAndTagsInside")
+    public ResponseEntity<?> findAllTagGroupsAndTagsInside() {
+        return new ResponseEntity<>(tagGroupService.findAllTagGroupsAndTagsInside(), HttpStatus.OK);
+    }
+
+    @RoleConstant.ManagerUserAuthorization
     @GetMapping("/getAllTags")
     public ResponseEntity<?> getAllTags() {
         return new ResponseEntity<>(tagService.findAll(), HttpStatus.OK);

@@ -1,5 +1,6 @@
 package com.unimerch.service.impl;
 
+import com.unimerch.dto.tag.FullTagGroupTagResult;
 import com.unimerch.dto.tag.TagResult;
 import com.unimerch.exception.InvalidIdException;
 import com.unimerch.mapper.TagMapper;
@@ -33,6 +34,23 @@ public class TagGroupServiceImpl implements TagGroupService {
     @Override
     public List<TagGroup> findAll() {
         return tagGroupRepository.findAll();
+    }
+
+    @Override
+    public List<FullTagGroupTagResult> findAllTagGroupsAndTagsInside() {
+        List<TagGroup> tagGroupList = tagGroupRepository.findAll();
+        List<FullTagGroupTagResult> fullTagGroupTagResultList = tagGroupList.stream().map(item ->{
+
+            List<TagResult> tagResultList = tagRepository.findAllTagInsideTagGroup(item.getId())
+                    .stream().map(tag -> tagMapper.toTagResult(tag)).collect(Collectors.toList());
+
+            return new FullTagGroupTagResult()
+                    .setTagGroup(item)
+                    .setTagResultList(tagResultList);
+
+        }).collect(Collectors.toList());
+
+        return fullTagGroupTagResultList;
     }
 
     @Override

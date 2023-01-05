@@ -36,51 +36,119 @@
                             <!-- Card Body -->
                             <div class="card-body">
                                 <div class="row">
-                                    <select class="selectpicker" id="analGrpSelect" data-live-search="true">
-                                        <option value="0" th:text="#{analyse.allGroupsSelect}">All Groups</option>
-                                    </select>
-                                    <select class="selectpicker ml-3" id="analAmznSelect" data-live-search="true">
-                                        <option value="0" th:text="#{analyse.allAmznsSelect}">All Amazon Accounts
-                                        </option>
-                                    </select>
-                                </div>
-                                <div class="row mt-3">
-                                    <div class="input-group-btn" data-toggle="buttons">
-                                        <label class="btn btn-outline-info active">
-                                            <input value="today" type="radio" name="dateFilter" id="option1"
-                                                   autocomplete="off" checked>
-                                            Today
-                                        </label>
-                                        <label class="btn btn-outline-info">
-                                            <input value="yesterday" type="radio" name="dateFilter" id="option2"
-                                                   autocomplete="off">
-                                            Yesterday
-                                        </label>
-                                        <label class="btn btn-outline-info">
-                                            <input value="thisMonth" type="radio" name="dateFilter" id="option3"
-                                                   autocomplete="off">
-                                            This month
-                                        </label>
-                                        <label class="btn btn-outline-info">
-                                            <input value="previousMonth" type="radio" name="dateFilter" id="option4"
-                                                   autocomplete="off">
-                                            Previous month
-                                        </label>
-                                        <label class="btn btn-outline-info">
-                                            <input value="custom" type="radio" name="dateFilter" id="customDateFilter"
-                                                   autocomplete="off">
-                                            Custom
-                                        </label>
-                                        <input class="form-control" type="text" name="dateRange" id="dateRange"
-                                               autocomplete="off" hidden>
+                                    <div class="col-md-8">
+                                        <div class="row">
+                                            <select class="selectpicker" id="analGrpSelect" data-live-search="true">
+                                                <option value="0" th:text="#{analyse.allGroupsSelect}">All Groups</option>
+                                            </select>
+                                            <select class="selectpicker ml-3" id="analAmznSelect" data-live-search="true">
+                                                <option value="0" th:text="#{analyse.allAmznsSelect}">All Amazon Accounts
+                                                </option>
+                                            </select>
+                                        </div>
+                                        <div class="row mt-3">
+                                            <div class="input-group-btn" data-toggle="buttons">
+                                                <label class="btn btn-outline-info active">
+                                                    <input value="today" type="radio" name="dateFilter" id="option1"
+                                                           autocomplete="off" checked>
+                                                    Today
+                                                </label>
+                                                <label class="btn btn-outline-info">
+                                                    <input value="yesterday" type="radio" name="dateFilter" id="option2"
+                                                           autocomplete="off">
+                                                    Yesterday
+                                                </label>
+                                                <label class="btn btn-outline-info">
+                                                    <input value="thisMonth" type="radio" name="dateFilter" id="option3"
+                                                           autocomplete="off">
+                                                    This month
+                                                </label>
+                                                <label class="btn btn-outline-info">
+                                                    <input value="previousMonth" type="radio" name="dateFilter" id="option4"
+                                                           autocomplete="off">
+                                                    Previous month
+                                                </label>
+                                                <label class="btn btn-outline-info">
+                                                    <input value="custom" type="radio" name="dateFilter" id="customDateFilter"
+                                                           autocomplete="off">
+                                                    Custom
+                                                </label>
+                                                <input class="form-control" type="text" name="dateRange" id="dateRange"
+                                                       autocomplete="off" hidden>
+                                            </div>
+                                        </div>
+                                        <div class="row mt-3">
+                                            <div class="col-md-2">Include Tag</div>
+                                            <div id="tagGroupIncludeArea" class="col-md-10">
+
+                                            </div>
+                                        </div>
+                                        <div class="row mt-3">
+                                            <div class="col-md-2">Exclude Tag</div>
+                                            <div id="tagGroupExcludeArea" class="col-md-10">
+
+                                            </div>
+                                        </div>
+                                        <div class="row mt-3">
+                                            <button id="btnAnalyse" class="btn btn-primary text-uppercase" type="button"
+                                                    th:text="#{analyse.btn.analyseSale}">ANALYSE SALES
+                                            </button>
+                                            <button type="button" class="btn btn-secondary ml-3" id="btnResetProductFilter"
+                                                    th:text="#{analyse.btn.reset}">Reset
+                                            </button>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <div class="card border-left-primary shadow">
+                                            <div class="card-body">
+                                                <div class="row no-gutters align-items-center mb-2">
+                                                    <div class="col mr-2">
+                                                        <div class="text-center font-weight-bold text-primary text-uppercase">
+                                                            Today's Sale
+                                                            <br>
+                                                            <span id="todayDate"></span>
+                                                        </div>
+
+                                                        <hr class="sidebar-divider my-2">
+
+                                                        <div id="todayPurchased"
+                                                             class="h2 text-center mb-0 font-weight-bold text-gray-800">
+                                                            0
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="row mt-1 no-gutters d-flex justify-content-between">
+                                                    <div id="todayRoyalties">
+                                                        0
+                                                    </div>
+                                                    <div>
+                                                        Royalties
+                                                    </div>
+                                                </div>
+                                                <div class="row mt-1 no-gutters d-flex justify-content-between">
+                                                    <div>
+                                                        <span id="todaySold">0</span> - <span
+                                                            id="todayCancelled">0</span>
+                                                    </div>
+                                                    <div>
+                                                        Sold-Cancelled
+                                                    </div>
+                                                </div>
+                                                <div class="row mt-1 no-gutters d-flex justify-content-between">
+                                                    <div id="todayReturned">
+                                                        0
+                                                    </div>
+                                                    <div>
+                                                        Returned
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
-                                <div class="row mt-3">
-                                    <button id="btnAnalyse" class="btn btn-primary text-uppercase" type="button"
-                                            th:text="#{analyse.btn.analyseSale}">ANALYSE SALES
-                                    </button>
-                                </div>
+
                                 <hr class="sidebar-divider">
+
                                 <div class="row mt-3">
                                     <div class="input-group-btn" data-toggle="buttons">
                                         <label class="btn btn-light active">
@@ -98,7 +166,9 @@
                                 <div class="row mt-3" id="chartHolder" style="width:100%;">
                                     <!-- Chart Content -->
                                 </div>
+
                                 <hr class="sidebar-divider">
+
                                 <div class="mt-3 mb-3 row">
                                     <div class="col-md-4">
                                         <div class="input-group">
@@ -112,112 +182,14 @@
                                             </div>
                                         </div>
                                     </div>
-
-                                    <div class="ml-3 col-md-8">
-                                        <div class="mb-3 row">
-                                            <div class="col-md-2">Include Tag</div>
-                                            <div class="col-md-10">
-                           <span class="dropdown">
-                            <button class="btn btn-success dropdown-toggle" type="button"
-                                    data-toggle="dropdown" aria-haspopup="true"
-                                    aria-expanded="false">
-                                Idea tagGroup
-                            </button>
-                            <div class="dropdown-menu animated--fade-in"
-                                 aria-labelledby="dropdownMenuButton" style="">
-                                <a class="dropdown-item" href="#">Action</a>
-                                <a class="dropdown-item" href="#">Another action</a>
-                                <a class="dropdown-item" href="#">Something else here</a>
-                            </div>
-                        </span>
-                                                <span class="dropdown">
-                            <button class="btn btn-warning dropdown-toggle" type="button"
-                                    data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                Design tagGroup
-                            </button>
-                            <div class="dropdown-menu animated--fade-in"
-                                 aria-labelledby="dropdownMenuButton" style="">
-                                <a class="dropdown-item" href="#">Action</a>
-                                <a class="dropdown-item" href="#">Another action</a>
-                                <a class="dropdown-item" href="#">Something else here</a>
-                            </div>
-                        </span>
-                                                <span class="dropdown">
-                            <button class="btn btn-secondary dropdown-toggle" type="button"
-                                    data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                Support tagGroup
-                            </button>
-                            <div class="dropdown-menu animated--fade-in"
-                                 aria-labelledby="dropdownMenuButton" style="">
-                                <a class="dropdown-item" href="#">Action</a>
-                                <a class="dropdown-item" href="#">Another action</a>
-                                <a class="dropdown-item" href="#">Something else here</a>
-                            </div>
-                        </span>
-                                            </div>
-                                        </div>
-                                        <div class="mb-3 row">
-                                            <div class="col-md-2">Exclude Tag</div>
-                                            <div class="col-md-10">
-                           <span class="dropdown">
-                            <button class="btn btn-success dropdown-toggle" type="button"
-                                    data-toggle="dropdown" aria-haspopup="true"
-                                    aria-expanded="false">
-                                Idea tagGroup
-                            </button>
-                            <div class="dropdown-menu animated--fade-in"
-                                 aria-labelledby="dropdownMenuButton" style="">
-                                <a class="dropdown-item" href="#">Action</a>
-                                <a class="dropdown-item" href="#">Another action</a>
-                                <a class="dropdown-item" href="#">Something else here</a>
-                            </div>
-                        </span>
-                                                <span class="dropdown">
-                            <button class="btn btn-warning dropdown-toggle" type="button"
-                                    data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                Design tagGroup
-                            </button>
-                            <div class="dropdown-menu animated--fade-in"
-                                 aria-labelledby="dropdownMenuButton" style="">
-                                <a class="dropdown-item" href="#">Action</a>
-                                <a class="dropdown-item" href="#">Another action</a>
-                                <a class="dropdown-item" href="#">Something else here</a>
-                            </div>
-                        </span>
-                                                <span class="dropdown">
-                            <button class="btn btn-secondary dropdown-toggle" type="button"
-                                    data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                Support tagGroup
-                            </button>
-                            <div class="dropdown-menu animated--fade-in"
-                                 aria-labelledby="dropdownMenuButton" style="">
-                                <a class="dropdown-item" href="#">Action</a>
-                                <a class="dropdown-item" href="#">Another action</a>
-                                <a class="dropdown-item" href="#">Something else here</a>
-                            </div>
-                        </span>
-                                            </div>
-                                        </div>
-                                        <div class="mb-3 row">
-                                            <div class="col-md-2">Date Range</div>
-                                            <div class="col-md-10">
-                                                <input class="form-control col-md-10" type="text" name="dateRange" id="productAnalDateRange" autocomplete="off">
-                                            </div>
-                                        </div>
-                                        <div class="row">
-                                            <button type="button" class="btn btn-primary mr-3" id="btnAnalyseProductFilter" th:text="#{analyse.btn.analyse}">Analyse</button>
-                                            <button type="button" class="btn btn-info" id="btnResetProductFilter" th:text="#{analyse.btn.reset}">Reset</button>
-                                        </div>
-                                    </div>
                                 </div>
                                 <div class="row mt-3">
                                     <div class="table-responsive" style="width: 80%">
                                         <table class="table table-bordered table-sm" id="tableProductAnalytics">
                                             <thead>
                                             <tr class="text-center">
-                                                <th class="col-md-1">ASIN</th>
-                                                <th>Title</th>
-                                                <th>Sales</th>
+                                                <th>Sold</th>
+                                                <th>Product</th>
                                                 <th>Royalties</th>
                                                 <th>Price</th>
                                                 <th>Username</th>
@@ -225,25 +197,6 @@
                                             </thead>
 
                                             <tbody>
-<!--                                            <tr>-->
-<!--                                                <td rowspan="2" class="align-middle text-center">HSFB44421</td>-->
-<!--                                                <td>System Architect</td>-->
-<!--                                                <td class="text-center font-weight-bold text-dark">3</td>-->
-<!--                                                <td class="text-center">61.01</td>-->
-<!--                                                <td class="text-center">30.20</td>-->
-<!--                                                <td class="text-center">140</td>-->
-<!--                                            </tr>-->
-<!--                                            <tr>-->
-<!--                                                <td colspan="5">-->
-<!--                                                    <span class="btn btn-success btn-sm">James</span>-->
-<!--                                                    <span class="btn btn-warning btn-sm">Emily</span>-->
-<!--                                                    <span class="btn btn-secondary btn-sm">Victor</span>-->
-<!--                                                    <button class="btn btn-primary btn-sm btn-handle-tagGroup"-->
-<!--                                                            title="TagGroup handler">-->
-<!--                                                        <i class="far fa-edit"></i>-->
-<!--                                                    </button>-->
-<!--                                                </td>-->
-<!--                                            </tr>-->
 
                                             </tbody>
                                         </table>
@@ -278,9 +231,9 @@
 </a>
 
 <th:block th:replace="dashboard/temp/temp-option :: temp-option"/>
+<th:block th:replace="dashboard/temp/temp-option :: temp-tagGroup-select"/>
 <th:block th:replace="dashboard/temp/temp-table-product-analytics :: temp-table-product-analytics"/>
 <th:block th:replace="dashboard/temp/temp-table-product-analytics :: temp-product-tagGroup"/>
-<!--<th:block th:replace="layout/modals-analytics :: product-analytics-filter"/>-->
 <th:block th:replace="layout/texts :: texts"/>
 <th:block th:replace="layout/script :: script-dashboard"/>
 
@@ -291,7 +244,8 @@
             findAllAmzns: CommonApp.BASE_URL_AMZN_ACCOUNT + "/findAllAmznAccs",
             findAmznsInsideGroup: CommonApp.BASE_URL_GROUP + "/showAmznAccInsideGroup",
             getAnalyticsSale: CommonApp.BASE_URL_ANALYTICS,
-            getProductAnalytics: CommonApp.BASE_URL_ANALYTICS + "/getProductAnalytics"
+            getProductAnalytics: CommonApp.BASE_URL_ANALYTICS + "/getProductAnalytics",
+            findAllTagGroupsAndTagsInside: CommonApp.BASE_URL_TAG + "/findAllTagGroupsAndTagsInside"
         },
         element: {},
         commands: {},
@@ -306,6 +260,9 @@
     page.element.analGrpSelect = $('#analGrpSelect');
     page.element.analAmznSelect = $('#analAmznSelect');
     page.element.tempOption = $('#tempOption');
+    page.element.tempTagGroupSelect = $('#tempTagGroupSelect');
+    page.element.tagGroupIncludeArea = $('#tagGroupIncludeArea');
+    page.element.tagGroupExcludeArea = $('#tagGroupExcludeArea');
     page.element.dateRange = $('#dateRange');
     page.element.btnAnalyse = $('#btnAnalyse');
     page.element.customDateFilter = $('#customDateFilter');
@@ -314,6 +271,7 @@
     page.element.monthlyChartRadio = $('#monthlyChartRadio');
 
     let tempOption = $.validator.format($.trim(page.element.tempOption.val().toString()));
+    let tempTagGroupSelect = $.validator.format($.trim(page.element.tempTagGroupSelect.val().toString()));
 
     page.commands.findAllGroups = () => {
         $.ajax({
@@ -330,7 +288,6 @@
                 DBApp.handleFailedTasks(jqXHR);
             })
     }
-
     page.commands.findAllAmzns = () => {
         $.ajax({
             type: "GET",
@@ -343,7 +300,6 @@
                 DBApp.handleFailedTasks(jqXHR);
             })
     }
-
     page.commands.findAmznInsideGroup = (groupId) => {
         if (groupId == 0) {
             page.element.analAmznSelect.find('[value!=0]').remove();
@@ -357,7 +313,7 @@
             .done((amzns) => {
                 if (amzns.length == 0) {
                     page.element.analAmznSelect.find('option').remove().end()
-                        .append(`<option value="noAmzn" selected>${noAmzn}</option>`).val('noAmzn');
+                        .append(`<option value="0" selected>${noAmzn}</option>`).val('noAmzn');
                     page.element.analAmznSelect.selectpicker('refresh');
                     return;
                 }
@@ -367,7 +323,6 @@
                 DBApp.handleFailedTasks(jqXHR);
             })
     }
-
     page.commands.renderAmznOptions = (amzns) => {
 
         page.element.analAmznSelect.find('option').remove().end()
@@ -380,11 +335,9 @@
         page.element.analAmznSelect.selectpicker('refresh');
 
     }
-
     page.commands.addGroupToSelect = (group) => {
         page.element.analGrpSelect.append($(tempOption(group.id, group.title)));
     }
-
     page.commands.addAmznToSelect = (amzn) => {
         page.element.analAmznSelect.append($(tempOption(amzn.id, amzn.username)));
     }
@@ -395,7 +348,6 @@
             page.commands.findAmznInsideGroup(groupId);
         })
     }
-
     page.commands.handleBtnAnalyse = () => {
         let groupId = page.element.analGrpSelect.selectpicker('val');
         let amznId = page.element.analAmznSelect.selectpicker('val');
@@ -404,10 +356,14 @@
         let endDate = page.element.dateRange.data('daterangepicker').endDate.format('DD/MM/YYYY');
         let analyticsParam = new AnalyticsParam(groupId, amznId, dateFilter, starDate, endDate);
 
+        if(groupId != 0 && amznId == 0) {
+            CommonApp.IziToast.showErrorAlert(noAmznVi);
+            return;
+        }
+
         page.commands.getChart(analyticsParam);
         page.commands.getProductAnalytics(analyticsParam);
     }
-
     page.commands.handleCustomDateRange = () => {
         $('input[type=radio][name=dateFilter]').change(function () {
             if (this.value === 'custom') {
@@ -417,7 +373,6 @@
             }
         });
     }
-
     page.commands.handleDailyOrMonthLyChart = () => {
         $('input[type=radio][name=dailyOrMonthly]').change(function () {
             if (this.value === 'daily') {
@@ -437,27 +392,86 @@
                     ]
                 });
             } else {
-                let royaltiesSum = dataOfChart.royalties.reduce((royaltiesSum, e) => royaltiesSum + e, 0);
-                let roundedRoyaltiesSum = Math.round((royaltiesSum + Number.EPSILON) * 100) / 100;
-                let soldSum = dataOfChart.soldNumbers.reduce((soldSum, e) => soldSum + e, 0)
-                let monthTitle = dataOfChart.dates[0].substring(3);
+                // let royaltiesSum = dataOfChart.royalties.reduce((royaltiesSum, e) => royaltiesSum + e, 0);
+                // let roundedRoyaltiesSum = Math.round((royaltiesSum + Number.EPSILON) * 100) / 100;
+                // let soldSum = dataOfChart.soldNumbers.reduce((soldSum, e) => soldSum + e, 0)
+                // let monthTitle = dataOfChart.dates[0].substring(3);
+
+                let monthlyOrderChartResult = page.commands.handleMonthlyChartData(dataOfChart);
+
                 chart.updateOptions({
                     xaxis: {
-                        categories: [monthTitle]
+                        categories: monthlyOrderChartResult.monthList
                     },
                     series: [
                         {
                             name: "Royalties",
-                            data: [roundedRoyaltiesSum],
+                            data: monthlyOrderChartResult.royaltiesList,
                         },
                         {
                             name: "Sold",
-                            data: [soldSum],
+                            data: monthlyOrderChartResult.soldNumbersList,
                         }
                     ]
                 });
             }
         });
+    }
+    page.commands.handleMonthlyChartData = (data) => {
+        let dailyRevenueArray = [];
+        let dateCount = data.dates.length;
+        for (let i = 0; i < dateCount; i++) {
+            let dailyRevenue = new DailyRevenue(data.dates[i], data.royalties[i], data.soldNumbers[i]);
+            dailyRevenueArray.push(dailyRevenue);
+        }
+
+        let monthGroup = CommonApp.groupBy(dailyRevenueArray, dailyRevenue => dailyRevenue.date.substring(3));
+
+        let monthTitle = [];
+        let royaltiesSum = [];
+        let soldNumbersSum = [];
+
+        for (let [key, value] of monthGroup.entries()) {
+            monthTitle.push(key);
+            let royalties = 0;
+            let soldNumbers = 0;
+            value.forEach((item, index) => {
+                royalties += item.royalties;
+                soldNumbers += item.soldNumbers;
+            })
+            let roundedRoyalties = Math.round((royalties + Number.EPSILON) * 100) / 100;
+            royaltiesSum.push(roundedRoyalties);
+            soldNumbersSum.push(soldNumbers);
+        }
+
+        return new MonthlyOrderChartResult(monthTitle, royaltiesSum, soldNumbersSum);
+    }
+
+    page.commands.findAllTagGroupsAndTagsInside = () => {
+        $.ajax({
+            type: "GET",
+            url: page.urls.findAllTagGroupsAndTagsInside
+        })
+            .done((fullTagGroupsTagResultList) => {
+
+                $.each(fullTagGroupsTagResultList, (index, element) => {
+                    page.commands.addTagGroupToFilterArea(element.tagGroup);
+                    $.each(element.tagResultList, (index, tagResult) => {
+                        page.commands.addTagOptionToTagGroupSelect(tagResult);
+                    })
+                });
+            })
+            .fail((jqXHR) => {
+                DBApp.handleFailedTasks(jqXHR);
+            })
+    }
+
+    page.commands.addTagGroupToFilterArea = (tagGroup) => {
+        page.element.tagGroupIncludeArea.append($(tempTagGroupSelect(tagGroup.name)));
+        page.element.tagGroupExcludeArea.append($(tempTagGroupSelect(tagGroup.name)));
+    }
+    page.commands.addTagOptionToTagGroupSelect = (tagResult) => {
+        $('.tag-group-select').append($(tempOption(tagResult.id, tagResult.name)))
     }
 
     //Analytics Sales Chart
@@ -648,12 +662,10 @@
     }
 
     // Analytics Sales Table
-    // page.element.btnProductFilter = $('#btnProductFilter');
     page.element.tableProductAnalyticsBody = $('#tableProductAnalytics tbody');
     page.element.tempTableProductAnalytics = $('#tempTableProductAnalytics');
     page.element.tempProductTag = $('#tempProductTag');
 
-    // page.dialogs.element.mdProductAnalyticsFilter = $('#mdProductAnalyticsFilter');
     page.element.productAnalDateRange = $('#productAnalDateRange')
     page.element.btnAnalyseProductFilter = $('#btnAnalyseProductFilter');
     page.element.btnResetProductFilter = $('#btnResetProductFilter');
@@ -676,7 +688,7 @@
                     page.commands.addProductAnalyticsToTable(item.productResult);
 
                     let tdId = `${item.productResult.asin}-${item.productResult.amznAccUsername}`;
-                    $.each(item.brgProductTagGroupList, (index, item) => {
+                    $.each(item.tagGroupTagResultList, (index, item) => {
                         page.commands.addTagToProductTable(tdId, item);
                     })
                 })
@@ -691,13 +703,15 @@
             shortProductName, productAnalytics.quantitySold, productAnalytics.royalties,
             productAnalytics.price, productAnalytics.amznAccUsername)));
     }
-    page.commands.addTagToProductTable = (tdId, brgProductTag) => {
-        $(`#${tdId}`).prepend($(tempProductTag(brgProductTag.tagGroup.id, 'Success')))
+    page.commands.addTagToProductTable = (tdId, tagGroupTagResult) => {
+        $(`#${tdId}`).prepend($(tempProductTag(tagGroupTagResult.tagGroupId, tagGroupTagResult.tagName)))
     }
+
     $(document).ready(function () {
         DBApp.handleGroupsFilterSidebar();
         page.commands.findAllGroups();
         page.commands.findAllAmzns();
+        page.commands.findAllTagGroupsAndTagsInside();
         page.commands.handleAnalGrpSelect();
         page.commands.handleCustomDateRange();
         page.commands.handleDailyOrMonthLyChart();
@@ -716,9 +730,6 @@
                 format: "DD/MM/YYYY"
             }
         });
-        // page.element.btnProductFilter.click(() => {
-        //     page.dialogs.element.mdProductAnalyticsFilter.modal('show');
-        // })
     });
 
 </script>

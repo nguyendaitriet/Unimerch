@@ -3,11 +3,11 @@
 <th:block th:fragment="temp-table-product-analytics">
     <textarea id="tempTableProductAnalytics" style="display:none">
         <tr>
-            <td rowspan="2" class="align-middle text-center">{0}</td>
+            <td rowspan="2" class="text-center align-middle font-weight-bold text-dark">{2}</td>
             <td>
-                <a href='https://www.amazon.com/dp/{0}' target='_blank'>{1}</a>
+                <a href='https://www.amazon.com/dp/{0}' target='_blank' title={0}>{1}</a>
+                <span class="font-weight-light">{0}</span>
             </td>
-            <td class="text-center font-weight-bold text-dark">{2}</td>
             <td class="text-center">{3}</td>
             <td class="text-center">{4}</td>
             <td class="text-center">{5}</td>

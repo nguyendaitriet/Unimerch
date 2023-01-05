@@ -6,10 +6,12 @@ import com.unimerch.dto.analytics.ProductAnalyticsResult;
 import com.unimerch.dto.order.OrderChartColumn;
 import com.unimerch.dto.order.OrderChartResult;
 import com.unimerch.dto.product.ProductResult;
+import com.unimerch.dto.tag.TagGroupTagResult;
 import com.unimerch.exception.ServerErrorException;
 import com.unimerch.mapper.OrderMapper;
 import com.unimerch.mapper.ProductMapper;
 import com.unimerch.repository.native_query_dto.order.OrderNativeQueryDTORepo;
+import com.unimerch.repository.product.BrgProductTagTagGroupRepository;
 import com.unimerch.repository.product.ProductRepository;
 import com.unimerch.service.AnalyticService;
 import com.unimerch.util.TimeUtils;
@@ -30,6 +32,8 @@ public class AnalyticServiceImpl implements AnalyticService {
     private OrderNativeQueryDTORepo orderNativeQueryDTORepo;
     @Autowired
     private ProductRepository productRepository;
+    @Autowired
+    private BrgProductTagTagGroupRepository brgProductTagTagGroupRepo;
     @Autowired
     private ProductMapper productMapper;
     @Autowired
@@ -207,10 +211,13 @@ public class AnalyticServiceImpl implements AnalyticService {
     }
 
     public List<ProductAnalyticsResult> processProductResultList(List<ProductResult> productResultList) {
-//        return productResultList.stream()
-//                .sorted((o1, o2) -> Integer.compare(o2.getQuantitySold(), o1.getQuantitySold()))
-//                .map(productResult -> productMapper.toProductAnalyticsResult(productResult)).collect(Collectors.toList());
-        return null;
+        return productResultList.stream()
+                .sorted((o1, o2) -> Integer.compare(o2.getQuantitySold(), o1.getQuantitySold()))
+                .map(productResult -> {
+                    List<TagGroupTagResult> tagGroupTagResultList = brgProductTagTagGroupRepo.findTagGroupAndTagByAsin(productResult.getAsin());
+                    return productMapper.toProductAnalyticsResult(productResult, tagGroupTagResultList);
+                }).collect(Collectors.toList());
+//        return null;
     }
 
 }
