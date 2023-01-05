@@ -56,7 +56,7 @@ public class TagGroupServiceImpl implements TagGroupService {
 
     @Override
     public void deleteTagGroup(int id) {
-        tagGroupRepository.deleteTagGroupAssociateProduct(id);
+//        tagGroupRepository.deleteTagGroupAssociateProduct(id);
         tagGroupRepository.deleteTagGroupAssociateTag(id);
         tagGroupRepository.deleteById(id);
     }

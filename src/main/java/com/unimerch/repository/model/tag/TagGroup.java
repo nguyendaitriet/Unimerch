@@ -22,4 +22,7 @@ public class TagGroup {
     @Column(name = "name", nullable = false, length = 200)
     private String name;
 
+    @Column(name = "color", nullable = false, length = 200)
+    private String color;
+
 }

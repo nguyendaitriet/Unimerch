@@ -12,10 +12,10 @@ import javax.transaction.Transactional;
 @Repository
 @Transactional
 public interface TagGroupRepository extends JpaRepository<TagGroup, Integer> {
-    @Query("DELETE FROM BrgProductTagGroup AS br " +
-            "WHERE (br.tagGroup.id = :tagGroupId) ")
-    @Modifying
-    void deleteTagGroupAssociateProduct(@Param("tagGroupId") Integer tagGroupId);
+//    @Query("DELETE FROM BrgProductTagGroup AS br " +
+//            "WHERE (br.tagGroup.id = :tagGroupId) ")
+//    @Modifying
+//    void deleteTagGroupAssociateProduct(@Param("tagGroupId") Integer tagGroupId);
 
     @Query("DELETE FROM BrgTagGroupTag AS br " +
             "WHERE (br.tagGroup.id = :tagGroupId) ")
