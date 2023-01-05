@@ -12,7 +12,7 @@ import javax.persistence.*;
 @AllArgsConstructor
 @Getter
 @Setter
-@Table(name = "brg_tagGroup_tag")
+@Table(name = "brg_tag_group_tag")
 public class BrgTagGroupTag {
 
     @GeneratedValue(strategy = GenerationType.IDENTITY)
