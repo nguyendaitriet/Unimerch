@@ -13,16 +13,12 @@ import com.unimerch.mapper.ProductMapper;
 import com.unimerch.repository.native_query_dto.order.OrderNativeQueryDTORepo;
 import com.unimerch.repository.product.BrgProductTagTagGroupRepository;
 import com.unimerch.repository.product.ProductRepository;
-import com.unimerch.service.analytics.AnalyticService;
 import com.unimerch.util.TimeUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
-import java.text.DateFormat;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.time.Instant;
 import java.time.Period;
 import java.util.*;

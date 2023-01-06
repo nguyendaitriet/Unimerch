@@ -19,7 +19,7 @@ public interface BrgProductTagTagGroupRepository extends JpaRepository<BrgProduc
                 "b.id.brgTagGroupTag.tag.name" +
             ") " +
             "FROM BrgProductTagTagGroup AS b " +
-            "WHERE b.product.id = :asin"
+            "WHERE b.id.productId = :asin"
     )
     List<TagGroupTagResult> findTagGroupAndTagByAsin(@Param("asin") String asin);
 }

@@ -452,10 +452,12 @@
 
                 $.each(fullTagGroupsTagResultList, (index, element) => {
                     page.commands.addTagGroupToFilterArea(element.tagGroup);
+                    let tagGroupId = element.tagGroup.id;
                     $.each(element.tagResultList, (index, tagResult) => {
-                        page.commands.addTagOptionToTagGroupSelect(tagResult);
+                        page.commands.addTagOptionToTagGroupSelect(tagGroupId, tagResult);
                     })
                 });
+                // var tagGroupSelect = new Choices('.tag-group-select');
             })
             .fail((jqXHR) => {
                 DBApp.handleFailedTasks(jqXHR);
@@ -463,11 +465,11 @@
     }
 
     page.commands.addTagGroupToFilterArea = (tagGroup) => {
-        page.element.tagGroupIncludeArea.append($(tempTagGroupSelect(tagGroup.name)));
-        page.element.tagGroupExcludeArea.append($(tempTagGroupSelect(tagGroup.name)));
+        page.element.tagGroupIncludeArea.append($(tempTagGroupSelect(tagGroup.id, tagGroup.name, tagGroup.color)));
+        page.element.tagGroupExcludeArea.append($(tempTagGroupSelect(tagGroup.id, tagGroup.name, tagGroup.color)));
     }
-    page.commands.addTagOptionToTagGroupSelect = (tagResult) => {
-        $('.tag-group-select').append($(tempOption(tagResult.id, tagResult.name)))
+    page.commands.addTagOptionToTagGroupSelect = (tagGroupId, tagResult) => {
+        $(`.tag-group-select-id-${tagGroupId}`).append($(tempOption(tagResult.id, tagResult.name)))
     }
 
     //Analytics Sales Chart
@@ -680,6 +682,8 @@
             data: JSON.stringify(analyticsParam)
         })
             .done((productAnalyticsList) => {
+                page.element.tableProductAnalyticsBody.html('');
+
                 $.each(productAnalyticsList, (index, item) => {
                     page.commands.addProductAnalyticsToTable(item.productResult);
 

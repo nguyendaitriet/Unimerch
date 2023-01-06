@@ -25,10 +25,10 @@ public class BrgProductTagTagGroup {
     @EmbeddedId
     private BrgProductTagTagGroupId id;
 
-    @MapsId("productId")
-    @ManyToOne(optional = false)
-    @JoinColumn(name = "ASIN", nullable = false)
-    private Product product;
+//    @MapsId("productId")
+//    @ManyToOne(optional = false)
+//    @JoinColumn(name = "ASIN", nullable = false)
+//    private Product product;
 
 //    @MapsId("tagGroupId")
 //    @ManyToOne(optional = false)
