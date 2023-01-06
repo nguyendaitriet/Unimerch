@@ -472,7 +472,7 @@
         })
             .done((data) => {
                 tableTagContent.rows({selected: true}).remove().draw();
-                //Delete TagGroup Content In TagGroup
+                //Delete TagGroup Content In TagGroup -> Not Yet
                 CommonApp.SweetAlert.showSuccessAlert(SUCCESS_REMOVED);
             })
             .fail(function (jqXHR) {
@@ -480,6 +480,16 @@
             })
 
     }
+
+    page.dialogs.commands.changeSelectBackgroundColorByOption = (selectEle) => {
+        $(selectEle).change(function () {
+            $(this).removeClass (function (index, className) {
+                return (className.match (/(^|\s)btn-\S+/g) || []).join(' ');
+            });
+            $(this).addClass(`btn-${$(this).val()}`);
+        })
+    }
+
     page.dialogs.close.mdCreateTagContent = () => {
         page.dialogs.element.frmCreateTagContent.find("input.error").removeClass("error");
         page.dialogs.element.frmCreateTagContent[0].reset();
@@ -700,6 +710,8 @@
             currentRowTagGroup = tableTagGroup.row($(this).parents('tr'));
             currentTagGroup = currentRowTagGroup.data();
             page.dialogs.element.tagGroupNameUpdate.val(currentTagGroup.name);
+            page.dialogs.element.tagGroupColorUpdate.addClass(`btn-${currentTagGroup.color}`);
+            page.dialogs.element.tagGroupColorUpdate.val(currentTagGroup.color);
             page.dialogs.element.mdUpdateTagGroup.modal('show');
         });
         page.element.tableTagGroup.on('click', 'button.delete-tagGroup', function () {
@@ -979,6 +991,9 @@
                 page.dialogs.commands.doCreateTagContent();
             }
         })
+
+        page.dialogs.commands.changeSelectBackgroundColorByOption('#tagColorCreate');
+        page.dialogs.commands.changeSelectBackgroundColorByOption('#tagColorUpdate');
 
         CommonApp.enableEnterKeyboard(page.dialogs.element.mdCreateTagGroup, page.dialogs.element.btnCreateTagGroup);
         // CommonApp.enableEnterKeyboard(page.dialogs.element.mdUpdateTagGroup, page.dialogs.element.btnUpdateTagGroup);

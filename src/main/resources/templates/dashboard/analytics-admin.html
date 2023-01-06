@@ -182,7 +182,10 @@
                                             </div>
                                         </div>
                                     </div>
-                                </div>
+                                    <div class="col-md-8" id="tagGroupLegend">
+
+                                    </div>
+                                    </div>
                                 <div class="row mt-3">
                                     <div class="table-responsive" style="width: 80%">
                                         <table class="table table-bordered table-sm" id="tableProductAnalytics">
@@ -234,6 +237,7 @@
 <th:block th:replace="dashboard/temp/temp-option :: temp-tagGroup-select"/>
 <th:block th:replace="dashboard/temp/temp-table-product-analytics :: temp-table-product-analytics"/>
 <th:block th:replace="dashboard/temp/temp-table-product-analytics :: temp-product-tagGroup"/>
+<th:block th:replace="dashboard/temp/temp-table-product-analytics :: temp-tagGroup-legend"/>
 <th:block th:replace="layout/texts :: texts"/>
 <th:block th:replace="layout/script :: script-dashboard"/>
 
@@ -261,8 +265,10 @@
     page.element.analAmznSelect = $('#analAmznSelect');
     page.element.tempOption = $('#tempOption');
     page.element.tempTagGroupSelect = $('#tempTagGroupSelect');
+    page.element.tempTagGroupLegend = $('#tempTagGroupLegend');
     page.element.tagGroupIncludeArea = $('#tagGroupIncludeArea');
     page.element.tagGroupExcludeArea = $('#tagGroupExcludeArea');
+    page.element.tagGroupLegendArea = $('#tagGroupLegend');
     page.element.dateRange = $('#dateRange');
     page.element.btnAnalyse = $('#btnAnalyse');
     page.element.customDateFilter = $('#customDateFilter');
@@ -272,6 +278,7 @@
 
     let tempOption = $.validator.format($.trim(page.element.tempOption.val().toString()));
     let tempTagGroupSelect = $.validator.format($.trim(page.element.tempTagGroupSelect.val().toString()));
+    let tempTagGroupLegend = $.validator.format($.trim(page.element.tempTagGroupLegend.val().toString()));
 
     page.commands.findAllGroups = () => {
         $.ajax({
@@ -392,9 +399,7 @@
                     ]
                 });
             } else {
-
                 let monthlyOrderChartResult = page.commands.handleMonthlyChartData(dataOfChart);
-
                 chart.updateOptions({
                     xaxis: {
                         categories: monthlyOrderChartResult.monthList
@@ -452,6 +457,7 @@
 
                 $.each(fullTagGroupsTagResultList, (index, element) => {
                     page.commands.addTagGroupToFilterArea(element.tagGroup);
+                    page.commands.addTagGroupToTagGroupLegend(element.tagGroup);
                     let tagGroupId = element.tagGroup.id;
                     $.each(element.tagResultList, (index, tagResult) => {
                         page.commands.addTagOptionToTagGroupSelect(tagGroupId, tagResult);
@@ -467,6 +473,9 @@
     page.commands.addTagGroupToFilterArea = (tagGroup) => {
         page.element.tagGroupIncludeArea.append($(tempTagGroupSelect(tagGroup.id, tagGroup.name, tagGroup.color)));
         page.element.tagGroupExcludeArea.append($(tempTagGroupSelect(tagGroup.id, tagGroup.name, tagGroup.color)));
+    }
+    page.commands.addTagGroupToTagGroupLegend = (tagGroup) => {
+        page.element.tagGroupLegendArea.append($(tempTagGroupLegend(tagGroup.name, tagGroup.color)));
     }
     page.commands.addTagOptionToTagGroupSelect = (tagGroupId, tagResult) => {
         $(`.tag-group-select-id-${tagGroupId}`).append($(tempOption(tagResult.id, tagResult.name)))
@@ -704,7 +713,7 @@
             productAnalytics.price, productAnalytics.amznAccUsername)));
     }
     page.commands.addTagToProductTable = (tdId, tagGroupTagResult) => {
-        $(`#${tdId}`).prepend($(tempProductTag(tagGroupTagResult.tagGroupId, tagGroupTagResult.tagName)))
+        $(`#${tdId}`).prepend($(tempProductTag(tagGroupTagResult.tagGroupId, tagGroupTagResult.tagName, tagGroupTagResult.tagGroupColor)))
     }
 
     $(document).ready(function () {

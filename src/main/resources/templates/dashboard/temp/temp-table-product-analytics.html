@@ -25,6 +25,12 @@
 
 <th:block th:fragment="temp-product-tagGroup">
     <textarea id="tempProductTag" style="display:none">
-        <span data-id={0} class="btn btn-success btn-sm product-tagGroup mr-3">{1}</span>
+        <span data-id={0} class="btn btn-{2} btn-sm product-tagGroup mr-3">{1}</span>
+    </textarea>
+</th:block>
+
+<th:block th:fragment="temp-tagGroup-legend">
+    <textarea id="tempTagGroupLegend" style="display:none">
+        <span class="btn btn-{1} mr-3">{0}</span>
     </textarea>
 </th:block>
