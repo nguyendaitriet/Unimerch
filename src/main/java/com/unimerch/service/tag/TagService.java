@@ -1,4 +1,4 @@
-package com.unimerch.service;
+package com.unimerch.service.tag;
 
 import com.unimerch.dto.tag.TagParam;
 import com.unimerch.dto.tag.TagResult;

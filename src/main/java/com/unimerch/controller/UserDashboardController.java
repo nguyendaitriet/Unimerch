@@ -1,7 +1,7 @@
 package com.unimerch.controller;
 
 import com.unimerch.dto.group.GroupResult;
-import com.unimerch.service.GroupService;
+import com.unimerch.service.group.GroupService;
 import com.unimerch.util.PrincipalUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;

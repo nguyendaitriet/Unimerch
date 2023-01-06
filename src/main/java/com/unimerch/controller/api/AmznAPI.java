@@ -2,8 +2,7 @@ package com.unimerch.controller.api;
 
 import com.unimerch.dto.amznacc.*;
 import com.unimerch.security.RoleConstant;
-import com.unimerch.service.AmznUserService;
-import com.unimerch.service.impl.AmznUserServiceImpl;
+import com.unimerch.service.amzn.AmznUserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.data.jpa.datatables.mapping.DataTablesInput;

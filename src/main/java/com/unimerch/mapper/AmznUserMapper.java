@@ -4,7 +4,7 @@ import com.unimerch.dto.amznacc.*;
 import com.unimerch.repository.model.amzn_user.AmznUser;
 import com.unimerch.repository.model.amzn_user.AzmnStatus;
 import com.unimerch.repository.model.group.BrgGroupAmznUser;
-import com.unimerch.service.OrderService;
+import com.unimerch.service.order.OrderService;
 import com.unimerch.util.TimeUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;

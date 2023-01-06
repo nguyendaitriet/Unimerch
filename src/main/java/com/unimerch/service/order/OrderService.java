@@ -1,4 +1,4 @@
-package com.unimerch.service;
+package com.unimerch.service.order;
 
 import com.unimerch.dto.order.OrderCardResult;
 import com.unimerch.dto.order.OrderChartResult;

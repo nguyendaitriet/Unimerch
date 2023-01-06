@@ -1,4 +1,4 @@
-package com.unimerch.service;
+package com.unimerch.service.user;
 
 import com.unimerch.dto.group.GroupResult;
 import com.unimerch.dto.user.CreateUserParam;

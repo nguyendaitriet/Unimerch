@@ -2,7 +2,7 @@ package com.unimerch.controller.api;
 
 import com.unimerch.dto.analytics.AnalyticsParam;
 import com.unimerch.security.RoleConstant;
-import com.unimerch.service.AnalyticService;
+import com.unimerch.service.analytics.AnalyticService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

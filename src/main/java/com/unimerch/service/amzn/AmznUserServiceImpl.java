@@ -1,4 +1,4 @@
-package com.unimerch.service.impl;
+package com.unimerch.service.amzn;
 
 import com.unimerch.dto.amznacc.*;
 import com.unimerch.exception.*;
@@ -11,8 +11,7 @@ import com.unimerch.repository.datatable.AmznAccTableRepository;
 import com.unimerch.repository.model.amzn_user.AmznUser;
 import com.unimerch.repository.model.amzn_user.AzmnStatus;
 import com.unimerch.repository.model.group.Group;
-import com.unimerch.service.AmznUserService;
-import com.unimerch.service.GroupService;
+import com.unimerch.service.group.GroupService;
 import com.unimerch.util.NaturalSortUtils;
 import com.unimerch.util.TimeUtils;
 import com.unimerch.util.ValidationUtils;

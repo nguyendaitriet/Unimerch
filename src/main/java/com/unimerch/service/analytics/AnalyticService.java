@@ -1,4 +1,4 @@
-package com.unimerch.service;
+package com.unimerch.service.analytics;
 
 import com.unimerch.dto.analytics.AnalyticsParam;
 import com.unimerch.dto.analytics.ProductAnalyticsResult;

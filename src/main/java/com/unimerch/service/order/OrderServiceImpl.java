@@ -1,4 +1,4 @@
-package com.unimerch.service.impl;
+package com.unimerch.service.order;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -15,7 +15,7 @@ import com.unimerch.repository.product.ProductRepository;
 import com.unimerch.repository.model.amzn_user.AmznUser;
 import com.unimerch.repository.model.order.Order;
 import com.unimerch.security.UserPrinciple;
-import com.unimerch.service.OrderService;
+import com.unimerch.service.order.OrderService;
 import com.unimerch.util.TimeUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;

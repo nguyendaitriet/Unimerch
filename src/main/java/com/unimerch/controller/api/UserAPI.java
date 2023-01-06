@@ -5,7 +5,7 @@ import com.unimerch.dto.user.CreateUserParam;
 import com.unimerch.dto.user.UserResult;
 import com.unimerch.security.RoleConstant;
 import com.unimerch.security.UserPrinciple;
-import com.unimerch.service.UniUserService;
+import com.unimerch.service.user.UniUserService;
 import com.unimerch.util.AppUtils;
 import com.unimerch.util.PrincipalUtils;
 import org.springframework.beans.factory.annotation.Autowired;

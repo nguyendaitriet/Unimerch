@@ -2,7 +2,7 @@ package com.unimerch.security.amzn;
 
 import com.unimerch.security.JWTUser;
 import com.unimerch.security.NameConstant;
-import com.unimerch.service.impl.JwtService;
+import com.unimerch.service.user.JwtService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;

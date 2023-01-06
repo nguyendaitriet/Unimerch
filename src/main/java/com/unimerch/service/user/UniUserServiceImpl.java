@@ -1,4 +1,4 @@
-package com.unimerch.service.impl;
+package com.unimerch.service.user;
 
 import com.unimerch.dto.group.GroupResult;
 import com.unimerch.dto.user.CreateUserParam;
@@ -16,9 +16,8 @@ import com.unimerch.repository.user.UserRepository;
 import com.unimerch.repository.datatable.UserDataTableRepository;
 import com.unimerch.repository.model.metamodel.User_;
 import com.unimerch.security.UserPrinciple;
-import com.unimerch.service.UniUserService;
+import com.unimerch.service.group.GroupServiceImpl;
 import com.unimerch.util.NaturalSortUtils;
-import com.unimerch.util.PrincipalUtils;
 import com.unimerch.util.ValidationUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;

@@ -1,4 +1,4 @@
-package com.unimerch.service;
+package com.unimerch.service.user;
 
 import com.unimerch.repository.model.user.Role;
 

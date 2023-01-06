@@ -7,7 +7,7 @@ import com.unimerch.dto.group.GroupResult;
 import com.unimerch.dto.group.GroupUpdateParam;
 import com.unimerch.repository.model.group.Group;
 import com.unimerch.security.RoleConstant;
-import com.unimerch.service.GroupService;
+import com.unimerch.service.group.GroupService;
 import com.unimerch.util.AppUtils;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;

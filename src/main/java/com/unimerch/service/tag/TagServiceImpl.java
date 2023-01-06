@@ -1,4 +1,4 @@
-package com.unimerch.service.impl;
+package com.unimerch.service.tag;
 
 import com.unimerch.dto.tag.TagParam;
 import com.unimerch.dto.tag.TagResult;
@@ -7,7 +7,7 @@ import com.unimerch.mapper.TagMapper;
 import com.unimerch.repository.model.tag.Tag;
 import com.unimerch.repository.tag.BrgTagGroupTagRepository;
 import com.unimerch.repository.tag.TagRepository;
-import com.unimerch.service.TagService;
+import com.unimerch.service.tag.TagService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
 import org.springframework.stereotype.Service;

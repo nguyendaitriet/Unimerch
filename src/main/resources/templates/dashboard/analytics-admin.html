@@ -313,7 +313,7 @@
             .done((amzns) => {
                 if (amzns.length == 0) {
                     page.element.analAmznSelect.find('option').remove().end()
-                        .append(`<option value="0" selected>${noAmzn}</option>`).val('noAmzn');
+                        .append(`<option value='noAmzn' selected>${noAmzn}</option>`).val('noAmzn');
                     page.element.analAmznSelect.selectpicker('refresh');
                     return;
                 }
@@ -356,7 +356,7 @@
         let endDate = page.element.dateRange.data('daterangepicker').endDate.format('DD/MM/YYYY');
         let analyticsParam = new AnalyticsParam(groupId, amznId, dateFilter, starDate, endDate);
 
-        if(groupId != 0 && amznId == 0) {
+        if(groupId != 0 && amznId == 'noAmzn') {
             CommonApp.IziToast.showErrorAlert(noAmznVi);
             return;
         }
@@ -392,10 +392,6 @@
                     ]
                 });
             } else {
-                // let royaltiesSum = dataOfChart.royalties.reduce((royaltiesSum, e) => royaltiesSum + e, 0);
-                // let roundedRoyaltiesSum = Math.round((royaltiesSum + Number.EPSILON) * 100) / 100;
-                // let soldSum = dataOfChart.soldNumbers.reduce((soldSum, e) => soldSum + e, 0)
-                // let monthTitle = dataOfChart.dates[0].substring(3);
 
                 let monthlyOrderChartResult = page.commands.handleMonthlyChartData(dataOfChart);
 
@@ -431,7 +427,7 @@
         let royaltiesSum = [];
         let soldNumbersSum = [];
 
-        for (let [key, value] of monthGroup.entries()) {
+        monthGroup.forEach(function(value, key) {
             monthTitle.push(key);
             let royalties = 0;
             let soldNumbers = 0;
@@ -442,7 +438,7 @@
             let roundedRoyalties = Math.round((royalties + Number.EPSILON) * 100) / 100;
             royaltiesSum.push(roundedRoyalties);
             soldNumbersSum.push(soldNumbers);
-        }
+        })
 
         return new MonthlyOrderChartResult(monthTitle, royaltiesSum, soldNumbersSum);
     }
