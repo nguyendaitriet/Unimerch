@@ -1,0 +1,26 @@
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+
+<th:block th:fragment="temp-product-tagGroup-handler">
+    <textarea id="tempProductTagGroupHandler" style="display:none">
+        <li class="list-group-item rounded-0">
+            <div class="custom-control custom-checkbox">
+                <span class="btn btn-{2}">{1}<span>
+            </div>
+            <div id="productTagGroup-{0}" class="custom-control mt-3">
+
+            </div>
+        </li>
+    </textarea>
+</th:block>
+
+<th:block th:fragment="temp-product-tag-handler">
+    <textarea id="tempProductTagHandler" style="display:none">
+        <div class="form-check form-check-inline custom-checkbox mr-5">
+            <input class="custom-control-input" id="productTag-{2}-{0}" type="checkbox">
+            <label class="cursor-pointer font-italic d-block custom-control-label"
+                   for="productTag-{2}-{0}">{1}</label>
+        </div>
+    </textarea>
+</th:block>
+
+</html>

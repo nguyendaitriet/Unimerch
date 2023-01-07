@@ -24,12 +24,6 @@ public class BrgProductTagTagGroupId implements Serializable {
     @Column(name = "ASIN", nullable = false, length = 150)
     private String productId;
 
-//    @Column(name = "tag_group_id", nullable = false)
-//    private Integer tagGroupId;
-//
-//    @Column(name = "tag_id", nullable = false)
-//    private Integer tagId;
-
     @ManyToOne
     @JoinColumns({
             @JoinColumn(name = "tag_group_id", referencedColumnName = "tag_group_id"),
@@ -43,7 +37,6 @@ public class BrgProductTagTagGroupId implements Serializable {
         if (o == null || Hibernate.getClass(this) != Hibernate.getClass(o)) return false;
         BrgProductTagTagGroupId entity = (BrgProductTagTagGroupId) o;
         return Objects.equals(this.productId, entity.productId) &&
-//                Objects.equals(this.tagId, entity.tagId) &&
                 Objects.equals(this.brgTagGroupTag, entity.brgTagGroupTag);
     }
 

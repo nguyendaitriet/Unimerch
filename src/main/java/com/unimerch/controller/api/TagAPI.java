@@ -36,6 +36,12 @@ public class TagAPI {
     }
 
     @RoleConstant.ManagerUserAuthorization
+    @GetMapping("/findAllProductTagsByAsin/{asin}")
+    public ResponseEntity<?> findAllProductTagsByAsin(@PathVariable("asin") String asin) {
+        return new ResponseEntity<>(tagGroupService.findAllProductTagsByAsin(asin), HttpStatus.OK);
+    }
+
+    @RoleConstant.ManagerUserAuthorization
     @GetMapping("/getAllTags")
     public ResponseEntity<?> getAllTags() {
         return new ResponseEntity<>(tagService.findAll(), HttpStatus.OK);

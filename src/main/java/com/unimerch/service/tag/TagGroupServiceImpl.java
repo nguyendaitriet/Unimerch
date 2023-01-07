@@ -1,10 +1,12 @@
 package com.unimerch.service.tag;
 
 import com.unimerch.dto.tag.FullTagGroupTagResult;
+import com.unimerch.dto.tag.TagGroupTagIdResult;
 import com.unimerch.dto.tag.TagResult;
 import com.unimerch.exception.InvalidIdException;
 import com.unimerch.mapper.TagMapper;
 import com.unimerch.repository.model.tag.*;
+import com.unimerch.repository.product.BrgProductTagTagGroupRepository;
 import com.unimerch.repository.tag.BrgTagGroupTagRepository;
 import com.unimerch.repository.tag.TagRepository;
 import com.unimerch.repository.tag.TagGroupRepository;
@@ -29,6 +31,8 @@ public class TagGroupServiceImpl implements TagGroupService {
     @Autowired
     private BrgTagGroupTagRepository brgTagGroupTagRepo;
     @Autowired
+    private BrgProductTagTagGroupRepository brgProductTagTagGroupRepo;
+    @Autowired
     private TagMapper tagMapper;
 
     @Override
@@ -51,6 +55,11 @@ public class TagGroupServiceImpl implements TagGroupService {
         }).collect(Collectors.toList());
 
         return fullTagGroupTagResultList;
+    }
+
+    @Override
+    public List<TagGroupTagIdResult> findAllProductTagsByAsin(String asin) {
+        return brgProductTagTagGroupRepo.findTagGroupAndTagIdByAsin(asin);
     }
 
     @Override

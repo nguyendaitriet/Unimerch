@@ -25,25 +25,4 @@ public class BrgProductTagTagGroup {
     @EmbeddedId
     private BrgProductTagTagGroupId id;
 
-//    @MapsId("productId")
-//    @ManyToOne(optional = false)
-//    @JoinColumn(name = "ASIN", nullable = false)
-//    private Product product;
-
-//    @MapsId("tagGroupId")
-//    @ManyToOne(optional = false)
-//    @JoinColumn(name = "tag_group_id", nullable = false)
-//    private TagGroup tagGroup;
-//
-//    @MapsId("tagId")
-//    @ManyToOne(optional = false)
-//    @JoinColumn(name = "tag_id", nullable = false)
-//    private Tag tag;
-
-//    @ManyToOne
-//    @JoinColumns({
-//            @JoinColumn(referencedColumnName="tag_group_id"),
-//            @JoinColumn(referencedColumnName="tag_id")
-//    })
-//    private BrgTagGroupTag tagGroupTag;
 }

@@ -39,10 +39,13 @@
                                     <div class="col-md-8">
                                         <div class="row">
                                             <select class="selectpicker" id="analGrpSelect" data-live-search="true">
-                                                <option value="0" th:text="#{analyse.allGroupsSelect}">All Groups</option>
+                                                <option value="0" th:text="#{analyse.allGroupsSelect}">All Groups
+                                                </option>
                                             </select>
-                                            <select class="selectpicker ml-3" id="analAmznSelect" data-live-search="true">
-                                                <option value="0" th:text="#{analyse.allAmznsSelect}">All Amazon Accounts
+                                            <select class="selectpicker ml-3" id="analAmznSelect"
+                                                    data-live-search="true">
+                                                <option value="0" th:text="#{analyse.allAmznsSelect}">All Amazon
+                                                    Accounts
                                                 </option>
                                             </select>
                                         </div>
@@ -64,12 +67,14 @@
                                                     This month
                                                 </label>
                                                 <label class="btn btn-outline-info">
-                                                    <input value="previousMonth" type="radio" name="dateFilter" id="option4"
+                                                    <input value="previousMonth" type="radio" name="dateFilter"
+                                                           id="option4"
                                                            autocomplete="off">
                                                     Previous month
                                                 </label>
                                                 <label class="btn btn-outline-info">
-                                                    <input value="custom" type="radio" name="dateFilter" id="customDateFilter"
+                                                    <input value="custom" type="radio" name="dateFilter"
+                                                           id="customDateFilter"
                                                            autocomplete="off">
                                                     Custom
                                                 </label>
@@ -93,7 +98,8 @@
                                             <button id="btnAnalyse" class="btn btn-primary text-uppercase" type="button"
                                                     th:text="#{analyse.btn.analyseSale}">ANALYSE SALES
                                             </button>
-                                            <button type="button" class="btn btn-secondary ml-3" id="btnResetProductFilter"
+                                            <button type="button" class="btn btn-secondary ml-3"
+                                                    id="btnResetProductFilter"
                                                     th:text="#{analyse.btn.reset}">Reset
                                             </button>
                                         </div>
@@ -185,7 +191,7 @@
                                     <div class="col-md-8" id="tagGroupLegend">
 
                                     </div>
-                                    </div>
+                                </div>
                                 <div class="row mt-3">
                                     <div class="table-responsive" style="width: 80%">
                                         <table class="table table-bordered table-sm" id="tableProductAnalytics">
@@ -238,6 +244,9 @@
 <th:block th:replace="dashboard/temp/temp-table-product-analytics :: temp-table-product-analytics"/>
 <th:block th:replace="dashboard/temp/temp-table-product-analytics :: temp-product-tagGroup"/>
 <th:block th:replace="dashboard/temp/temp-table-product-analytics :: temp-tagGroup-legend"/>
+<th:block th:replace="dashboard/temp/temp-product-tag-handler :: temp-product-tagGroup-handler"/>
+<th:block th:replace="dashboard/temp/temp-product-tag-handler :: temp-product-tag-handler"/>
+<th:block th:replace="layout/modals-analytics :: product-tag-handler"/>
 <th:block th:replace="layout/texts :: texts"/>
 <th:block th:replace="layout/script :: script-dashboard"/>
 
@@ -249,7 +258,8 @@
             findAmznsInsideGroup: CommonApp.BASE_URL_GROUP + "/showAmznAccInsideGroup",
             getAnalyticsSale: CommonApp.BASE_URL_ANALYTICS,
             getProductAnalytics: CommonApp.BASE_URL_ANALYTICS + "/getProductAnalytics",
-            findAllTagGroupsAndTagsInside: CommonApp.BASE_URL_TAG + "/findAllTagGroupsAndTagsInside"
+            findAllTagGroupsAndTagsInside: CommonApp.BASE_URL_TAG + "/findAllTagGroupsAndTagsInside",
+            findAllProductTagsByAsin: CommonApp.BASE_URL_TAG + "/findAllProductTagsByAsin/"
         },
         element: {},
         commands: {},
@@ -257,7 +267,8 @@
             element: {},
             alertDanger: {},
             inputError: {},
-            messages: {}
+            messages: {},
+            commands: {}
         }
     }
 
@@ -266,6 +277,8 @@
     page.element.tempOption = $('#tempOption');
     page.element.tempTagGroupSelect = $('#tempTagGroupSelect');
     page.element.tempTagGroupLegend = $('#tempTagGroupLegend');
+    page.element.tempProductTagGroupHandler = $('#tempProductTagGroupHandler');
+    page.element.tempProductTagHandler = $('#tempProductTagHandler');
     page.element.tagGroupIncludeArea = $('#tagGroupIncludeArea');
     page.element.tagGroupExcludeArea = $('#tagGroupExcludeArea');
     page.element.tagGroupLegendArea = $('#tagGroupLegend');
@@ -279,6 +292,8 @@
     let tempOption = $.validator.format($.trim(page.element.tempOption.val().toString()));
     let tempTagGroupSelect = $.validator.format($.trim(page.element.tempTagGroupSelect.val().toString()));
     let tempTagGroupLegend = $.validator.format($.trim(page.element.tempTagGroupLegend.val().toString()));
+    let tempProductTagGroupHandler = $.validator.format($.trim(page.element.tempProductTagGroupHandler.val().toString()));
+    let tempProductTagHandler = $.validator.format($.trim(page.element.tempProductTagHandler.val().toString()));
 
     page.commands.findAllGroups = () => {
         $.ajax({
@@ -363,7 +378,7 @@
         let endDate = page.element.dateRange.data('daterangepicker').endDate.format('DD/MM/YYYY');
         let analyticsParam = new AnalyticsParam(groupId, amznId, dateFilter, starDate, endDate);
 
-        if(groupId != 0 && amznId == 'noAmzn') {
+        if (groupId != 0 && amznId == 'noAmzn') {
             CommonApp.IziToast.showErrorAlert(noAmznVi);
             return;
         }
@@ -432,7 +447,7 @@
         let royaltiesSum = [];
         let soldNumbersSum = [];
 
-        monthGroup.forEach(function(value, key) {
+        monthGroup.forEach(function (value, key) {
             monthTitle.push(key);
             let royalties = 0;
             let soldNumbers = 0;
@@ -458,9 +473,11 @@
                 $.each(fullTagGroupsTagResultList, (index, element) => {
                     page.commands.addTagGroupToFilterArea(element.tagGroup);
                     page.commands.addTagGroupToTagGroupLegend(element.tagGroup);
+                    page.dialogs.commands.addTagGroupToTagHandler(element.tagGroup);
                     let tagGroupId = element.tagGroup.id;
                     $.each(element.tagResultList, (index, tagResult) => {
                         page.commands.addTagOptionToTagGroupSelect(tagGroupId, tagResult);
+                        page.dialogs.commands.addTagToTagHandler(tagGroupId, tagResult);
                     })
                 });
                 // var tagGroupSelect = new Choices('.tag-group-select');
@@ -716,6 +733,38 @@
         $(`#${tdId}`).prepend($(tempProductTag(tagGroupTagResult.tagGroupId, tagGroupTagResult.tagName, tagGroupTagResult.tagGroupColor)))
     }
 
+    // Product Tag Handler
+
+    page.dialogs.element.mdProductTagHandler = $('#mdProductTagHandler');
+    page.dialogs.element.tagHandlerProductAsin = $('#tagHandlerProductAsin');
+    page.dialogs.element.tagHandlerTagGroupArea = $('#tagHandlerTagGroupArea');
+    page.dialogs.element.btnSaveTagHandler = $('#btnSaveTagHandler');
+
+    page.dialogs.commands.addTagGroupToTagHandler = (tagGroup) => {
+        page.dialogs.element.tagHandlerTagGroupArea.append($(tempProductTagGroupHandler(tagGroup.id, tagGroup.name, tagGroup.color)));
+    }
+    page.dialogs.commands.addTagToTagHandler = (tagGroupId, tagResult) => {
+        $(`#productTagGroup-${tagGroupId}`).append($(tempProductTagHandler(tagResult.id, tagResult.name, tagGroupId)))
+    }
+    page.dialogs.commands.selectAllTagInsideProduct = (asin) => {
+        $.ajax({
+            url: page.urls.findAllProductTagsByAsin + asin,
+            type: 'GET'
+        })
+        .done((tagGroupTagIdResultList) => {
+            $('#mdProductTagHandler input[type=checkbox]').each(function() {
+                console.log(this.id)
+                let isExisted = tagGroupTagIdResultList.some(item => item.productTag == this.id);
+                if (isExisted) {
+                    $(this).prop('checked', true);
+                }
+            })
+        })
+        .fail((jqXHR) => {
+            DBApp.handleFailedTasks(jqXHR);
+        })
+    }
+
     $(document).ready(function () {
         DBApp.handleGroupsFilterSidebar();
         page.commands.findAllGroups();
@@ -739,6 +788,15 @@
                 format: "DD/MM/YYYY"
             }
         });
+        page.element.tableProductAnalyticsBody.on('click', '.btn-handle-product-tag', function () {
+            let asin = $(this).data('id');
+            page.dialogs.element.tagHandlerProductAsin.text(asin);
+            page.dialogs.commands.selectAllTagInsideProduct(asin);
+            page.dialogs.element.mdProductTagHandler.modal('show');
+        })
+        page.dialogs.element.mdProductTagHandler.on('hidden.bs.modal', () => {
+            $('#mdProductTagHandler input[type=checkbox]').attr('checked', false);
+        })
     });
 
 </script>
