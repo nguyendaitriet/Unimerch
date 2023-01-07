@@ -795,7 +795,7 @@
             page.dialogs.element.mdProductTagHandler.modal('show');
         })
         page.dialogs.element.mdProductTagHandler.on('hidden.bs.modal', () => {
-            $('#mdProductTagHandler input[type=checkbox]').attr('checked', false);
+            $('#mdProductTagHandler input[type=checkbox]').prop('checked', false);
         })
     });
 
