@@ -1,5 +1,6 @@
 package com.unimerch.service.tag;
 
+import com.unimerch.dto.product.ProductTagTagGroupParam;
 import com.unimerch.dto.tag.TagParam;
 import com.unimerch.dto.tag.TagResult;
 import com.unimerch.exception.InvalidIdException;
@@ -51,6 +52,11 @@ public class TagServiceImpl implements TagService {
     public TagResult updateTag(TagParam tagParam) {
         Tag tag = tagMapper.toTag(tagParam);
         return tagMapper.toTagResult(tagRepository.save(tag));
+    }
+
+    @Override
+    public void updateProductTagsByAsin(String asin, List<ProductTagTagGroupParam> productTagTagGroupParamList) {
+
     }
 
     @Override

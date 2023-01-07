@@ -259,7 +259,8 @@
             getAnalyticsSale: CommonApp.BASE_URL_ANALYTICS,
             getProductAnalytics: CommonApp.BASE_URL_ANALYTICS + "/getProductAnalytics",
             findAllTagGroupsAndTagsInside: CommonApp.BASE_URL_TAG + "/findAllTagGroupsAndTagsInside",
-            findAllProductTagsByAsin: CommonApp.BASE_URL_TAG + "/findAllProductTagsByAsin/"
+            findAllProductTagsByAsin: CommonApp.BASE_URL_TAG + "/findAllProductTagsByAsin/",
+            updateProductTagsByAsin: CommonApp.BASE_URL_TAG + "/updateProductTagsByAsin/",
         },
         element: {},
         commands: {},
@@ -753,7 +754,6 @@
         })
         .done((tagGroupTagIdResultList) => {
             $('#mdProductTagHandler input[type=checkbox]').each(function() {
-                console.log(this.id)
                 let isExisted = tagGroupTagIdResultList.some(item => item.productTag == this.id);
                 if (isExisted) {
                     $(this).prop('checked', true);
@@ -764,6 +764,39 @@
             DBApp.handleFailedTasks(jqXHR);
         })
     }
+    page.dialogs.commands.handleBtnSaveTagHandler = () => {
+        page.dialogs.element.btnSaveTagHandler.click(function () {
+            let asin = $(this).data('asin');
+            page.dialogs.commands.updateTagHandler(asin);
+        })
+    }
+    page.dialogs.commands.updateTagHandler = (asin) => {
+        let productTagTagGroupList = [];
+
+        $('#mdProductTagHandler input[type=checkbox]').each(function() {
+            if ($(this).prop('checked')) {
+                productTagTagGroupList.push(new ProductTagTagGroup(asin, $(this).data('tag_group_id'), $(this).data('tag_id')))
+            }
+        })
+
+        $.ajax({
+            headers: {
+                "accept": "application/json",
+                "content-type": "application/json"
+            },
+            type: "PUT",
+            url: page.urls.updateProductTagsByAsin + asin,
+            data: JSON.stringify({productTagTagGroupList})
+        })
+            .done(() => {
+
+                CommonApp.SweetAlert.showSuccessAlert(SUCCESS_UPDATED);
+            })
+            .fail((jqXHR) => {
+                DBApp.handleFailedTasks(jqXHR);
+            })
+    }
+
 
     $(document).ready(function () {
         DBApp.handleGroupsFilterSidebar();
@@ -782,7 +815,7 @@
         page.element.analAmznSelect.selectpicker('setStyle', 'btn-outline-primary');
         page.element.btnAnalyse.click(() => {
             page.commands.handleBtnAnalyse();
-        })
+        });
         page.element.productAnalDateRange.daterangepicker({
             locale: {
                 format: "DD/MM/YYYY"
@@ -791,12 +824,15 @@
         page.element.tableProductAnalyticsBody.on('click', '.btn-handle-product-tag', function () {
             let asin = $(this).data('id');
             page.dialogs.element.tagHandlerProductAsin.text(asin);
+            page.dialogs.element.btnSaveTagHandler.attr('data-asin',asin);
             page.dialogs.commands.selectAllTagInsideProduct(asin);
             page.dialogs.element.mdProductTagHandler.modal('show');
-        })
+        });
         page.dialogs.element.mdProductTagHandler.on('hidden.bs.modal', () => {
             $('#mdProductTagHandler input[type=checkbox]').prop('checked', false);
-        })
+            page.dialogs.element.btnSaveTagHandler.removeAttr('data-asin');
+        });
+        page.dialogs.commands.handleBtnSaveTagHandler();
     });
 
 </script>

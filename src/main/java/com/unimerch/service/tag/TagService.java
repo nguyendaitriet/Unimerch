@@ -1,5 +1,6 @@
 package com.unimerch.service.tag;
 
+import com.unimerch.dto.product.ProductTagTagGroupParam;
 import com.unimerch.dto.tag.TagParam;
 import com.unimerch.dto.tag.TagResult;
 
@@ -13,6 +14,8 @@ public interface TagService {
     TagResult createTag(TagParam tagParam);
 
     TagResult updateTag(TagParam tagParam);
+
+    void updateProductTagsByAsin(String asin, List<ProductTagTagGroupParam> productTagTagGroupParamList);
 
     void deleteMultiTag(List<Integer> tagIdList);
 }

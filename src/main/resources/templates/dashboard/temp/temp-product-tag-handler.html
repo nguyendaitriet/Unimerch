@@ -16,7 +16,7 @@
 <th:block th:fragment="temp-product-tag-handler">
     <textarea id="tempProductTagHandler" style="display:none">
         <div class="form-check form-check-inline custom-checkbox mr-5">
-            <input class="custom-control-input" id="productTag-{2}-{0}" type="checkbox">
+            <input data-tag_group_id={2} data-tag_id={0} class="custom-control-input" id="productTag-{2}-{0}" type="checkbox">
             <label class="cursor-pointer font-italic d-block custom-control-label"
                    for="productTag-{2}-{0}">{1}</label>
         </div>

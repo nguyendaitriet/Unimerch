@@ -31,3 +31,12 @@ class TagGroup {
         this.color = color;
     }
 }
+
+class ProductTagTagGroup {
+    constructor(asin, tagGroupId, tagId) {
+        this.asin = asin;
+        this.tagGroupId = tagGroupId;
+        this.tagId = tagId;
+    }
+}
+

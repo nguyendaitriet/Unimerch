@@ -1,5 +1,6 @@
 package com.unimerch.controller.api;
 
+import com.unimerch.dto.product.ProductTagTagGroupParam;
 import com.unimerch.dto.tag.TagParam;
 import com.unimerch.dto.tag.TagResult;
 import com.unimerch.repository.model.tag.TagGroup;
@@ -75,6 +76,17 @@ public class TagAPI {
     @PutMapping("/updateTag")
     public ResponseEntity<?> updateTag(@RequestBody TagParam tag) {
         return new ResponseEntity<>(tagService.updateTag(tag), HttpStatus.OK);
+    }
+
+    @RoleConstant.ManagerAuthorization
+    @PutMapping("/updateProductTagsByAsin/{asin}")
+    public ResponseEntity<?> updateProductTagsByAsin(
+            @PathVariable("asin") String asin,
+            @RequestBody Map<String, List<ProductTagTagGroupParam>> productTagIdUpdateList
+    ) {
+        List<ProductTagTagGroupParam> productTagTagGroupParamList = productTagIdUpdateList.get("productTagTagGroupList");
+        tagService.updateProductTagsByAsin(asin, productTagTagGroupParamList);
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 
     @RoleConstant.ManagerAuthorization
