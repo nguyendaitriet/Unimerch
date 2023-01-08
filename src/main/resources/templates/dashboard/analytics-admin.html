@@ -372,20 +372,23 @@
         })
     }
     page.commands.handleBtnAnalyse = () => {
-        let groupId = page.element.analGrpSelect.selectpicker('val');
-        let amznId = page.element.analAmznSelect.selectpicker('val');
-        let dateFilter = $('input[name=dateFilter]:checked').val();
-        let starDate = page.element.dateRange.data('daterangepicker').startDate.format('DD/MM/YYYY');
-        let endDate = page.element.dateRange.data('daterangepicker').endDate.format('DD/MM/YYYY');
-        let analyticsParam = new AnalyticsParam(groupId, amznId, dateFilter, starDate, endDate);
+        let analyticsParam = page.commands.getAnalyticsParam();
 
-        if (groupId != 0 && amznId == 'noAmzn') {
+        if (analyticsParam.groupId != 0 && analyticsParam.amznId == 'noAmzn') {
             CommonApp.IziToast.showErrorAlert(noAmznVi);
             return;
         }
 
         page.commands.getChart(analyticsParam);
         page.commands.getProductAnalytics(analyticsParam);
+    }
+    page.commands.getAnalyticsParam = () => {
+        let groupId = page.element.analGrpSelect.selectpicker('val');
+        let amznId = page.element.analAmznSelect.selectpicker('val');
+        let dateFilter = $('input[name=dateFilter]:checked').val();
+        let starDate = page.element.dateRange.data('daterangepicker').startDate.format('DD/MM/YYYY');
+        let endDate = page.element.dateRange.data('daterangepicker').endDate.format('DD/MM/YYYY');
+        return new AnalyticsParam(groupId, amznId, dateFilter, starDate, endDate);
     }
     page.commands.handleCustomDateRange = () => {
         $('input[type=radio][name=dateFilter]').change(function () {
@@ -775,7 +778,7 @@
 
         $('#mdProductTagHandler input[type=checkbox]').each(function() {
             if ($(this).prop('checked')) {
-                productTagTagGroupList.push(new ProductTagTagGroup(asin, $(this).data('tag_group_id'), $(this).data('tag_id')))
+                productTagTagGroupList.push(new ProductTagTagGroup($(this).data('tag_group_id'), $(this).data('tag_id')))
             }
         })
 
@@ -789,7 +792,8 @@
             data: JSON.stringify({productTagTagGroupList})
         })
             .done(() => {
-
+                let analyticsParam = page.commands.getAnalyticsParam();
+                page.commands.getProductAnalytics(analyticsParam);
                 CommonApp.SweetAlert.showSuccessAlert(SUCCESS_UPDATED);
             })
             .fail((jqXHR) => {
@@ -833,6 +837,9 @@
             page.dialogs.element.btnSaveTagHandler.removeAttr('data-asin');
         });
         page.dialogs.commands.handleBtnSaveTagHandler();
+
+        CommonApp.enableEnterKeyboard(page.dialogs.element.mdProductTagHandler, page.dialogs.element.btnSaveTagHandler);
+
     });
 
 </script>

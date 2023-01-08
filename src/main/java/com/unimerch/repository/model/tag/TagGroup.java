@@ -25,4 +25,7 @@ public class TagGroup {
     @Column(name = "color", length = 200)
     private String color;
 
+    public TagGroup(Integer id) {
+        this.id = id;
+    }
 }

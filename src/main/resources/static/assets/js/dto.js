@@ -33,8 +33,7 @@ class TagGroup {
 }
 
 class ProductTagTagGroup {
-    constructor(asin, tagGroupId, tagId) {
-        this.asin = asin;
+    constructor(tagGroupId, tagId) {
         this.tagGroupId = tagGroupId;
         this.tagId = tagId;
     }

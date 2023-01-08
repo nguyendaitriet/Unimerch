@@ -10,7 +10,6 @@ import lombok.Setter;
 @Getter
 @Setter
 public class ProductTagTagGroupParam {
-    private String asin;
     private Integer tagGroupId;
     private Integer tagId;
 }

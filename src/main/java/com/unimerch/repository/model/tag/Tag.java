@@ -24,4 +24,7 @@ public class Tag {
     @Column(name = "name", nullable = false, length = 200)
     private String name;
 
+    public Tag(Integer id) {
+        this.id = id;
+    }
 }
