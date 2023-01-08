@@ -5,6 +5,8 @@ class AnalyticsParam {
         this.dateFilter = dateFilter;
         this.startDate = startDate;
         this.endDate = endDate;
+        this.searchable = false;
+        this.searchKey = '';
     }
 }
 

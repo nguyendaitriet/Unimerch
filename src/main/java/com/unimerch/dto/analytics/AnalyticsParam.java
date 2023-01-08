@@ -15,4 +15,6 @@ public class AnalyticsParam {
     private String dateFilter;
     private String startDate;
     private String endDate;
+    private boolean searchable;
+    private String searchKey;
 }

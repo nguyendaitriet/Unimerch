@@ -197,6 +197,19 @@ public class AnalyticServiceImpl implements AnalyticService {
     }
 
     public List<ProductResult> getProductResultList(AnalyticsParam analyticsParam, String amznFilter, Instant startDate, Instant endDate) {
+        if (analyticsParam.isSearchable()) {
+            switch (amznFilter) {
+                case "all":
+                    return productRepository.searchAllProductAnalyticsListByAsinOrTitle(analyticsParam.getSearchKey(), startDate, endDate);
+//                case "group":
+//                    return productRepository.getGroupProductAnalyticsList(analyticsParam.getGroupId(), startDate, endDate);
+//                case "amzn":
+//                    return productRepository.getAmznProductAnalyticsList(analyticsParam.getAmznId(), startDate, endDate);
+                default:
+                    throw new ServerErrorException(messageSource.getMessage("error.500", null, Locale.getDefault()));
+            }
+        }
+
         switch (amznFilter) {
             case "all":
                 return productRepository.getAllProductAnalyticsList(startDate, endDate);
