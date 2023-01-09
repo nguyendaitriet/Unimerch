@@ -210,7 +210,6 @@ public class AmznUserServiceImpl implements AmznUserService {
         for (Row row : sheet) {
             String amznUsername = null;
             String amznPassword = null;
-            boolean isUsernameExisted = false;
             for (Cell cell : row) {
                 if (cell.getCellType() == CellType.STRING && cell.getRichStringCellValue()
                         .getString().trim()
@@ -231,11 +230,6 @@ public class AmznUserServiceImpl implements AmznUserService {
                     }
                 }
 
-                if (amznUserRepository.existsByUsername(amznUsername)) {
-                    isUsernameExisted = true;
-                    break;
-                }
-
                 if (cell.getColumnIndex() == usernameColumnIndex + 1) {
                     switch (cell.getCellType()) {
                         case STRING:
@@ -248,26 +242,26 @@ public class AmznUserServiceImpl implements AmznUserService {
                 }
             }
 
-            if (row.getRowNum() == usernameRowIndex || isUsernameExisted) {
+            if (row.getRowNum() == usernameRowIndex || amznPassword == null || amznUsername == null) {
                 continue;
             }
 
-            if (amznPassword == null || amznUsername == null) {
-                continue;
-            }
-
-            amznPassword = passwordEncoder.encode(amznPassword);
-            AmznAccParam newAmznAccParam = new AmznAccParam(amznUsername, amznPassword);
-            amznUserList.add(amznMapper.toAmznAcc(newAmznAccParam));
-
+            amznUserList.add(new AmznUser(amznUsername, amznPassword));
         }
+        List<String> allAmznUsers = amznUserRepository.getAllAmznUsername();
+        amznUserList.removeAll(allAmznUsers.stream().map(AmznUser::new).collect(Collectors.toList()));
+        amznUserList = amznUserList.stream().map(item -> {
+            String encodedPassword = passwordEncoder.encode(item.getPassword());
+            return amznMapper.toAmznAcc(new AmznAccParam(item.getUsername(), encodedPassword));
+        }).collect(Collectors.toList());
+
         try {
             amznUserList = amznUserRepository.saveAll(amznUserList);
+            amznAccResultList = amznUserList.stream().map(amznUser -> amznMapper.toDTO(amznUser)).collect(Collectors.toList());
+            return amznAccResultList;
         } catch (Exception e) {
             throw new ServerErrorException(messageSource.getMessage("error.500", null, Locale.getDefault()));
         }
-        amznAccResultList = amznUserList.stream().map(amznUser -> amznMapper.toDTO(amznUser)).collect(Collectors.toList());
-        return amznAccResultList;
     }
 
     @Override

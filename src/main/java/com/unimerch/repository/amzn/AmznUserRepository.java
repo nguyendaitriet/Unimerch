@@ -1,5 +1,6 @@
 package com.unimerch.repository.amzn;
 
+import com.unimerch.dto.amznacc.AmznAccParam;
 import com.unimerch.repository.model.amzn_user.AmznUser;
 import com.unimerch.repository.model.amzn_user.AzmnStatus;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -29,4 +30,8 @@ public interface AmznUserRepository extends JpaRepository<AmznUser, Integer> {
             "SET a.lastCheck = :currentTime " +
             "WHERE a.id = :id")
     void updateLastCheck(@Param("id") Integer id, @Param("currentTime") Instant currentTime);
+
+    @Query("SELECT a.username " +
+            "FROM AmznUser AS a")
+    List<String> getAllAmznUsername();
 }
