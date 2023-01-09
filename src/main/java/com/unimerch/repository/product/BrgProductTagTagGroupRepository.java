@@ -10,6 +10,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
+import javax.transaction.Transactional;
 import java.util.List;
 
 @Repository
@@ -33,8 +34,9 @@ public interface BrgProductTagTagGroupRepository extends JpaRepository<BrgProduc
     )
     List<TagGroupTagIdResult> findTagGroupAndTagIdByAsin(@Param("asin") String asin);
 
-    @Query("DELETE FROM BrgProductTagTagGroup AS b " +
-            "WHERE b.id.productId = :asin")
+    @Query(value = "DELETE FROM brg_product_tag_tag_group AS b " +
+            "WHERE b.asin = :asin", nativeQuery = true)
     @Modifying
+    @Transactional
     void deleteAllByAsin(@Param("asin") String asin);
 }

@@ -105,16 +105,16 @@
                                         </div>
                                     </div>
                                     <div class="col-md-4">
+                                        <!--Card-->
                                         <div class="card border-left-primary shadow">
                                             <div class="card-body">
                                                 <div class="row no-gutters align-items-center mb-2">
                                                     <div class="col mr-2">
                                                         <div id="carDateTitle" class="text-center font-weight-bold text-primary text-uppercase">
                                                             Date's Sale
-                                                            <br>
-                                                            <span id="cardDate"></span>
                                                         </div>
-
+                                                        <div id="cardDate" class="text-center font-weight-bold text-primary text-uppercase">
+                                                        </div>
                                                         <hr class="sidebar-divider my-2">
 
                                                         <div id="cardPurchased"
@@ -264,6 +264,7 @@
             findAllAmzns: CommonApp.BASE_URL_AMZN_ACCOUNT + "/findAllAmznAccs",
             findAmznsInsideGroup: CommonApp.BASE_URL_GROUP + "/showAmznAccInsideGroup",
             getChartAnalytics: CommonApp.BASE_URL_ANALYTICS + "/getChartAnalytics",
+            getCardAnalytics: CommonApp.BASE_URL_ANALYTICS + "/getCardAnalytics",
             getProductAnalytics: CommonApp.BASE_URL_ANALYTICS + "/getProductAnalytics",
             findAllTagGroupsAndTagsInside: CommonApp.BASE_URL_TAG + "/findAllTagGroupsAndTagsInside",
             findAllProductTagsByAsin: CommonApp.BASE_URL_TAG + "/findAllProductTagsByAsin/",
@@ -293,7 +294,6 @@
     page.element.dateRange = $('#dateRange');
     page.element.btnAnalyse = $('#btnAnalyse');
     page.element.customDateFilter = $('#customDateFilter');
-    page.element.dateRange = $('#dateRange');
     page.element.dailyChartRadio = $('#dailyChartRadio');
     page.element.monthlyChartRadio = $('#monthlyChartRadio');
 
@@ -388,14 +388,15 @@
 
         page.commands.getChartAnalytics(analyticsParam);
         page.commands.getProductAnalytics(analyticsParam);
+        page.commands.getCardAnalytics(analyticsParam);
     }
     page.commands.getAnalyticsParam = () => {
         let groupId = page.element.analGrpSelect.selectpicker('val');
         let amznId = page.element.analAmznSelect.selectpicker('val');
         let dateFilter = $('input[name=dateFilter]:checked').val();
-        let starDate = page.element.dateRange.data('daterangepicker').startDate.format('DD/MM/YYYY');
+        let startDate = page.element.dateRange.data('daterangepicker').startDate.format('DD/MM/YYYY');
         let endDate = page.element.dateRange.data('daterangepicker').endDate.format('DD/MM/YYYY');
-        return new AnalyticsParam(groupId, amznId, dateFilter, starDate, endDate);
+        return new AnalyticsParam(groupId, amznId, dateFilter, startDate, endDate);
     }
     page.commands.handleCustomDateRange = () => {
         $('input[type=radio][name=dateFilter]').change(function () {
@@ -405,73 +406,6 @@
                 page.element.dateRange.attr('hidden', true);
             }
         });
-    }
-    page.commands.handleDailyOrMonthLyChart = () => {
-        $('input[type=radio][name=dailyOrMonthly]').change(function () {
-            if (this.value === 'daily') {
-                chart.updateOptions({
-                    xaxis: {
-                        categories: dataOfChart.dates
-                    },
-                    series: [
-                        {
-                            name: "Royalties",
-                            data: dataOfChart.royalties,
-                        },
-                        {
-                            name: "Sold",
-                            data: dataOfChart.soldNumbers,
-                        }
-                    ]
-                });
-            } else {
-                let monthlyOrderChartResult = page.commands.handleMonthlyChartData(dataOfChart);
-                chart.updateOptions({
-                    xaxis: {
-                        categories: monthlyOrderChartResult.monthList
-                    },
-                    series: [
-                        {
-                            name: "Royalties",
-                            data: monthlyOrderChartResult.royaltiesList,
-                        },
-                        {
-                            name: "Sold",
-                            data: monthlyOrderChartResult.soldNumbersList,
-                        }
-                    ]
-                });
-            }
-        });
-    }
-    page.commands.handleMonthlyChartData = (data) => {
-        let dailyRevenueArray = [];
-        let dateCount = data.dates.length;
-        for (let i = 0; i < dateCount; i++) {
-            let dailyRevenue = new DailyRevenue(data.dates[i], data.royalties[i], data.soldNumbers[i]);
-            dailyRevenueArray.push(dailyRevenue);
-        }
-
-        let monthGroup = CommonApp.groupBy(dailyRevenueArray, dailyRevenue => dailyRevenue.date.substring(3));
-
-        let monthTitle = [];
-        let royaltiesSum = [];
-        let soldNumbersSum = [];
-
-        monthGroup.forEach(function (value, key) {
-            monthTitle.push(key);
-            let royalties = 0;
-            let soldNumbers = 0;
-            value.forEach((item, index) => {
-                royalties += item.royalties;
-                soldNumbers += item.soldNumbers;
-            })
-            let roundedRoyalties = Math.round((royalties + Number.EPSILON) * 100) / 100;
-            royaltiesSum.push(roundedRoyalties);
-            soldNumbersSum.push(soldNumbers);
-        })
-
-        return new MonthlyOrderChartResult(monthTitle, royaltiesSum, soldNumbersSum);
     }
 
     page.commands.findAllTagGroupsAndTagsInside = () => {
@@ -508,7 +442,7 @@
         $(`.tag-group-select-id-${tagGroupId}`).append($(tempOption(tagResult.id, tagResult.name)))
     }
 
-    //Analytics Sales Chart
+    // Analytics Sales Chart
 
     var options = {
         title: {
@@ -542,6 +476,7 @@
                     svg: {
                         filename: "Weekly Revenues"
                     },
+
                     png: {
                         filename: "Weekly Revenues"
                     }
@@ -694,6 +629,139 @@
                 DBApp.handleFailedTasks(jqXHR);
             })
     }
+    page.commands.handleDailyOrMonthLyChart = () => {
+        $('input[type=radio][name=dailyOrMonthly]').change(function () {
+            if (this.value === 'daily') {
+                chart.updateOptions({
+                    xaxis: {
+                        categories: dataOfChart.dates
+                    },
+                    series: [
+                        {
+                            name: "Royalties",
+                            data: dataOfChart.royalties,
+                        },
+                        {
+                            name: "Sold",
+                            data: dataOfChart.soldNumbers,
+                        }
+                    ]
+                });
+            } else {
+                let monthlyOrderChartResult = page.commands.handleMonthlyChartData(dataOfChart);
+                chart.updateOptions({
+                    xaxis: {
+                        categories: monthlyOrderChartResult.monthList
+                    },
+                    series: [
+                        {
+                            name: "Royalties",
+                            data: monthlyOrderChartResult.royaltiesList,
+                        },
+                        {
+                            name: "Sold",
+                            data: monthlyOrderChartResult.soldNumbersList,
+                        }
+                    ]
+                });
+            }
+        });
+    }
+    page.commands.handleMonthlyChartData = (data) => {
+        let dailyRevenueArray = [];
+        let dateCount = data.dates.length;
+        for (let i = 0; i < dateCount; i++) {
+            let dailyRevenue = new DailyRevenue(data.dates[i], data.royalties[i], data.soldNumbers[i]);
+            dailyRevenueArray.push(dailyRevenue);
+        }
+
+        let monthGroup = CommonApp.groupBy(dailyRevenueArray, dailyRevenue => dailyRevenue.date.substring(3));
+
+        let monthTitle = [];
+        let royaltiesSum = [];
+        let soldNumbersSum = [];
+
+        monthGroup.forEach(function (value, key) {
+            monthTitle.push(key);
+            let royalties = 0;
+            let soldNumbers = 0;
+            value.forEach((item, index) => {
+                royalties += item.royalties;
+                soldNumbers += item.soldNumbers;
+            })
+            let roundedRoyalties = Math.round((royalties + Number.EPSILON) * 100) / 100;
+            royaltiesSum.push(roundedRoyalties);
+            soldNumbersSum.push(soldNumbers);
+        })
+
+        return new MonthlyOrderChartResult(monthTitle, royaltiesSum, soldNumbersSum);
+    }
+
+    // Analytics Sales Card
+
+    page.element.carDateTitle = $('#carDateTitle');
+    page.element.cardDate = $('#cardDate');
+    page.element.cardPurchased = $('#cardPurchased');
+    page.element.cardRoyalties = $('#cardRoyalties');
+    page.element.cardSold = $('#cardSold');
+    page.element.cardCancelled = $('#cardCancelled');
+    page.element.cardReturned = $('#cardReturned');
+
+    page.commands.getCardAnalytics = (analyticsParam) => {
+        $.ajax({
+            headers: {
+                "accept": "application/json",
+                "content-type": "application/json"
+            },
+            type: "POST",
+            url: page.urls.getCardAnalytics,
+            data: JSON.stringify(analyticsParam)
+        })
+            .done((orderCardResult) => {
+                page.commands.handleCardDateTitle(analyticsParam);
+                page.commands.addDataToCard(orderCardResult);
+            })
+            .fail((jqXHR) => {
+                DBApp.handleFailedTasks(jqXHR);
+            })
+    }
+
+    page.commands.addDataToCard = (orderCardResult) => {
+        page.element.cardPurchased.text(orderCardResult.sold);
+        page.element.cardRoyalties.text(orderCardResult.royalties);
+        page.element.cardSold.text(orderCardResult.sold);
+        page.element.cardPurchased.text(orderCardResult.purchased);
+        page.element.cardCancelled.text(orderCardResult.cancelled);
+        page.element.cardReturned.text(orderCardResult.returned);
+    }
+    page.commands.handleCardDateTitle = (analyticsParam) => {
+            let date = new Date();
+            switch (analyticsParam.dateFilter) {
+                case 'today':
+                    page.element.carDateTitle.text("Today's sale");
+                    page.element.cardDate.text(dateFormat(date,'dd/mm/yyyy'));
+                    break;
+                case 'yesterday':
+                    page.element.carDateTitle.text("Yesterday's sale");
+                    date.setDate(date.getDate() - 1);
+                    page.element.cardDate.text(dateFormat(date,'dd/mm/yyyy'));
+                    break;
+                case 'thisMonth':
+                    page.element.carDateTitle.text("This month's sale");
+                    page.element.cardDate.text(dateFormat(date,'mm/yyyy'));
+                    break;
+                case 'previousMonth':
+                    page.element.carDateTitle.text("Previous month's sale");
+                    date.setMonth(date.getMonth() - 1);
+                    page.element.cardDate.text(dateFormat(date,'mm/yyyy'));
+                    break;
+                case 'custom':
+                    page.element.carDateTitle.text(page.element.dateRange.val());
+                    page.element.cardDate.text('');
+                    break;
+                default:
+            }
+    }
 
     // Analytics Sales Table
 
@@ -762,7 +830,7 @@
         page.commands.getProductAnalytics(analyticsParam);
     }
 
-    // Product Tag Handler
+    // + Product Tag Handler
 
     page.dialogs.element.mdProductTagHandler = $('#mdProductTagHandler');
     page.dialogs.element.tagHandlerProductAsin = $('#tagHandlerProductAsin');
@@ -794,7 +862,7 @@
     }
     page.dialogs.commands.handleBtnSaveTagHandler = () => {
         page.dialogs.element.btnSaveTagHandler.click(function () {
-            let asin = $(this).data('asin');
+            let asin = page.dialogs.element.tagHandlerProductAsin.text();
             page.dialogs.commands.updateTagHandler(asin);
         })
     }
@@ -858,13 +926,11 @@
         page.element.tableProductAnalyticsBody.on('click', '.btn-handle-product-tag', function () {
             let asin = $(this).data('id');
             page.dialogs.element.tagHandlerProductAsin.text(asin);
-            page.dialogs.element.btnSaveTagHandler.attr('data-asin', asin);
             page.dialogs.commands.selectAllTagInsideProduct(asin);
             page.dialogs.element.mdProductTagHandler.modal('show');
         });
         page.dialogs.element.mdProductTagHandler.on('hidden.bs.modal', () => {
             $('#mdProductTagHandler input[type=checkbox]').prop('checked', false);
-            page.dialogs.element.btnSaveTagHandler.removeAttr('data-asin');
         });
         page.dialogs.commands.handleBtnSaveTagHandler();
 
