@@ -109,22 +109,22 @@
                                             <div class="card-body">
                                                 <div class="row no-gutters align-items-center mb-2">
                                                     <div class="col mr-2">
-                                                        <div class="text-center font-weight-bold text-primary text-uppercase">
-                                                            Today's Sale
+                                                        <div id="carDateTitle" class="text-center font-weight-bold text-primary text-uppercase">
+                                                            Date's Sale
                                                             <br>
-                                                            <span id="todayDate"></span>
+                                                            <span id="cardDate"></span>
                                                         </div>
 
                                                         <hr class="sidebar-divider my-2">
 
-                                                        <div id="todayPurchased"
+                                                        <div id="cardPurchased"
                                                              class="h2 text-center mb-0 font-weight-bold text-gray-800">
                                                             0
                                                         </div>
                                                     </div>
                                                 </div>
                                                 <div class="row mt-1 no-gutters d-flex justify-content-between">
-                                                    <div id="todayRoyalties">
+                                                    <div id="cardRoyalties">
                                                         0
                                                     </div>
                                                     <div>
@@ -133,15 +133,15 @@
                                                 </div>
                                                 <div class="row mt-1 no-gutters d-flex justify-content-between">
                                                     <div>
-                                                        <span id="todaySold">0</span> - <span
-                                                            id="todayCancelled">0</span>
+                                                        <span id="cardSold">0</span> - <span
+                                                            id="cardCancelled">0</span>
                                                     </div>
                                                     <div>
                                                         Sold-Cancelled
                                                     </div>
                                                 </div>
                                                 <div class="row mt-1 no-gutters d-flex justify-content-between">
-                                                    <div id="todayReturned">
+                                                    <div id="cardReturned">
                                                         0
                                                     </div>
                                                     <div>
@@ -203,10 +203,10 @@
                                         <table class="table table-bordered table-sm" id="tableProductAnalytics">
                                             <thead>
                                             <tr class="text-center">
-                                                <th>Sold</th>
+                                                <th data-sortas="numeric">Sold</th>
                                                 <th>Product</th>
-                                                <th>Royalties</th>
-                                                <th>Price</th>
+                                                <th data-sortas="numeric">Royalties</th>
+                                                <th data-sortas="numeric">Price</th>
                                                 <th>Username</th>
                                             </tr>
                                             </thead>
@@ -263,7 +263,7 @@
             findAllGroups: CommonApp.BASE_URL_GROUP + "/findAllGroups",
             findAllAmzns: CommonApp.BASE_URL_AMZN_ACCOUNT + "/findAllAmznAccs",
             findAmznsInsideGroup: CommonApp.BASE_URL_GROUP + "/showAmznAccInsideGroup",
-            getAnalyticsSale: CommonApp.BASE_URL_ANALYTICS,
+            getChartAnalytics: CommonApp.BASE_URL_ANALYTICS + "/getChartAnalytics",
             getProductAnalytics: CommonApp.BASE_URL_ANALYTICS + "/getProductAnalytics",
             findAllTagGroupsAndTagsInside: CommonApp.BASE_URL_TAG + "/findAllTagGroupsAndTagsInside",
             findAllProductTagsByAsin: CommonApp.BASE_URL_TAG + "/findAllProductTagsByAsin/",
@@ -386,7 +386,7 @@
             return;
         }
 
-        page.commands.getChart(analyticsParam);
+        page.commands.getChartAnalytics(analyticsParam);
         page.commands.getProductAnalytics(analyticsParam);
     }
     page.commands.getAnalyticsParam = () => {
@@ -497,7 +497,6 @@
                 DBApp.handleFailedTasks(jqXHR);
             })
     }
-
     page.commands.addTagGroupToFilterArea = (tagGroup) => {
         page.element.tagGroupIncludeArea.append($(tempTagGroupSelect(tagGroup.id, tagGroup.name, tagGroup.color)));
         page.element.tagGroupExcludeArea.append($(tempTagGroupSelect(tagGroup.id, tagGroup.name, tagGroup.color)));
@@ -648,14 +647,14 @@
 
     var dataOfChart;
 
-    page.commands.getChart = (analyticsParam) => {
+    page.commands.getChartAnalytics = (analyticsParam) => {
         $.ajax({
             headers: {
                 "accept": "application/json",
                 "content-type": "application/json"
             },
             type: "POST",
-            url: page.urls.getAnalyticsSale,
+            url: page.urls.getChartAnalytics,
             data: JSON.stringify(analyticsParam)
         })
             .done((chartData) => {
@@ -729,7 +728,6 @@
                 DBApp.handleFailedTasks(jqXHR);
             })
     }
-
     page.commands.renderProductAnalyticsTableRow = (productAnalyticsList) => {
         page.element.tableProductAnalyticsBody.html('');
 
@@ -744,8 +742,8 @@
 
         page.element.tableProductAnalytics.fancyTable({
             pagination: true,
-            perPage: 5,
-            searchable: false
+            perPage: 10,
+            searchable: false,
         });
     }
     page.commands.addProductAnalyticsToTableRow = (productAnalytics) => {

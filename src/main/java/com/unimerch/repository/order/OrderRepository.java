@@ -1,5 +1,6 @@
 package com.unimerch.repository.order;
 
+import com.unimerch.dto.order.OrderCardResult;
 import com.unimerch.repository.model.order.Order;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -82,5 +83,47 @@ public interface OrderRepository extends JpaRepository<Order, Integer> {
             nativeQuery = true
     )
     List<Order> findRandomOrders(@Param("number") int number);
+
+    @Query(value = "SELECT NEW com.unimerch.dto.order.OrderCardResult (" +
+                "SUM(o.purchased - o.cancelled), " +
+                "SUM(o.purchased), " +
+                "SUM(o.cancelled), " +
+                "SUM(o.returned), " +
+                "SUM(o.royalties)" +
+            ")" +
+            "FROM Order AS o " +
+            "WHERE o.date >= :startDate AND o.date <= :endDate"
+    )
+    OrderCardResult getOrderCartResultAll(@Param("startDate") Instant startDate, @Param("endDate") Instant endDate);
+
+    @Query(value = "SELECT NEW com.unimerch.dto.order.OrderCardResult (" +
+                "SUM(o.purchased - o.cancelled), " +
+                "SUM(o.purchased), " +
+                "SUM(o.cancelled), " +
+                "SUM(o.returned), " +
+                "SUM(o.royalties)" +
+            ")" +
+            "FROM Order AS o " +
+            "WHERE o.date >= :startDate AND o.date <= :endDate " +
+            "AND o.amznUser.id IN (" +
+                "(SELECT br.amznUser.id " +
+                "FROM BrgGroupAmznUser br " +
+                "WHERE br.group.id = :groupId)" +
+            ")"
+    )
+    OrderCardResult getOrderCartResultGroup(@Param("groupId") Integer groupId,@Param("startDate") Instant startDate, @Param("endDate") Instant endDate);
+
+    @Query(value = "SELECT NEW com.unimerch.dto.order.OrderCardResult (" +
+                "SUM(o.purchased - o.cancelled), " +
+                "SUM(o.purchased), " +
+                "SUM(o.cancelled), " +
+                "SUM(o.returned), " +
+                "SUM(o.royalties)" +
+            ")" +
+            "FROM Order AS o " +
+            "WHERE o.date >= :startDate AND o.date <= :endDate " +
+            "AND o.amznUser.id = :amznId"
+    )
+    OrderCardResult getOrderCartResultAmzn(@Param("amznId") Integer amznId,@Param("startDate") Instant startDate, @Param("endDate") Instant endDate);
 
 }

@@ -1,13 +1,15 @@
 //package com.unimerch.schedules;
 //
+//import com.unimerch.repository.model.order.Order;
 //import com.unimerch.repository.order.OrderRepository;
-//import com.unimerch.repository.model.Order;
 //import org.springframework.beans.factory.annotation.Autowired;
 //import org.springframework.scheduling.annotation.Scheduled;
 //import org.springframework.stereotype.Component;
 //
+//import java.time.Duration;
 //import java.time.Instant;
 //import java.util.List;
+//import java.util.concurrent.ThreadLocalRandom;
 //import java.util.stream.Collectors;
 //
 //@Component
@@ -30,4 +32,12 @@
 //        return (int) ((Math.random() * (max - min)) + min);
 //    }
 //
+//
+//    public static Instant between(Instant startInclusive, Instant endExclusive) {
+//        long startSeconds = startInclusive.getEpochSecond();
+//        long endSeconds = endExclusive.getEpochSecond();
+//        long random = ThreadLocalRandom.current().nextLong(startSeconds, endSeconds);
+//
+//        return Instant.ofEpochSecond(random);
+//    }
 //}

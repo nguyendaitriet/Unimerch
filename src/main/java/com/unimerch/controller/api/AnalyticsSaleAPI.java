@@ -16,15 +16,21 @@ public class AnalyticsSaleAPI {
     private AnalyticService analyticService;
 
     @RoleConstant.ManagerUserAuthorization
-    @PostMapping
-    public ResponseEntity<?> getAnalyticsChart(@RequestBody AnalyticsParam analyticsParam) {
-        return new ResponseEntity<> (analyticService.getAnalyticsChart(analyticsParam), HttpStatus.OK);
+    @PostMapping("/getChartAnalytics")
+    public ResponseEntity<?> getChartAnalytics(@RequestBody AnalyticsParam analyticsParam) {
+        return new ResponseEntity<> (analyticService.getChartAnalytics(analyticsParam), HttpStatus.OK);
     }
 
     @RoleConstant.ManagerUserAuthorization
     @PostMapping("/getProductAnalytics")
     public ResponseEntity<?> getProductAnalytics(@RequestBody AnalyticsParam analyticsParam) {
         return new ResponseEntity<> (analyticService.getProductAnalyticsList(analyticsParam), HttpStatus.OK);
+    }
+
+    @RoleConstant.ManagerUserAuthorization
+    @PostMapping("/getCardAnalytics")
+    public ResponseEntity<?> getCardAnalytics(@RequestBody AnalyticsParam analyticsParam) {
+        return new ResponseEntity<> (analyticService.getCardAnalytics(analyticsParam), HttpStatus.OK);
     }
 
 }
