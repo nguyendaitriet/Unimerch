@@ -1,5 +1,7 @@
-package com.unimerch.service;
+package com.unimerch.service.tag;
 
+import com.unimerch.dto.tag.FullTagGroupTagResult;
+import com.unimerch.dto.tag.TagGroupTagIdResult;
 import com.unimerch.dto.tag.TagResult;
 import com.unimerch.repository.model.tag.TagGroup;
 
@@ -7,6 +9,10 @@ import java.util.List;
 
 public interface TagGroupService {
     List<TagGroup> findAll();
+
+    List<FullTagGroupTagResult> findAllTagGroupsAndTagsInside();
+
+    List<TagGroupTagIdResult> findAllProductTagsByAsin(String asin);
 
     TagGroup findById(int id);
 

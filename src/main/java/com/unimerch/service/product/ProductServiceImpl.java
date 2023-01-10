@@ -1,4 +1,4 @@
-package com.unimerch.service.impl;
+package com.unimerch.service.product;
 
 import com.unimerch.dto.product.ProductPriceParam;
 import com.unimerch.dto.product.ProductResult;
@@ -7,7 +7,7 @@ import com.unimerch.mapper.ProductMapper;
 import com.unimerch.repository.group.BrgGroupAmznUserRepository;
 import com.unimerch.repository.product.ProductRepository;
 import com.unimerch.repository.model.product.Product;
-import com.unimerch.service.ProductService;
+import com.unimerch.service.config.ConfigurationServiceImpl;
 import com.unimerch.util.TimeUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;

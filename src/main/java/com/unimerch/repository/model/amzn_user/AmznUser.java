@@ -1,11 +1,14 @@
 package com.unimerch.repository.model.amzn_user;
 
+import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.experimental.Accessors;
 
 import javax.persistence.*;
 import java.time.Instant;
+import java.util.Objects;
 
 @Entity
 @Getter
@@ -15,6 +18,8 @@ import java.time.Instant;
         indexes = @Index(name = "idx_last_check", columnList = "last_check")
 )
 @Accessors(chain = true)
+@NoArgsConstructor
+@AllArgsConstructor
 public class AmznUser {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -64,12 +69,29 @@ public class AmznUser {
     @Column(name = "note", length = 50)
     private String note;
 
-    public AmznUser() {
-
-    }
-
     public AmznUser(Integer id) {
         this.id = id;
     }
 
+    public AmznUser(String username,String password) {
+        this.password = password;
+        this.username = username;
+    }
+
+    public AmznUser(String username) {
+        this.username = username;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        AmznUser amznUser = (AmznUser) o;
+        return Objects.equals(username, amznUser.username);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(username);
+    }
 }

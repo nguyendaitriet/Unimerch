@@ -1,11 +1,12 @@
 package com.unimerch.controller.api;
 
+import com.unimerch.dto.product.ProductTagTagGroupParam;
 import com.unimerch.dto.tag.TagParam;
 import com.unimerch.dto.tag.TagResult;
 import com.unimerch.repository.model.tag.TagGroup;
 import com.unimerch.security.RoleConstant;
-import com.unimerch.service.TagService;
-import com.unimerch.service.TagGroupService;
+import com.unimerch.service.tag.TagService;
+import com.unimerch.service.tag.TagGroupService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -23,13 +24,25 @@ public class TagAPI {
     @Autowired
     private TagService tagService;
 
-    @RoleConstant.ManagerAuthorization
+    @RoleConstant.ManagerUserAuthorization
     @GetMapping("/findAllTagGroups")
     public ResponseEntity<?> findAllTagGroups() {
         return new ResponseEntity<>(tagGroupService.findAll(), HttpStatus.OK);
     }
 
-    @RoleConstant.ManagerAuthorization
+    @RoleConstant.ManagerUserAuthorization
+    @GetMapping("/findAllTagGroupsAndTagsInside")
+    public ResponseEntity<?> findAllTagGroupsAndTagsInside() {
+        return new ResponseEntity<>(tagGroupService.findAllTagGroupsAndTagsInside(), HttpStatus.OK);
+    }
+
+    @RoleConstant.ManagerUserAuthorization
+    @GetMapping("/findAllProductTagsByAsin/{asin}")
+    public ResponseEntity<?> findAllProductTagsByAsin(@PathVariable("asin") String asin) {
+        return new ResponseEntity<>(tagGroupService.findAllProductTagsByAsin(asin), HttpStatus.OK);
+    }
+
+    @RoleConstant.ManagerUserAuthorization
     @GetMapping("/getAllTags")
     public ResponseEntity<?> getAllTags() {
         return new ResponseEntity<>(tagService.findAll(), HttpStatus.OK);
@@ -63,6 +76,17 @@ public class TagAPI {
     @PutMapping("/updateTag")
     public ResponseEntity<?> updateTag(@RequestBody TagParam tag) {
         return new ResponseEntity<>(tagService.updateTag(tag), HttpStatus.OK);
+    }
+
+    @RoleConstant.ManagerAuthorization
+    @PutMapping("/updateProductTagsByAsin/{asin}")
+    public ResponseEntity<?> updateProductTagsByAsin(
+            @PathVariable("asin") String asin,
+            @RequestBody Map<String, List<ProductTagTagGroupParam>> productTagIdUpdateList
+    ) {
+        List<ProductTagTagGroupParam> productTagTagGroupParamList = productTagIdUpdateList.get("productTagTagGroupList");
+        tagService.updateProductTagsByAsin(asin, productTagTagGroupParamList);
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 
     @RoleConstant.ManagerAuthorization

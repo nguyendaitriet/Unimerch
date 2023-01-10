@@ -1,4 +1,4 @@
-package com.unimerch.service.impl;
+package com.unimerch.service.user;
 
 import com.unimerch.security.JWTUser;
 import io.jsonwebtoken.*;

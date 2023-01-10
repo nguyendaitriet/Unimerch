@@ -1,4 +1,4 @@
-package com.unimerch.service.impl;
+package com.unimerch.service.config;
 
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;

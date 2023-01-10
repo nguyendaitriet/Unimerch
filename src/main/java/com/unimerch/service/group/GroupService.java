@@ -1,4 +1,4 @@
-package com.unimerch.service;
+package com.unimerch.service.group;
 
 import com.unimerch.dto.amznacc.AmznAccFilterResult;
 import com.unimerch.dto.amznacc.AmznAccResult;

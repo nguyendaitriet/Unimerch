@@ -1,13 +1,16 @@
-package com.unimerch.service.impl;
+package com.unimerch.service.tag;
 
+import com.unimerch.dto.tag.FullTagGroupTagResult;
+import com.unimerch.dto.tag.TagGroupTagIdResult;
 import com.unimerch.dto.tag.TagResult;
 import com.unimerch.exception.InvalidIdException;
 import com.unimerch.mapper.TagMapper;
 import com.unimerch.repository.model.tag.*;
+import com.unimerch.repository.product.BrgProductTagTagGroupRepository;
 import com.unimerch.repository.tag.BrgTagGroupTagRepository;
 import com.unimerch.repository.tag.TagRepository;
 import com.unimerch.repository.tag.TagGroupRepository;
-import com.unimerch.service.TagGroupService;
+import com.unimerch.service.tag.TagGroupService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
 import org.springframework.stereotype.Service;
@@ -28,11 +31,35 @@ public class TagGroupServiceImpl implements TagGroupService {
     @Autowired
     private BrgTagGroupTagRepository brgTagGroupTagRepo;
     @Autowired
+    private BrgProductTagTagGroupRepository brgProductTagTagGroupRepo;
+    @Autowired
     private TagMapper tagMapper;
 
     @Override
     public List<TagGroup> findAll() {
         return tagGroupRepository.findAll();
+    }
+
+    @Override
+    public List<FullTagGroupTagResult> findAllTagGroupsAndTagsInside() {
+        List<TagGroup> tagGroupList = tagGroupRepository.findAll();
+        List<FullTagGroupTagResult> fullTagGroupTagResultList = tagGroupList.stream().map(item ->{
+
+            List<TagResult> tagResultList = tagRepository.findAllTagInsideTagGroup(item.getId())
+                    .stream().map(tag -> tagMapper.toTagResult(tag)).collect(Collectors.toList());
+
+            return new FullTagGroupTagResult()
+                    .setTagGroup(item)
+                    .setTagResultList(tagResultList);
+
+        }).collect(Collectors.toList());
+
+        return fullTagGroupTagResultList;
+    }
+
+    @Override
+    public List<TagGroupTagIdResult> findAllProductTagsByAsin(String asin) {
+        return brgProductTagTagGroupRepo.findTagGroupAndTagIdByAsin(asin);
     }
 
     @Override

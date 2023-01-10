@@ -1,4 +1,4 @@
-package com.unimerch.service.impl;
+package com.unimerch.service.order;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -9,13 +9,13 @@ import com.unimerch.dto.order.OrderData;
 import com.unimerch.exception.ServerErrorException;
 import com.unimerch.mapper.OrderMapper;
 import com.unimerch.repository.amzn.AmznUserRepository;
-import com.unimerch.repository.model.amzn_user.AmznUser;
-import com.unimerch.repository.model.order.Order;
 import com.unimerch.repository.order.OrderRepository;
 import com.unimerch.repository.order.OrderRepositoryExtension;
 import com.unimerch.repository.product.ProductRepository;
-import com.unimerch.security.UserPrincipal;
-import com.unimerch.service.OrderService;
+import com.unimerch.repository.model.amzn_user.AmznUser;
+import com.unimerch.repository.model.order.Order;
+import com.unimerch.security.UserPrinciple;
+import com.unimerch.service.order.OrderService;
 import com.unimerch.util.TimeUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
@@ -55,8 +55,8 @@ public class OrderServiceImpl implements OrderService {
         SimpleModule module = new SimpleModule();
         module.addDeserializer(OrderData.class, new OrderMapper());
         mapper.registerModule(module);
-        UserPrincipal userPrincipal = (UserPrincipal) authentication.getPrincipal();
-        int id = Integer.parseInt(userPrincipal.getId());
+        UserPrinciple userPrinciple = (UserPrinciple) authentication.getPrincipal();
+        int id = Integer.parseInt(userPrinciple.getId());
         try {
             OrderData orderData = mapper.readValue(data, OrderData.class);
             List<String> orderDates = orderData.getOrderList().stream()

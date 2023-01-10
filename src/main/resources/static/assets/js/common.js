@@ -246,14 +246,21 @@ class CommonApp {
             console.log(text);
         };
     }
+
+    static groupBy(list, keyGetter) {
+        const map = new Map();
+        list.forEach((item) => {
+            const key = keyGetter(item);
+            const collection = map.get(key);
+            if (!collection) {
+                map.set(key, [item]);
+            } else {
+                collection.push(item);
+            }
+        });
+        return map;
+    }
+
 }
 
-class AnalyticsParam {
-    constructor(groupId, amznId, dateFilter, startDate, endDate) {
-        this.groupId = groupId;
-        this.amznId = amznId;
-        this.dateFilter = dateFilter;
-        this.startDate = startDate;
-        this.endDate = endDate;
-    }
-}
+

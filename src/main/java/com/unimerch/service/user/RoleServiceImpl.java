@@ -1,9 +1,8 @@
-package com.unimerch.service.impl;
+package com.unimerch.service.user;
 
 import com.unimerch.repository.user.RoleRepository;
 import com.unimerch.repository.model.user.Role;
-import com.unimerch.repository.model.user.User;
-import com.unimerch.service.RoleService;
+import com.unimerch.service.user.RoleService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

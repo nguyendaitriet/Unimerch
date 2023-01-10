@@ -2,6 +2,7 @@ package com.unimerch.util;
 
 import com.unimerch.exception.ServerErrorException;
 
+import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.*;
@@ -15,6 +16,8 @@ public class TimeUtils {
     static final public ZoneId zoneIdVN = ZoneId.of("Asia/Ho_Chi_Minh");
 
     static final public String dayMonthYearPattern = "dd/MM/yyyy";
+
+    static final public String yearMonthDayPattern = "yyyy-MM-dd";
 
     static final public String monthYearPattern = "MM/yyyy";
 
@@ -34,6 +37,16 @@ public class TimeUtils {
 
     public static String toDayMonthYear(LocalDate date) {
         return date.format(DateTimeFormatter.ofPattern(dayMonthYearPattern));
+    }
+
+    public static String toDayMonthYearPattern(String inputDate) {
+        DateFormat iFormatter = new SimpleDateFormat(yearMonthDayPattern);
+        DateFormat oFormatter = new SimpleDateFormat(dayMonthYearPattern);
+        try {
+            return oFormatter.format(iFormatter.parse(inputDate));
+        } catch (ParseException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     public static String toMonthYear(LocalDate date) {

@@ -1,4 +1,4 @@
-package com.unimerch.service;
+package com.unimerch.service.amzn;
 
 import com.unimerch.dto.amznacc.*;
 import com.unimerch.repository.model.amzn_user.AmznUser;

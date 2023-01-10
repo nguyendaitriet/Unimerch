@@ -1,4 +1,4 @@
-package com.unimerch.service.impl;
+package com.unimerch.service.group;
 
 import com.unimerch.dto.amznacc.AmznAccFilterResult;
 import com.unimerch.dto.amznacc.AmznAccResult;
@@ -18,7 +18,7 @@ import com.unimerch.repository.model.amzn_user.AmznUser;
 import com.unimerch.repository.model.group.BrgGroupAmznUser;
 import com.unimerch.repository.model.group.BrgGroupAmznUserId;
 import com.unimerch.repository.model.group.Group;
-import com.unimerch.service.GroupService;
+import com.unimerch.service.group.GroupService;
 import com.unimerch.util.NaturalSortUtils;
 import com.unimerch.util.ValidationUtils;
 import org.springframework.beans.factory.annotation.Autowired;

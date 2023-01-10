@@ -2,8 +2,8 @@ package com.unimerch.controller;
 
 import com.unimerch.dto.group.GroupResult;
 import com.unimerch.dto.user.UserResult;
-import com.unimerch.service.GroupService;
-import com.unimerch.service.UniUserService;
+import com.unimerch.service.group.GroupService;
+import com.unimerch.service.user.UniUserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
 import org.springframework.stereotype.Controller;

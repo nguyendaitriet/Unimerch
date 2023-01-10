@@ -22,7 +22,10 @@ public class TagGroup {
     @Column(name = "name", nullable = false, length = 200)
     private String name;
 
-    @Column(name = "color", nullable = false, length = 200)
+    @Column(name = "color", length = 200)
     private String color;
 
+    public TagGroup(Integer id) {
+        this.id = id;
+    }
 }

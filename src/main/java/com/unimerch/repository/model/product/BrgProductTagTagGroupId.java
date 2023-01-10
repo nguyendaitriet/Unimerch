@@ -1,5 +1,6 @@
 package com.unimerch.repository.model.product;
 
+import com.unimerch.repository.model.tag.BrgTagGroupTag;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -7,8 +8,7 @@ import lombok.Setter;
 import lombok.experimental.Accessors;
 import org.hibernate.Hibernate;
 
-import javax.persistence.Column;
-import javax.persistence.Embeddable;
+import javax.persistence.*;
 import java.io.Serializable;
 import java.util.Objects;
 
@@ -24,11 +24,12 @@ public class BrgProductTagTagGroupId implements Serializable {
     @Column(name = "ASIN", nullable = false, length = 150)
     private String productId;
 
-    @Column(name = "tag_group_id", nullable = false)
-    private Integer tagGroupId;
-
-    @Column(name = "tag_id", nullable = false)
-    private Integer tagId;
+    @ManyToOne
+    @JoinColumns({
+            @JoinColumn(name = "tag_group_id", referencedColumnName = "tag_group_id"),
+            @JoinColumn(name = "tag_id", referencedColumnName = "tag_id")
+    })
+    private BrgTagGroupTag brgTagGroupTag;
 
     @Override
     public boolean equals(Object o) {
@@ -36,13 +37,12 @@ public class BrgProductTagTagGroupId implements Serializable {
         if (o == null || Hibernate.getClass(this) != Hibernate.getClass(o)) return false;
         BrgProductTagTagGroupId entity = (BrgProductTagTagGroupId) o;
         return Objects.equals(this.productId, entity.productId) &&
-                Objects.equals(this.tagId, entity.tagId) &&
-                Objects.equals(this.tagGroupId, entity.tagGroupId);
+                Objects.equals(this.brgTagGroupTag, entity.brgTagGroupTag);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(productId, tagGroupId, tagId);
+        return Objects.hash(productId, brgTagGroupTag);
     }
 
 

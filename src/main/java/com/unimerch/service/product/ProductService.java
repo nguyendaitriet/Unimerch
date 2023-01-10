@@ -1,4 +1,4 @@
-package com.unimerch.service;
+package com.unimerch.service.product;
 
 import com.unimerch.dto.product.ProductPriceParam;
 import com.unimerch.dto.product.ProductResult;

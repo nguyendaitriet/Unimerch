@@ -3,28 +3,34 @@
 <th:block th:fragment="temp-table-product-analytics">
     <textarea id="tempTableProductAnalytics" style="display:none">
         <tr>
-            <td rowspan="2" class="align-middle text-center">{0}</td>
-            <td>
-                <a href='https://www.amazon.com/dp/{0}' target='_blank'>{1}</a>
-            </td>
-            <td class="text-center font-weight-bold text-dark">{2}</td>
-            <td class="text-center">{3}</td>
-            <td class="text-center">{4}</td>
-            <td class="text-center">{5}</td>
-        </tr>
-        <tr>
-            <td id="{0}-{5}" colspan="5">
-                <button class="btn btn-primary btn-sm btn-handle-tagGroup"
-                        title="Tag handler">
+            <td  class="text-center align-middle font-weight-bold text-dark">{2}</td>
+            <td id="{0}-{5}">
+                <a href='https://www.amazon.com/dp/{0}' target='_blank' title={0}>{1}</a>
+                <span class="font-weight-light">{0}</span>
+                <br>
+                <button class="btn btn-outline-warning btn-sm btn-handle-product-tag"
+                        title="Tag handler" data-id={0}>
                     <i class="far fa-edit"></i>
                 </button>
             </td>
+            <td class="text-center">{3}</td>
+            <td class="text-center">{4}</td>
+            <td class="text-center">{5}</td>
         </tr>
     </textarea>
 </th:block>
 
 <th:block th:fragment="temp-product-tagGroup">
     <textarea id="tempProductTag" style="display:none">
-        <span data-id={0} class="btn btn-success btn-sm product-tagGroup mr-3">{1}</span>
+        <span data-id={0} class="btn btn-{2} btn-sm product-tagGroup mr-1">{1}</span>
     </textarea>
 </th:block>
+
+<th:block th:fragment="temp-tagGroup-legend">
+    <textarea id="tempTagGroupLegend" style="display:none">
+        <span class="btn btn-{1} mr-3">{0}</span>
+    </textarea>
+</th:block>
+
+</html>
+
