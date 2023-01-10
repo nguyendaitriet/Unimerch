@@ -9,17 +9,20 @@ import com.unimerch.dto.old_system.Result;
 import com.unimerch.dto.order.OrderData;
 import com.unimerch.dto.product.ProductPriceParam;
 import com.unimerch.security.RoleConstant;
-import com.unimerch.service.AmznUserService;
-import com.unimerch.service.OrderService;
-import com.unimerch.service.ProductService;
-import com.unimerch.service.impl.ConfigurationServiceImpl;
+import com.unimerch.service.amzn.AmznUserService;
+import com.unimerch.service.config.ConfigurationServiceImpl;
+import com.unimerch.service.order.OrderService;
+import com.unimerch.service.product.ProductService;
 import com.unimerch.shared.JacksonParser;
 import com.unimerch.shared.JsonPathParser;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RestController;
 
 import java.util.HashMap;
 import java.util.List;
@@ -83,8 +86,10 @@ public class OldAPI {
     @PostMapping("/api/amazone/updateProduct")
     public ResponseEntity<?> updateProduct(Authentication authentication, @RequestBody HashMap<String, String> fields) {
         String json = fields.get("json");
-        List<ProductPriceParam> params = JacksonParser.INSTANCE.toList(json, OProductPriceParam.class)
-                .stream().map(old -> new ProductPriceParam(old.getASIN(), old.getPriceHTML()))
+        List<ProductPriceParam> params = JacksonParser.INSTANCE
+                .toList(json, OProductPriceParam.class)
+                .stream()
+                .map(old -> new ProductPriceParam(old.getASIN(), old.getPriceHTML()))
                 .collect(Collectors.toList());
         productService.updateProducts(params);
         return new ResponseEntity<>(HttpStatus.OK);
@@ -94,6 +99,4 @@ public class OldAPI {
     public ResponseEntity<?> getConfiguration() {
         return new ResponseEntity<>(configurationService.getAppsConfigString(), HttpStatus.OK);
     }
-
-
 }

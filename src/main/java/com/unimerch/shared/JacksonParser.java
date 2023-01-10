@@ -25,7 +25,7 @@ public class JacksonParser {
     private JacksonParser() {
         mapper = new ObjectMapper();
         mapper.setDefaultPropertyInclusion(Value.construct(Include.ALWAYS, Include.NON_NULL));
-        mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+//        mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
         mapper.setSerializationInclusion(JsonInclude.Include.NON_DEFAULT);
     }
 

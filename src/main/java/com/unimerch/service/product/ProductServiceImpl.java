@@ -80,6 +80,7 @@ public class ProductServiceImpl implements ProductService {
     private BigDecimal convertToProductPrice(String priceHtml) {
         String priceRegex = configurationService.getBackendPricePattern();
         Pattern pattern = Pattern.compile(priceRegex);
+        System.out.println(priceHtml);
         Matcher matcher = pattern.matcher(priceHtml);
         if (matcher.find()) {
             return new BigDecimal(matcher.group(0));

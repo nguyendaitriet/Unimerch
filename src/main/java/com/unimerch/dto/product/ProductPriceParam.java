@@ -12,4 +12,12 @@ import lombok.Setter;
 public class ProductPriceParam {
     private String asin;
     private String priceHtml;
+
+    @Override
+    public String toString() {
+        return "ProductPriceParam{" +
+                "asin='" + asin + '\'' +
+                ", priceHtml='" + priceHtml + '\'' +
+                '}';
+    }
 }

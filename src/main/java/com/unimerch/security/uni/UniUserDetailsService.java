@@ -4,7 +4,7 @@ import com.unimerch.exception.NotAllowDisableException;
 import com.unimerch.repository.model.user.User;
 import com.unimerch.security.NameConstant;
 import com.unimerch.security.UserPrincipal;
-import com.unimerch.service.UniUserService;
+import com.unimerch.service.user.UniUserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
 import org.springframework.security.core.userdetails.UserDetails;
