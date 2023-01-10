@@ -42,10 +42,8 @@
                                                 <option value="0" th:text="#{analyse.allGroupsSelect}">All Groups
                                                 </option>
                                             </select>
-                                            <select class="selectpicker ml-3" id="analAmznSelect"
-                                                    data-live-search="true">
-                                                <option value="0" th:text="#{analyse.allAmznsSelect}">All Amazon
-                                                    Accounts
+                                            <select class="selectpicker ml-3" id="analAmznSelect" data-live-search="true">
+                                                <option value="0" th:text="#{analyse.allAmznsSelect}">All Amazon Accounts
                                                 </option>
                                             </select>
                                         </div>
@@ -309,6 +307,7 @@
             url: page.urls.findAllGroups
         })
             .done((groups) => {
+                page.element.analGrpSelect.selectpicker('setStyle', 'btn-outline-primary');
                 $.each(groups, (index, group) => {
                     page.commands.addGroupToSelect(group);
                 });
@@ -324,6 +323,7 @@
             url: page.urls.findAllAmzns
         })
             .done((amzns) => {
+                page.element.analAmznSelect.selectpicker('setStyle', 'btn-outline-primary');
                 page.commands.renderAmznOptions(amzns);
             })
             .fail((jqXHR) => {
@@ -345,6 +345,7 @@
                     page.element.analAmznSelect.find('option').remove().end()
                         .append(`<option value='noAmzn' selected>${noAmzn}</option>`).val('noAmzn');
                     page.element.analAmznSelect.selectpicker('refresh');
+                    page.element.analAmznSelect.selectpicker('render');
                     return;
                 }
                 page.commands.renderAmznOptions(amzns);
@@ -363,6 +364,7 @@
         });
 
         page.element.analAmznSelect.selectpicker('refresh');
+        page.element.analAmznSelect.selectpicker('render');
 
     }
     page.commands.addGroupToSelect = (group) => {
@@ -396,7 +398,16 @@
         let dateFilter = $('input[name=dateFilter]:checked').val();
         let startDate = page.element.dateRange.data('daterangepicker').startDate.format('DD/MM/YYYY');
         let endDate = page.element.dateRange.data('daterangepicker').endDate.format('DD/MM/YYYY');
-        return new AnalyticsParam(groupId, amznId, dateFilter, startDate, endDate);
+        let tagIncluded = [];
+        page.element.tagGroupIncludeArea.children().children('.selectpicker').each((i, e) => {
+            tagIncluded = tagIncluded.concat($(e).val())
+        });
+        let tagExcluded = [];
+        page.element.tagGroupExcludeArea.children().children('.selectpicker').each((i, e) => {
+            tagExcluded = tagExcluded.concat($(e).val())
+        });
+
+        return new AnalyticsParam(groupId, amznId, dateFilter, startDate, endDate, tagIncluded, tagExcluded);
     }
     page.commands.handleCustomDateRange = () => {
         $('input[type=radio][name=dateFilter]').change(function () {
@@ -424,8 +435,13 @@
                         page.commands.addTagOptionToTagGroupSelect(tagGroupId, tagResult);
                         page.dialogs.commands.addTagToTagHandler(tagGroupId, tagResult);
                     })
+
+                    $(`.tag-group-select-id-${element.tagGroup.id}`).selectpicker('refresh');
+                    $(`.tag-group-select-id-${element.tagGroup.id}`).selectpicker('setStyle', `btn-${element.tagGroup.color}`, 'add');
                 });
-                // var tagGroupSelect = new Choices('.tag-group-select');
+
+                $('.selectpicker').selectpicker('setStyle', 'btn-light', 'remove');
+                $('.selectpicker').selectpicker('render');
             })
             .fail((jqXHR) => {
                 DBApp.handleFailedTasks(jqXHR);
@@ -434,12 +450,14 @@
     page.commands.addTagGroupToFilterArea = (tagGroup) => {
         page.element.tagGroupIncludeArea.append($(tempTagGroupSelect(tagGroup.id, tagGroup.name, tagGroup.color)));
         page.element.tagGroupExcludeArea.append($(tempTagGroupSelect(tagGroup.id, tagGroup.name, tagGroup.color)));
+
     }
     page.commands.addTagGroupToTagGroupLegend = (tagGroup) => {
         page.element.tagGroupLegendArea.append($(tempTagGroupLegend(tagGroup.name, tagGroup.color)));
     }
     page.commands.addTagOptionToTagGroupSelect = (tagGroupId, tagResult) => {
-        $(`.tag-group-select-id-${tagGroupId}`).append($(tempOption(tagResult.id, tagResult.name)))
+        let tagGroupTagId = tagGroupId + '-' + tagResult.id
+        $(`.tag-group-select-id-${tagGroupId}`).append($(tempOption(tagGroupTagId, tagResult.name)))
     }
 
     // Analytics Sales Chart
@@ -912,8 +930,6 @@
                 format: "DD/MM/YYYY"
             }
         });
-        page.element.analGrpSelect.selectpicker('setStyle', 'btn-outline-primary');
-        page.element.analAmznSelect.selectpicker('setStyle', 'btn-outline-primary');
         page.element.btnAnalyse.click(() => {
             page.commands.handleBtnAnalyse();
         });

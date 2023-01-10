@@ -5,6 +5,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.util.List;
+
 @Getter
 @Setter
 @NoArgsConstructor
@@ -17,4 +19,6 @@ public class AnalyticsParam {
     private String endDate;
     private boolean searchable;
     private String searchKey;
+    private List<String> tagIncluded;
+    private List<String> tagExcluded;
 }

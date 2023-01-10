@@ -1,5 +1,5 @@
 class AnalyticsParam {
-    constructor(groupId, amznId, dateFilter, startDate, endDate) {
+    constructor(groupId, amznId, dateFilter, startDate, endDate, tagIncluded, tagExcluded) {
         this.groupId = groupId;
         this.amznId = amznId;
         this.dateFilter = dateFilter;
@@ -7,6 +7,8 @@ class AnalyticsParam {
         this.endDate = endDate;
         this.searchable = false;
         this.searchKey = '';
+        this.tagIncluded = tagIncluded;
+        this.tagExcluded = tagExcluded;
     }
 }
 

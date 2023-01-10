@@ -117,11 +117,14 @@ public class AnalyticServiceImpl implements AnalyticService {
     public List<OrderChartColumn> getOrderChartColumnList(AnalyticsParam analyticsParam, AmznFilter amznFilter, Instant startDate, Instant endDate) {
         switch (amznFilter) {
             case ALL:
-                return orderNativeQueryDTORepo.findAllOrderChartWithDateRange(startDate, endDate);
+                return orderNativeQueryDTORepo.findAllOrderChartWithDateRange(startDate, endDate,
+                        analyticsParam.getTagIncluded(), analyticsParam.getTagIncluded().size());
             case GROUP:
-                return orderNativeQueryDTORepo.findGroupOrderChartWithDateRange(analyticsParam.getGroupId(), startDate, endDate);
+                return orderNativeQueryDTORepo.findGroupOrderChartWithDateRange(analyticsParam.getGroupId(), startDate, endDate,
+                        analyticsParam.getTagIncluded(), analyticsParam.getTagIncluded().size());
             case AMZN:
-                return orderNativeQueryDTORepo.findAmznOrderChartWithDateRange(analyticsParam.getAmznId(), startDate, endDate);
+                return orderNativeQueryDTORepo.findAmznOrderChartWithDateRange(analyticsParam.getAmznId(), startDate, endDate,
+                        analyticsParam.getTagIncluded(), analyticsParam.getTagIncluded().size());
             default:
                 throw new ServerErrorException(messageSource.getMessage("error.500", null, Locale.getDefault()));
         }
@@ -205,27 +208,19 @@ public class AnalyticServiceImpl implements AnalyticService {
     }
 
     public List<ProductResult> getProductResultList(AnalyticsParam analyticsParam, AmznFilter amznFilter, Instant startDate, Instant endDate) {
-        if (analyticsParam.isSearchable()) {
-            String key = analyticsParam.getSearchKey();
-            switch (amznFilter) {
-                case ALL:
-                    return productRepository.searchAllProductAnalyticsListByAsinOrTitle(key, startDate, endDate);
-                case GROUP:
-                    return productRepository.searchGroupProductAnalyticsList(key, analyticsParam.getGroupId(), startDate, endDate);
-                case AMZN:
-                    return productRepository.searchAmznProductAnalyticsList(key, analyticsParam.getAmznId(), startDate, endDate);
-                default:
-                    throw new ServerErrorException(messageSource.getMessage("error.500", null, Locale.getDefault()));
-            }
-        }
-
         switch (amznFilter) {
             case ALL:
-                return productRepository.getAllProductAnalyticsList(startDate, endDate);
+                return orderNativeQueryDTORepo.getAllProductAnalyticsList(startDate, endDate,
+                        analyticsParam.getTagIncluded(), analyticsParam.getTagIncluded().size(),
+                        analyticsParam.isSearchable(), analyticsParam.getSearchKey());
             case GROUP:
-                return productRepository.getGroupProductAnalyticsList(analyticsParam.getGroupId(), startDate, endDate);
+                return orderNativeQueryDTORepo.getGroupProductAnalyticsList(analyticsParam.getGroupId(), startDate, endDate,
+                        analyticsParam.getTagIncluded(), analyticsParam.getTagIncluded().size(),
+                        analyticsParam.isSearchable(), analyticsParam.getSearchKey());
             case AMZN:
-                return productRepository.getAmznProductAnalyticsList(analyticsParam.getAmznId(), startDate, endDate);
+                return orderNativeQueryDTORepo.getAmznProductAnalyticsList(analyticsParam.getAmznId(), startDate, endDate,
+                        analyticsParam.getTagIncluded(), analyticsParam.getTagIncluded().size(),
+                        analyticsParam.isSearchable(), analyticsParam.getSearchKey());
             default:
                 throw new ServerErrorException(messageSource.getMessage("error.500", null, Locale.getDefault()));
         }
@@ -233,7 +228,7 @@ public class AnalyticServiceImpl implements AnalyticService {
 
     public List<ProductAnalyticsResult> processProductResultList(List<ProductResult> productResultList) {
         return productResultList.stream()
-                .sorted((o1, o2) -> Integer.compare(o2.getQuantitySold(), o1.getQuantitySold()))
+                .sorted((o1, o2) -> Long.compare(o2.getQuantitySold(), o1.getQuantitySold()))
                 .map(productResult -> {
                     List<TagGroupTagResult> tagGroupTagResultList = brgProductTagTagGroupRepo.findTagGroupAndTagByAsin(productResult.getAsin());
                     return productMapper.toProductAnalyticsResult(productResult, tagGroupTagResultList);
@@ -301,11 +296,14 @@ public class AnalyticServiceImpl implements AnalyticService {
     public OrderCardResult getOrderCardResult(AnalyticsParam analyticsParam, AmznFilter amznFilter, Instant startDate, Instant endDate) {
         switch (amznFilter) {
             case ALL:
-                return orderRepository.getOrderCartResultAll(startDate, endDate);
+                return orderNativeQueryDTORepo.getAllOrderCartResult(startDate, endDate,
+                        analyticsParam.getTagIncluded(), analyticsParam.getTagIncluded().size());
             case GROUP:
-                return orderRepository.getOrderCartResultGroup(analyticsParam.getGroupId(), startDate, endDate);
+                return orderNativeQueryDTORepo.getGroupOrderCartResult(analyticsParam.getGroupId(), startDate, endDate,
+                        analyticsParam.getTagIncluded(), analyticsParam.getTagIncluded().size());
             case AMZN:
-                return orderRepository.getOrderCartResultAmzn(analyticsParam.getAmznId(), startDate, endDate);
+                return orderNativeQueryDTORepo.getAmznOrderCartResult(analyticsParam.getAmznId(), startDate, endDate,
+                        analyticsParam.getTagIncluded(), analyticsParam.getTagIncluded().size());
             default:
                 throw new ServerErrorException(messageSource.getMessage("error.500", null, Locale.getDefault()));
         }

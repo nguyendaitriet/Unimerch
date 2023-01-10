@@ -8,8 +8,8 @@
 
 <th:block th:fragment="temp-tagGroup-select">
     <textarea id="tempTagGroupSelect" style="display:none">
-        <select class="btn btn-{2} mr-3 tag-group-select-id-{0}">
-                <option value="0">{1}</option>
+        <select class="mb-3 mr-3 tag-group-select-id-{0} selectpicker" data-live-search="true" multiple>
+                <option value="0" selected disabled>{1}</option>
         </select>
     </textarea>
 </th:block>
