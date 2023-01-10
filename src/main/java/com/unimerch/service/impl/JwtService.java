@@ -16,7 +16,7 @@ public class JwtService {
     public static final long JWT_TOKEN_VALIDITY = 1000L;
     private static final Logger logger = LoggerFactory.getLogger(JwtService.class.getName());
 
-    public String generateTokenLogin(String userId, String username) {
+    public String generateToken(String userId, String username) {
         return Jwts.builder()
                 .setSubject(username)
                 .setIssuedAt(new Date())

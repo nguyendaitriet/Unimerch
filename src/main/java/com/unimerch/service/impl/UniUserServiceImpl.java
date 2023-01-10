@@ -6,19 +6,17 @@ import com.unimerch.dto.user.UserResult;
 import com.unimerch.exception.*;
 import com.unimerch.mapper.GroupMapper;
 import com.unimerch.mapper.UserMapper;
+import com.unimerch.repository.datatable.UserDataTableRepository;
 import com.unimerch.repository.group.BrgGroupUserRepository;
 import com.unimerch.repository.model.group.BrgGroupUser;
 import com.unimerch.repository.model.group.BrgGroupUserId;
 import com.unimerch.repository.model.group.Group;
+import com.unimerch.repository.model.metamodel.User_;
 import com.unimerch.repository.model.user.Role;
 import com.unimerch.repository.model.user.User;
 import com.unimerch.repository.user.UserRepository;
-import com.unimerch.repository.datatable.UserDataTableRepository;
-import com.unimerch.repository.model.metamodel.User_;
-import com.unimerch.security.UserPrinciple;
 import com.unimerch.service.UniUserService;
 import com.unimerch.util.NaturalSortUtils;
-import com.unimerch.util.PrincipalUtils;
 import com.unimerch.util.ValidationUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
@@ -27,8 +25,6 @@ import org.springframework.data.jpa.datatables.mapping.Column;
 import org.springframework.data.jpa.datatables.mapping.DataTablesInput;
 import org.springframework.data.jpa.datatables.mapping.DataTablesOutput;
 import org.springframework.data.jpa.domain.Specification;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -86,13 +82,7 @@ public class UniUserServiceImpl implements UniUserService {
 
     @Override
     @Transactional(readOnly = true)
-    public UserResult findUserItemResultByUsername(String username) {
-        return userMapper.toDTO(getByUsername(username));
-    }
-
-    @Override
-    @Transactional(readOnly = true)
-    public User getByUsername(String username) {
+    public User findByUsername(String username) {
         Optional<User> optUser = userRepository.findByUsername(username);
         if (!optUser.isPresent())
             throw new UserNotFoundException(messageSource.getMessage("validation.usernameNotExist", null, Locale.getDefault()));
@@ -191,18 +181,6 @@ public class UniUserServiceImpl implements UniUserService {
         } catch (Exception e) {
             throw new ServerErrorException(messageSource.getMessage("error.500", null, Locale.getDefault()));
         }
-    }
-
-    @Override
-    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        Optional<User> userOptional = userRepository.findByUsername(username);
-        if (!userOptional.isPresent())
-            throw new UsernameNotFoundException(username);
-        User user = userOptional.get();
-        return UserPrinciple.build(user.getId().toString(),
-                user.getUsername(),
-                user.getPasswordHash(),
-                user.getRole().getCode());
     }
 
     @Override

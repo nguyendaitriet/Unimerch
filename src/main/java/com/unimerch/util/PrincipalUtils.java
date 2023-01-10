@@ -15,14 +15,14 @@ public class PrincipalUtils {
     public int getPrincipalId() {
         Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         String userName = ((UserDetails) principal).getUsername();
-        User user = userService.getByUsername(userName);
+        User user = userService.findByUsername(userName);
         return user.getId();
     }
 
     public String getPrincipalRoleCode() {
         Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         String userName = ((UserDetails) principal).getUsername();
-        User user = userService.getByUsername(userName);
+        User user = userService.findByUsername(userName);
         return user.getRole().getCode();
     }
 

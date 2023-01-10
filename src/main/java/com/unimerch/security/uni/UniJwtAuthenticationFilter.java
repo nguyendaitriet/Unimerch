@@ -29,26 +29,8 @@ public class UniJwtAuthenticationFilter extends OncePerRequestFilter {
     @Qualifier(NameConstant.UNI_USER_SECURITY_SERVICE_NAME)
     private UserDetailsService userDetailsService;
 
-    private String getBearerTokenRequest(HttpServletRequest request) {
-        String authHeader = request.getHeader("Authorization");
-
-        if (authHeader != null) {
-            if (authHeader.startsWith("Bearer ")) {
-                return authHeader.replace("Bearer ", "");
-            }
-            return authHeader;
-        }
-
-        return null;
-    }
-
-    private String getAuthorizationType(HttpServletRequest request) {
-        return request.getHeader("Authorization-Type");
-    }
-
-    private static String getCookieValue(HttpServletRequest req) {
-        Cookie[] cookies = req.getCookies();
-
+    private static String getAccessToken(HttpServletRequest request) {
+        Cookie[] cookies = request.getCookies();
         if (cookies != null) {
             for (Cookie cookie : cookies) {
                 if (cookie.getName().equals("JWT")) {
@@ -56,38 +38,17 @@ public class UniJwtAuthenticationFilter extends OncePerRequestFilter {
                 }
             }
         }
-
         return null;
     }
-
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
-        String authorizationType = getAuthorizationType(request);
-        if (authorizationType != null) {
+        String accessToken = getAccessToken(request);
+        if (accessToken == null) {
             filterChain.doFilter(request, response);
             return;
         }
-
-        try {
-            String bearerToken = getBearerTokenRequest(request);
-            if (bearerToken != null) {
-                setAuthentication(request, bearerToken);
-            } else {
-                String authorizationCookie = getCookieValue(request);
-                setAuthentication(request, authorizationCookie);
-            }
-
-        } catch (Exception e) {
-            logger.error("Can NOT set uni authentication -> Message: {0}", e);
-        }
-
-        filterChain.doFilter(request, response);
-    }
-
-    private void setAuthentication(HttpServletRequest request, String authorizationValue) {
-        if (authorizationValue != null && jwtService.validateJwtToken(authorizationValue)) {
-
-            JWTUser jwtUser = jwtService.getPrincipalFromJwtToken(authorizationValue);
+        if (jwtService.validateJwtToken(accessToken)) {
+            JWTUser jwtUser = jwtService.getPrincipalFromJwtToken(accessToken);
             UserDetails userDetails = userDetailsService.loadUserByUsername(jwtUser.getUsername());
 
             UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
@@ -96,6 +57,8 @@ public class UniJwtAuthenticationFilter extends OncePerRequestFilter {
 
             SecurityContextHolder.getContext().setAuthentication(authentication);
         }
+        filterChain.doFilter(request, response);
     }
+
 
 }

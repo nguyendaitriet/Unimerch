@@ -6,18 +6,15 @@ import com.unimerch.dto.user.UserResult;
 import com.unimerch.repository.model.user.User;
 import org.springframework.data.jpa.datatables.mapping.DataTablesInput;
 import org.springframework.data.jpa.datatables.mapping.DataTablesOutput;
-import org.springframework.security.core.userdetails.UserDetailsService;
 
 import java.util.List;
 
-public interface UniUserService extends UserDetailsService {
+public interface UniUserService {
     DataTablesOutput<UserResult> findAllUserDTOExclSelf(DataTablesInput input, String principalUsername);
 
-    User getByUsername(String username);
+    User findByUsername(String username);
 
     User findById(String id);
-
-    UserResult findUserItemResultByUsername(String username);
 
     UserResult findUserListById(String id);
 

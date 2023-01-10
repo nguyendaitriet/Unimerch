@@ -1,9 +1,10 @@
 package com.unimerch.security.amzn;
 
+import com.unimerch.exception.UserNotFoundException;
 import com.unimerch.repository.amzn.AmznUserRepository;
 import com.unimerch.repository.model.amzn_user.AmznUser;
 import com.unimerch.security.NameConstant;
-import com.unimerch.security.UserPrinciple;
+import com.unimerch.security.UserPrincipal;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -18,11 +19,10 @@ public class AmznUserDetailsService implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        AmznUser user = amznUserRepository.findByUsername(username);
-        if (user == null) {
-            throw new UsernameNotFoundException("No amzn acc found with the given username.");
-        }
-        return UserPrinciple.build(
+        System.out.println(username);
+        AmznUser user = amznUserRepository.findByUsername(username)
+                .orElseThrow(()->new UserNotFoundException("{exception.userNotFound}"));
+        return UserPrincipal.build(
                 user.getId().toString(),
                 user.getUsername(),
                 user.getPassword(),

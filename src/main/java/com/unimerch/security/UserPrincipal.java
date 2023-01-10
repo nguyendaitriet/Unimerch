@@ -4,9 +4,12 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
+import java.util.Objects;
 
-public class UserPrinciple implements UserDetails {
+public class UserPrincipal implements UserDetails {
 
     private final String id;
 
@@ -16,7 +19,7 @@ public class UserPrinciple implements UserDetails {
 
     private final Collection<? extends GrantedAuthority> authorities;
 
-    public UserPrinciple(String id,
+    public UserPrincipal(String id,
                          String username,
                          String password,
                          Collection<? extends GrantedAuthority> authorities) {
@@ -27,14 +30,14 @@ public class UserPrinciple implements UserDetails {
     }
 
     //Giam Dependency nen ko truyen thang User vao
-    public static UserPrinciple build(String id, String username, String passwordHash, String roleCode) {
+    public static UserPrincipal build(String id, String username, String passwordHash, String roleCode) {
         List<GrantedAuthority> authorities = null;
         if (roleCode != null) {
             authorities = new ArrayList<>();
             SimpleGrantedAuthority authority = new SimpleGrantedAuthority(roleCode);
             authorities.add(authority);
         }
-        return new UserPrinciple(
+        return new UserPrincipal(
                 id,
                 username,
                 passwordHash,
@@ -86,7 +89,7 @@ public class UserPrinciple implements UserDetails {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
 
-        UserPrinciple user = (UserPrinciple) o;
+        UserPrincipal user = (UserPrincipal) o;
         return Objects.equals(id, user.id);
     }
 
@@ -95,13 +98,4 @@ public class UserPrinciple implements UserDetails {
         return Objects.hash(id);
     }
 
-    @Override
-    public String toString() {
-        return "UserPrinciple{" +
-                "id=" + id +
-                ", username='" + username + '\'' +
-                ", password='" + password + '\'' +
-                ", roles=" + authorities +
-                '}';
-    }
 }

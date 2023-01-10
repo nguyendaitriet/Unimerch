@@ -21,6 +21,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 
 @Service
 public class ProductServiceImpl implements ProductService {
@@ -66,10 +67,20 @@ public class ProductServiceImpl implements ProductService {
         }
     }
 
+    @Override
+    public void updateProducts(List<ProductPriceParam> productData) {
+        List<Product> products = productData.stream().map(param -> {
+            BigDecimal price = convertToProductPrice(param.getPriceHtml());
+            return productMapper.toProduct(param)
+                    .setPrice(price);
+        }).collect(Collectors.toList());
+        productRepository.saveAll(products);
+    }
+
     private BigDecimal convertToProductPrice(String priceHtml) {
         String priceRegex = configurationService.getBackendPricePattern();
-        Pattern TAG_REGEX = Pattern.compile(priceRegex);
-        Matcher matcher = TAG_REGEX.matcher(priceHtml);
+        Pattern pattern = Pattern.compile(priceRegex);
+        Matcher matcher = pattern.matcher(priceHtml);
         if (matcher.find()) {
             return new BigDecimal(matcher.group(0));
         }

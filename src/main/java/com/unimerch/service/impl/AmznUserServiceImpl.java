@@ -87,7 +87,8 @@ public class AmznUserServiceImpl implements AmznUserService {
     public void updateMetadata(Metadata metadata, Authentication authentication) {
         try {
             String username = authentication.getName();
-            AmznUser user = amznAccountRepository.findByUsername(username);
+            AmznUser user = amznAccountRepository.findByUsername(username)
+                    .orElseThrow(()->new UserNotFoundException("{exception.userNotFound}"));
             user = metadataMapper.updateAmznAccMetadata(user, metadata);
             amznAccountRepository.save(user);
         } catch (ServerErrorException e) {
@@ -99,7 +100,8 @@ public class AmznUserServiceImpl implements AmznUserService {
     public void updateStatus(AmznStatus amznStatus, Authentication authentication) {
         try {
             String username = authentication.getName();
-            AmznUser user = amznAccountRepository.findByUsername(username);
+            AmznUser user = amznAccountRepository.findByUsername(username)
+                    .orElseThrow(()->new UserNotFoundException("{exception.userNotFound}"));
             user.setStatus(AzmnStatus.parseAzmnStatus(amznStatus.getStatus()));
             user.setLastCheck(Instant.now());
             amznAccountRepository.save(user);
@@ -222,14 +224,14 @@ public class AmznUserServiceImpl implements AmznUserService {
                 if (cell.getColumnIndex() == usernameColumnIndex) {
                     switch (cell.getCellType()) {
                         case STRING:
-                            amznUsername = cell.getRichStringCellValue().getString().trim().toLowerCase();
+                            amznUsername = cell.getRichStringCellValue().getString().trim();
                             break;
                         case NUMERIC:
                             amznUsername = String.valueOf((int) cell.getNumericCellValue());
                             break;
                     }
                 }
-
+//TODO: Can viet lai de kiem tra toan bo user mot lan, connection DB qua nhieu
                 if (amznAccountRepository.existsByUsername(amznUsername)) {
                     isUsernameExisted = true;
                     break;
@@ -330,9 +332,8 @@ public class AmznUserServiceImpl implements AmznUserService {
 
     @Override
     public AmznAccResult findByUsername(String username) {
-        AmznUser user = amznAccountRepository.findByUsername(username);
-        if (user == null)
-            throw new UserNotFoundException("{exception.userNotFound}");
+        AmznUser user = amznAccountRepository.findByUsername(username)
+                .orElseThrow(() -> new UserNotFoundException("{exception.userNotFound}"));
         return amznMapper.toDTO(user);
     }
 

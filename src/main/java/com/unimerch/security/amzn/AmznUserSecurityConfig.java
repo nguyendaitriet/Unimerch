@@ -58,7 +58,7 @@ public class AmznUserSecurityConfig extends WebSecurityConfigurerAdapter {
         http.httpBasic().authenticationEntryPoint(restAuthenticationEntryPoint);
         http.authenticationProvider(authenticationProvider2());
         http.authorizeRequests()
-                .antMatchers("/api/amzn/login").permitAll()
+                .antMatchers("/api/amzn/login","/AccessToken").permitAll()
                 .antMatchers(
                         "/api/amzn/updateMetadata",
                         "/api/amzn/updateStatus",
