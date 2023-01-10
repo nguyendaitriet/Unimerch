@@ -248,6 +248,7 @@ public class AmznUserServiceImpl implements AmznUserService {
 
             amznUserList.add(new AmznUser(amznUsername, amznPassword));
         }
+
         List<String> allAmznUsers = amznUserRepository.getAllAmznUsername();
         amznUserList.removeAll(allAmznUsers.stream().map(AmznUser::new).collect(Collectors.toList()));
         amznUserList = amznUserList.stream().map(item -> {

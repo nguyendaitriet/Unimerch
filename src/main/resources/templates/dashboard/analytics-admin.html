@@ -596,9 +596,14 @@
                 dataOfChart = chartData;
                 let titleChartUpdate;
                 let datesLength = chartData.dates.length;
-                if (datesLength === 1) {
+
+                if (datesLength === 0) {
+                    titleChartUpdate = 'No data';
+                }
+                else if (datesLength === 1) {
                     titleChartUpdate = `Revenues Dashboard ${chartData.dates[0]}`;
-                } else {
+                }
+                else {
                     titleChartUpdate = `Revenues Dashboard ${chartData.dates[0]} - ${chartData.dates[datesLength - 1]}`;
                 }
 
@@ -917,6 +922,7 @@
         })
         page.element.btnClearSearchKey.click(() => {
             page.element.productAnalyticsSearchKey.val('');
+            page.element.productAnalyticsSearchKey.focus();
         })
         page.element.productAnalDateRange.daterangepicker({
             locale: {

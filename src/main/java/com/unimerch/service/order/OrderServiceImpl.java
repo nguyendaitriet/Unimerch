@@ -79,7 +79,7 @@ public class OrderServiceImpl implements OrderService {
             });
 
             orderRepositoryExt.deleteAllByDate(orderDates, id);
-            productRepository.deleteAllByIdInBatch(orderData.getAsinList());
+//            productRepository.deleteAllByIdInBatch(orderData.getAsinList());
             productRepository.saveAll(orderData.getProductList());
 
             orderData.getOrderList().forEach(order -> order.setAmznUser(new AmznUser(id)));
