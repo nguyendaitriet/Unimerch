@@ -1,4 +1,4 @@
-package com.unimerch.service.amzn;
+package com.unimerch.service.impl;
 
 import com.unimerch.dto.amznacc.*;
 import com.unimerch.exception.*;
@@ -11,6 +11,7 @@ import com.unimerch.repository.datatable.AmznAccTableRepository;
 import com.unimerch.repository.model.amzn_user.AmznUser;
 import com.unimerch.repository.model.amzn_user.AzmnStatus;
 import com.unimerch.repository.model.group.Group;
+import com.unimerch.service.amzn.AmznUserService;
 import com.unimerch.service.group.GroupService;
 import com.unimerch.util.NaturalSortUtils;
 import com.unimerch.util.TimeUtils;
@@ -46,7 +47,7 @@ public class AmznUserServiceImpl implements AmznUserService {
     private AmznUserMapper amznMapper;
 
     @Autowired
-    private AmznUserRepository amznUserRepository;
+    private AmznUserRepository amznAccountRepository;
 
     @Autowired
     private BrgGroupAmznUserRepository brgGroupAmznUserRepository;
@@ -74,7 +75,7 @@ public class AmznUserServiceImpl implements AmznUserService {
         }
 
         int validId = Integer.parseInt(id);
-        Optional<AmznUser> optionalAmznAcc = amznUserRepository.findById(validId);
+        Optional<AmznUser> optionalAmznAcc = amznAccountRepository.findById(validId);
         if (!optionalAmznAcc.isPresent()) {
             throw new InvalidIdException(messageSource.getMessage("validation.idNotExist", null, Locale.getDefault()));
         }
@@ -86,9 +87,10 @@ public class AmznUserServiceImpl implements AmznUserService {
     public void updateMetadata(Metadata metadata, Authentication authentication) {
         try {
             String username = authentication.getName();
-            AmznUser user = amznUserRepository.findByUsername(username);
+            AmznUser user = amznAccountRepository.findByUsername(username)
+                    .orElseThrow(()->new UserNotFoundException("{exception.userNotFound}"));
             user = metadataMapper.updateAmznAccMetadata(user, metadata);
-            amznUserRepository.save(user);
+            amznAccountRepository.save(user);
         } catch (ServerErrorException e) {
             throw new ServerErrorException(messageSource.getMessage("error.500", null, Locale.getDefault()));
         }
@@ -98,10 +100,11 @@ public class AmznUserServiceImpl implements AmznUserService {
     public void updateStatus(AmznStatus amznStatus, Authentication authentication) {
         try {
             String username = authentication.getName();
-            AmznUser user = amznUserRepository.findByUsername(username);
+            AmznUser user = amznAccountRepository.findByUsername(username)
+                    .orElseThrow(()->new UserNotFoundException("{exception.userNotFound}"));
             user.setStatus(AzmnStatus.parseAzmnStatus(amznStatus.getStatus()));
             user.setLastCheck(Instant.now());
-            amznUserRepository.save(user);
+            amznAccountRepository.save(user);
         } catch (ServerErrorException e) {
             throw new ServerErrorException(messageSource.getMessage("error.500", null, Locale.getDefault()));
         }
@@ -122,14 +125,14 @@ public class AmznUserServiceImpl implements AmznUserService {
 
     @Override
     public List<AmznAccResult> findAll() {
-        return amznUserRepository.findAll().stream()
+        return amznAccountRepository.findAll().stream()
                 .sorted((s1, s2) -> NaturalSortUtils.compareString(s1.getUsername(), s2.getUsername()))
                 .map(amznMapper::toDTO).collect(Collectors.toList());
     }
 
     @Override
     public List<AmznAccFilterResult> findAllFilter() {
-        return amznUserRepository.findAll()
+        return amznAccountRepository.findAll()
                 .stream()
                 .sorted((s1, s2) -> NaturalSortUtils.compareString(s1.getUsername(), s2.getUsername()))
                 .map(account -> amznMapper.toAmznAccFilterResult(account))
@@ -140,7 +143,7 @@ public class AmznUserServiceImpl implements AmznUserService {
     public AmznAccResult create(AmznAccParam createParam) {
         String username = createParam.getUsername().trim().toLowerCase();
         String password = createParam.getPassword();
-        if (amznUserRepository.existsByUsername(username)) {
+        if (amznAccountRepository.existsByUsername(username)) {
             throw new DuplicateDataException(messageSource.getMessage("validation.usernameExists", null, Locale.getDefault()));
         }
         try {
@@ -148,7 +151,7 @@ public class AmznUserServiceImpl implements AmznUserService {
             createParam.setPassword(passwordEncoder.encode(password));
             AmznUser user = amznMapper.toAmznAcc(createParam);
             user.setStatus(AzmnStatus.APPROVED);
-            user = amznUserRepository.save(user);
+            user = amznAccountRepository.save(user);
             return amznMapper.toDTO(user);
         } catch (Exception e) {
             throw new ServerErrorException(messageSource.getMessage("error.500", null, Locale.getDefault()));
@@ -160,7 +163,7 @@ public class AmznUserServiceImpl implements AmznUserService {
         AmznUser amznAccount = findById(id);
         try {
             amznAccount.setPassword(passwordEncoder.encode(amznAccParam.getPassword()));
-            amznAccount = amznUserRepository.save(amznAccount);
+            amznAccount = amznAccountRepository.save(amznAccount);
             return amznMapper.toDTO(amznAccount);
         } catch (Exception e) {
             throw new ServerErrorException(messageSource.getMessage("error.500", null, Locale.getDefault()));
@@ -168,25 +171,23 @@ public class AmznUserServiceImpl implements AmznUserService {
     }
 
     @Override
-    @Transactional
     public void delete(String id) {
         AmznUser amznAccount = findById(id);
         try {
             orderRepository.deleteByAmznUserId(amznAccount.getId());
             brgGroupAmznUserRepository.deleteByAmznUserId(amznAccount.getId());
-            amznUserRepository.delete(amznAccount);
+            amznAccountRepository.delete(amznAccount);
         } catch (Exception e) {
             throw new ServerErrorException(messageSource.getMessage("error.500", null, Locale.getDefault()));
         }
     }
 
     @Override
-    @Transactional
     public void deleteAllByListId(List<Integer> idList) {
         try {
             orderRepository.deleteAllByAmznUserIdIn(idList);
             brgGroupAmznUserRepository.deleteAllByAmznUserIdIn(idList);
-            amznUserRepository.deleteAllByIdIn(idList);
+            amznAccountRepository.deleteAllByIdIn(idList);
         } catch (Exception e) {
             throw new ServerErrorException(messageSource.getMessage("error.500", null, Locale.getDefault()));
         }
@@ -210,6 +211,7 @@ public class AmznUserServiceImpl implements AmznUserService {
         for (Row row : sheet) {
             String amznUsername = null;
             String amznPassword = null;
+            boolean isUsernameExisted = false;
             for (Cell cell : row) {
                 if (cell.getCellType() == CellType.STRING && cell.getRichStringCellValue()
                         .getString().trim()
@@ -222,12 +224,17 @@ public class AmznUserServiceImpl implements AmznUserService {
                 if (cell.getColumnIndex() == usernameColumnIndex) {
                     switch (cell.getCellType()) {
                         case STRING:
-                            amznUsername = cell.getRichStringCellValue().getString().trim().toLowerCase();
+                            amznUsername = cell.getRichStringCellValue().getString().trim();
                             break;
                         case NUMERIC:
                             amznUsername = String.valueOf((int) cell.getNumericCellValue());
                             break;
                     }
+                }
+//TODO: Can viet lai de kiem tra toan bo user mot lan, connection DB qua nhieu
+                if (amznAccountRepository.existsByUsername(amznUsername)) {
+                    isUsernameExisted = true;
+                    break;
                 }
 
                 if (cell.getColumnIndex() == usernameColumnIndex + 1) {
@@ -242,27 +249,26 @@ public class AmznUserServiceImpl implements AmznUserService {
                 }
             }
 
-            if (row.getRowNum() == usernameRowIndex || amznPassword == null || amznUsername == null) {
+            if (row.getRowNum() == usernameRowIndex || isUsernameExisted) {
                 continue;
             }
 
-            amznUserList.add(new AmznUser(amznUsername, amznPassword));
+            if (amznPassword == null || amznUsername == null) {
+                continue;
+            }
+
+            amznPassword = passwordEncoder.encode(amznPassword);
+            AmznAccParam newAmznAccParam = new AmznAccParam(amznUsername, amznPassword);
+            amznUserList.add(amznMapper.toAmznAcc(newAmznAccParam));
+
         }
-
-        List<String> allAmznUsers = amznUserRepository.getAllAmznUsername();
-        amznUserList.removeAll(allAmznUsers.stream().map(AmznUser::new).collect(Collectors.toList()));
-        amznUserList = amznUserList.stream().map(item -> {
-            String encodedPassword = passwordEncoder.encode(item.getPassword());
-            return amznMapper.toAmznAcc(new AmznAccParam(item.getUsername(), encodedPassword));
-        }).collect(Collectors.toList());
-
         try {
-            amznUserList = amznUserRepository.saveAll(amznUserList);
-            amznAccResultList = amznUserList.stream().map(amznUser -> amznMapper.toDTO(amznUser)).collect(Collectors.toList());
-            return amznAccResultList;
+            amznUserList = amznAccountRepository.saveAll(amznUserList);
         } catch (Exception e) {
             throw new ServerErrorException(messageSource.getMessage("error.500", null, Locale.getDefault()));
         }
+        amznAccResultList = amznUserList.stream().map(amznUser -> amznMapper.toDTO(amznUser)).collect(Collectors.toList());
+        return amznAccResultList;
     }
 
     @Override
@@ -326,15 +332,14 @@ public class AmznUserServiceImpl implements AmznUserService {
 
     @Override
     public AmznAccResult findByUsername(String username) {
-        AmznUser user = amznUserRepository.findByUsername(username);
-        if (user == null)
-            throw new UserNotFoundException("{exception.userNotFound}");
+        AmznUser user = amznAccountRepository.findByUsername(username)
+                .orElseThrow(() -> new UserNotFoundException("{exception.userNotFound}"));
         return amznMapper.toDTO(user);
     }
 
     @Override
     public List<AmznAccAnalyticsResult> findAllAnalytics() {
-        return amznUserRepository.findAll().stream()
+        return amznAccountRepository.findAll().stream()
                 .sorted((o1, o2) -> NaturalSortUtils.compareString(o1.getUsername(), o2.getUsername()))
                 .map(amznUser -> amznMapper.toAmznAccAnalyticsResult(amznUser))
                 .collect(Collectors.toList());
@@ -362,7 +367,7 @@ public class AmznUserServiceImpl implements AmznUserService {
 
         try {
             user.setNote(note);
-            amznUserRepository.save(user);
+            amznAccountRepository.save(user);
         } catch (Exception e) {
             throw new ServerErrorException(messageSource.getMessage("error.500", null, Locale.getDefault()));
         }
@@ -370,7 +375,7 @@ public class AmznUserServiceImpl implements AmznUserService {
 
     @Override
     public List<AmznAccDieResult> findAllAccDie() {
-        List<AmznUser> userList = amznUserRepository.findByStatus(AzmnStatus.TERMINATED);
+        List<AmznUser> userList = amznAccountRepository.findByStatus(AzmnStatus.TERMINATED);
         userList.sort((o1, o2) -> NaturalSortUtils.compareString(o1.getUsername(), o2.getUsername()));
         return amznMapper.toAmznAccDieResults(userList);
     }
@@ -385,7 +390,7 @@ public class AmznUserServiceImpl implements AmznUserService {
     @Override
     public List<AmznAccLastCheckResult> findAllLastCheck12Hours() {
         Instant twelveHoursBefore = TimeUtils.getInstantSomeHourBefore(12);
-        List<AmznUser> userList = amznUserRepository.findAllByLastCheckBefore(twelveHoursBefore);
+        List<AmznUser> userList = amznAccountRepository.findAllByLastCheckBefore(twelveHoursBefore);
         return amznMapper.toAmznLastCheckResult(userList);
     }
 

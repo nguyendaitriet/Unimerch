@@ -3,7 +3,7 @@ package com.unimerch.security.uni;
 import com.unimerch.exception.NotAllowDisableException;
 import com.unimerch.repository.model.user.User;
 import com.unimerch.security.NameConstant;
-import com.unimerch.security.UserPrinciple;
+import com.unimerch.security.UserPrincipal;
 import com.unimerch.service.user.UniUserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
@@ -23,14 +23,14 @@ public class UniUserDetailsService implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        User user = uniUserService.getByUsername(username);
+        User user = uniUserService.findByUsername(username);
         if (user == null) {
             throw new UsernameNotFoundException("No uni found with the given email.");
         }
         if (user.isDisabled()) {
             throw new NotAllowDisableException(messageSource.getMessage("error.login.403", null, Locale.getDefault()));
         }
-        return UserPrinciple.build(
+        return UserPrincipal.build(
                 user.getId().toString(),
                 user.getUsername(),
                 user.getPasswordHash(),

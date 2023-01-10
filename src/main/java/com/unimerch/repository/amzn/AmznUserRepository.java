@@ -11,13 +11,15 @@ import org.springframework.stereotype.Repository;
 
 import java.time.Instant;
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface AmznUserRepository extends JpaRepository<AmznUser, Integer> {
 
     boolean existsByUsername(String username);
+    boolean existsByUsernameIn(List<String> usernameList);
 
-    AmznUser findByUsername(String username);
+    Optional<AmznUser> findByUsername(String username);
 
     List<AmznUser> findByStatus(AzmnStatus status);
 

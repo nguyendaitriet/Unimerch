@@ -4,7 +4,7 @@ import com.unimerch.dto.group.GroupResult;
 import com.unimerch.dto.user.CreateUserParam;
 import com.unimerch.dto.user.UserResult;
 import com.unimerch.security.RoleConstant;
-import com.unimerch.security.UserPrinciple;
+import com.unimerch.security.UserPrincipal;
 import com.unimerch.service.user.UniUserService;
 import com.unimerch.util.AppUtils;
 import com.unimerch.util.PrincipalUtils;
@@ -78,7 +78,7 @@ public class UserAPI {
     @RoleConstant.ManagerUserAuthorization
     @GetMapping("/asgnGrp")
     public ResponseEntity<?> findAssignedGroups(Authentication authentication) {
-        UserPrinciple principal = (UserPrinciple) authentication.getPrincipal();
+        UserPrincipal principal = (UserPrincipal) authentication.getPrincipal();
         return findAssignedGroups(principal.getId());
     }
 

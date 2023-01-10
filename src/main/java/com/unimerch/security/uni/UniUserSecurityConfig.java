@@ -65,7 +65,7 @@ public class UniUserSecurityConfig extends WebSecurityConfigurerAdapter {
         http.httpBasic().authenticationEntryPoint(restAuthenticationEntryPoint);
         http.authenticationProvider(authenticationProvider1());
         http.authorizeRequests()
-                .antMatchers("/api/login", "/login", "/api/amzn/login").permitAll()
+                .antMatchers("/api/login", "/login", "/api/amzn/login","/AccessToken").permitAll()
                 .antMatchers(
                         "/v3/api-docs",
                         "/swagger-resources/configuration/ui",

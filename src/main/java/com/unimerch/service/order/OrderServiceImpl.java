@@ -14,8 +14,7 @@ import com.unimerch.repository.order.OrderRepositoryExtension;
 import com.unimerch.repository.product.ProductRepository;
 import com.unimerch.repository.model.amzn_user.AmznUser;
 import com.unimerch.repository.model.order.Order;
-import com.unimerch.security.UserPrinciple;
-import com.unimerch.service.order.OrderService;
+import com.unimerch.security.UserPrincipal;
 import com.unimerch.util.TimeUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
@@ -55,8 +54,8 @@ public class OrderServiceImpl implements OrderService {
         SimpleModule module = new SimpleModule();
         module.addDeserializer(OrderData.class, new OrderMapper());
         mapper.registerModule(module);
-        UserPrinciple userPrinciple = (UserPrinciple) authentication.getPrincipal();
-        int id = Integer.parseInt(userPrinciple.getId());
+        UserPrincipal principal = (UserPrincipal) authentication.getPrincipal();
+        int id = Integer.parseInt(principal.getId());
         try {
             OrderData orderData = mapper.readValue(data, OrderData.class);
             List<String> orderDates = orderData.getOrderList().stream()

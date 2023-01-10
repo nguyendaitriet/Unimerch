@@ -14,4 +14,6 @@ public interface ProductService {
     List<ProductResult> findAllLast30DaysSoldProduct(Integer id, int choice);
 
     void updateProduct(ProductPriceParam productData);
+
+    void updateProducts(List<ProductPriceParam> productData);
 }
