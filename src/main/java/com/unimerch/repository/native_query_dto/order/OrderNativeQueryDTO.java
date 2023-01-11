@@ -7,7 +7,6 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import lombok.experimental.Accessors;
 
 import javax.persistence.*;
 import java.math.BigDecimal;
@@ -28,19 +27,39 @@ import java.math.BigDecimal;
                     "SUM(o.purchased - o.cancelled) AS sold " +
                 "FROM orders o " +
                 "WHERE o.date BETWEEN :startDay AND :endDay " +
+                        "AND CASE " +
+                        "WHEN :includedSize = 0 AND :excludedSize = 0 THEN TRUE " +
                         // include tags
-                "AND CASE " +
-                    "WHEN :includedSize = 0 THEN TRUE " +
-                    "WHEN :includedSize > 0 THEN  " +
+                        "WHEN :includedSize > 0 AND :excludedSize = 0 THEN " +
                         "o.asin IN ( " +
-                            "SELECT b.asin " +
-                            "FROM brg_product_tag_tag_group as b " +
-                            "WHERE concat(b.tag_group_id, '-', b.tag_id) IN :tagIncluded " +
-                            "GROUP BY b.asin HAVING COUNT(DISTINCT concat(b.tag_group_id, '-', b.tag_id)) = :includedSize " +
+                        "SELECT b.asin FROM brg_product_tag_tag_group as b " +
+                        "WHERE concat(b.tag_group_id, '-', b.tag_id) IN :tagIncluded " +
+                        "GROUP BY b.asin HAVING COUNT(DISTINCT concat(b.tag_group_id, '-', b.tag_id)) = :includedSize " +
                         ") " +
-                    "ELSE FALSE " +
-                "END " +
-                "GROUP BY STR_TO_DATE(DATE(o.`date`),'%Y-%m-%d') " +
+                        // exclude tags
+                        "WHEN :includedSize = 0 AND :excludedSize > 0 THEN " +
+                        "o.asin IN ( " +
+                        "SELECT DISTINCT b.asin FROM brg_product_tag_tag_group as b " +
+                        "WHERE b.asin NOT IN (" +
+                        "SELECT b.asin FROM brg_product_tag_tag_group AS b " +
+                        "WHERE concat(b.tag_group_id, '-', b.tag_id) IN :tagExcluded " +
+                        "GROUP BY b.asin HAVING COUNT(DISTINCT concat(b.tag_group_id, '-', b.tag_id)) = :excludedSize " +
+                        ") " +
+                        ")" +
+                        // include and exclude tags
+                        "WHEN :includedSize > 0 AND :excludedSize > 0 THEN " +
+                        "o.asin IN ( " +
+                        "SELECT b.asin FROM brg_product_tag_tag_group as b " +
+                        "WHERE concat(b.tag_group_id, '-', b.tag_id) IN :tagIncluded " +
+                        "AND b.asin NOT IN( " +
+                        "SELECT b.asin FROM brg_product_tag_tag_group as b " +
+                        "WHERE concat(b.tag_group_id, '-', b.tag_id) IN :tagExcluded " +
+                        "GROUP BY b.asin HAVING COUNT(DISTINCT concat(b.tag_group_id, '-', b.tag_id)) = :excludedSize) " +
+                        "GROUP BY b.asin HAVING COUNT(DISTINCT concat(b.tag_group_id, '-', b.tag_id)) = :includedSize" +
+                        ")" +
+                        "ELSE FALSE " +
+                        "END " +
+                        "GROUP BY STR_TO_DATE(DATE(o.`date`),'%Y-%m-%d') " +
                 "ORDER BY STR_TO_DATE(DATE(o.`date`),'%Y-%m-%d') ",
         resultSetMapping = "order_chart_column_result_all_acc"
 )
@@ -70,18 +89,38 @@ import java.math.BigDecimal;
                     "FROM brg_group_amzn_user AS b " +
                     "WHERE b.group_id = :groupId " +
                 ") " +
+                        "AND CASE " +
+                        "WHEN :includedSize = 0 AND :excludedSize = 0 THEN TRUE " +
                         // include tags
-                "AND CASE " +
-                    "WHEN :includedSize = 0 THEN TRUE " +
-                    "WHEN :includedSize > 0 THEN  " +
+                        "WHEN :includedSize > 0 AND :excludedSize = 0 THEN " +
                         "o.asin IN ( " +
-                            "SELECT b.asin " +
-                            "FROM brg_product_tag_tag_group as b " +
-                            "WHERE concat(b.tag_group_id, '-', b.tag_id) IN :tagIncluded " +
-                            "GROUP BY b.asin HAVING COUNT(DISTINCT concat(b.tag_group_id, '-', b.tag_id)) = :includedSize " +
+                        "SELECT b.asin FROM brg_product_tag_tag_group as b " +
+                        "WHERE concat(b.tag_group_id, '-', b.tag_id) IN :tagIncluded " +
+                        "GROUP BY b.asin HAVING COUNT(DISTINCT concat(b.tag_group_id, '-', b.tag_id)) = :includedSize " +
                         ") " +
-                    "ELSE FALSE " +
-                "END " +
+                        // exclude tags
+                        "WHEN :includedSize = 0 AND :excludedSize > 0 THEN " +
+                        "o.asin IN ( " +
+                        "SELECT DISTINCT b.asin FROM brg_product_tag_tag_group as b " +
+                        "WHERE b.asin NOT IN (" +
+                        "SELECT b.asin FROM brg_product_tag_tag_group AS b " +
+                        "WHERE concat(b.tag_group_id, '-', b.tag_id) IN :tagExcluded " +
+                        "GROUP BY b.asin HAVING COUNT(DISTINCT concat(b.tag_group_id, '-', b.tag_id)) = :excludedSize " +
+                        ") " +
+                        ")" +
+                        // include and exclude tags
+                        "WHEN :includedSize > 0 AND :excludedSize > 0 THEN " +
+                        "o.asin IN ( " +
+                        "SELECT b.asin FROM brg_product_tag_tag_group as b " +
+                        "WHERE concat(b.tag_group_id, '-', b.tag_id) IN :tagIncluded " +
+                        "AND b.asin NOT IN( " +
+                        "SELECT b.asin FROM brg_product_tag_tag_group as b " +
+                        "WHERE concat(b.tag_group_id, '-', b.tag_id) IN :tagExcluded " +
+                        "GROUP BY b.asin HAVING COUNT(DISTINCT concat(b.tag_group_id, '-', b.tag_id)) = :excludedSize) " +
+                        "GROUP BY b.asin HAVING COUNT(DISTINCT concat(b.tag_group_id, '-', b.tag_id)) = :includedSize" +
+                        ")" +
+                        "ELSE FALSE " +
+                        "END " +
                 "GROUP BY STR_TO_DATE(DATE(o.`date`),'%Y-%m-%d') " +
                 "ORDER BY STR_TO_DATE(DATE(o.`date`),'%Y-%m-%d') ",
         resultSetMapping = "order_chart_column_result_group"
@@ -108,16 +147,36 @@ import java.math.BigDecimal;
                 "FROM orders o " +
                 "WHERE o.date BETWEEN :startDay AND :endDay " +
                 "AND o.amzn_user_id = :amznId " +
-                        // include tags
                 "AND CASE " +
-                    "WHEN :includedSize = 0 THEN TRUE " +
-                    "WHEN :includedSize > 0 THEN  " +
+                    "WHEN :includedSize = 0 AND :excludedSize = 0 THEN TRUE " +
+                        // include tags
+                    "WHEN :includedSize > 0 AND :excludedSize = 0 THEN " +
                         "o.asin IN ( " +
-                            "SELECT b.asin " +
-                            "FROM brg_product_tag_tag_group as b " +
+                            "SELECT b.asin FROM brg_product_tag_tag_group as b " +
                             "WHERE concat(b.tag_group_id, '-', b.tag_id) IN :tagIncluded " +
                             "GROUP BY b.asin HAVING COUNT(DISTINCT concat(b.tag_group_id, '-', b.tag_id)) = :includedSize " +
                         ") " +
+                        // exclude tags
+                    "WHEN :includedSize = 0 AND :excludedSize > 0 THEN " +
+                        "o.asin IN ( " +
+                            "SELECT DISTINCT b.asin FROM brg_product_tag_tag_group as b " +
+                            "WHERE b.asin NOT IN (" +
+                                "SELECT b.asin FROM brg_product_tag_tag_group AS b " +
+                                "WHERE concat(b.tag_group_id, '-', b.tag_id) IN :tagExcluded " +
+                                "GROUP BY b.asin HAVING COUNT(DISTINCT concat(b.tag_group_id, '-', b.tag_id)) = :excludedSize " +
+                            ") " +
+                        ")" +
+                        // include and exclude tags
+                    "WHEN :includedSize > 0 AND :excludedSize > 0 THEN " +
+                        "o.asin IN ( " +
+                            "SELECT b.asin FROM brg_product_tag_tag_group as b " +
+                            "WHERE concat(b.tag_group_id, '-', b.tag_id) IN :tagIncluded " +
+                            "AND b.asin NOT IN( " +
+                                "SELECT b.asin FROM brg_product_tag_tag_group as b " +
+                                "WHERE concat(b.tag_group_id, '-', b.tag_id) IN :tagExcluded " +
+                                "GROUP BY b.asin HAVING COUNT(DISTINCT concat(b.tag_group_id, '-', b.tag_id)) = :excludedSize) " +
+                            "GROUP BY b.asin HAVING COUNT(DISTINCT concat(b.tag_group_id, '-', b.tag_id)) = :includedSize" +
+                        ")" +
                     "ELSE FALSE " +
                 "END " +
                 "GROUP BY STR_TO_DATE(DATE(o.`date`),'%Y-%m-%d') " +
@@ -152,18 +211,39 @@ import java.math.BigDecimal;
                 "INNER JOIN amzn_users AS a " +
                 "ON o.amzn_user_id = a.id " +
                 "WHERE o.date >= :startDay AND o.date <= :endDay " +
-                        //Include tags
-                "AND CASE " +
-                        "WHEN :includedSize = 0 THEN TRUE " +
-                        "WHEN :includedSize > 0 THEN  " +
-                            "o.asin IN ( " +
-                                "SELECT b.asin " +
-                                "FROM brg_product_tag_tag_group as b " +
-                                "WHERE concat(b.tag_group_id, '-', b.tag_id) IN :tagIncluded " +
-                                "GROUP BY b.asin HAVING COUNT(DISTINCT concat(b.tag_group_id, '-', b.tag_id)) = :includedSize " +
-                            ") " +
+                        "AND CASE " +
+                        "WHEN :includedSize = 0 AND :excludedSize = 0 THEN TRUE " +
+                        // include tags
+                        "WHEN :includedSize > 0 AND :excludedSize = 0 THEN " +
+                        "o.asin IN ( " +
+                        "SELECT b.asin FROM brg_product_tag_tag_group as b " +
+                        "WHERE concat(b.tag_group_id, '-', b.tag_id) IN :tagIncluded " +
+                        "GROUP BY b.asin HAVING COUNT(DISTINCT concat(b.tag_group_id, '-', b.tag_id)) = :includedSize " +
+                        ") " +
+                        // exclude tags
+                        "WHEN :includedSize = 0 AND :excludedSize > 0 THEN " +
+                        "o.asin IN ( " +
+                        "SELECT DISTINCT b.asin FROM brg_product_tag_tag_group as b " +
+                        "WHERE b.asin NOT IN (" +
+                        "SELECT b.asin FROM brg_product_tag_tag_group AS b " +
+                        "WHERE concat(b.tag_group_id, '-', b.tag_id) IN :tagExcluded " +
+                        "GROUP BY b.asin HAVING COUNT(DISTINCT concat(b.tag_group_id, '-', b.tag_id)) = :excludedSize " +
+                        ") " +
+                        ")" +
+                        // include and exclude tags
+                        "WHEN :includedSize > 0 AND :excludedSize > 0 THEN " +
+                        "o.asin IN ( " +
+                        "SELECT b.asin FROM brg_product_tag_tag_group as b " +
+                        "WHERE concat(b.tag_group_id, '-', b.tag_id) IN :tagIncluded " +
+                        "AND b.asin NOT IN( " +
+                        "SELECT b.asin FROM brg_product_tag_tag_group as b " +
+                        "WHERE concat(b.tag_group_id, '-', b.tag_id) IN :tagExcluded " +
+                        "GROUP BY b.asin HAVING COUNT(DISTINCT concat(b.tag_group_id, '-', b.tag_id)) = :excludedSize) " +
+                        "GROUP BY b.asin HAVING COUNT(DISTINCT concat(b.tag_group_id, '-', b.tag_id)) = :includedSize" +
+                        ")" +
                         "ELSE FALSE " +
-                    "END " +
+                        "END " +
+
                         //Searchable
                 "AND CASE " +
                         "WHEN :searchable THEN LOWER(o.asin) LIKE CONCAT('%',:key,'%') OR LOWER(o.title) LIKE CONCAT('%',:key,'%')" +
@@ -208,18 +288,38 @@ import java.math.BigDecimal;
                     "FROM brg_group_amzn_user AS r " +
                     "WHERE r.group_id = :groupId " +
                 ") " +
-                        //Include tags
-                "AND CASE " +
-                        "WHEN :includedSize = 0 THEN TRUE " +
-                        "WHEN :includedSize > 0 THEN  " +
-                            "o.asin IN ( " +
-                                "SELECT b.asin " +
-                                "FROM brg_product_tag_tag_group as b " +
-                                "WHERE concat(b.tag_group_id, '-', b.tag_id) IN :tagIncluded " +
-                                "GROUP BY b.asin HAVING COUNT(DISTINCT concat(b.tag_group_id, '-', b.tag_id)) = :includedSize " +
-                            ") " +
+                        "AND CASE " +
+                        "WHEN :includedSize = 0 AND :excludedSize = 0 THEN TRUE " +
+                        // include tags
+                        "WHEN :includedSize > 0 AND :excludedSize = 0 THEN " +
+                        "o.asin IN ( " +
+                        "SELECT b.asin FROM brg_product_tag_tag_group as b " +
+                        "WHERE concat(b.tag_group_id, '-', b.tag_id) IN :tagIncluded " +
+                        "GROUP BY b.asin HAVING COUNT(DISTINCT concat(b.tag_group_id, '-', b.tag_id)) = :includedSize " +
+                        ") " +
+                        // exclude tags
+                        "WHEN :includedSize = 0 AND :excludedSize > 0 THEN " +
+                        "o.asin IN ( " +
+                        "SELECT DISTINCT b.asin FROM brg_product_tag_tag_group as b " +
+                        "WHERE b.asin NOT IN (" +
+                        "SELECT b.asin FROM brg_product_tag_tag_group AS b " +
+                        "WHERE concat(b.tag_group_id, '-', b.tag_id) IN :tagExcluded " +
+                        "GROUP BY b.asin HAVING COUNT(DISTINCT concat(b.tag_group_id, '-', b.tag_id)) = :excludedSize " +
+                        ") " +
+                        ")" +
+                        // include and exclude tags
+                        "WHEN :includedSize > 0 AND :excludedSize > 0 THEN " +
+                        "o.asin IN ( " +
+                        "SELECT b.asin FROM brg_product_tag_tag_group as b " +
+                        "WHERE concat(b.tag_group_id, '-', b.tag_id) IN :tagIncluded " +
+                        "AND b.asin NOT IN( " +
+                        "SELECT b.asin FROM brg_product_tag_tag_group as b " +
+                        "WHERE concat(b.tag_group_id, '-', b.tag_id) IN :tagExcluded " +
+                        "GROUP BY b.asin HAVING COUNT(DISTINCT concat(b.tag_group_id, '-', b.tag_id)) = :excludedSize) " +
+                        "GROUP BY b.asin HAVING COUNT(DISTINCT concat(b.tag_group_id, '-', b.tag_id)) = :includedSize" +
+                        ")" +
                         "ELSE FALSE " +
-                    "END " +
+                        "END " +
                         //Searchable
                 "AND CASE " +
                         "WHEN :searchable THEN LOWER(o.asin) LIKE CONCAT('%',:key,'%') OR LOWER(o.title) LIKE CONCAT('%',:key,'%')" +
@@ -260,18 +360,38 @@ import java.math.BigDecimal;
                 "ON o.amzn_user_id = a.id " +
                 "WHERE o.date >= :startDay AND o.date <= :endDay " +
                 "AND o.amzn_user_id = :amznId " +
-                        //Include tags
-                "AND CASE " +
-                        "WHEN :includedSize = 0 THEN TRUE " +
-                        "WHEN :includedSize > 0 THEN  " +
-                            "o.asin IN ( " +
-                                "SELECT b.asin " +
-                                "FROM brg_product_tag_tag_group as b " +
-                                "WHERE concat(b.tag_group_id, '-', b.tag_id) IN :tagIncluded " +
-                                "GROUP BY b.asin HAVING COUNT(DISTINCT concat(b.tag_group_id, '-', b.tag_id)) = :includedSize " +
-                            ") " +
+                        "AND CASE " +
+                        "WHEN :includedSize = 0 AND :excludedSize = 0 THEN TRUE " +
+                        // include tags
+                        "WHEN :includedSize > 0 AND :excludedSize = 0 THEN " +
+                        "o.asin IN ( " +
+                        "SELECT b.asin FROM brg_product_tag_tag_group as b " +
+                        "WHERE concat(b.tag_group_id, '-', b.tag_id) IN :tagIncluded " +
+                        "GROUP BY b.asin HAVING COUNT(DISTINCT concat(b.tag_group_id, '-', b.tag_id)) = :includedSize " +
+                        ") " +
+                        // exclude tags
+                        "WHEN :includedSize = 0 AND :excludedSize > 0 THEN " +
+                        "o.asin IN ( " +
+                        "SELECT DISTINCT b.asin FROM brg_product_tag_tag_group as b " +
+                        "WHERE b.asin NOT IN (" +
+                        "SELECT b.asin FROM brg_product_tag_tag_group AS b " +
+                        "WHERE concat(b.tag_group_id, '-', b.tag_id) IN :tagExcluded " +
+                        "GROUP BY b.asin HAVING COUNT(DISTINCT concat(b.tag_group_id, '-', b.tag_id)) = :excludedSize " +
+                        ") " +
+                        ")" +
+                        // include and exclude tags
+                        "WHEN :includedSize > 0 AND :excludedSize > 0 THEN " +
+                        "o.asin IN ( " +
+                        "SELECT b.asin FROM brg_product_tag_tag_group as b " +
+                        "WHERE concat(b.tag_group_id, '-', b.tag_id) IN :tagIncluded " +
+                        "AND b.asin NOT IN( " +
+                        "SELECT b.asin FROM brg_product_tag_tag_group as b " +
+                        "WHERE concat(b.tag_group_id, '-', b.tag_id) IN :tagExcluded " +
+                        "GROUP BY b.asin HAVING COUNT(DISTINCT concat(b.tag_group_id, '-', b.tag_id)) = :excludedSize) " +
+                        "GROUP BY b.asin HAVING COUNT(DISTINCT concat(b.tag_group_id, '-', b.tag_id)) = :includedSize" +
+                        ")" +
                         "ELSE FALSE " +
-                    "END " +
+                        "END " +
                         //Searchable
                 "AND CASE " +
                         "WHEN :searchable THEN LOWER(o.asin) LIKE CONCAT('%',:key,'%') OR LOWER(o.title) LIKE CONCAT('%',:key,'%')" +
@@ -306,18 +426,38 @@ import java.math.BigDecimal;
                 "SUM(o.royalties) AS royalties " +
             "FROM orders AS o " +
             "WHERE o.date >= :startDate AND o.date <= :endDate " +
-                    //include tags
-            "AND CASE " +
-                "WHEN :includedSize = 0 THEN TRUE " +
-                "WHEN :includedSize > 0 THEN  " +
+                    "AND CASE " +
+                    "WHEN :includedSize = 0 AND :excludedSize = 0 THEN TRUE " +
+                    // include tags
+                    "WHEN :includedSize > 0 AND :excludedSize = 0 THEN " +
                     "o.asin IN ( " +
-                        "SELECT b.asin " +
-                        "FROM brg_product_tag_tag_group as b " +
-                        "WHERE concat(b.tag_group_id, '-', b.tag_id) IN :tagIncluded " +
-                        "GROUP BY b.asin HAVING COUNT(DISTINCT concat(b.tag_group_id, '-', b.tag_id)) = :includedSize " +
+                    "SELECT b.asin FROM brg_product_tag_tag_group as b " +
+                    "WHERE concat(b.tag_group_id, '-', b.tag_id) IN :tagIncluded " +
+                    "GROUP BY b.asin HAVING COUNT(DISTINCT concat(b.tag_group_id, '-', b.tag_id)) = :includedSize " +
                     ") " +
-                "ELSE FALSE " +
-            "END ",
+                    // exclude tags
+                    "WHEN :includedSize = 0 AND :excludedSize > 0 THEN " +
+                    "o.asin IN ( " +
+                    "SELECT DISTINCT b.asin FROM brg_product_tag_tag_group as b " +
+                    "WHERE b.asin NOT IN (" +
+                    "SELECT b.asin FROM brg_product_tag_tag_group AS b " +
+                    "WHERE concat(b.tag_group_id, '-', b.tag_id) IN :tagExcluded " +
+                    "GROUP BY b.asin HAVING COUNT(DISTINCT concat(b.tag_group_id, '-', b.tag_id)) = :excludedSize " +
+                    ") " +
+                    ")" +
+                    // include and exclude tags
+                    "WHEN :includedSize > 0 AND :excludedSize > 0 THEN " +
+                    "o.asin IN ( " +
+                    "SELECT b.asin FROM brg_product_tag_tag_group as b " +
+                    "WHERE concat(b.tag_group_id, '-', b.tag_id) IN :tagIncluded " +
+                    "AND b.asin NOT IN( " +
+                    "SELECT b.asin FROM brg_product_tag_tag_group as b " +
+                    "WHERE concat(b.tag_group_id, '-', b.tag_id) IN :tagExcluded " +
+                    "GROUP BY b.asin HAVING COUNT(DISTINCT concat(b.tag_group_id, '-', b.tag_id)) = :excludedSize) " +
+                    "GROUP BY b.asin HAVING COUNT(DISTINCT concat(b.tag_group_id, '-', b.tag_id)) = :includedSize" +
+                    ")" +
+                    "ELSE FALSE " +
+                    "END ",
         resultSetMapping = "all_order_cart_result"
 )
 @SqlResultSetMapping(
@@ -350,18 +490,38 @@ import java.math.BigDecimal;
                 "FROM brg_group_amzn_user AS r " +
                 "WHERE r.group_id = :groupId " +
             ") " +
-                    //include tags
-            "AND CASE " +
-                "WHEN :includedSize = 0 THEN TRUE " +
-                "WHEN :includedSize > 0 THEN  " +
+                    "AND CASE " +
+                    "WHEN :includedSize = 0 AND :excludedSize = 0 THEN TRUE " +
+                    // include tags
+                    "WHEN :includedSize > 0 AND :excludedSize = 0 THEN " +
                     "o.asin IN ( " +
-                        "SELECT b.asin " +
-                        "FROM brg_product_tag_tag_group as b " +
-                        "WHERE concat(b.tag_group_id, '-', b.tag_id) IN :tagIncluded " +
-                        "GROUP BY b.asin HAVING COUNT(DISTINCT concat(b.tag_group_id, '-', b.tag_id)) = :includedSize " +
+                    "SELECT b.asin FROM brg_product_tag_tag_group as b " +
+                    "WHERE concat(b.tag_group_id, '-', b.tag_id) IN :tagIncluded " +
+                    "GROUP BY b.asin HAVING COUNT(DISTINCT concat(b.tag_group_id, '-', b.tag_id)) = :includedSize " +
                     ") " +
-                "ELSE FALSE " +
-            "END ",
+                    // exclude tags
+                    "WHEN :includedSize = 0 AND :excludedSize > 0 THEN " +
+                    "o.asin IN ( " +
+                    "SELECT DISTINCT b.asin FROM brg_product_tag_tag_group as b " +
+                    "WHERE b.asin NOT IN (" +
+                    "SELECT b.asin FROM brg_product_tag_tag_group AS b " +
+                    "WHERE concat(b.tag_group_id, '-', b.tag_id) IN :tagExcluded " +
+                    "GROUP BY b.asin HAVING COUNT(DISTINCT concat(b.tag_group_id, '-', b.tag_id)) = :excludedSize " +
+                    ") " +
+                    ")" +
+                    // include and exclude tags
+                    "WHEN :includedSize > 0 AND :excludedSize > 0 THEN " +
+                    "o.asin IN ( " +
+                    "SELECT b.asin FROM brg_product_tag_tag_group as b " +
+                    "WHERE concat(b.tag_group_id, '-', b.tag_id) IN :tagIncluded " +
+                    "AND b.asin NOT IN( " +
+                    "SELECT b.asin FROM brg_product_tag_tag_group as b " +
+                    "WHERE concat(b.tag_group_id, '-', b.tag_id) IN :tagExcluded " +
+                    "GROUP BY b.asin HAVING COUNT(DISTINCT concat(b.tag_group_id, '-', b.tag_id)) = :excludedSize) " +
+                    "GROUP BY b.asin HAVING COUNT(DISTINCT concat(b.tag_group_id, '-', b.tag_id)) = :includedSize" +
+                    ")" +
+                    "ELSE FALSE " +
+                    "END ",
         resultSetMapping = "group_order_cart_result"
 )
 @SqlResultSetMapping(
@@ -390,18 +550,38 @@ import java.math.BigDecimal;
             "FROM orders AS o " +
             "WHERE o.date >= :startDate AND o.date <= :endDate " +
             "AND o.amzn_user_id = :amznId " +
-                    //include tags
-            "AND CASE " +
-                "WHEN :includedSize = 0 THEN TRUE " +
-                "WHEN :includedSize > 0 THEN  " +
+                    "AND CASE " +
+                    "WHEN :includedSize = 0 AND :excludedSize = 0 THEN TRUE " +
+                    // include tags
+                    "WHEN :includedSize > 0 AND :excludedSize = 0 THEN " +
                     "o.asin IN ( " +
-                        "SELECT b.asin " +
-                        "FROM brg_product_tag_tag_group as b " +
-                        "WHERE concat(b.tag_group_id, '-', b.tag_id) IN :tagIncluded " +
-                        "GROUP BY b.asin HAVING COUNT(DISTINCT concat(b.tag_group_id, '-', b.tag_id)) = :includedSize " +
+                    "SELECT b.asin FROM brg_product_tag_tag_group as b " +
+                    "WHERE concat(b.tag_group_id, '-', b.tag_id) IN :tagIncluded " +
+                    "GROUP BY b.asin HAVING COUNT(DISTINCT concat(b.tag_group_id, '-', b.tag_id)) = :includedSize " +
                     ") " +
-                "ELSE FALSE " +
-            "END ",
+                    // exclude tags
+                    "WHEN :includedSize = 0 AND :excludedSize > 0 THEN " +
+                    "o.asin IN ( " +
+                    "SELECT DISTINCT b.asin FROM brg_product_tag_tag_group as b " +
+                    "WHERE b.asin NOT IN (" +
+                    "SELECT b.asin FROM brg_product_tag_tag_group AS b " +
+                    "WHERE concat(b.tag_group_id, '-', b.tag_id) IN :tagExcluded " +
+                    "GROUP BY b.asin HAVING COUNT(DISTINCT concat(b.tag_group_id, '-', b.tag_id)) = :excludedSize " +
+                    ") " +
+                    ")" +
+                    // include and exclude tags
+                    "WHEN :includedSize > 0 AND :excludedSize > 0 THEN " +
+                    "o.asin IN ( " +
+                    "SELECT b.asin FROM brg_product_tag_tag_group as b " +
+                    "WHERE concat(b.tag_group_id, '-', b.tag_id) IN :tagIncluded " +
+                    "AND b.asin NOT IN( " +
+                    "SELECT b.asin FROM brg_product_tag_tag_group as b " +
+                    "WHERE concat(b.tag_group_id, '-', b.tag_id) IN :tagExcluded " +
+                    "GROUP BY b.asin HAVING COUNT(DISTINCT concat(b.tag_group_id, '-', b.tag_id)) = :excludedSize) " +
+                    "GROUP BY b.asin HAVING COUNT(DISTINCT concat(b.tag_group_id, '-', b.tag_id)) = :includedSize" +
+                    ")" +
+                    "ELSE FALSE " +
+                    "END ",
         resultSetMapping = "amzn_order_cart_result"
 )
 @SqlResultSetMapping(

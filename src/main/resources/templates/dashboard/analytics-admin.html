@@ -97,7 +97,7 @@
                                                     th:text="#{analyse.btn.analyseSale}">ANALYSE SALES
                                             </button>
                                             <button type="button" class="btn btn-secondary ml-3"
-                                                    id="btnResetProductFilter"
+                                                    id="btnResetAnalyticsFilter"
                                                     th:text="#{analyse.btn.reset}">Reset
                                             </button>
                                         </div>
@@ -291,6 +291,7 @@
     page.element.tagGroupLegendArea = $('#tagGroupLegend');
     page.element.dateRange = $('#dateRange');
     page.element.btnAnalyse = $('#btnAnalyse');
+    page.element.btnResetAnalyticsFilter = $('#btnResetAnalyticsFilter');
     page.element.customDateFilter = $('#customDateFilter');
     page.element.dailyChartRadio = $('#dailyChartRadio');
     page.element.monthlyChartRadio = $('#monthlyChartRadio');
@@ -391,6 +392,14 @@
         page.commands.getChartAnalytics(analyticsParam);
         page.commands.getProductAnalytics(analyticsParam);
         page.commands.getCardAnalytics(analyticsParam);
+    }
+    page.commands.handleBtnResetAnalyticsFilter = () => {
+        $('.selectpicker').selectpicker('val', 0);
+        $('.selectpicker').selectpicker('deselectAll');
+        $("input[name=dateFilter]").parent().removeClass('active');
+        $("input[name=dateFilter][value='today']").prop("checked",true);
+        $("input[name=dateFilter][value='today']").parent().addClass('active');
+        page.element.dateRange.prop('hidden', true);
     }
     page.commands.getAnalyticsParam = () => {
         let groupId = page.element.analGrpSelect.selectpicker('val');
@@ -933,6 +942,9 @@
         page.element.btnAnalyse.click(() => {
             page.commands.handleBtnAnalyse();
         });
+        page.element.btnResetAnalyticsFilter.click(() => {
+            page.commands.handleBtnResetAnalyticsFilter();
+        })
         page.element.btnSearchProductAnalytics.click(() => {
             page.commands.handleBtnSearchProductAnalytics();
         })

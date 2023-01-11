@@ -118,13 +118,16 @@ public class AnalyticServiceImpl implements AnalyticService {
         switch (amznFilter) {
             case ALL:
                 return orderNativeQueryDTORepo.findAllOrderChartWithDateRange(startDate, endDate,
-                        analyticsParam.getTagIncluded(), analyticsParam.getTagIncluded().size());
+                        analyticsParam.getTagIncluded(), analyticsParam.getTagIncluded().size(),
+                        analyticsParam.getTagExcluded(), analyticsParam.getTagExcluded().size());
             case GROUP:
                 return orderNativeQueryDTORepo.findGroupOrderChartWithDateRange(analyticsParam.getGroupId(), startDate, endDate,
-                        analyticsParam.getTagIncluded(), analyticsParam.getTagIncluded().size());
+                        analyticsParam.getTagIncluded(), analyticsParam.getTagIncluded().size(),
+                        analyticsParam.getTagExcluded(), analyticsParam.getTagExcluded().size());
             case AMZN:
                 return orderNativeQueryDTORepo.findAmznOrderChartWithDateRange(analyticsParam.getAmznId(), startDate, endDate,
-                        analyticsParam.getTagIncluded(), analyticsParam.getTagIncluded().size());
+                        analyticsParam.getTagIncluded(), analyticsParam.getTagIncluded().size(),
+                        analyticsParam.getTagExcluded(), analyticsParam.getTagExcluded().size());
             default:
                 throw new ServerErrorException(messageSource.getMessage("error.500", null, Locale.getDefault()));
         }
@@ -212,14 +215,17 @@ public class AnalyticServiceImpl implements AnalyticService {
             case ALL:
                 return orderNativeQueryDTORepo.getAllProductAnalyticsList(startDate, endDate,
                         analyticsParam.getTagIncluded(), analyticsParam.getTagIncluded().size(),
+                        analyticsParam.getTagExcluded(), analyticsParam.getTagExcluded().size(),
                         analyticsParam.isSearchable(), analyticsParam.getSearchKey());
             case GROUP:
                 return orderNativeQueryDTORepo.getGroupProductAnalyticsList(analyticsParam.getGroupId(), startDate, endDate,
                         analyticsParam.getTagIncluded(), analyticsParam.getTagIncluded().size(),
+                        analyticsParam.getTagExcluded(), analyticsParam.getTagExcluded().size(),
                         analyticsParam.isSearchable(), analyticsParam.getSearchKey());
             case AMZN:
                 return orderNativeQueryDTORepo.getAmznProductAnalyticsList(analyticsParam.getAmznId(), startDate, endDate,
                         analyticsParam.getTagIncluded(), analyticsParam.getTagIncluded().size(),
+                        analyticsParam.getTagExcluded(), analyticsParam.getTagExcluded().size(),
                         analyticsParam.isSearchable(), analyticsParam.getSearchKey());
             default:
                 throw new ServerErrorException(messageSource.getMessage("error.500", null, Locale.getDefault()));
@@ -297,13 +303,16 @@ public class AnalyticServiceImpl implements AnalyticService {
         switch (amznFilter) {
             case ALL:
                 return orderNativeQueryDTORepo.getAllOrderCartResult(startDate, endDate,
-                        analyticsParam.getTagIncluded(), analyticsParam.getTagIncluded().size());
+                        analyticsParam.getTagIncluded(), analyticsParam.getTagIncluded().size(),
+                        analyticsParam.getTagExcluded(), analyticsParam.getTagExcluded().size());
             case GROUP:
                 return orderNativeQueryDTORepo.getGroupOrderCartResult(analyticsParam.getGroupId(), startDate, endDate,
-                        analyticsParam.getTagIncluded(), analyticsParam.getTagIncluded().size());
+                        analyticsParam.getTagIncluded(), analyticsParam.getTagIncluded().size(),
+                        analyticsParam.getTagExcluded(), analyticsParam.getTagExcluded().size());
             case AMZN:
                 return orderNativeQueryDTORepo.getAmznOrderCartResult(analyticsParam.getAmznId(), startDate, endDate,
-                        analyticsParam.getTagIncluded(), analyticsParam.getTagIncluded().size());
+                        analyticsParam.getTagIncluded(), analyticsParam.getTagIncluded().size(),
+                        analyticsParam.getTagExcluded(), analyticsParam.getTagExcluded().size());
             default:
                 throw new ServerErrorException(messageSource.getMessage("error.500", null, Locale.getDefault()));
         }
