@@ -2,7 +2,7 @@
 <html xmlns:th="http://www.thymeleaf.org" lang="en">
 <head>
     <th:block th:replace="layout/head :: dashboard-head"/>
-    <title th:text="#{analyse.pageTitle}">Users Management</title>
+    <title th:text="#{analyse.pageTitle}">Analytics Sale</title>
 </head>
 <body id="page-top">
 
@@ -374,9 +374,8 @@
     page.commands.addAmznToSelect = (amzn) => {
         page.element.analAmznSelect.append($(tempOption(amzn.id, amzn.username)));
     }
-
     page.commands.handleAnalGrpSelect = () => {
-        page.element.analGrpSelect.change(function () {
+        page.element.analGrpSelect.on('changed.bs.select', function () {
             let groupId = $(this).selectpicker('val');
             page.commands.findAmznInsideGroup(groupId);
         })
@@ -393,8 +392,8 @@
         page.commands.getProductAnalytics(analyticsParam);
         page.commands.getCardAnalytics(analyticsParam);
     }
-    page.commands.handleBtnResetAnalyticsFilter = () => {
-        $('.selectpicker').selectpicker('val', 0);
+    page.commands.handleBtnResetFilter = () => {
+        page.element.analGrpSelect.selectpicker('val', 0);
         $('.selectpicker').selectpicker('deselectAll');
         $("input[name=dateFilter]").parent().removeClass('active');
         $("input[name=dateFilter][value='today']").prop("checked",true);
@@ -465,8 +464,8 @@
         page.element.tagGroupLegendArea.append($(tempTagGroupLegend(tagGroup.name, tagGroup.color)));
     }
     page.commands.addTagOptionToTagGroupSelect = (tagGroupId, tagResult) => {
-        let tagGroupTagId = tagGroupId + '-' + tagResult.id
-        $(`.tag-group-select-id-${tagGroupId}`).append($(tempOption(tagGroupTagId, tagResult.name)))
+        let tagGroupTagId = tagGroupId + '-' + tagResult.id;
+        $(`.tag-group-select-id-${tagGroupId}`).append($(tempOption(tagGroupTagId, tagResult.name)));
     }
 
     // Analytics Sales Chart
@@ -759,12 +758,12 @@
     }
 
     page.commands.addDataToCard = (orderCardResult) => {
-        page.element.cardPurchased.text(orderCardResult.sold);
-        page.element.cardRoyalties.text(orderCardResult.royalties);
-        page.element.cardSold.text(orderCardResult.sold);
-        page.element.cardPurchased.text(orderCardResult.purchased);
-        page.element.cardCancelled.text(orderCardResult.cancelled);
-        page.element.cardReturned.text(orderCardResult.returned);
+        page.element.cardPurchased.text(DBApp.fmtNumComma(orderCardResult.sold));
+        page.element.cardRoyalties.text('$' + DBApp.fmtNumComma(orderCardResult.royalties));
+        page.element.cardSold.text(DBApp.fmtNumComma(orderCardResult.sold));
+        page.element.cardPurchased.text(DBApp.fmtNumComma(orderCardResult.purchased));
+        page.element.cardCancelled.text(DBApp.fmtNumComma(orderCardResult.cancelled));
+        page.element.cardReturned.text(DBApp.fmtNumComma(orderCardResult.returned));
     }
     page.commands.handleCardDateTitle = (analyticsParam) => {
             let date = new Date();
@@ -943,7 +942,7 @@
             page.commands.handleBtnAnalyse();
         });
         page.element.btnResetAnalyticsFilter.click(() => {
-            page.commands.handleBtnResetAnalyticsFilter();
+            page.commands.handleBtnResetFilter();
         })
         page.element.btnSearchProductAnalytics.click(() => {
             page.commands.handleBtnSearchProductAnalytics();

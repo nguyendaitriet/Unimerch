@@ -1,4 +1,7 @@
 class DBApp {
+    static DOMAIN_MANAGER = 'dashboard';
+    static DOMAIN_EMPLOYEE = 'dashboard-employee'
+
     static formatNumber() {
         $(".num-space").number(true, 0, ',', ' ');
         $(".num-point").number(true, 0, ',', '.');
@@ -90,11 +93,11 @@ class DBApp {
         let domain = currentURL[1];
         let url = CommonApp.BASE_URL_GROUP + "/findAllGroups";
 
-        if (domain == 'dashboard-employee') {
+        if (domain == this.DOMAIN_EMPLOYEE) {
             url = CommonApp.BASE_URL_USER + "/asgnGrp";
         }
 
-        $.ajax({
+        return $.ajax({
             "headers": {
                 "accept": "application/json",
                 "content-type": "application/json"
@@ -104,9 +107,8 @@ class DBApp {
         })
             .done((groups) => {
                 let str = ``
-
                 $.each(groups, function (index, group) {
-                    str += `<a class="collapse-item" data-id="${group.id}" href="/dashboard/${group.id}">${group.title}</a>`
+                    str += `<a class="collapse-item" data-id="${group.id}" href="/${domain}/${group.id}">${group.title}</a>`
                 })
 
                 $.when(container.append(str)).then(function () {

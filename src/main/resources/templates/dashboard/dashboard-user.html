@@ -1027,39 +1027,8 @@
         })
     }
 
-    page.commands.createSideBarGroupList = () => {
-        let container = $('#filter-sidebar');
-
-        return $.ajax({
-            "headers": {
-                "accept": "application/json",
-                "content-type": "application/json"
-            },
-            "type": "GET",
-            "url": CommonApp.BASE_URL_USER + "/asgnGrp",
-        })
-            .done((groups) => {
-                let str = ``
-
-                $.each(groups, function (index, group) {
-                    str += `<a class="collapse-item" data-id="${group.id}" href="/dashboard-employee/${group.id}">${group.title}</a>`
-                })
-                container.append(str);
-
-                DBApp.handleFilter('filter-sidebar', 'sidebar-grp-search', 'collapse-item');
-
-                DBApp.handleStatusNavDashboard();
-                DBApp.handleCollapsedFilterSidebar();
-                DBApp.autoScrollFilterSidebar();
-
-            })
-            .fail((jqXHR) => {
-                CommonApp.IziToast.showErrorAlert(ERROR_GRP_RETRIEVE);
-            })
-    }
-
     $(document).ready(function () {
-        page.commands.createSideBarGroupList().then(() => {
+        DBApp.handleGroupsFilterSidebar().then(() => {
             if (isNaN(currentGrpId) || currentGrpId === '')
                 currentGrpId = $('#filter-sidebar .collapse-item').data('id');
 
