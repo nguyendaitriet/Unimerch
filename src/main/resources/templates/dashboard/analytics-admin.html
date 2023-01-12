@@ -104,7 +104,7 @@
                                     </div>
                                     <div class="col-md-4">
                                         <!--Card-->
-                                        <div class="card border-left-primary shadow">
+                                        <div id="analyticsCard" class="card border-left-primary shadow" hidden>
                                             <div class="card-body">
                                                 <div class="row no-gutters align-items-center mb-2">
                                                     <div class="col mr-2">
@@ -152,67 +152,68 @@
                                 </div>
 
                                 <hr class="sidebar-divider">
-
-                                <div class="row mt-3">
-                                    <div class="input-group-btn" data-toggle="buttons">
-                                        <label class="btn btn-light active">
-                                            <input id="dailyChartRadio" value="daily" type="radio" name="dailyOrMonthly"
-                                                   autocomplete="off" checked>
-                                            Daily
-                                        </label>
-                                        <label class="btn btn-light">
-                                            <input id="monthlyChartRadio" value="monthly" type="radio"
-                                                   name="dailyOrMonthly" autocomplete="off">
-                                            Monthly
-                                        </label>
-                                    </div>
-                                </div>
-                                <div class="row mt-3" id="chartHolder" style="width:100%;">
-                                    <!-- Chart Content -->
-                                </div>
-
-                                <hr class="sidebar-divider">
-
-                                <div class="mt-3 mb-3 row">
-                                    <div class="col-md-4">
-                                        <div class="input-group">
-                                            <input type="text" class="form-control bg-light border-0 small"
-                                                   placeholder="Search for asin or title" aria-label="Search"
-                                                   aria-describedby="basic-addon2" id="productAnalyticsSearchKey">
-                                            <button type="button" class="btn bg-transparent"
-                                                    style="margin-left: -40px; z-index: 100;"
-                                                    id="btnClearSearchKey">
-                                                <i class="fa fa-times"></i>
-                                            </button>
-                                            <div class="input-group-append">
-                                                <button id="btnSearchProductAnalytics" class="btn btn-primary"
-                                                        type="button">
-                                                    <i class="fas fa-search fa-sm"></i>
-                                                </button>
-                                            </div>
+                                <div hidden id="chartAndTableArea">
+                                    <div class="row mt-3">
+                                        <div class="input-group-btn" data-toggle="buttons">
+                                            <label class="btn btn-light active">
+                                                <input id="dailyChartRadio" value="daily" type="radio" name="dailyOrMonthly"
+                                                       autocomplete="off" checked>
+                                                Daily
+                                            </label>
+                                            <label class="btn btn-light">
+                                                <input id="monthlyChartRadio" value="monthly" type="radio"
+                                                       name="dailyOrMonthly" autocomplete="off">
+                                                Monthly
+                                            </label>
                                         </div>
                                     </div>
-                                    <div class="col-md-8" id="tagGroupLegend">
-
+                                    <div class="row mt-3" id="analyticsChart" style="width:100%;">
+                                        <!-- Chart Content -->
                                     </div>
-                                </div>
-                                <div class="row mt-3">
-                                    <div class="table-responsive" style="width: 80%">
-                                        <table class="table table-bordered table-sm" id="tableProductAnalytics">
-                                            <thead>
-                                            <tr class="text-center">
-                                                <th data-sortas="numeric">Sold</th>
-                                                <th>Product</th>
-                                                <th data-sortas="numeric">Royalties</th>
-                                                <th data-sortas="numeric">Price</th>
-                                                <th>Username</th>
-                                            </tr>
-                                            </thead>
 
-                                            <tbody>
+                                    <hr class="sidebar-divider">
 
-                                            </tbody>
-                                        </table>
+                                    <div class="mt-3 mb-3 row">
+                                        <div class="col-md-4">
+                                            <div class="input-group">
+                                                <input type="text" class="form-control bg-light border-0 small"
+                                                       placeholder="Search for asin or title" aria-label="Search"
+                                                       aria-describedby="basic-addon2" id="productAnalyticsSearchKey">
+                                                <button type="button" class="btn bg-transparent"
+                                                        style="margin-left: -40px; z-index: 100;"
+                                                        id="btnClearSearchKey">
+                                                    <i class="fa fa-times"></i>
+                                                </button>
+                                                <div class="input-group-append">
+                                                    <button id="btnSearchProductAnalytics" class="btn btn-primary"
+                                                            type="button">
+                                                        <i class="fas fa-search fa-sm"></i>
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-8" id="tagGroupLegend">
+
+                                        </div>
+                                    </div>
+                                    <div class="row mt-3">
+                                        <div class="table-responsive" style="width: 80%">
+                                            <table class="table table-bordered table-sm" id="tableProductAnalytics">
+                                                <thead>
+                                                <tr class="text-center">
+                                                    <th data-sortas="numeric">Sold</th>
+                                                    <th>Product</th>
+                                                    <th data-sortas="numeric">Royalties</th>
+                                                    <th data-sortas="numeric">Price</th>
+                                                    <th>Username</th>
+                                                </tr>
+                                                </thead>
+
+                                                <tbody>
+
+                                                </tbody>
+                                            </table>
+                                        </div>
                                     </div>
                                 </div>
 
@@ -294,6 +295,7 @@
     page.element.btnResetAnalyticsFilter = $('#btnResetAnalyticsFilter');
     page.element.customDateFilter = $('#customDateFilter');
     page.element.dailyChartRadio = $('#dailyChartRadio');
+    page.element.chartAndTableArea = $('#chartAndTableArea');
     page.element.monthlyChartRadio = $('#monthlyChartRadio');
 
     let tempOption = $.validator.format($.trim(page.element.tempOption.val().toString()));
@@ -391,6 +393,9 @@
         page.commands.getChartAnalytics(analyticsParam);
         page.commands.getProductAnalytics(analyticsParam);
         page.commands.getCardAnalytics(analyticsParam);
+
+        page.element.analyticsCard.prop('hidden', false);
+        page.element.chartAndTableArea.prop('hidden', false);
     }
     page.commands.handleBtnResetFilter = () => {
         page.element.analGrpSelect.selectpicker('val', 0);
@@ -399,6 +404,8 @@
         $("input[name=dateFilter][value='today']").prop("checked",true);
         $("input[name=dateFilter][value='today']").parent().addClass('active');
         page.element.dateRange.prop('hidden', true);
+        page.element.analyticsCard.prop('hidden', true);
+        page.element.chartAndTableArea.prop('hidden', true);
     }
     page.commands.getAnalyticsParam = () => {
         let groupId = page.element.analGrpSelect.selectpicker('val');
@@ -602,7 +609,7 @@
         }
     };
 
-    var chart = new ApexCharts($("#chartHolder")[0], options);
+    var chart = new ApexCharts($("#analyticsChart")[0], options);
 
     chart.render();
 
@@ -730,6 +737,7 @@
 
     // Analytics Sales Card
 
+    page.element.analyticsCard = $('#analyticsCard');
     page.element.carDateTitle = $('#carDateTitle');
     page.element.cardDate = $('#cardDate');
     page.element.cardPurchased = $('#cardPurchased');
@@ -756,7 +764,6 @@
                 DBApp.handleFailedTasks(jqXHR);
             })
     }
-
     page.commands.addDataToCard = (orderCardResult) => {
         page.element.cardPurchased.text(DBApp.fmtNumComma(orderCardResult.sold));
         page.element.cardRoyalties.text('$' + DBApp.fmtNumComma(orderCardResult.royalties));

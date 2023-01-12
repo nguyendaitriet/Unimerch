@@ -31,4 +31,33 @@
         </div>
     </div>
 </th:block>
+
+<th:block th:fragment="analytics-card-sample">
+    <div id="analyticsCardSample" class="card border-left-primary shadow">
+        <div class="card-body">
+            <div class="row no-gutters align-items-center mb-2">
+                <div class="col mr-2">
+                    <div class="text-center font-weight-bold text-primary text-uppercase">Date's Sale</div>
+                    <hr class="sidebar-divider my-2">
+                    <div class="h2 text-center mb-0 font-weight-bold text-gray-800">0</div>
+                </div>
+            </div>
+            <div class="row mt-1 no-gutters d-flex justify-content-between">
+                <div id="cardRoyalties">0</div>
+                <div>Royalties</div>
+            </div>
+            <div class="row mt-1 no-gutters d-flex justify-content-between">
+                <div>
+                    <span id="cardSold">0</span> - <span id="cardCancelled">0</span>
+                </div>
+                <div>Sold-Cancelled</div>
+            </div>
+            <div class="row mt-1 no-gutters d-flex justify-content-between">
+                <div id="cardReturned">0</div>
+                <div>Returned</div>
+            </div>
+        </div>
+    </div>
+
+</th:block>
 </html>

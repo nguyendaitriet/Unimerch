@@ -1,12 +1,9 @@
 package com.unimerch.repository.order;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.stereotype.Component;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
-import java.io.IOException;
-import java.io.InputStream;
 import java.util.List;
 
 @Component

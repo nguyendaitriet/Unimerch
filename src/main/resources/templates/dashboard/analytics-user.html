@@ -103,7 +103,7 @@
                                     </div>
                                     <div class="col-md-4">
                                         <!--Card-->
-                                        <div class="card border-left-primary shadow">
+                                        <div id="analyticsCard" class="card border-left-primary shadow">
                                             <div class="card-body">
                                                 <div class="row no-gutters align-items-center mb-2">
                                                     <div class="col mr-2">
@@ -166,7 +166,7 @@
                                         </label>
                                     </div>
                                 </div>
-                                <div class="row mt-3" id="chartHolder" style="width:100%;">
+                                <div class="row mt-3" id="analyticsChart" style="width:100%;">
                                     <!-- Chart Content -->
                                 </div>
 
@@ -404,6 +404,9 @@
         page.commands.getChartAnalytics(analyticsParam);
         page.commands.getProductAnalytics(analyticsParam);
         page.commands.getCardAnalytics(analyticsParam);
+        
+        page.element.analyticsCard.prop('hidden', false);
+        page.element.chartAndTableArea.prop('hidden', false);
     }
     page.commands.handleBtnResetFilter = () => {
         page.element.analGrpSelect.selectpicker('val', $('#filter-sidebar .collapse-item').data('id'));
@@ -412,6 +415,8 @@
         $("input[name=dateFilter][value='today']").prop("checked",true);
         $("input[name=dateFilter][value='today']").parent().addClass('active');
         page.element.dateRange.prop('hidden', true);
+        page.element.analyticsCard.prop('hidden', true);
+        page.element.chartAndTableArea.prop('hidden', true);
     }
     page.commands.getAnalyticsParam = () => {
         let groupId = page.element.analGrpSelect.selectpicker('val');
@@ -615,7 +620,7 @@
         }
     };
 
-    var chart = new ApexCharts($("#chartHolder")[0], options);
+    var chart = new ApexCharts($("#analyticsChart")[0], options);
 
     chart.render();
 
@@ -743,6 +748,7 @@
 
     // Analytics Sales Card
 
+    page.element.analyticsCard = $('#analyticsCard');
     page.element.carDateTitle = $('#carDateTitle');
     page.element.cardDate = $('#cardDate');
     page.element.cardPurchased = $('#cardPurchased');
